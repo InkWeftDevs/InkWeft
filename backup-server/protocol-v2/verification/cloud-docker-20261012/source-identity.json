@@ -1,0 +1,14 @@
+{
+  "base_commit": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+  "tested_fix_commit": "4ee5c671b3bfcd1c22a2dfb82f5f49e642190a8e",
+  "branch": "codex/docker-validation-20261012-a128bb07",
+  "source_diff_paths": [
+    "backup-server/container_check.py"
+  ],
+  "tested_files_sha256": {
+    "backup-server/container_check.py": "84e438be826127da7371d1286bc7de68108f8b07844dbbee6580ee5570a2f645",
+    "backup-server/Dockerfile": "beb0d3f3508e2a58c70128853e2e4a00edb9b369ff39a05a65392afcce60c7da",
+    "backup-server/go.mod": "6a2ba0cff80e1f48a4c121cf81c484eb7ab79aae7f6279436c686bfeb789d071",
+    "backup-server/go.sum": "298e0b6b0f9e5b3536e14c1e716939f5eadb303a1fa62a841aed06ac9c0029cb"
+  }
+}

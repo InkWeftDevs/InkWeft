@@ -1,0 +1,38 @@
+{
+  "tests": [
+    {
+      "module": "core-domain",
+      "task": "test",
+      "reports": [],
+      "status": "NOT_RUN",
+      "suites": null,
+      "tests": null,
+      "failures": null,
+      "errors": null,
+      "skipped": null,
+      "reason": "No JUnit XML report exists; no test execution claimed."
+    },
+    {
+      "module": "data-local",
+      "task": "testDebugUnitTest",
+      "reports": [],
+      "status": "NOT_RUN",
+      "suites": null,
+      "tests": null,
+      "failures": null,
+      "errors": null,
+      "skipped": null,
+      "reason": "No JUnit XML report exists; no test execution claimed."
+    }
+  ],
+  "lint": {
+    "status": "NOT_RUN",
+    "severities": null,
+    "reason": "No lint XML report exists; no lint execution claimed."
+  },
+  "native_tests": {
+    "status": "NOT_RUN",
+    "reason": "This recorder does not run instrumentation."
+  },
+  "build_exit_status": "NOT_DETERMINED: consult the separate build receipt/log"
+}

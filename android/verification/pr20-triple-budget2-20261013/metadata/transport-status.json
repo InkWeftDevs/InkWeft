@@ -1,0 +1,8 @@
+{
+  "artifact_download_attempted": false,
+  "waiting_for_user_uploaded_original_zip": true,
+  "reason": "The previous run official artifact storage transfer returned Forbidden. Do not repeat the denied route; use an authorized user Library upload. No claim that this new artifact itself was requested or denied.",
+  "prior_run": "38396134768",
+  "current_run": "38403076172",
+  "third_run_started": false
+}

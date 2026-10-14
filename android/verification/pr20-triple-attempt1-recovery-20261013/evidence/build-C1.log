@@ -1,0 +1,121 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/build.gradle.kts:80:41: 'fun srcDir(srcDir: Any): Any' is deprecated. Use `directories` mutable set instead.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/build.gradle.kts:85:46: 'fun srcDir(srcDir: Any): Any' is deprecated. Use `directories` mutable set instead.
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :core-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core-domain:compileKotlin
+> Task :core-domain:compileJava NO-SOURCE
+> Task :core-domain:processResources NO-SOURCE
+> Task :core-domain:classes UP-TO-DATE
+> Task :core-domain:jar
+> Task :app:generateDebugBuildConfig
+> Task :app:generateDebugResources
+> Task :app:packageDebugResources
+> Task :data-local:preBuild UP-TO-DATE
+> Task :data-local:preDebugBuild UP-TO-DATE
+> Task :data-local:processDebugNavigationResources
+> Task :app:processDebugNavigationResources
+> Task :app:parseDebugLocalResources
+> Task :app:generateDebugRFile
+> Task :data-local:generateDebugResources
+> Task :data-local:packageDebugResources
+> Task :data-local:parseDebugLocalResources
+> Task :data-local:generateDebugRFile
+> Task :data-local:kspDebugKotlin
+> Task :data-local:compileDebugKotlin
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/data-local/src/main/kotlin/org/inkweft/data/DocumentRepository.kt:38:47 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt:274:31 Unnecessary safe call on a non-null receiver of type 'List<String>'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/data-local/src/main/kotlin/org/inkweft/data/KnowledgeTextRepository.kt:140:34 Condition is always 'true'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/data-local/src/main/kotlin/org/inkweft/data/KnowledgeTextRepository.kt:140:65 Condition is always 'true'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/data-local/src/main/kotlin/org/inkweft/data/OriginalStorage.kt:61:27 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/data-local/src/main/kotlin/org/inkweft/data/OriginalStorage.kt:73:44 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt:30:58 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyRepository.kt:37:37 Unnecessary non-null assertion (!!) on a non-null receiver of type 'KnowledgeData.Question'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/data-local/src/main/kotlin/org/inkweft/data/StudyRepository.kt:185:51 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StudySourceRow'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/data-local/src/main/kotlin/org/inkweft/data/StudyRepository.kt:185:95 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StudySourceRow'.
+
+> Task :data-local:javaPreCompileDebug
+> Task :data-local:compileDebugJavaWithJavac NO-SOURCE
+> Task :data-local:bundleLibCompileToJarDebug
+> Task :app:compileDebugKotlin
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/debug/java/org/inkweft/app/EditorDesignReviewActivity.kt:162:51 'fun rememberTooltipPositionProvider(spacingBetweenTooltipAndAnchor: Dp = ...): PopupPositionProvider' is deprecated. Deprecated in favor of rememberTooltipPositionProvider API that takes a preferred positioning. Please use rememberTooltipPositionProvider with TooltipAnchorPosition.Above if this same behavior is desired.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/AutomaticBeauty.kt:38:222 Unnecessary non-null assertion (!!) on a non-null receiver of type 'TextRun'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/AutomaticBeauty.kt:45:192 Unnecessary non-null assertion (!!) on a non-null receiver of type 'TextRun'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/EditorControls.kt:50:55 'fun rememberTooltipPositionProvider(spacingBetweenTooltipAndAnchor: Dp = ...): PopupPositionProvider' is deprecated. Deprecated in favor of rememberTooltipPositionProvider API that takes a preferred positioning. Please use rememberTooltipPositionProvider with TooltipAnchorPosition.Above if this same behavior is desired.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/EditorControls.kt:118:40 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'anchorBounds'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/EditorControls.kt:118:50 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'windowSize'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/EditorControls.kt:118:60 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'layoutDirection'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/EditorControls.kt:118:78 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'popupContentSize'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/ImageRendering.kt:141:41 'static fun newInstance(p0: String, p1: Boolean): BitmapRegionDecoder' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/InkCanvasView.kt:374:116 'val matrix: Matrix' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/InkScreen.kt:550:72 Condition is always 'false'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/InkScreen.kt:564:18 Condition is always 'true'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/InkScreen.kt:602:357 Condition is always 'true'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/InkWeftApplication.kt:44:114 'static field TRIM_MEMORY_RUNNING_LOW: Int' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/KnowledgeRelationEditor.kt:72:48 Unnecessary non-null assertion (!!) on a non-null receiver of type 'KnowledgeRow'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/MapScenePainter.kt:125:42 Unnecessary safe call on a non-null receiver of type 'MapSourceFrame'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/MindMapView.kt:280:49 Redundant call of conversion method.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/MindMapView.kt:280:79 Redundant call of conversion method.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/MindMapView.kt:281:50 Redundant call of conversion method.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/MindMapView.kt:281:79 Redundant call of conversion method.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/NodeActions.kt:35:32 'fun rememberPlainTooltipPositionProvider(spacingBetweenTooltipAndAnchor: Dp = ...): PopupPositionProvider' is deprecated. Deprecated in favor of rememberTooltipPositionProvider API.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/OverviewCollections.kt:69:41 The corresponding parameter in the supertype 'Factory' is named 'modelClass'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/PageAuthoringViewModel.kt:59:58 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/PenWidthSettings.kt:120:154 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/RecallStudyViewModel.kt:80:38 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JSONObject'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/RecallStudyViewModel.kt:81:51 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JSONObject'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/ReviewSourceDialog.kt:29:111 'val id: Long' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/StudySession.kt:223:119 The corresponding parameter in the supertype 'Factory' is named 'modelClass'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:329:123 Condition is always 'true'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:340:27 Elvis operator (?:) always returns the left operand of non-nullable type 'StudyGraphSnapshot'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:436:27 Elvis operator (?:) always returns the left operand of non-nullable type 'StudyGraphSnapshot'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:667:81 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:922:74 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:927:74 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:980:49 Condition is always 'true'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:984:1791 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:1202:38 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:1490:50 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/TapeSettingsCard.kt:22:34 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'anchorBounds'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/TapeSettingsCard.kt:22:44 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'windowSize'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/TapeSettingsCard.kt:22:54 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'layoutDirection'. This may cause problems when calling this function with named arguments.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/C1/android/app/src/main/java/org/inkweft/app/TapeSettingsCard.kt:22:72 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'popupContentSize'. This may cause problems when calling this function with named arguments.
+
+> Task :app:javaPreCompileDebug
+> Task :app:compileDebugJavaWithJavac
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:generateInkWeftBuildIdentity
+> Task :data-local:generateDebugAssets UP-TO-DATE
+> Task :data-local:mergeDebugAssets
+> Task :app:mergeDebugAssets
+> Task :app:compressDebugAssets
+> Task :app:generateDebugGlobalSynthetics
+> Task :app:processDebugJavaRes
+> Task :data-local:processDebugJavaRes
+> Task :app:mergeDebugJavaResource
+> Task :app:checkDebugDuplicateClasses
+> Task :app:desugarDebugFileDependencies
+> Task :app:mergeExtDexDebug
+> Task :data-local:bundleLibRuntimeToDirDebug
+> Task :app:mergeLibDexDebug
+> Task :data-local:writeDebugAarMetadata
+> Task :app:checkDebugAarMetadata
+> Task :app:mapDebugSourceSetPaths
+> Task :app:compileDebugNavigationResources
+> Task :app:mergeDebugResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :data-local:extractDeepLinksDebug
+> Task :data-local:processDebugManifest
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :data-local:mapDebugSourceSetPaths
+> Task :data-local:compileDebugLibraryResources
+> Task :app:processDebugResources

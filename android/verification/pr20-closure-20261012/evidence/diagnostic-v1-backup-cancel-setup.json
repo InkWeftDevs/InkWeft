@@ -1,0 +1,45 @@
+[
+  {
+    "command": [
+      "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+      "-s",
+      "emulator-5554",
+      "shell",
+      "input",
+      "keyevent",
+      "KEYCODE_WAKEUP"
+    ],
+    "utc": "2026-10-12T21:48:22.620872+00:00",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+      "-s",
+      "emulator-5554",
+      "shell",
+      "wm",
+      "dismiss-keyguard"
+    ],
+    "utc": "2026-10-12T21:48:23.808648+00:00",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+      "-s",
+      "emulator-5554",
+      "shell",
+      "dumpsys",
+      "power"
+    ],
+    "utc": "2026-10-12T21:48:25.982769+00:00",
+    "exit_code": 0,
+    "stdout": "  mWakefulness=Awake\n  mIsPowered=true\n  mStayOn=true\n  mScreenOffTimeoutSetting=2147483647\n  mIsPowered=true",
+    "stderr": ""
+  }
+]

@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/workspace/InkWeft/ci/test_pr20_build_cache.py", line 147, in <module>
+    main()
+  File "/workspace/InkWeft/ci/test_pr20_build_cache.py", line 44, in main
+    properties = dict(line.strip().split(' = ', 1) for line in version.stdout.splitlines() if ' = ' in line)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: dictionary update sequence element #2 has length 1; 2 is required

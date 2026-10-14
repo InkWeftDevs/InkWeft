@@ -15,10 +15,22 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 class HistoryConcurrencyTest {
-    @Test fun largeLibraryAuditAllowsAuthorCommitAndCancellation()=runBlocking{coroutineScope{
+    @Test fun largeLibraryAuditAllowsAuthorCommitAndCancellation()=runBlocking{
         val context=ApplicationProvider.getApplicationContext<Context>();val name="history-concurrency-${UUID.randomUUID()}.db";val db=NoteDatabase.open(context,name)
         val baseline=InstrumentationRegistry.getArguments().getString("historyBaseline")=="true"
-        try{
+        val testStarted=System.nanoTime()
+        fun phase(value:String){
+            InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{
+                putString("stream","HISTORY_CONCURRENCY_PHASE phase=$value elapsedMs=${(System.nanoTime()-testStarted)/1_000_000.0}\n")
+            })
+        }
+        suspend fun <T> timed(label:String,millis:Long,block:suspend()->T):T {
+            phase("$label:start")
+            try{return withTimeout(millis){block()}.also{phase("$label:complete")}}
+            catch(failure:TimeoutCancellationException){phase("$label:timeout");throw failure}
+        }
+        try{coroutineScope{
+            phase("fixture:start")
             val book=WorkspaceRepository(db).create("历史并发",false,PaperStyle.BLANK).id
             val source=UUID.randomUUID().toString();val card=UUID.randomUUID().toString()
             val stroke=InkStroke(UUID.randomUUID().toString(),InkPen.PEN,0xff123456.toInt(),2f,InkTool.STYLUS,listOf(InkSample(20f,20f,0)))
@@ -31,28 +43,33 @@ class HistoryConcurrencyTest {
                     db.sourceVersions().insert(StudyCardSourceSetRow(card,revision,StudySourceRefs.encode(listOf(StudySourceVersionRef(source,revision))),true))
                 }
             }
+            phase("fixture:complete")
             val entered=CompletableDeferred<Unit>();val release=CountDownLatch(1)
-            val history=HistoryStorage(db){if(it=="after-roots"){entered.complete(Unit);check(release.await(15,TimeUnit.SECONDS))}}
+            val history=HistoryStorage(db){phase("paused-audit:$it");if(it=="after-roots"){entered.complete(Unit);check(release.await(15,TimeUnit.SECONDS))}}
             val audit=async(Dispatchers.IO){history.audit()}
-            withTimeout(30_000){entered.await()}
+            try{
+            timed("paused-audit:roots",30_000){entered.await()}
             val started=System.nanoTime();val edit=async(Dispatchers.IO){NoteRepository(db).rename(RenameNote(UUID.randomUUID().toString(),book,1,"审计时仍可保存"))}
             delay(500);val committedWhilePaused=edit.isCompleted;release.countDown()
-            withTimeout(10_000){edit.await()};val waitMs=(System.nanoTime()-started)/1_000_000.0
-            val report=withTimeout(30_000){audit.await()};assertEquals(0L,report.detachedSources)
+            timed("paused-audit:edit",10_000){edit.await()};val waitMs=(System.nanoTime()-started)/1_000_000.0
+            val report=timed("paused-audit:complete",30_000){audit.await()};assertEquals(0L,report.detachedSources)
             if(!baseline)assertTrue("Author commit blocked by root decoding",committedWhilePaused)
             val times=mutableListOf<Double>();val unpausedStart=System.nanoTime()
-            val scanning=async(Dispatchers.IO){HistoryStorage(db).audit()}
+            val scanning=async(Dispatchers.IO){HistoryStorage(db){phase("unpaused-audit:$it")}.audit()}
             repeat(30){i->val before=System.nanoTime();val note=db.notes().note(book)!!;NoteRepository(db).rename(RenameNote(UUID.randomUUID().toString(),book,note.revision,"保存 $i"));times+=(System.nanoTime()-before)/1_000_000.0}
             scanning.await();val unpausedMs=(System.nanoTime()-unpausedStart)/1_000_000.0
             val cancelEntered=CompletableDeferred<Unit>();val cancelRelease=CountDownLatch(1)
-            val cancelled=launch(Dispatchers.IO){HistoryStorage(db){if(it=="after-roots"){cancelEntered.complete(Unit);check(cancelRelease.await(15,TimeUnit.SECONDS))}}.audit()}
-            withTimeout(30_000){cancelEntered.await()};val cancelStart=System.nanoTime();cancelled.cancel();cancelRelease.countDown();withTimeout(5_000){cancelled.join()}
+            val cancelled=launch(Dispatchers.IO){HistoryStorage(db){phase("cancel-audit:$it");if(it=="after-roots"){cancelEntered.complete(Unit);check(cancelRelease.await(15,TimeUnit.SECONDS))}}.audit()}
+            try{
+            timed("cancel-audit:roots",30_000){cancelEntered.await()};val cancelStart=System.nanoTime();cancelled.cancel();cancelRelease.countDown();timed("cancel-audit:join",5_000){cancelled.join()}
             assertEquals(20_000,db.sourceVersions().all().size)
             val sorted=times.sorted();val evidence=JSONObject().put("baseline",baseline).put("sourceVersions",20000).put("historicalCardRoots",20000)
                 .put("committedWhileAuditPaused",committedWhilePaused).put("pausedProbeWindowMs",500).put("editCompletionIncludingProbeWaitMs",waitMs)
                 .put("unpausedAuditAndThirtyEditsMs",unpausedMs).put("editMedianMs",sorted[15]).put("editP95Ms",sorted[28])
                 .put("cancellationMs",(System.nanoTime()-cancelStart)/1_000_000.0).put("historyRetained",true)
             InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","HISTORY_CONCURRENCY_EVIDENCE $evidence\n")})
-        }finally{db.close();context.deleteDatabase(name)}
-    }}
+            }finally{cancelRelease.countDown();withContext(NonCancellable){cancelled.cancelAndJoin()}}
+            }finally{release.countDown();withContext(NonCancellable){audit.cancelAndJoin()}}
+        }}finally{db.close();context.deleteDatabase(name)}
+    }
 }

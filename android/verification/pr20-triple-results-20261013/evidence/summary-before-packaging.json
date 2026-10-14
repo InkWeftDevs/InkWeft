@@ -1,0 +1,6163 @@
+{
+  "run_id": "38419007471",
+  "run_attempt": "1",
+  "workflow_sha": "30acef2e082eb1cd2d70471737824da32fbe9c24",
+  "source_spec": {
+    "schema": 1,
+    "status": "PROPOSED_NOT_AUTHORIZED_NOT_RUN",
+    "materialized_scope": [
+      "android",
+      "ci"
+    ],
+    "excluded_from_build_inputs": [
+      "android/verification"
+    ],
+    "identities": {
+      "B": {
+        "git": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+        "tree": "2eefbf879679d29f5ae4b1d6b9715a4cef14d5d9",
+        "production_overrides": [
+          {
+            "from_git": "7949011ca2b84492f6438d275a09d28faef3b472",
+            "from_path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+            "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+            "bytes": 4426,
+            "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d"
+          }
+        ],
+        "canonical_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+        "file_count": 947
+      },
+      "C0": {
+        "git": "7949011ca2b84492f6438d275a09d28faef3b472",
+        "tree": "78deba5d8fe47cc4f6d3e4eeecafba9013768635",
+        "production_overrides": [],
+        "canonical_manifest_sha256": "8b072c5833e807b5fdc722cade96f0265ba1d9badbf4ac577cb3ffe0b1b96a64",
+        "file_count": 960
+      },
+      "C1": {
+        "git": "ebb48481e7e995288c1844d43011398c513b4f4e",
+        "tree": "3d88de9681dae25f24b8e7cc6ae695cc2600a140",
+        "production_overrides": [],
+        "canonical_manifest_sha256": "c0e3b9a4cfa9b5a602e47422f080add43353d64acacea505cc8f3ebee4c91e63",
+        "file_count": 964
+      }
+    },
+    "common_probes": [
+      {
+        "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+        "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLibraryPairProbe.kt",
+        "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+        "bytes": 18281,
+        "sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+      },
+      {
+        "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+        "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLocalAppendPairProbe.kt",
+        "path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+        "bytes": 12932,
+        "sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+      }
+    ],
+    "native_execution": "NOT_RUN",
+    "notes": [
+      "B retains old search/paging/raster/GC and receives only the established C0 writer factory override.",
+      "C1 is the final code commit; later report-only commits do not alter measured sources.",
+      "All source inputs are local fixed git blobs; this document authorizes no build, runner or security action."
+    ]
+  },
+  "input_hashes": {
+    "approved_plan_sha256": "d5efd83c08b6bb6e107c397db8ca3999337693dc2af45f0615c5e198bac93077",
+    "source_spec_sha256": "0a38b7e6348c0e1be7bf2d0ce7bbb115665fbfa56d49875ac6ccab8e6851dbcd",
+    "method_plan_sha256": "797b64fcdfe9576e2c678e37a541161c0b795276ad99574dc92f81aa789d2913",
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+  },
+  "job_started_epoch": 1791903921,
+  "phase_cutoff_epochs": {
+    "setup": 1791905841,
+    "correctness": 1791906201,
+    "common": 1791907041,
+    "diagnostics": 1791907221
+  },
+  "work_deadline_epoch": 1791907221,
+  "status": "EXECUTION_COMPLETE_ANALYSIS_PENDING",
+  "actions": {
+    "setup": {
+      "status": "PASS",
+      "budget_phase": "setup",
+      "started_epoch": 1791903930.3034859,
+      "seconds": 40.1050865650177
+    },
+    "build-B": {
+      "status": "PASS",
+      "budget_phase": "setup",
+      "started_epoch": 1791903970.4618294,
+      "seconds": 503.5096127986908
+    },
+    "build-C0": {
+      "status": "PASS",
+      "budget_phase": "setup",
+      "started_epoch": 1791904474.0396924,
+      "seconds": 339.20193243026733
+    },
+    "build-C1": {
+      "status": "PASS",
+      "budget_phase": "setup",
+      "started_epoch": 1791904813.302199,
+      "seconds": 405.4519956111908
+    },
+    "emulator": {
+      "status": "PASS",
+      "budget_phase": "setup",
+      "started_epoch": 1791905218.816746,
+      "seconds": 26.181581258773804
+    },
+    "methods-correctness": {
+      "status": "PASS",
+      "budget_phase": "correctness",
+      "started_epoch": 1791905245.0753372,
+      "seconds": 28.078970909118652
+    },
+    "methods-common": {
+      "status": "PASS",
+      "budget_phase": "common",
+      "started_epoch": 1791905273.2181141,
+      "seconds": 499.4975655078888
+    },
+    "methods-diagnostics": {
+      "status": "PASS",
+      "budget_phase": "diagnostics",
+      "started_epoch": 1791905772.775361,
+      "seconds": 44.92075705528259
+    }
+  },
+  "phases": [
+    {
+      "name": "source-fetch",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1791903930.6035368,
+      "exit_code": 0,
+      "seconds": 0.36668992042541504
+    },
+    {
+      "name": "source-reconstruction",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1791903930.9711106,
+      "exit_code": 0,
+      "seconds": 3.4728872776031494
+    },
+    {
+      "name": "sdk",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1791903935.895645,
+      "exit_code": 0,
+      "seconds": 34.511913776397705
+    },
+    {
+      "name": "build-B",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1791903970.5557923,
+      "exit_code": 0,
+      "seconds": 501.6613597869873
+    },
+    {
+      "name": "build-C0",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1791904474.1538284,
+      "exit_code": 0,
+      "seconds": 337.4186725616455
+    },
+    {
+      "name": "build-C1",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1791904813.4077148,
+      "exit_code": 0,
+      "seconds": 403.7830054759979
+    },
+    {
+      "name": "acceleration",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1791905218.8514154,
+      "exit_code": 0,
+      "seconds": 0.03306722640991211
+    },
+    {
+      "name": "avd",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1791905218.8854136,
+      "exit_code": 0,
+      "seconds": 1.2270629405975342
+    }
+  ],
+  "install_groups": {
+    "C1-correctness": {
+      "identity": "C1",
+      "status": "PASS",
+      "started_epoch": 1791905245.0765646,
+      "seconds": 28.0757794380188
+    },
+    "visit-01-B": {
+      "identity": "B",
+      "status": "PASS",
+      "started_epoch": 1791905273.2199633,
+      "seconds": 46.169960260391235
+    },
+    "visit-02-C0": {
+      "identity": "C0",
+      "status": "PASS",
+      "started_epoch": 1791905319.3919225,
+      "seconds": 40.23322916030884
+    },
+    "visit-03-C1": {
+      "identity": "C1",
+      "status": "PASS",
+      "started_epoch": 1791905359.6269708,
+      "seconds": 39.697115898132324
+    },
+    "visit-04-C1": {
+      "identity": "C1",
+      "status": "PASS",
+      "started_epoch": 1791905399.3259752,
+      "seconds": 39.787872552871704
+    },
+    "visit-05-B": {
+      "identity": "B",
+      "status": "PASS",
+      "started_epoch": 1791905439.1159024,
+      "seconds": 45.265820264816284
+    },
+    "visit-06-C0": {
+      "identity": "C0",
+      "status": "PASS",
+      "started_epoch": 1791905484.3841422,
+      "seconds": 39.8028883934021
+    },
+    "visit-07-C0": {
+      "identity": "C0",
+      "status": "PASS",
+      "started_epoch": 1791905524.189297,
+      "seconds": 39.549174070358276
+    },
+    "visit-08-C1": {
+      "identity": "C1",
+      "status": "PASS",
+      "started_epoch": 1791905563.7411218,
+      "seconds": 40.53047561645508
+    },
+    "visit-09-B": {
+      "identity": "B",
+      "status": "PASS",
+      "started_epoch": 1791905604.2740886,
+      "seconds": 45.71139097213745
+    },
+    "visit-10-B": {
+      "identity": "B",
+      "status": "PASS",
+      "started_epoch": 1791905649.9881575,
+      "seconds": 44.583383560180664
+    },
+    "visit-11-C1": {
+      "identity": "C1",
+      "status": "PASS",
+      "started_epoch": 1791905694.5742388,
+      "seconds": 38.9169225692749
+    },
+    "visit-12-C0": {
+      "identity": "C0",
+      "status": "PASS",
+      "started_epoch": 1791905733.4940927,
+      "seconds": 39.218509674072266
+    },
+    "C1-diagnostics": {
+      "identity": "C1",
+      "status": "PASS",
+      "started_epoch": 1791905772.7787328,
+      "seconds": 44.91407322883606
+    }
+  },
+  "methods": [
+    {
+      "ordinal": 1,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905247.8481603,
+      "log_sha256": "c237bf70a2ccf65661247eb8a3ae7d8a00635e93d05bce9c0ce62d3503722345",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.LibraryPagingTest",
+        "org.inkweft.data.LibraryPagingTest"
+      ],
+      "reported_methods": [
+        "sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+        "sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 4.4299999899521936e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.044872789000010016,
+      "seconds": 1.9666025638580322
+    },
+    {
+      "ordinal": 2,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibraryPagingTest#snapshotRetainsOldClassificationAndSourceWhileWriterCommits",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.LibraryPagingTest#snapshotRetainsOldClassificationAndSourceWhileWriterCommits",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905249.815843,
+      "log_sha256": "0236cb276810e96b2a7b6493f09879cb1c283a87dfbe5c246fc07f7048b7a6b3",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.LibraryPagingTest",
+        "org.inkweft.data.LibraryPagingTest"
+      ],
+      "reported_methods": [
+        "snapshotRetainsOldClassificationAndSourceWhileWriterCommits",
+        "snapshotRetainsOldClassificationAndSourceWhileWriterCommits"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.243000037400634e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04795835000004445,
+      "seconds": 0.6149780750274658
+    },
+    {
+      "ordinal": 3,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibraryPagingTest#refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.LibraryPagingTest#refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905250.4319189,
+      "log_sha256": "dd55ae028dc135107d9c6af5e990a14418532eb4e511a3da322b17a9ca455369",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.LibraryPagingTest",
+        "org.inkweft.data.LibraryPagingTest"
+      ],
+      "reported_methods": [
+        "refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState",
+        "refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.4500000108673703e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.044921779000105744,
+      "seconds": 0.5814790725708008
+    },
+    {
+      "ordinal": 4,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905251.0146608,
+      "log_sha256": "8d45e6195c8a3b010adb2918cf0cc50adc3c908161566b3e5b98612205119d00",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.LibrarySearchRepositoryTest",
+        "org.inkweft.data.LibrarySearchRepositoryTest"
+      ],
+      "reported_methods": [
+        "pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh",
+        "pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.4959999791462906e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04349629500006813,
+      "seconds": 0.7608354091644287
+    },
+    {
+      "ordinal": 5,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905251.7767224,
+      "log_sha256": "940a41863339c9ad062d1671553569273261748b337bc31d1a3418ade78becb4",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.LibrarySearchRepositoryTest",
+        "org.inkweft.data.LibrarySearchRepositoryTest"
+      ],
+      "reported_methods": [
+        "deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+        "deletedOrStalePageAndTrashedCardCannotReviveSearchHits"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.0580001748603536e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04112890500005051,
+      "seconds": 0.708681583404541
+    },
+    {
+      "ordinal": 6,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905252.486712,
+      "log_sha256": "9201c469a46f3a173cb1dfd7d2fd003f3becccf7b97dbd5fef4021683e79175f",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.SearchIndexFreshnessTest",
+        "org.inkweft.data.SearchIndexFreshnessTest"
+      ],
+      "reported_methods": [
+        "freshnessFollowsInkObjectLayerAndPageChanges",
+        "freshnessFollowsInkObjectLayerAndPageChanges"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.1820000003790483e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04808830499996475,
+      "seconds": 0.7660102844238281
+    },
+    {
+      "ordinal": 7,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905253.2545714,
+      "log_sha256": "8782139d86483538191d3ee94e985990762732c4f15fd7a1d65964ce09bedf67",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.SearchIndexFreshnessTest",
+        "org.inkweft.data.SearchIndexFreshnessTest"
+      ],
+      "reported_methods": [
+        "checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+        "checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.6190000426140614e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.044563917999994374,
+      "seconds": 0.5615415573120117
+    },
+    {
+      "ordinal": 8,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#oneScanSurvivesRoomObserverRefreshAcrossSevenBatches",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#oneScanSurvivesRoomObserverRefreshAcrossSevenBatches",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905253.8174427,
+      "log_sha256": "c9edea342dbb39a9cded555cbe7f8e9b3ad56efb71d081cb0e3ba40fd6349fe2",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "oneScanSurvivesRoomObserverRefreshAcrossSevenBatches",
+        "oneScanSurvivesRoomObserverRefreshAcrossSevenBatches"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.339000047868467e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04348617799996646,
+      "seconds": 0.9135308265686035
+    },
+    {
+      "ordinal": 9,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905254.7322521,
+      "log_sha256": "74ce31567a1a5cc4b34a3d61fdfae2e1789215ff30be660c8ac2a5fdbd814e2c",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+        "sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.9210000320745166e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04353074200002993,
+      "seconds": 0.8111803531646729
+    },
+    {
+      "ordinal": 10,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905255.5448039,
+      "log_sha256": "6b8e40b6d0e2cf8afdb6bc31f47d07ca226571da4521bee3e40d90cf96dbfbad",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+        "separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.629999926284654e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.3146838640000169,
+      "seconds": 1.1325790882110596
+    },
+    {
+      "ordinal": 11,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905256.7972302,
+      "log_sha256": "d5c500d7eae873c587dbc10c9dfc0a8040171b5df5c2c70313b8155c5c8f65eb",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+        "sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.9719999474764336e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.29189475199996195,
+      "seconds": 1.2322478294372559
+    },
+    {
+      "ordinal": 12,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905258.1487234,
+      "log_sha256": "ac60cf17f5342fdc4481db5dc6d03afc11346eaef425a5347e387cc3967cd347",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+        "separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.9949999316158937e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.33766290199992,
+      "seconds": 1.2900240421295166
+    },
+    {
+      "ordinal": 13,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905259.5613165,
+      "log_sha256": "af678234fdfefb62e714e47e14db9134cec3c5f698d28387be0b34d0837a3f27",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion",
+        "overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.6679999791667797e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04575216900002488,
+      "seconds": 1.0390450954437256
+    },
+    {
+      "ordinal": 14,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905260.6019986,
+      "log_sha256": "a93fd8dab82c738ee40abde4999b4539e4e762fd2008c656f7bd9854f594d8fb",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+        "malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.1050000214017928e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04068104399993899,
+      "seconds": 0.759103536605835
+    },
+    {
+      "ordinal": 15,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905261.364136,
+      "log_sha256": "950a5d2b48fcc4c030934d24c9a64f611e3999e0369ad0e69a70a9c2af87ebaa",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "interruptedBatchRollsBackAndReopenedCollectionResumes",
+        "interruptedBatchRollsBackAndReopenedCollectionResumes"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.7799999315902824e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04265575799990984,
+      "seconds": 0.8606703281402588
+    },
+    {
+      "ordinal": 16,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#missingRoomGuardLogAbortsWithoutDeletingCandidates",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#missingRoomGuardLogAbortsWithoutDeletingCandidates",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905262.2263954,
+      "log_sha256": "7b2187f218a6411d838012383f8a82d2c0fffd09bc43e74a5d4ebc48cb74df9d",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "missingRoomGuardLogAbortsWithoutDeletingCandidates",
+        "missingRoomGuardLogAbortsWithoutDeletingCandidates"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.849999873433262e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.044466815000077986,
+      "seconds": 0.767064094543457
+    },
+    {
+      "ordinal": 17,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.app.NotebookShelfUiTest#pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.app.NotebookShelfUiTest#pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905262.9951558,
+      "log_sha256": "f7aa9243f9d70c09573e9c7be67b972c86e4424a7c8f5081d120481d8c1e8a38",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.app.NotebookShelfUiTest",
+        "org.inkweft.app.NotebookShelfUiTest"
+      ],
+      "reported_methods": [
+        "pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges",
+        "pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.7019998469768325e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 0.14393766399984997,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 0.2874571180000203,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 0.43030260099999396,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 0.573716905999845,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 0.717838047999976,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 0.861532102999945,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 1.0064115440000023,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 1.1508480949999012,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 1.2937222149998888,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 1.4401135999999042,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 1.5903588489998128,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 1.7402081349998753,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 1.8892311309998604,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.0381583779999346,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.1865148189999672,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.3367646869999135,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.4844376669998383,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.6297298259999025,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 0,
+              "stdout": "2744",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        },
+        {
+          "stage": "after-background-cleanup",
+          "elapsed_seconds": 2.771988249999822,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "AUXILIARY_AM_KILL_CONFIRMED",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "auxiliary_cleanup": {
+        "command": [
+          "adb",
+          "-s",
+          "emulator-5554",
+          "shell",
+          "am",
+          "kill",
+          "--user",
+          "0",
+          "org.inkweft.app.a0.test"
+        ],
+        "status": "ABSENCE_CONFIRMED",
+        "started_seconds": 2.750147294999806,
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "process_exit_seconds": 2.816828158999897,
+      "seconds": 9.999937534332275
+    },
+    {
+      "ordinal": 18,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-01-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4101,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905275.6291704,
+      "log_sha256": "d92a7f16b2b22fbb8c40bcd62b761f2de6c1b31833374d019bf93f5a9dc96d01",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.app.KvmLocalAppendPairProbe",
+        "org.inkweft.app.KvmLocalAppendPairProbe"
+      ],
+      "reported_methods": [
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.9689998629910406e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04877001399995606,
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4101,
+          "logicalSha256": "e42134ad686969604696eca0c8b1e509642eb8cb0f394806f4463a7a0c51b4f5",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4101,
+          "logicalSha256": "ce90b22b09e96ba9c39c605ab6789cf87d488152388a36d473416cdbd9b4c241",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4101,
+          "logicalSha256": "0df59d18c4c4dea150455471d713e6110524e93bbb78b82d0389c1ea29e36990",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 4.027285575866699
+    },
+    {
+      "ordinal": 19,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-01-B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4101,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905279.658727,
+      "log_sha256": "efc5074a0018dac5106057841a437a048b2ac94cfdfb42d7c85c82ff39469579",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.KvmLibraryPairProbe",
+        "org.inkweft.data.KvmLibraryPairProbe"
+      ],
+      "reported_methods": [
+        "coldSearchConcurrentSavesAndShelfReadScale",
+        "coldSearchConcurrentSavesAndShelfReadScale"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 4.904999968857737e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.050801595000166344,
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4101,
+          "logicalSha256": "1c69bba77781ba0c0b642309b8e869ff21c9a440fd7714894e67c572b95c9dcf",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 39.56572461128235
+    },
+    {
+      "ordinal": 20,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-02-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4101,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905321.6156838,
+      "log_sha256": "2f5db65ee080d32827a0be921e9dee410fada96d8658551240e07069fc3960b3",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.app.KvmLocalAppendPairProbe",
+        "org.inkweft.app.KvmLocalAppendPairProbe"
+      ],
+      "reported_methods": [
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.457000164213241e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.0432275309999568,
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4101,
+          "logicalSha256": "e42134ad686969604696eca0c8b1e509642eb8cb0f394806f4463a7a0c51b4f5",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4101,
+          "logicalSha256": "ce90b22b09e96ba9c39c605ab6789cf87d488152388a36d473416cdbd9b4c241",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4101,
+          "logicalSha256": "0df59d18c4c4dea150455471d713e6110524e93bbb78b82d0389c1ea29e36990",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 3.7205357551574707
+    },
+    {
+      "ordinal": 21,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-02-C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4101,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905325.33822,
+      "log_sha256": "b3a23d6836cc0b9860edcb72a846f5dbe8dae1ea96169216be31815c17433899",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.KvmLibraryPairProbe",
+        "org.inkweft.data.KvmLibraryPairProbe"
+      ],
+      "reported_methods": [
+        "coldSearchConcurrentSavesAndShelfReadScale",
+        "coldSearchConcurrentSavesAndShelfReadScale"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.1310000849771313e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.042184743000007074,
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4101,
+          "logicalSha256": "1c69bba77781ba0c0b642309b8e869ff21c9a440fd7714894e67c572b95c9dcf",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 34.14409399032593
+    },
+    {
+      "ordinal": 22,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-03-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4101,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905361.8589888,
+      "log_sha256": "7c892ad246030e9b889ba1933badce53b6d8064fdb9a065bd01b1458a0c712f8",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.app.KvmLocalAppendPairProbe",
+        "org.inkweft.app.KvmLocalAppendPairProbe"
+      ],
+      "reported_methods": [
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.8879999263153877e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.0424729850001313,
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4101,
+          "logicalSha256": "e42134ad686969604696eca0c8b1e509642eb8cb0f394806f4463a7a0c51b4f5",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4101,
+          "logicalSha256": "ce90b22b09e96ba9c39c605ab6789cf87d488152388a36d473416cdbd9b4c241",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4101,
+          "logicalSha256": "0df59d18c4c4dea150455471d713e6110524e93bbb78b82d0389c1ea29e36990",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 3.670274257659912
+    },
+    {
+      "ordinal": 23,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-03-C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4101,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905365.5314393,
+      "log_sha256": "0152b6d49958052a9d141e67602d797208a4d58d3211c190a75187199cf5558f",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.KvmLibraryPairProbe",
+        "org.inkweft.data.KvmLibraryPairProbe"
+      ],
+      "reported_methods": [
+        "coldSearchConcurrentSavesAndShelfReadScale",
+        "coldSearchConcurrentSavesAndShelfReadScale"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.594999952838407e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04575889200009442,
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4101,
+          "logicalSha256": "1c69bba77781ba0c0b642309b8e869ff21c9a440fd7714894e67c572b95c9dcf",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 33.64558172225952
+    },
+    {
+      "ordinal": 24,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-04-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4102,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905401.546908,
+      "log_sha256": "169d78a757c4edd645ba7b2a043083a6f8df194920d9ba3efd1d2fb998dde2a2",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.app.KvmLocalAppendPairProbe",
+        "org.inkweft.app.KvmLocalAppendPairProbe"
+      ],
+      "reported_methods": [
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.567999899838469e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04369052299989562,
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4102,
+          "logicalSha256": "a041ece6c5b1a6fd1cbec080ffc738c6ad63b374516cb722d4266ca0023909df",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4102,
+          "logicalSha256": "21519a3876f8f6c9ac6434a0111d1da10fec364ce0ea31ddefe6a0a2d2967386",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4102,
+          "logicalSha256": "fd5134454ed2f4518823fb0265a0fe40c9089ce0c645bb5a39dde3af070cfc16",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 3.9714927673339844
+    },
+    {
+      "ordinal": 25,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-04-C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4102,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905405.5207067,
+      "log_sha256": "73edcc588956fe6d5bb1161d9436f59f858c85c3ef85e6dc5a1de3323d276c63",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.KvmLibraryPairProbe",
+        "org.inkweft.data.KvmLibraryPairProbe"
+      ],
+      "reported_methods": [
+        "coldSearchConcurrentSavesAndShelfReadScale",
+        "coldSearchConcurrentSavesAndShelfReadScale"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.9069999527564505e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.045512164999991,
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4102,
+          "logicalSha256": "40f13cbf979307a3db39146d7849d8af7fd9cfdbf9216f569d99565d8949bdc5",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 33.44713068008423
+    },
+    {
+      "ordinal": 26,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-05-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4102,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905441.279927,
+      "log_sha256": "d0b9c4782f17e35911496f32ca21496f037fe027f0157f2884563584e759dee9",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.app.KvmLocalAppendPairProbe",
+        "org.inkweft.app.KvmLocalAppendPairProbe"
+      ],
+      "reported_methods": [
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.708000010898104e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.043429637000144794,
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4102,
+          "logicalSha256": "a041ece6c5b1a6fd1cbec080ffc738c6ad63b374516cb722d4266ca0023909df",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4102,
+          "logicalSha256": "21519a3876f8f6c9ac6434a0111d1da10fec364ce0ea31ddefe6a0a2d2967386",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4102,
+          "logicalSha256": "fd5134454ed2f4518823fb0265a0fe40c9089ce0c645bb5a39dde3af070cfc16",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 3.8728981018066406
+    },
+    {
+      "ordinal": 27,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-05-B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4102,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905445.155328,
+      "log_sha256": "99809223d6127d2769be2e7871ab516c3c10e94536ea76e5cb3307f3c234f198",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.KvmLibraryPairProbe",
+        "org.inkweft.data.KvmLibraryPairProbe"
+      ],
+      "reported_methods": [
+        "coldSearchConcurrentSavesAndShelfReadScale",
+        "coldSearchConcurrentSavesAndShelfReadScale"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.237000100853038e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.0495427410000957,
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4102,
+          "logicalSha256": "40f13cbf979307a3db39146d7849d8af7fd9cfdbf9216f569d99565d8949bdc5",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 39.06254458427429
+    },
+    {
+      "ordinal": 28,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-06-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4102,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905486.669127,
+      "log_sha256": "a5f30319146edf3d048665affcb74e84a4a96c3e3e23079db47813c5cfa726e4",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.app.KvmLocalAppendPairProbe",
+        "org.inkweft.app.KvmLocalAppendPairProbe"
+      ],
+      "reported_methods": [
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.8890001431136625e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04377380200003245,
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4102,
+          "logicalSha256": "a041ece6c5b1a6fd1cbec080ffc738c6ad63b374516cb722d4266ca0023909df",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4102,
+          "logicalSha256": "21519a3876f8f6c9ac6434a0111d1da10fec364ce0ea31ddefe6a0a2d2967386",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4102,
+          "logicalSha256": "fd5134454ed2f4518823fb0265a0fe40c9089ce0c645bb5a39dde3af070cfc16",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 3.7731542587280273
+    },
+    {
+      "ordinal": 29,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-06-C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4102,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905490.4448597,
+      "log_sha256": "6701af74dcbf9d3a9ffa44883777a074c01ea6c38186cf4349b7c0d0452230db",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.KvmLibraryPairProbe",
+        "org.inkweft.data.KvmLibraryPairProbe"
+      ],
+      "reported_methods": [
+        "coldSearchConcurrentSavesAndShelfReadScale",
+        "coldSearchConcurrentSavesAndShelfReadScale"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.3799999528127955e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04954211199992642,
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4102,
+          "logicalSha256": "40f13cbf979307a3db39146d7849d8af7fd9cfdbf9216f569d99565d8949bdc5",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 33.59701728820801
+    },
+    {
+      "ordinal": 30,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-07-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4103,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4103",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905526.4672534,
+      "log_sha256": "3bce60ec9684f1238b7886bd1bcd704c89193b92237d2dfe28ff128118b67a2c",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.app.KvmLocalAppendPairProbe",
+        "org.inkweft.app.KvmLocalAppendPairProbe"
+      ],
+      "reported_methods": [
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.6620000426191837e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04366838500004633,
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4103,
+          "logicalSha256": "dab1c2e0041b38f5d3ffd8c89e17ee9fff375a4f41bec6ac426e34b8c69386c9",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4103,
+          "logicalSha256": "5ad5ed9192a0eeb43b6978c2ae8d5a410fef1ab67099888cdd62f643511d50e8",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4103,
+          "logicalSha256": "f1107ae9b0de2b2bd16830b423bc32aa9b8f890d6c91bb54bd1b00f4ec4f900d",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 3.772256851196289
+    },
+    {
+      "ordinal": 31,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-07-C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4103,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4103",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905530.2435865,
+      "log_sha256": "661cca9a89cbeee12598a3e436e829751a0ca541ad95085fcd2dd57517a13a24",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.KvmLibraryPairProbe",
+        "org.inkweft.data.KvmLibraryPairProbe"
+      ],
+      "reported_methods": [
+        "coldSearchConcurrentSavesAndShelfReadScale",
+        "coldSearchConcurrentSavesAndShelfReadScale"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.93900006909098e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.044271401000059996,
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4103,
+          "logicalSha256": "9322d8eff726e4dea3987ebf016c4700cab0351a8d7344e29d10306075f4a5f4",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 33.34285020828247
+    },
+    {
+      "ordinal": 32,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-08-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4103,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4103",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905566.0035958,
+      "log_sha256": "0341d797fca6ac9150b929905cc7cf766a44ce87fee55369387116fce23b0e7f",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.app.KvmLocalAppendPairProbe",
+        "org.inkweft.app.KvmLocalAppendPairProbe"
+      ],
+      "reported_methods": [
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.643000016178121e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04337119999991046,
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4103,
+          "logicalSha256": "dab1c2e0041b38f5d3ffd8c89e17ee9fff375a4f41bec6ac426e34b8c69386c9",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4103,
+          "logicalSha256": "5ad5ed9192a0eeb43b6978c2ae8d5a410fef1ab67099888cdd62f643511d50e8",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4103,
+          "logicalSha256": "f1107ae9b0de2b2bd16830b423bc32aa9b8f890d6c91bb54bd1b00f4ec4f900d",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 3.872817039489746
+    },
+    {
+      "ordinal": 33,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-08-C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4103,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4103",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905569.8792934,
+      "log_sha256": "44494b28ed8b363444ed6a5a17603de0be9863bca708f8c3fc80737ff0e73aba",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.KvmLibraryPairProbe",
+        "org.inkweft.data.KvmLibraryPairProbe"
+      ],
+      "reported_methods": [
+        "coldSearchConcurrentSavesAndShelfReadScale",
+        "coldSearchConcurrentSavesAndShelfReadScale"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.9760001325485064e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04384168500018859,
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4103,
+          "logicalSha256": "9322d8eff726e4dea3987ebf016c4700cab0351a8d7344e29d10306075f4a5f4",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 34.24589800834656
+    },
+    {
+      "ordinal": 34,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-09-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4103,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4103",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905606.5942852,
+      "log_sha256": "aeb9d99284ca64b25a20219260df691d4c8811fbfc3349073b8a4092fc2a8022",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.app.KvmLocalAppendPairProbe",
+        "org.inkweft.app.KvmLocalAppendPairProbe"
+      ],
+      "reported_methods": [
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.567000137787545e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.047133015000099476,
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4103,
+          "logicalSha256": "dab1c2e0041b38f5d3ffd8c89e17ee9fff375a4f41bec6ac426e34b8c69386c9",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4103,
+          "logicalSha256": "5ad5ed9192a0eeb43b6978c2ae8d5a410fef1ab67099888cdd62f643511d50e8",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4103,
+          "logicalSha256": "f1107ae9b0de2b2bd16830b423bc32aa9b8f890d6c91bb54bd1b00f4ec4f900d",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 4.027745246887207
+    },
+    {
+      "ordinal": 35,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-09-B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4103,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4103",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905610.6250238,
+      "log_sha256": "8121d5067bc97d35b4be0a563033ecf5c7afa6e5b5faeac33b1a77cb50cce08b",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.KvmLibraryPairProbe",
+        "org.inkweft.data.KvmLibraryPairProbe"
+      ],
+      "reported_methods": [
+        "coldSearchConcurrentSavesAndShelfReadScale",
+        "coldSearchConcurrentSavesAndShelfReadScale"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.8849999580415897e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04469357199991464,
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4103,
+          "logicalSha256": "9322d8eff726e4dea3987ebf016c4700cab0351a8d7344e29d10306075f4a5f4",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 39.20932602882385
+    },
+    {
+      "ordinal": 36,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-10-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4104,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4104",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905652.193461,
+      "log_sha256": "24727ef167012412c27d29444108aaf36df6e01296a46d7d8007a69a4d3c62bf",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.app.KvmLocalAppendPairProbe",
+        "org.inkweft.app.KvmLocalAppendPairProbe"
+      ],
+      "reported_methods": [
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.5489999845594866e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04454311799986499,
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4104,
+          "logicalSha256": "3b22700197bc4a81a3676386a52337b08263d01f28ea83f33f3303ecea9ceea4",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4104,
+          "logicalSha256": "0f853304b0164070ce18cd74c855e4a926c3481b1eab24f3830ea85dc9c57fe8",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4104,
+          "logicalSha256": "8f3d7c1e08bee55f9efa2504f70b3b7fe346e15a76b8b16a15043bca5e21dbf2",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 3.72324275970459
+    },
+    {
+      "ordinal": 37,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-10-B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4104,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4104",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905655.919744,
+      "log_sha256": "f058c3b9396889b27a8401be56d94ab8858e22bf6b57848619b81dc8bfb4d5d8",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.KvmLibraryPairProbe",
+        "org.inkweft.data.KvmLibraryPairProbe"
+      ],
+      "reported_methods": [
+        "coldSearchConcurrentSavesAndShelfReadScale",
+        "coldSearchConcurrentSavesAndShelfReadScale"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.024999841727549e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04335889300000417,
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4104,
+          "logicalSha256": "77bfe6ade61386e8bcf755c3735ead8dd0bc8e2f14a6f4d430cac81d4d279042",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 38.50247597694397
+    },
+    {
+      "ordinal": 38,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-11-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4104,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4104",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905696.779332,
+      "log_sha256": "c63294bc421c9b55c937ee7c960210bbd211eeff199d2ce5f81de6454166ec86",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.app.KvmLocalAppendPairProbe",
+        "org.inkweft.app.KvmLocalAppendPairProbe"
+      ],
+      "reported_methods": [
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.296999921076349e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04389085000002524,
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4104,
+          "logicalSha256": "3b22700197bc4a81a3676386a52337b08263d01f28ea83f33f3303ecea9ceea4",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4104,
+          "logicalSha256": "0f853304b0164070ce18cd74c855e4a926c3481b1eab24f3830ea85dc9c57fe8",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4104,
+          "logicalSha256": "8f3d7c1e08bee55f9efa2504f70b3b7fe346e15a76b8b16a15043bca5e21dbf2",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 3.5738871097564697
+    },
+    {
+      "ordinal": 39,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-11-C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4104,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4104",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905700.3565145,
+      "log_sha256": "15e7b6b79a73f04ae033fd2810fd81606e51e180a765a510c8b01fb9dcfee06d",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.KvmLibraryPairProbe",
+        "org.inkweft.data.KvmLibraryPairProbe"
+      ],
+      "reported_methods": [
+        "coldSearchConcurrentSavesAndShelfReadScale",
+        "coldSearchConcurrentSavesAndShelfReadScale"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.3030000849976204e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04369025000005422,
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4104,
+          "logicalSha256": "77bfe6ade61386e8bcf755c3735ead8dd0bc8e2f14a6f4d430cac81d4d279042",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 32.98590064048767
+    },
+    {
+      "ordinal": 40,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-12-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4104,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4104",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905735.697828,
+      "log_sha256": "ae8fa5ac3324d781d31b8ad859d9c4733ed39afda3beaf2898ca7810fd4735c8",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.app.KvmLocalAppendPairProbe",
+        "org.inkweft.app.KvmLocalAppendPairProbe"
+      ],
+      "reported_methods": [
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.379999841650715e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04381220499999472,
+      "fixtures": [
+        {
+          "label": "raster-1-before",
+          "seed": 4104,
+          "logicalSha256": "3b22700197bc4a81a3676386a52337b08263d01f28ea83f33f3303ecea9ceea4",
+          "rowCounts": {
+            "notes": 1,
+            "note_revisions": 1,
+            "notebook_workspace": 1,
+            "notebook_pages": 1,
+            "ink_pages": 1,
+            "ink_strokes": 320,
+            "canvas_authoring": 1,
+            "page_layer_memberships": 320
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-4-before",
+          "seed": 4104,
+          "logicalSha256": "0f853304b0164070ce18cd74c855e4a926c3481b1eab24f3830ea85dc9c57fe8",
+          "rowCounts": {
+            "notes": 2,
+            "note_revisions": 2,
+            "notebook_workspace": 2,
+            "notebook_pages": 2,
+            "ink_pages": 2,
+            "ink_strokes": 641,
+            "canvas_authoring": 2,
+            "page_layer_memberships": 641
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        },
+        {
+          "label": "raster-8-before",
+          "seed": 4104,
+          "logicalSha256": "8f3d7c1e08bee55f9efa2504f70b3b7fe346e15a76b8b16a15043bca5e21dbf2",
+          "rowCounts": {
+            "notes": 3,
+            "note_revisions": 3,
+            "notebook_workspace": 3,
+            "notebook_pages": 3,
+            "ink_pages": 3,
+            "ink_strokes": 962,
+            "canvas_authoring": 3,
+            "page_layer_memberships": 962
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 3.723781108856201
+    },
+    {
+      "ordinal": 41,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-12-C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4104,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4104",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905739.4248974,
+      "log_sha256": "c92eba6beb735a3cea0d1d5e092274ac648a4385853b4c20d756dcece251f80f",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.KvmLibraryPairProbe",
+        "org.inkweft.data.KvmLibraryPairProbe"
+      ],
+      "reported_methods": [
+        "coldSearchConcurrentSavesAndShelfReadScale",
+        "coldSearchConcurrentSavesAndShelfReadScale"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.538000100888894e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04426466600011736,
+      "fixtures": [
+        {
+          "label": "library-before",
+          "seed": 4104,
+          "logicalSha256": "77bfe6ade61386e8bcf755c3735ead8dd0bc8e2f14a6f4d430cac81d4d279042",
+          "rowCounts": {
+            "notes": 501,
+            "note_revisions": 501,
+            "notebook_workspace": 501,
+            "notebook_pages": 20001,
+            "page_search_text": 20000,
+            "library_search_pending": 20000
+          },
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          }
+        }
+      ],
+      "seconds": 33.13865637779236
+    },
+    {
+      "ordinal": 42,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "install_group": "C1-diagnostics",
+      "selection": "org.inkweft.data.HistoryDeletionExposureTest#sameRoomWriterNaturalDeletionExposure",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryDeletionExposureTest#sameRoomWriterNaturalDeletionExposure",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905775.1476314,
+      "log_sha256": "ca4d58cb7c62da59dae46277be10a53bb699f4e1531abc0b41a4036764056dd3",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryDeletionExposureTest",
+        "org.inkweft.data.HistoryDeletionExposureTest"
+      ],
+      "reported_methods": [
+        "sameRoomWriterNaturalDeletionExposure",
+        "sameRoomWriterNaturalDeletionExposure"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 4.223000132697052e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.042816588000050615,
+      "seconds": 5.278714418411255
+    },
+    {
+      "ordinal": 43,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "install_group": "C1-diagnostics",
+      "selection": "org.inkweft.data.HistoryDeletionExposureTest#separateRoomWriterNaturalDeletionExposure",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryDeletionExposureTest#separateRoomWriterNaturalDeletionExposure",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905780.4296253,
+      "log_sha256": "703b33760514f6dcd58be20bbad7862e899aaecd1a8303df6522f6b8f0435fa7",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryDeletionExposureTest",
+        "org.inkweft.data.HistoryDeletionExposureTest"
+      ],
+      "reported_methods": [
+        "separateRoomWriterNaturalDeletionExposure",
+        "separateRoomWriterNaturalDeletionExposure"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.758000048037502e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04272139199997582,
+      "seconds": 5.777120590209961
+    },
+    {
+      "ordinal": 44,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "install_group": "C1-diagnostics",
+      "selection": "org.inkweft.data.LibraryReadPerformanceTest#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": true,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "libraryStageDiagnostics",
+        "true",
+        "-e",
+        "class",
+        "org.inkweft.data.LibraryReadPerformanceTest#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791905786.210198,
+      "log_sha256": "e629f82a71c0a2786254a9d91d1f2a1836b31f03f7050fec9b252b9448a7c0fa",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.LibraryReadPerformanceTest",
+        "org.inkweft.data.LibraryReadPerformanceTest"
+      ],
+      "reported_methods": [
+        "coldSearchConcurrentSavesAndShelfReadScale",
+        "coldSearchConcurrentSavesAndShelfReadScale"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.479000042716507e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.04404796700009683,
+      "seconds": 31.33964991569519
+    }
+  ],
+  "scope": "One KVM emulator, three frozen source identities, synthetic debug workloads. Completion is not a claim that all performance regressions are absent.",
+  "fetched_fixed_refs": [
+    "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+    "7949011ca2b84492f6438d275a09d28faef3b472",
+    "ebb48481e7e995288c1844d43011398c513b4f4e",
+    "e1a813aa24be20df0901f6aff9554632e1f531b7"
+  ],
+  "setup_seconds": 1323.9982960224152
+}

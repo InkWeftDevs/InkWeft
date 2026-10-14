@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "provenance_references": [
+    "baseline-final-provenance.json",
+    "baseline-final-source-manifest.json",
+    "baseline-final-build.json",
+    "baseline-final-artifacts.json",
+    "candidate-v4-source-sha256.json",
+    "candidate-v4-build.json",
+    "candidate-v4-artifacts.json",
+    "candidate-v4-reconstruction-provenance.json"
+  ],
+  "environment_references": [
+    "candidate-v4-performance-environment.json",
+    "candidate-v4-performance-environment-after.json",
+    "baseline-final-performance-environment.json",
+    "baseline-final-performance-environment-after.json"
+  ],
+  "pairs": [
+    {
+      "id": "1024-full-final-v4-vs-a128-common-factory-probes",
+      "baseline": {
+        "label": "a128bb07 + shared safe factory and probes",
+        "logs": {
+          "library": "baseline-final-performance-library-probe.log",
+          "history": "baseline-final-performance-history-probe.log",
+          "raster": "baseline-final-performance-raster-probe.log"
+        }
+      },
+      "candidate": {
+        "label": "candidate-v4 frozen 744 sources",
+        "logs": {
+          "library": "candidate-v4-performance-library-probe.log",
+          "history": "candidate-v4-performance-history-probe.log",
+          "raster": "candidate-v4-performance-raster-probe.log"
+        }
+      }
+    }
+  ]
+}

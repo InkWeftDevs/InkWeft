@@ -1,0 +1,31 @@
+{
+  "time_utc": "2026-10-12T14:39:29.260041+00:00",
+  "commands": [
+    {
+      "command": [
+        "docker",
+        "ps",
+        "-a",
+        "--format",
+        "{{.ID}} {{.Names}} {{.Status}} {{.Ports}}"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "volume",
+        "ls",
+        "--format",
+        "{{.Name}}"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "rea_modified": false,
+  "owned_backup_processes": []
+}

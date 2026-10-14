@@ -1,0 +1,45 @@
+{
+  "utc": "2026-10-13T02:31:15.729853+00:00",
+  "source_delta_status": "EXACT_TWO_PATHS_PER_SIDE",
+  "bindings": [
+    {
+      "label": "candidate",
+      "source_count": 744,
+      "changed_paths": [
+        "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "old_manifest": {
+        "path": "candidate-v4-source-sha256.json",
+        "sha256": "8285c54019d0a4409a6dbf6f5d36e87298b5be9b6d47f93801ea9123bb7d859f"
+      },
+      "diagnostic_manifest": {
+        "path": "candidate-raster-diagnostic-v2-source-sha256.json",
+        "sha256": "730b12637f1ee898b2b439603017c787c6323ba5411412662e003eb1066edf0f"
+      }
+    },
+    {
+      "label": "baseline",
+      "source_count": 734,
+      "changed_paths": [
+        "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+        "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+      ],
+      "old_manifest": {
+        "path": "baseline-final-source-sha256.json",
+        "sha256": "386046c9c28eb27d33fd3977fb2baa06c94a855511f024f4a83188a4c304bbfd"
+      },
+      "diagnostic_manifest": {
+        "path": "baseline-raster-diagnostic-v2-source-sha256.json",
+        "sha256": "ea53d39f9dc02b118c95f18cec166d8c4ca2c64b88dabe83adaecb65b9f8e1e2"
+      }
+    }
+  ],
+  "algorithm_changes": "NONE; optional default-off metadata diagnostics and optional existing native counter output only",
+  "patch": {
+    "path": "raster-metadata-diagnostics-v2-portable.patch",
+    "sha256": "3449bdb9dc5063e4386a9d5f9d0b3061a5bbb8834362dcb897777b05605352ac"
+  },
+  "native_status": "NOT_RUN_YET",
+  "build_status": "See separate immutable build receipts; baseline may still be running."
+}

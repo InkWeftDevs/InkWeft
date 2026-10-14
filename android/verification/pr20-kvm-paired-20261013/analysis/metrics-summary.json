@@ -1,0 +1,262 @@
+[
+  {
+    "metric": "history.collectionMs",
+    "B_median_ms": 1656.414002,
+    "C_median_ms": 238.5570945,
+    "paired_median_delta_ms": -1419.541545,
+    "paired_median_percent": -85.67211566093265,
+    "slower_pairs": 0,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "history.live.max",
+    "B_median_ms": 6.2602045,
+    "C_median_ms": 6.696903000000001,
+    "paired_median_delta_ms": 0.7518530000000001,
+    "paired_median_percent": 11.416414511904572,
+    "slower_pairs": 2,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "history.live.p50",
+    "B_median_ms": 2.042439,
+    "C_median_ms": 2.0632770000000002,
+    "paired_median_delta_ms": 0.04919549999999995,
+    "paired_median_percent": 2.4534185154145516,
+    "slower_pairs": 3,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "history.live.p95",
+    "B_median_ms": 4.2507684999999995,
+    "C_median_ms": 3.9282305,
+    "paired_median_delta_ms": -0.15198199999999984,
+    "paired_median_percent": -3.731473099139598,
+    "slower_pairs": 1,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "history.liveCollectionAndSavesMs",
+    "B_median_ms": 1682.846794,
+    "C_median_ms": 341.9674055,
+    "paired_median_delta_ms": -1340.8793885,
+    "paired_median_percent": -79.5048372040343,
+    "slower_pairs": 0,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "history.paused.max",
+    "B_median_ms": 6.7216495,
+    "C_median_ms": 5.1238425,
+    "paired_median_delta_ms": -1.9727329999999998,
+    "paired_median_percent": -29.528510124629108,
+    "slower_pairs": 1,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "history.paused.p50",
+    "B_median_ms": 2.3108,
+    "C_median_ms": 2.389083,
+    "paired_median_delta_ms": 0.11298999999999992,
+    "paired_median_percent": 5.137895630674749,
+    "slower_pairs": 3,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "history.paused.p95",
+    "B_median_ms": 3.097901,
+    "C_median_ms": 3.573034,
+    "paired_median_delta_ms": -0.2413099999999997,
+    "paired_median_percent": -7.817892428738116,
+    "slower_pairs": 1,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "library.allIndexRowsCommittedMs",
+    "B_median_ms": 26639.644705500003,
+    "C_median_ms": 25919.322751,
+    "paired_median_delta_ms": -791.6063625000006,
+    "paired_median_percent": -2.957092930808586,
+    "slower_pairs": 0,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "library.coldMs",
+    "B_median_ms": 4007.939583,
+    "C_median_ms": 1991.3833785000002,
+    "paired_median_delta_ms": -2018.3608629999999,
+    "paired_median_percent": -50.35803849364877,
+    "slower_pairs": 0,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "library.direct.max",
+    "B_median_ms": 3842.251931,
+    "C_median_ms": 9.135065,
+    "paired_median_delta_ms": -3833.1168660000003,
+    "paired_median_percent": -99.76220310817837,
+    "slower_pairs": 0,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "library.direct.p50",
+    "B_median_ms": 2.0055449999999997,
+    "C_median_ms": 2.295934,
+    "paired_median_delta_ms": 0.2771364999999999,
+    "paired_median_percent": 13.729450753550465,
+    "slower_pairs": 4,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "library.direct.p95",
+    "B_median_ms": 2.9964250000000003,
+    "C_median_ms": 7.1054805000000005,
+    "paired_median_delta_ms": 4.488447,
+    "paired_median_percent": 156.4806271035116,
+    "slower_pairs": 4,
+    "over_band_pairs": 2,
+    "status": "INCONCLUSIVE"
+  },
+  {
+    "metric": "library.observe.max",
+    "B_median_ms": 3845.7933869999997,
+    "C_median_ms": 31.024563999999998,
+    "paired_median_delta_ms": -3814.768823,
+    "paired_median_percent": -99.193221615579,
+    "slower_pairs": 0,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "library.observe.p50",
+    "B_median_ms": 2.3465835,
+    "C_median_ms": 4.883558000000001,
+    "paired_median_delta_ms": 2.455083,
+    "paired_median_percent": 104.57386561562191,
+    "slower_pairs": 4,
+    "over_band_pairs": 4,
+    "status": "REGRESSION_SIGNAL"
+  },
+  {
+    "metric": "library.observe.p95",
+    "B_median_ms": 72.964814,
+    "C_median_ms": 13.7457695,
+    "paired_median_delta_ms": -60.46584750000001,
+    "paired_median_percent": -80.8798925821482,
+    "slower_pairs": 0,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "library.searchIndexReadyMs",
+    "B_median_ms": 27175.513928,
+    "C_median_ms": 26508.4581345,
+    "paired_median_delta_ms": -731.9354884999993,
+    "paired_median_percent": -2.681595430882433,
+    "slower_pairs": 1,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "raster.1.appendCompleteMs",
+    "B_median_ms": 50.508243500000006,
+    "C_median_ms": 34.8559815,
+    "paired_median_delta_ms": -16.509607,
+    "paired_median_percent": -32.12546712052504,
+    "slower_pairs": 1,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "raster.1.firstCompleteMs",
+    "B_median_ms": 234.106181,
+    "C_median_ms": 245.477633,
+    "paired_median_delta_ms": 9.159300499999986,
+    "paired_median_percent": 3.876950859517325,
+    "slower_pairs": 4,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "raster.1.forcedFullCompleteMs",
+    "B_median_ms": 179.425071,
+    "C_median_ms": 171.739851,
+    "paired_median_delta_ms": 0.0070520000000016125,
+    "paired_median_percent": 0.004107600722857985,
+    "slower_pairs": 2,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "raster.4.appendCompleteMs",
+    "B_median_ms": 100.8587455,
+    "C_median_ms": 106.8920365,
+    "paired_median_delta_ms": 5.6576385000000045,
+    "paired_median_percent": 5.557174400223519,
+    "slower_pairs": 3,
+    "over_band_pairs": 1,
+    "status": "INCONCLUSIVE"
+  },
+  {
+    "metric": "raster.4.firstCompleteMs",
+    "B_median_ms": 207.2685065,
+    "C_median_ms": 191.99850450000002,
+    "paired_median_delta_ms": -15.453376000000006,
+    "paired_median_percent": -7.348716614635836,
+    "slower_pairs": 2,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "raster.4.forcedFullCompleteMs",
+    "B_median_ms": 172.00269,
+    "C_median_ms": 174.186044,
+    "paired_median_delta_ms": 1.8680690000000055,
+    "paired_median_percent": 1.0865749624344834,
+    "slower_pairs": 3,
+    "over_band_pairs": 1,
+    "status": "INCONCLUSIVE"
+  },
+  {
+    "metric": "raster.8.appendCompleteMs",
+    "B_median_ms": 156.826493,
+    "C_median_ms": 127.519557,
+    "paired_median_delta_ms": -30.997269999999993,
+    "paired_median_percent": -16.638796476743284,
+    "slower_pairs": 1,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "raster.8.firstCompleteMs",
+    "B_median_ms": 242.8082355,
+    "C_median_ms": 243.3510915,
+    "paired_median_delta_ms": 0.8257290000000097,
+    "paired_median_percent": 0.34026907422091135,
+    "slower_pairs": 3,
+    "over_band_pairs": 0,
+    "status": "WITHIN_PROPOSED_BAND"
+  },
+  {
+    "metric": "raster.8.forcedFullCompleteMs",
+    "B_median_ms": 234.90009,
+    "C_median_ms": 240.70403100000001,
+    "paired_median_delta_ms": 8.571982500000004,
+    "paired_median_percent": 3.728351704361199,
+    "slower_pairs": 2,
+    "over_band_pairs": 2,
+    "status": "INCONCLUSIVE"
+  }
+]

@@ -1,0 +1,126 @@
+{
+  "baseline_root": "/workspace/scratch/inkweft-baseline-closure-a128bb07",
+  "baseline_label": "a128bb07 + current common initialization fix; fresh default SQLite format expected 1024/FULL; not yet device verified",
+  "plan": [
+    {
+      "label": "history-probe",
+      "module": "data",
+      "selection": "org.inkweft.data.HistoryCollectionBenchmarkTest",
+      "methods": [
+        "collectLargeGarbageWithRootsAndConcurrentAuthorSaves"
+      ],
+      "expected": 1,
+      "runner": "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner",
+      "baseline_arguments": {
+        "historyScanBaseline": "true"
+      },
+      "candidate_arguments": {},
+      "same_selection_as_original_pair": true,
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "label": "library-probe",
+      "module": "data",
+      "selection": "org.inkweft.data.LibraryReadPerformanceTest",
+      "methods": [
+        "coldSearchConcurrentSavesAndShelfReadScale"
+      ],
+      "expected": 1,
+      "runner": "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner",
+      "baseline_arguments": {},
+      "candidate_arguments": {},
+      "same_selection_as_original_pair": true,
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "label": "raster-probe",
+      "module": "app",
+      "selection": "org.inkweft.app.RasterPerformanceProbe",
+      "methods": [
+        "continuousTransformsAndSeparatedDirtyTiles"
+      ],
+      "expected": 1,
+      "runner": "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner",
+      "baseline_arguments": {},
+      "candidate_arguments": {},
+      "same_selection_as_original_pair": true,
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "label": "tile-local",
+      "module": "app",
+      "selection": "org.inkweft.app.TileLocalRedrawTest",
+      "methods": [
+        "integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+        "oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions"
+      ],
+      "expected": 2,
+      "runner": "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner",
+      "baseline_arguments": {},
+      "candidate_arguments": {},
+      "same_selection_as_original_pair": true,
+      "execution_status": "NOT_RUN"
+    }
+  ],
+  "pair_order": [
+    "baseline-1",
+    "candidate-1",
+    "candidate-2",
+    "baseline-2"
+  ],
+  "pair_order_note": "Recommended balanced order for all four selections; previous task used this order for the repeated Library probe. Do not combine new results with earlier 4096/INCREMENTAL database-format runs.",
+  "environment_requirements": [
+    "Same single cloud emulator serial, display, font scale and software timeout multiplier for both revisions",
+    "No overlapping builds, instrumentation or performance polling",
+    "Fresh synthetic databases created by each probe; record actual page_size, auto_vacuum, journal_mode and synchronous on both sides before claiming matching settings",
+    "No global app clear is required by these UUID-isolated probes; no real notes or devices",
+    "App APKs must be default .a0, not CI .a0.insertion"
+  ],
+  "baseline_unavailable_raster_metrics": {
+    "reusedStrokes": null,
+    "geometryBytes": null,
+    "nativeStrokeBuilds": null
+  },
+  "missing_metric_policy": "Explicit JSON null from the identical reflection probe; never coerce unavailable counters to zero.",
+  "history_parameter_note": "historyScanBaseline applies only to HistoryCollectionBenchmarkTest. Optional HistoryConcurrencyTest control needs historyBaseline=true instead; it is not one of these four performance selections.",
+  "candidate_only_native_shape_test": "org.inkweft.app.NativeStrokeTileReuseTest#oneNativeShapePerStrokeMatchesPerTileConstructionThroughTransformsAndClips remains candidate-only; its perTileReferenceBuilds is a measured reference implementation count, not an instrumented legacy production counter.",
+  "additional_evidence": {
+    "raw_save_samples": {
+      "library": "LIBRARY_READ_EVIDENCE.saveSamplesMs; 30 values in original save order",
+      "history_paused": "HISTORY_COLLECTION_EVIDENCE.pausedScanSaveSamplesMs; 30 values in original save order",
+      "history_live": "HISTORY_COLLECTION_EVIDENCE.liveSaveSamplesMs; 30 values in original save order"
+    },
+    "percentile_definitions_unchanged": {
+      "library": {
+        "p50_zero_based_sorted_index": 15,
+        "p95_zero_based_sorted_index": 28,
+        "max": "last"
+      },
+      "history": {
+        "p50_zero_based_sorted_index": 14,
+        "p95_zero_based_sorted_index": 28,
+        "max": "last"
+      }
+    },
+    "no_runtime_values_claimed": "Source prepared only; actual SQLite settings and samples require subsequent instrumentation.",
+    "writerSqlite": {
+      "keys": [
+        "page_size",
+        "auto_vacuum",
+        "journal_mode",
+        "synchronous"
+      ],
+      "types": {
+        "page_size": "integer",
+        "auto_vacuum": "integer",
+        "journal_mode": "string",
+        "synchronous": "integer"
+      },
+      "source": "Read-only PRAGMA queries inside db.withTransaction on the primary writer, after measured work; no PRAGMA assignments",
+      "library_location": "LIBRARY_READ_EVIDENCE.writerSqlite",
+      "history_location": "HISTORY_COLLECTION_EVIDENCE.writerSqlite",
+      "raster_location": "RASTER_SQLITE_EVIDENCE.writerSqlite, emitted once after all 14 timed frame comparisons",
+      "connection_local_reason": "synchronous belongs to a connection; a read outside a transaction can use a WAL reader. Room write transaction pins these reads to the primary writer."
+    }
+  }
+}

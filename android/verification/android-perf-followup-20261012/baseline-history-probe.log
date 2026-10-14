@@ -1,0 +1,9 @@
+
+org.inkweft.data.HistoryCollectionBenchmarkTest:HISTORY_COLLECTION_EVIDENCE {"baseline":true,"historicalRoots":2000,"detachedSources":4096,"collectionRootScans":17,"collectionMs":102487.620029,"pausedConcurrentRootScans":1,"pausedScanSaves":30,"liveConcurrentRootScans":18,"liveCollectionAndSavesMs":115727.324903,"liveFirstPassDeferred":true,"observerNotifications":33,"pausedScanSaveP50Ms":81.643409,"pausedScanSaveP95Ms":199.372908,"pausedScanSaveMaxMs":212.651702,"liveSaveP50Ms":70.781544,"liveSaveP95Ms":238.179177,"liveSaveMaxMs":274.217168}
+.
+
+Time: 302.937
+
+OK (1 test)
+
+

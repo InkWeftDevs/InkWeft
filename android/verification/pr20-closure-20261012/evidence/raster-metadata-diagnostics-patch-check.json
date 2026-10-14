@@ -1,0 +1,29 @@
+{
+  "utc": "2026-10-13T02:17:21.626752+00:00",
+  "candidate_root": "/workspace/InkWeft",
+  "baseline_root": "/workspace/scratch/inkweft-baseline-closure-a128bb07",
+  "patch": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-portable.patch",
+  "patch_sha256": "1fc0348e2b4aae0ecf38cace3959fad5c4798871acee6ec1aac7d46452883d08",
+  "candidate_sources": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt": "aebfc90c0a9354a15995b47ed0f9d62037adb9009ecfb5fbf21c7749d7e0c7ea",
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt": "31325f357e719d4fe61354645f499ce06ecf8079e64fddb471c069f44ad3f5ec"
+  },
+  "baseline_sources_before": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt": "8211f46304ae6af076de7da33fba96f5f8bb5ff5c69bc8caffecd6df041af686",
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt": "28d62ffd20123af1fd9806b601563ddf2707e562c9dadaa31dcdf7936c93a302"
+  },
+  "baseline_sources_after": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt": "8211f46304ae6af076de7da33fba96f5f8bb5ff5c69bc8caffecd6df041af686",
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt": "28d62ffd20123af1fd9806b601563ddf2707e562c9dadaa31dcdf7936c93a302"
+  },
+  "baseline_unchanged": true,
+  "baseline_patch_dry_run": {
+    "exit_code": 0,
+    "stdout": "checking file android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt\nHunk #2 succeeded at 45 (offset -2 lines).\nHunk #3 succeeded at 87 (offset -2 lines).\nHunk #4 succeeded at 115 (offset -2 lines).\nchecking file android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt\nHunk #2 succeeded at 346 (offset -33 lines).\nHunk #3 succeeded at 364 (offset -33 lines).\nHunk #4 succeeded at 378 (offset -33 lines).\n",
+    "stderr": "",
+    "fuzz": 0,
+    "applied": false
+  },
+  "build": "NOT_RUN",
+  "device": "NOT_RUN"
+}

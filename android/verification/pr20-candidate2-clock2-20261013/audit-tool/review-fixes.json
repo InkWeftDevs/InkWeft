@@ -1,0 +1,12 @@
+{
+  "status": "SCRATCH_VERIFIER_REVIEW_FIXES_SYNTHETIC_PASS_REAL_ZIP_PENDING",
+  "checks": 27,
+  "new_review_cases": 10,
+  "old_verifier_sha256": "0ca3f59032d13b05e9d7f007c7cb31292bf787a2ac3b2dd5869b7555cc1d33ce",
+  "new_verifier_sha256": "aee9eb7734c688f6c80bb5a4b9a3c8e296eaf421a95b50cc65a891293a906c8a",
+  "synthetic_check_sha256": "d380cda33cfc60132ebe8aa4ebbe368323a6df38e1c6a6919e7f8703768725dd",
+  "preparation_sha256": "867538c7f950b5a8c2bc8602bcb3be11925ac3c82e7aa8338466105706002244",
+  "diff_sha256": "a9a2ef5ef6f549d406fd59ab32f6c0b05dd8986afd12a6b089f3d3e5fec81b8c",
+  "no_frozen_controller_source_or_protocol_edits": true,
+  "no_network_build_native_or_job_actions": true
+}

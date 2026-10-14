@@ -1,0 +1,547 @@
+{
+  "checked_utc": "2026-10-13T00:45:45.397408+00:00",
+  "status": "V4_COMPLETED_RECORD_CHAIN_VERIFIED_WITH_ONE_RECORDED_VALIDATION_FAILURE",
+  "method": "Read-only comparison of frozen sources, persisted build/install/signature/runtime receipts and raw native logs; no new APK hashing/signing/device operation.",
+  "source": {
+    "manifest": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-source-sha256.json",
+      "sha256": "8285c54019d0a4409a6dbf6f5d36e87298b5be9b6d47f93801ea9123bb7d859f",
+      "bytes": 106879
+    },
+    "files": 744,
+    "current_source_hash_matches": 744,
+    "unmatched": [],
+    "matches_reconstruction_manifest": true,
+    "build_reported_source_unchanged": true
+  },
+  "build": {
+    "exit_code": 0,
+    "raw_build_successful_marker": true,
+    "jvm_tests": 498,
+    "jvm_failures": 0,
+    "jvm_errors": 0,
+    "lint_errors": 0,
+    "lint_warnings": 188,
+    "lint_hints": 2
+  },
+  "apk_receipt_chain": {
+    "expected_artifacts": 3,
+    "matched": 3,
+    "gaps": [],
+    "artifacts": [
+      {
+        "path": "app/build/outputs/apk/debug/app-debug.apk",
+        "sha256": "79fe8a40024d0cbd7283145f52febc3d54a6312ec231acea11182822e8f6aaf4",
+        "bytes": 241512357,
+        "build_artifact_equals_install_equals_after_performance": true,
+        "signature_receipt_exit_code": 0,
+        "installation_exit_code": 0,
+        "recorded_mupdf_native_members": [
+          {
+            "path": "lib/arm64-v8a/libmupdf_java.so",
+            "size": 10840392,
+            "sha256": "5c7872c5e12ae3c00f68e14e371d3467cbfb2fd3dfefc7bb2a03d2cd491f6a4f"
+          },
+          {
+            "path": "lib/armeabi-v7a/libmupdf_java.so",
+            "size": 7582088,
+            "sha256": "2b24af301ba54d70c4cac09a1ae22af2c20f62b5f1046a2e8b352ca702e2ffd6"
+          },
+          {
+            "path": "lib/x86/libmupdf_java.so",
+            "size": 11187796,
+            "sha256": "46f512805c693c07f6e7fac50cdf3d2e028c5078f92e7d230f4c1e6e1b165ed9"
+          },
+          {
+            "path": "lib/x86_64/libmupdf_java.so",
+            "size": 11264136,
+            "sha256": "e9907d1e11f886662915376a1f059608e539c75cb1bc5ef57ccdf887a0367349"
+          }
+        ]
+      },
+      {
+        "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+        "sha256": "37dc4f858fdf13fde56fd514515f6e043356e482db0a8a0bc7339fce4504c5b2",
+        "bytes": 18387376,
+        "build_artifact_equals_install_equals_after_performance": true,
+        "signature_receipt_exit_code": 0,
+        "installation_exit_code": 0,
+        "recorded_mupdf_native_members": []
+      },
+      {
+        "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+        "sha256": "79a7280c9667ef4721b4606ffc17a4bd7c476ceeb661d4d015ec9c19769324a3",
+        "bytes": 27073737,
+        "build_artifact_equals_install_equals_after_performance": true,
+        "signature_receipt_exit_code": 0,
+        "installation_exit_code": 0,
+        "recorded_mupdf_native_members": []
+      }
+    ],
+    "boundary": "Signature results are the saved path-based verification receipts; this task did not rerun apksigner or rehash APK binaries. Recorded artifact hashes join build/install/after-performance phases."
+  },
+  "native": {
+    "performance": {
+      "selections": 4,
+      "executed_tests": 5,
+      "failed_tests": 0,
+      "passed_tests": 5,
+      "checks": [
+        {
+          "label": "history-probe",
+          "selection": "org.inkweft.data.HistoryCollectionBenchmarkTest",
+          "expected": 1,
+          "executed": 1,
+          "failures": 0,
+          "passed": true,
+          "raw_log_matches_receipt": true,
+          "receipt": "candidate-v4-performance-history-probe.json",
+          "raw_log": "candidate-v4-performance-history-probe.log",
+          "setup": "candidate-v4-performance-history-probe-setup.json"
+        },
+        {
+          "label": "library-probe",
+          "selection": "org.inkweft.data.LibraryReadPerformanceTest",
+          "expected": 1,
+          "executed": 1,
+          "failures": 0,
+          "passed": true,
+          "raw_log_matches_receipt": true,
+          "receipt": "candidate-v4-performance-library-probe.json",
+          "raw_log": "candidate-v4-performance-library-probe.log",
+          "setup": "candidate-v4-performance-library-probe-setup.json"
+        },
+        {
+          "label": "raster-probe",
+          "selection": "org.inkweft.app.RasterPerformanceProbe",
+          "expected": 1,
+          "executed": 1,
+          "failures": 0,
+          "passed": true,
+          "raw_log_matches_receipt": true,
+          "receipt": "candidate-v4-performance-raster-probe.json",
+          "raw_log": "candidate-v4-performance-raster-probe.log",
+          "setup": "candidate-v4-performance-raster-probe-setup.json"
+        },
+        {
+          "label": "tile-local",
+          "selection": "org.inkweft.app.TileLocalRedrawTest",
+          "expected": 2,
+          "executed": 2,
+          "failures": 0,
+          "passed": true,
+          "raw_log_matches_receipt": true,
+          "receipt": "candidate-v4-performance-tile-local.json",
+          "raw_log": "candidate-v4-performance-tile-local.log",
+          "setup": "candidate-v4-performance-tile-local-setup.json"
+        }
+      ]
+    },
+    "validation": {
+      "selections": 4,
+      "executed_tests": 28,
+      "failed_tests": 1,
+      "passed_tests": 27,
+      "checks": [
+        {
+          "label": "index-preparation",
+          "selection": "org.inkweft.data.LibraryTextIndexPreparationTest",
+          "expected": 11,
+          "executed": 11,
+          "failures": 0,
+          "passed": true,
+          "raw_log_matches_receipt": true,
+          "receipt": "candidate-v4-validation-index-preparation.json",
+          "raw_log": "candidate-v4-validation-index-preparation.log",
+          "setup": "candidate-v4-validation-index-preparation-setup.json"
+        },
+        {
+          "label": "original-storage",
+          "selection": "org.inkweft.data.OriginalStorageRepositoryTest",
+          "expected": 11,
+          "executed": 11,
+          "failures": 0,
+          "passed": true,
+          "raw_log_matches_receipt": true,
+          "receipt": "candidate-v4-validation-original-storage.json",
+          "raw_log": "candidate-v4-validation-original-storage.log",
+          "setup": "candidate-v4-validation-original-storage-setup.json"
+        },
+        {
+          "label": "search-regressions",
+          "selection": "org.inkweft.data.LibrarySearchRepositoryTest#classificationUsesTheReadSnapshotAfterCancellableInitialIndexing,org.inkweft.data.LibrarySearchRepositoryTest#unicodeShortQueriesAndBoundedPagesKeepOrderAndNavigation,org.inkweft.data.LibrarySearchRepositoryTest#draftUnicodeFiltersPinsAndPageBeforeCardNavigationStayIntact,org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh,org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+          "expected": 5,
+          "executed": 5,
+          "failures": 0,
+          "passed": true,
+          "raw_log_matches_receipt": true,
+          "receipt": "candidate-v4-validation-search-regressions.json",
+          "raw_log": "candidate-v4-validation-search-regressions.log",
+          "setup": "candidate-v4-validation-search-regressions-setup.json"
+        },
+        {
+          "label": "rapid-search",
+          "selection": "org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+          "expected": 1,
+          "executed": 1,
+          "failures": 1,
+          "passed": false,
+          "raw_log_matches_receipt": true,
+          "receipt": "candidate-v4-validation-rapid-search.json",
+          "raw_log": "candidate-v4-validation-rapid-search.log",
+          "setup": "candidate-v4-validation-rapid-search-setup.json"
+        }
+      ]
+    }
+  },
+  "performance_environment": {
+    "before_after_equal": true,
+    "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+    "boundary": "Settings/process identity match; dynamic host load, fixture database bytes and physical-device performance are not implied."
+  },
+  "raw_performance_completeness": {
+    "library_direct_save_samples": 30,
+    "library_observe_index_save_samples": 30,
+    "library_observe_progress_samples": 30,
+    "history_paused_save_samples": 30,
+    "history_live_save_samples": 30,
+    "raster_frame_comparisons": 14,
+    "all_raster_pixels_equal_to_same_run_cold_reference": true,
+    "writerSqlite_all_three_probes_equal": true,
+    "writerSqlite": {
+      "page_size": 1024,
+      "auto_vacuum": 1,
+      "journal_mode": "wal",
+      "synchronous": 2
+    }
+  },
+  "retained_current_failure": {
+    "receipt": "candidate-v4-validation-rapid-search.json",
+    "test": "twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+    "timeout_ms": 10000,
+    "last_recorded_step": "first-fts-written",
+    "index_gate_required_rows": 128,
+    "index_gate_completed_rows": 0,
+    "result": "FAIL, preserved; Android process exit_code=0 does not override JUnit failure"
+  },
+  "historical_failed_runs": [
+    {
+      "receipt": "candidate-v2-backup-cancel.json",
+      "receipt_sha256": "c59bf321146f45821a699065f2433934e0cdf53a3e0cc6835086fe6073632ff5",
+      "log": "candidate-v2-backup-cancel.log",
+      "log_sha256": "c61b8c97e4b26cdaeddb719994f00343d556994798962168aeaabf6e43258fa7",
+      "selection": "org.inkweft.data.LibraryBackupRepositoryTest#cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary",
+      "executed": 1,
+      "failures": 1,
+      "status": "historical_failed_run_preserved; resolution depends on later matching receipts"
+    },
+    {
+      "receipt": "candidate-v2-backup-isolation.json",
+      "receipt_sha256": "bb5b71875bd9fdcb7538138c44aeb198e6d2188d5225d55e27597272adfeadc4",
+      "log": "candidate-v2-backup-isolation.log",
+      "log_sha256": "05cc76633fc44f457c25219a95e5d5e655b1c05e099e41c35dde5c32710a8cb7",
+      "selection": "org.inkweft.data.LibraryBackupIsolationTest",
+      "executed": 5,
+      "failures": 1,
+      "status": "historical_failed_run_preserved; resolution depends on later matching receipts"
+    },
+    {
+      "receipt": "candidate-v2-rapid-search.json",
+      "receipt_sha256": "d373ce353a9675418dce3c5d3350957cb2e8523d68954a9dc8e8b73d56b1606b",
+      "log": "candidate-v2-rapid-search.log",
+      "log_sha256": "f1ffdb70187633509a54afd2af91243375859410907514f32ca67dac2c0fb7e3",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+      "executed": 1,
+      "failures": 1,
+      "status": "historical_failed_run_preserved; resolution depends on later matching receipts"
+    },
+    {
+      "receipt": "candidate-v2-regression-original-storage.json",
+      "receipt_sha256": "359416051c53cc7a165d2db69f06648a57ef9e91c9af12e7bc86fc2c248220ab",
+      "log": "candidate-v2-regression-original-storage.log",
+      "log_sha256": "b31e3ce7d7b4fac1584105173caa69db25c30e02c40e91e61a0824e9730e1fdc",
+      "selection": "org.inkweft.data.OriginalStorageRepositoryTest",
+      "executed": 11,
+      "failures": 1,
+      "status": "historical_failed_run_preserved; resolution depends on later matching receipts"
+    },
+    {
+      "receipt": "candidate-v2-regression-streamed-dense-original.json",
+      "receipt_sha256": "4d08b26b84df55e8472f044e1c6e4804bbb356a089f1dedd343ceabee0d1d6fa",
+      "log": "candidate-v2-regression-streamed-dense-original.log",
+      "log_sha256": "b2ba96b526a76faa7cac07f397b1c2bf09a993aedac5f6dd5bf5ad8b68c4309d",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "executed": 1,
+      "failures": 1,
+      "status": "historical_failed_run_preserved; resolution depends on later matching receipts"
+    },
+    {
+      "receipt": "candidate-v3-followup-original-later-corruption.json",
+      "receipt_sha256": "e97e5a4c54664d525b4b4002c30a847c9d3c6b8119134dc742c22e3930be65fe",
+      "log": "candidate-v3-followup-original-later-corruption.log",
+      "log_sha256": "59e070dd5e1c3ea83fe1882eeca69981db43f3b654a7be4ca0b0a809a9edc8c7",
+      "selection": "org.inkweft.data.OriginalStorageRepositoryTest#laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes",
+      "executed": 1,
+      "failures": 1,
+      "status": "historical_failed_run_preserved; resolution depends on later matching receipts"
+    },
+    {
+      "receipt": "candidate-v4-validation-rapid-search.json",
+      "receipt_sha256": "4c2ef51c0b14d6056113fac8d289ed62c19d88f09d5e6e306aaf5ae5be5ee967",
+      "log": "candidate-v4-validation-rapid-search.log",
+      "log_sha256": "9a9195bc98cbbcb9cc4672c17f022fb431dc122d46f5793e06dc78f66eedef69",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+      "executed": 1,
+      "failures": 1,
+      "status": "historical_failed_run_preserved; resolution depends on later matching receipts"
+    },
+    {
+      "receipt": "diagnostic-v1-backup-cancel.json",
+      "receipt_sha256": "bf6bf430a567b3f9737b41e389a0a7d5ae9f906d1c183f76ed7eea939dd840b6",
+      "log": "diagnostic-v1-backup-cancel.log",
+      "log_sha256": "1426e7ca58b771117dac93a3769f0c670b7a47c025ad3593f8ae7271d5870982",
+      "selection": "org.inkweft.data.LibraryBackupRepositoryTest#cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary",
+      "executed": 1,
+      "failures": 1,
+      "status": "historical_failed_run_preserved; resolution depends on later matching receipts"
+    },
+    {
+      "receipt": "diagnostic-v1-history.json",
+      "receipt_sha256": "664be798274268f03c40c5d91133450eaf67b248318a474724adaa0a89aeb4d4",
+      "log": "diagnostic-v1-history.log",
+      "log_sha256": "3decdacec0fe8ed53fca2ccd3f1a883028351f5535bd3293f897011e069e6187",
+      "selection": "org.inkweft.data.HistoryConcurrencyTest",
+      "executed": 1,
+      "failures": 1,
+      "status": "historical_failed_run_preserved; resolution depends on later matching receipts"
+    },
+    {
+      "receipt": "diagnostic-v1-large-frame.json",
+      "receipt_sha256": "577b78a5b9b6bee590169b40df4e562bbda190dbe8b8864f127bd355a610d95c",
+      "log": "diagnostic-v1-large-frame.log",
+      "log_sha256": "5b6ee97241761e6d431ea4918c535888f48da953691326e93af45cd834bbbe72",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "executed": 1,
+      "failures": 1,
+      "status": "historical_failed_run_preserved; resolution depends on later matching receipts"
+    },
+    {
+      "receipt": "diagnostic-v1-rapid-search.json",
+      "receipt_sha256": "5005cd99826d422d38f1fffb468b5ce7ff23a28a132341dc0fe3ed4b80b4fe47",
+      "log": "diagnostic-v1-rapid-search.log",
+      "log_sha256": "7a3700f541c51a3a65a53b029ddaca16790f5ca0cce9c3ff648a585f8a069f84",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+      "executed": 1,
+      "failures": 1,
+      "status": "historical_failed_run_preserved; resolution depends on later matching receipts"
+    },
+    {
+      "receipt": "diagnostic-v1-shelf-rename.json",
+      "receipt_sha256": "90f74b4710c62244aad20a3833418aece20e50575387f493100693158e634ead",
+      "log": "diagnostic-v1-shelf-rename.log",
+      "log_sha256": "a114d8b63968b531c25cfe40d4a7e61e96a7a927bc8059e99509ace2eaed5b85",
+      "selection": "org.inkweft.app.NotebookShelfUiTest#shelfRenameCancelBlankAndPersistedIdentity",
+      "executed": 1,
+      "failures": 1,
+      "status": "historical_failed_run_preserved; resolution depends on later matching receipts"
+    }
+  ],
+  "history_note": "This list preserves failed attempts across versions; it is not a count of unresolved distinct tests. Do not delete or relabel them when later evidence resolves a case.",
+  "pending": [
+    "baseline-final build and subsequent matched performance execution/summary",
+    "final source/commit/PR/Actions readback"
+  ],
+  "references": {
+    "candidate-v4-source-sha256.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-source-sha256.json",
+      "sha256": "8285c54019d0a4409a6dbf6f5d36e87298b5be9b6d47f93801ea9123bb7d859f",
+      "bytes": 106879
+    },
+    "candidate-v4-reconstruction-provenance.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-reconstruction-provenance.json",
+      "sha256": "baf182ea8bcfae5c5a697b75d8a8dbf0ea690ed099030736b02eb17149820ca5",
+      "bytes": 15738
+    },
+    "candidate-v4-build.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-build.json",
+      "sha256": "d87398633fd15b53e83db3b55c9d6b13ff8e2bc8628319150fe1ec63ace4f29f",
+      "bytes": 476
+    },
+    "candidate-v4-build.log": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-build.log",
+      "sha256": "ac73bae67001943ccf491642e2364ef501c70b06cec630bded8b309e2f217129",
+      "bytes": 36723
+    },
+    "candidate-v4-artifacts.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-artifacts.json",
+      "sha256": "84ce38bb2acacb53e027e7f56a43253e717bd9e53ed47a547d3acfa7e5b79851",
+      "bytes": 1356
+    },
+    "candidate-v4-signatures.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-signatures.json",
+      "sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b",
+      "bytes": 1481
+    },
+    "candidate-v4-apk-installation.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-apk-installation.json",
+      "sha256": "d6541c7a3e962adabfa42ceb7252d009e554dd16d6feb94df1c1fac6dae2a889",
+      "bytes": 2374
+    },
+    "candidate-v4-performance-artifact-continuity.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-artifact-continuity.json",
+      "sha256": "a917e236ce3e45472aa204e50a351bf8cb15ad6ff46b7cac82d42ac041f228a0",
+      "bytes": 875
+    },
+    "candidate-v4-jvm-and-lint-status.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-jvm-and-lint-status.json",
+      "sha256": "7fb210fba7c0357ea52d3f2ae950c5e105ab065c8a3a3c77665ea2dbef498939",
+      "bytes": 354
+    },
+    "candidate-v4-performance-results.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-results.json",
+      "sha256": "f8627e7e31ee969008846fed2350e23ccb8ae76674b3c2540de56e504cf14888",
+      "bytes": 3102
+    },
+    "candidate-v4-performance-history-probe.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe.json",
+      "sha256": "cf79086ca4eb1e12e8229c810710663e15c28d137ec16bfc42b0a97275081bc6",
+      "bytes": 705
+    },
+    "candidate-v4-performance-history-probe-setup.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe-setup.json",
+      "sha256": "dd6dea371c14ed1ceb39cb8f8f0c1d5faeef8c680c7c6a1a54fd3f363f6f2b7c",
+      "bytes": 987
+    },
+    "candidate-v4-performance-history-probe.log": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe.log",
+      "sha256": "f3d471a977144c3d5402668036efead72617c5193104e96a42114bef26d3da49",
+      "bytes": 1327
+    },
+    "candidate-v4-performance-library-probe.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-library-probe.json",
+      "sha256": "2e24cf1ee7c3a1756cd7694560da50d42d575b2af51c670182a4da9ab195d110",
+      "bytes": 696
+    },
+    "candidate-v4-performance-library-probe-setup.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-library-probe-setup.json",
+      "sha256": "b0b6da66a03ff4874c7a5a45627d072600d8a74b5835bd0d97e5856fe7036285",
+      "bytes": 987
+    },
+    "candidate-v4-performance-library-probe.log": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-library-probe.log",
+      "sha256": "3ff495eec29fb24b8da80c881689c0aaf19c7f4173fcd049f6230f17b4d5cc33",
+      "bytes": 10609
+    },
+    "candidate-v4-performance-raster-probe.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-raster-probe.json",
+      "sha256": "df42e0bbf6a113224c95a244449fae3b091fd3e1a627449ea0afb5043bde2ae4",
+      "bytes": 688
+    },
+    "candidate-v4-performance-raster-probe-setup.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-raster-probe-setup.json",
+      "sha256": "5f3cf614a458b823951e255d7c36314128f0e5d6742a7d12942cbec867bdfefa",
+      "bytes": 987
+    },
+    "candidate-v4-performance-raster-probe.log": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-raster-probe.log",
+      "sha256": "60875b751b7adda89221fcaaffc92ef07dc978e3faf95cf874cd2d0ce1c9148c",
+      "bytes": 5382
+    },
+    "candidate-v4-performance-tile-local.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-tile-local.json",
+      "sha256": "f0de25b9617712f3dfd64c537688c781d88236d49e72f495cc4c080c4f8f1829",
+      "bytes": 682
+    },
+    "candidate-v4-performance-tile-local-setup.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-tile-local-setup.json",
+      "sha256": "192e561e44becb3c1cb84ff2ee42bf5e8faef6130ecede52d24cf1344135e138",
+      "bytes": 987
+    },
+    "candidate-v4-performance-tile-local.log": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-tile-local.log",
+      "sha256": "fdfa2736aab5b05f97a8dacd090ff7754efe977d91472ec5e50aef46f246f1d8",
+      "bytes": 1313
+    },
+    "candidate-v4-validation-results.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-results.json",
+      "sha256": "49df2babf5307c2f24bc4190ac537365fc1dbc603070cc7fb205786a4f0c9e22",
+      "bytes": 4266
+    },
+    "candidate-v4-validation-index-preparation.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-index-preparation.json",
+      "sha256": "213dddcca941999b1d5c26fb38c7643c5f1f314c6f99da32a7f4b117538a5b3b",
+      "bytes": 708
+    },
+    "candidate-v4-validation-index-preparation-setup.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-index-preparation-setup.json",
+      "sha256": "2991e53661511a48bb45519d3ea34525937a5ca0fd6e3283112c7fbdada1f288",
+      "bytes": 987
+    },
+    "candidate-v4-validation-index-preparation.log": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-index-preparation.log",
+      "sha256": "7367bcb15893181383b0929cbf9ba5cf1ebf2aba02b65d4575c5c991af68b242",
+      "bytes": 93
+    },
+    "candidate-v4-validation-original-storage.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-original-storage.json",
+      "sha256": "052028294103e837fedc19609f10f7b307e4d8c55cc7499381ed09b12b4ba4a4",
+      "bytes": 705
+    },
+    "candidate-v4-validation-original-storage-setup.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-original-storage-setup.json",
+      "sha256": "28d1a190afe5a921a6e52fe146d1a81912434bd666fad1de8f578954b2fdb35e",
+      "bytes": 987
+    },
+    "candidate-v4-validation-original-storage.log": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-original-storage.log",
+      "sha256": "b7a8c7c2aba3072fb61502f1019b35a894306fee992914ac6ce1c1cc1582fd20",
+      "bytes": 719
+    },
+    "candidate-v4-validation-search-regressions.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-search-regressions.json",
+      "sha256": "6382758e5b4dd679d32e52290067f0f50cbc9702890d06f01036e7c691cbc0db",
+      "bytes": 1664
+    },
+    "candidate-v4-validation-search-regressions-setup.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-search-regressions-setup.json",
+      "sha256": "026dd820752bc869d69f9db497a804bee73c2c799de2a0562e7c246ca88735c2",
+      "bytes": 987
+    },
+    "candidate-v4-validation-search-regressions.log": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-search-regressions.log",
+      "sha256": "43caf22f149f4c557cf18217cf2334cd15a038256aebc539e5a025c28b0b6a12",
+      "bytes": 82
+    },
+    "candidate-v4-validation-rapid-search.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-rapid-search.json",
+      "sha256": "4c2ef51c0b14d6056113fac8d289ed62c19d88f09d5e6e306aaf5ae5be5ee967",
+      "bytes": 843
+    },
+    "candidate-v4-validation-rapid-search-setup.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-rapid-search-setup.json",
+      "sha256": "46688d0cd35eabcaee2f975ddfb88751e4c9417994e395b8c5be3d97b26ba595",
+      "bytes": 987
+    },
+    "candidate-v4-validation-rapid-search.log": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-validation-rapid-search.log",
+      "sha256": "9a9195bc98cbbcb9cc4672c17f022fb431dc122d46f5793e06dc78f66eedef69",
+      "bytes": 2439
+    },
+    "candidate-v4-performance-environment.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-environment.json",
+      "sha256": "841602a7ea1bf7444ce28a8faf6b695f483a4f94d9f75a09970432f945ac3d39",
+      "bytes": 11784
+    },
+    "candidate-v4-performance-environment-after.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-environment-after.json",
+      "sha256": "9dbbe1b3b8194253ba44dfab30cd3b5fbb077a14b1e700c37a02dd25b252fd8e",
+      "bytes": 11790
+    }
+  },
+  "actions": {
+    "source_or_old_evidence_modified": false,
+    "reconstruction_repeated": false,
+    "build_native_adb_docker_run": false,
+    "commit_or_push": false
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "scope": "SCREENING_ONLY",
+  "run_id": "38508580078",
+  "job_id": "115671626209",
+  "run_attempt": "1",
+  "workflow_sha": "02aaa0e3df3d77c6a726931cee060e2daff4bbf2",
+  "run_status": "completed",
+  "run_conclusion": "success",
+  "job_status": "completed",
+  "job_conclusion": "success",
+  "input_hashes": {
+    "approved_plan_sha256": "64921517343ba2dfddf3cba3f319b15b61757501744c87f43d4217bd37d4a08a",
+    "source_spec_sha256": "e57296ec73cea28ba22c5ee5871d77a0e5b22f0d0503c2bd453b987653ed6499",
+    "method_plan_sha256": "7dd485f678aa16d89fc0a1ef3e69421a376b4054cc31918f2b393c8212033284",
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "marker_contract_sha256": "3f3bc2a6bc5b0a663a4e03a54be65c2193a8ed868ba31014e344a95595d6aa4d",
+    "prepare_sources_sha256": "7e42199cd01da917a0a141982a963fd6db51f6411c7516c85ea27406a0744ce5"
+  },
+  "control_hashes": {
+    "ci/pr20-search-screen/run.py": "3b88cda9aabda1eb261a4d1c860cde11ce73fd4d3b22223bac34676aa21febec",
+    "ci/pr20-search-screen/package.py": "6662193ae687c097df6d4e748c348d7a83a3e702b8c44ca1ce79b86ee27d449a",
+    "ci/pr20-search-screen/cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    ".github/workflows/pr20-search-screen.yml": "27a99bf8733eca43611bae3e263330d78244c919aa9208e63c0b4ecd9fc3faef"
+  }
+}

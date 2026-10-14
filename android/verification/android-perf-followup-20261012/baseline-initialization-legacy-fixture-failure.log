@@ -1,0 +1,36 @@
+
+org.inkweft.data.BundledSqliteFactoryTest:..
+Error in nonemptyUnversionedDatabaseNeverEntersEmptyInitialization(org.inkweft.data.BundledSqliteFactoryTest):
+org.junit.ComparisonFailure: expected:<[Existing unversioned database needs explicit recovery]> but was:<[expected:<0> but was:<1>]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at org.inkweft.data.BundledSqliteFactoryTest.nonemptyUnversionedDatabaseNeverEntersEmptyInitialization(BundledSqliteFactoryTest.kt:205)
+.
+Error in existing1024ByteDatabaseRetainsPageSizeAndAuthorContent(org.inkweft.data.BundledSqliteFactoryTest):
+java.lang.AssertionError: expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at org.inkweft.data.BundledSqliteFactoryTest.existing1024ByteDatabaseRetainsPageSizeAndAuthorContent(BundledSqliteFactoryTest.kt:93)
+
+
+Time: 11.698
+There were 2 failures:
+1) nonemptyUnversionedDatabaseNeverEntersEmptyInitialization(org.inkweft.data.BundledSqliteFactoryTest)
+org.junit.ComparisonFailure: expected:<[Existing unversioned database needs explicit recovery]> but was:<[expected:<0> but was:<1>]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at org.inkweft.data.BundledSqliteFactoryTest.nonemptyUnversionedDatabaseNeverEntersEmptyInitialization(BundledSqliteFactoryTest.kt:205)
+2) existing1024ByteDatabaseRetainsPageSizeAndAuthorContent(org.inkweft.data.BundledSqliteFactoryTest)
+java.lang.AssertionError: expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at org.inkweft.data.BundledSqliteFactoryTest.existing1024ByteDatabaseRetainsPageSizeAndAuthorContent(BundledSqliteFactoryTest.kt:93)
+
+FAILURES!!!
+Tests run: 5,  Failures: 2
+
+

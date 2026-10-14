@@ -1,0 +1,2562 @@
+[
+  {
+    "marker": "KVM_PAIR_FIXTURE",
+    "data": {
+      "label": "library-before",
+      "seed": 4103,
+      "logicalSha256": "9322d8eff726e4dea3987ebf016c4700cab0351a8d7344e29d10306075f4a5f4",
+      "rowCounts": {
+        "notes": 501,
+        "note_revisions": 501,
+        "notebook_workspace": 501,
+        "notebook_pages": 20001,
+        "page_search_text": 20000,
+        "library_search_pending": 20000
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    }
+  },
+  {
+    "marker": "KVM_DIRECT_INTERVALS",
+    "data": {
+      "coldStartNs": 307597963296,
+      "coldEndNs": 309613767003,
+      "saves": [
+        {
+          "sample": 0,
+          "startNs": 307630917038,
+          "endNs": 307640794316,
+          "elapsedMs": 9.877278,
+          "checksStart": 1,
+          "checksEnd": 24,
+          "committedRevision": 2,
+          "committed": true
+        },
+        {
+          "sample": 1,
+          "startNs": 307640838974,
+          "endNs": 307644299894,
+          "elapsedMs": 3.46092,
+          "checksStart": 24,
+          "checksEnd": 41,
+          "committedRevision": 3,
+          "committed": true
+        },
+        {
+          "sample": 2,
+          "startNs": 307644320722,
+          "endNs": 307646925363,
+          "elapsedMs": 2.604641,
+          "checksStart": 41,
+          "checksEnd": 74,
+          "committedRevision": 4,
+          "committed": true
+        },
+        {
+          "sample": 3,
+          "startNs": 307646939470,
+          "endNs": 307649292403,
+          "elapsedMs": 2.352933,
+          "checksStart": 74,
+          "checksEnd": 104,
+          "committedRevision": 5,
+          "committed": true
+        },
+        {
+          "sample": 4,
+          "startNs": 307649306261,
+          "endNs": 307651353528,
+          "elapsedMs": 2.047267,
+          "checksStart": 104,
+          "checksEnd": 133,
+          "committedRevision": 6,
+          "committed": true
+        },
+        {
+          "sample": 5,
+          "startNs": 307651367430,
+          "endNs": 307653553357,
+          "elapsedMs": 2.185927,
+          "checksStart": 133,
+          "checksEnd": 161,
+          "committedRevision": 7,
+          "committed": true
+        },
+        {
+          "sample": 6,
+          "startNs": 307653567104,
+          "endNs": 307655568102,
+          "elapsedMs": 2.000998,
+          "checksStart": 161,
+          "checksEnd": 189,
+          "committedRevision": 8,
+          "committed": true
+        },
+        {
+          "sample": 7,
+          "startNs": 307655584786,
+          "endNs": 307657830874,
+          "elapsedMs": 2.246088,
+          "checksStart": 189,
+          "checksEnd": 218,
+          "committedRevision": 9,
+          "committed": true
+        },
+        {
+          "sample": 8,
+          "startNs": 307657844019,
+          "endNs": 307659727663,
+          "elapsedMs": 1.883644,
+          "checksStart": 218,
+          "checksEnd": 244,
+          "committedRevision": 10,
+          "committed": true
+        },
+        {
+          "sample": 9,
+          "startNs": 307659741436,
+          "endNs": 307662151125,
+          "elapsedMs": 2.409689,
+          "checksStart": 244,
+          "checksEnd": 273,
+          "committedRevision": 11,
+          "committed": true
+        },
+        {
+          "sample": 10,
+          "startNs": 307662164917,
+          "endNs": 307664222087,
+          "elapsedMs": 2.05717,
+          "checksStart": 273,
+          "checksEnd": 300,
+          "committedRevision": 12,
+          "committed": true
+        },
+        {
+          "sample": 11,
+          "startNs": 307664237984,
+          "endNs": 307667540052,
+          "elapsedMs": 3.302068,
+          "checksStart": 300,
+          "checksEnd": 343,
+          "committedRevision": 13,
+          "committed": true
+        },
+        {
+          "sample": 12,
+          "startNs": 307667553739,
+          "endNs": 307669918380,
+          "elapsedMs": 2.364641,
+          "checksStart": 343,
+          "checksEnd": 373,
+          "committedRevision": 14,
+          "committed": true
+        },
+        {
+          "sample": 13,
+          "startNs": 307669933058,
+          "endNs": 307671926430,
+          "elapsedMs": 1.993372,
+          "checksStart": 374,
+          "checksEnd": 401,
+          "committedRevision": 15,
+          "committed": true
+        },
+        {
+          "sample": 14,
+          "startNs": 307671942179,
+          "endNs": 307674248654,
+          "elapsedMs": 2.306475,
+          "checksStart": 401,
+          "checksEnd": 432,
+          "committedRevision": 16,
+          "committed": true
+        },
+        {
+          "sample": 15,
+          "startNs": 307674262239,
+          "endNs": 307676198184,
+          "elapsedMs": 1.935945,
+          "checksStart": 432,
+          "checksEnd": 458,
+          "committedRevision": 17,
+          "committed": true
+        },
+        {
+          "sample": 16,
+          "startNs": 307676213793,
+          "endNs": 307678634996,
+          "elapsedMs": 2.421203,
+          "checksStart": 458,
+          "checksEnd": 490,
+          "committedRevision": 18,
+          "committed": true
+        },
+        {
+          "sample": 17,
+          "startNs": 307678648176,
+          "endNs": 307680704403,
+          "elapsedMs": 2.056227,
+          "checksStart": 490,
+          "checksEnd": 518,
+          "committedRevision": 19,
+          "committed": true
+        },
+        {
+          "sample": 18,
+          "startNs": 307680738390,
+          "endNs": 307683099423,
+          "elapsedMs": 2.361033,
+          "checksStart": 518,
+          "checksEnd": 549,
+          "committedRevision": 20,
+          "committed": true
+        },
+        {
+          "sample": 19,
+          "startNs": 307683113638,
+          "endNs": 307685241427,
+          "elapsedMs": 2.127789,
+          "checksStart": 549,
+          "checksEnd": 572,
+          "committedRevision": 21,
+          "committed": true
+        },
+        {
+          "sample": 20,
+          "startNs": 307685259924,
+          "endNs": 307687411478,
+          "elapsedMs": 2.151554,
+          "checksStart": 573,
+          "checksEnd": 602,
+          "committedRevision": 22,
+          "committed": true
+        },
+        {
+          "sample": 21,
+          "startNs": 307687428576,
+          "endNs": 307689991232,
+          "elapsedMs": 2.562656,
+          "checksStart": 603,
+          "checksEnd": 633,
+          "committedRevision": 23,
+          "committed": true
+        },
+        {
+          "sample": 22,
+          "startNs": 307690039827,
+          "endNs": 307692323647,
+          "elapsedMs": 2.28382,
+          "checksStart": 634,
+          "checksEnd": 665,
+          "committedRevision": 24,
+          "committed": true
+        },
+        {
+          "sample": 23,
+          "startNs": 307692340043,
+          "endNs": 307699802009,
+          "elapsedMs": 7.461966,
+          "checksStart": 665,
+          "checksEnd": 733,
+          "committedRevision": 25,
+          "committed": true
+        },
+        {
+          "sample": 24,
+          "startNs": 307699823976,
+          "endNs": 307708468188,
+          "elapsedMs": 8.644212,
+          "checksStart": 734,
+          "checksEnd": 833,
+          "committedRevision": 26,
+          "committed": true
+        },
+        {
+          "sample": 25,
+          "startNs": 307708486300,
+          "endNs": 307711167496,
+          "elapsedMs": 2.681196,
+          "checksStart": 833,
+          "checksEnd": 865,
+          "committedRevision": 27,
+          "committed": true
+        },
+        {
+          "sample": 26,
+          "startNs": 307711182066,
+          "endNs": 307713761999,
+          "elapsedMs": 2.579933,
+          "checksStart": 865,
+          "checksEnd": 898,
+          "committedRevision": 28,
+          "committed": true
+        },
+        {
+          "sample": 27,
+          "startNs": 307713775991,
+          "endNs": 307715597702,
+          "elapsedMs": 1.821711,
+          "checksStart": 898,
+          "checksEnd": 920,
+          "committedRevision": 29,
+          "committed": true
+        },
+        {
+          "sample": 28,
+          "startNs": 307715616049,
+          "endNs": 307717921911,
+          "elapsedMs": 2.305862,
+          "checksStart": 920,
+          "checksEnd": 946,
+          "committedRevision": 30,
+          "committed": true
+        },
+        {
+          "sample": 29,
+          "startNs": 307717938282,
+          "endNs": 307719880831,
+          "elapsedMs": 1.942549,
+          "checksStart": 946,
+          "checksEnd": 973,
+          "committedRevision": 31,
+          "committed": true
+        }
+      ]
+    }
+  },
+  {
+    "marker": "LIBRARY_DIRECT_SAVE_CHECKPOINT",
+    "data": {
+      "coldMs": 2016.270647,
+      "coldSourceChecks": 20000,
+      "saveCount": 30,
+      "saveSamplesMs": [
+        9.877278,
+        3.46092,
+        2.604641,
+        2.352933,
+        2.047267,
+        2.185927,
+        2.000998,
+        2.246088,
+        1.883644,
+        2.409689,
+        2.05717,
+        3.302068,
+        2.364641,
+        1.993372,
+        2.306475,
+        1.935945,
+        2.421203,
+        2.056227,
+        2.361033,
+        2.127789,
+        2.151554,
+        2.562656,
+        2.28382,
+        7.461966,
+        8.644212,
+        2.681196,
+        2.579933,
+        1.821711,
+        2.305862,
+        1.942549
+      ],
+      "saveP50Ms": 2.306475,
+      "saveP95Ms": 8.644212,
+      "saveMaxMs": 9.877278,
+      "writerCompletedDuringPausedSearch": true
+    }
+  },
+  {
+    "marker": "INDEX_SAVE_PROGRESS",
+    "data": {
+      "rows": 64,
+      "elapsedMs": 120.601957
+    }
+  },
+  {
+    "marker": "LIBRARY_INDEX_SAVE_CHECKPOINT",
+    "data": {
+      "indexRowsBeforeSaves": 64,
+      "indexRowsAfterSaves": 128,
+      "firstCommittedBatchMs": 120.558539,
+      "saveCount": 30,
+      "saveP50Ms": 4.809065,
+      "saveP95Ms": 14.150945,
+      "saveMaxMs": 26.508898,
+      "saveSamplesMs": [
+        4.464916,
+        5.890851,
+        3.925567,
+        9.09948,
+        6.013542,
+        6.359144,
+        3.529648,
+        4.809065,
+        5.956284,
+        2.820891,
+        8.547296,
+        14.150945,
+        2.740778,
+        3.264514,
+        9.017926,
+        7.305046,
+        3.355261,
+        5.751129,
+        6.93321,
+        26.508898,
+        2.31547,
+        2.484238,
+        3.058755,
+        2.01768,
+        2.47286,
+        2.000124,
+        2.430698,
+        9.643965,
+        4.8032,
+        6.630309
+      ],
+      "saveProgressSamples": [
+        {
+          "sample": 0,
+          "elapsedMs": 4.464916,
+          "startNs": 311677386741,
+          "endNs": 311681851657,
+          "committed": true,
+          "committedRevision": 33,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1240,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 1,
+          "elapsedMs": 5.890851,
+          "startNs": 311681908424,
+          "endNs": 311687799275,
+          "committed": true,
+          "committedRevision": 34,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 2,
+          "elapsedMs": 3.925567,
+          "startNs": 311687813615,
+          "endNs": 311691739182,
+          "committed": true,
+          "committedRevision": 35,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 3,
+          "elapsedMs": 9.09948,
+          "startNs": 311691752246,
+          "endNs": 311700851726,
+          "committed": true,
+          "committedRevision": 36,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 4,
+          "elapsedMs": 6.013542,
+          "startNs": 311700864873,
+          "endNs": 311706878415,
+          "committed": true,
+          "committedRevision": 37,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 5,
+          "elapsedMs": 6.359144,
+          "startNs": 311706891485,
+          "endNs": 311713250629,
+          "committed": true,
+          "committedRevision": 38,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 6,
+          "elapsedMs": 3.529648,
+          "startNs": 311713263540,
+          "endNs": 311716793188,
+          "committed": true,
+          "committedRevision": 39,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 7,
+          "elapsedMs": 4.809065,
+          "startNs": 311716806400,
+          "endNs": 311721615465,
+          "committed": true,
+          "committedRevision": 40,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 8,
+          "elapsedMs": 5.956284,
+          "startNs": 311721628687,
+          "endNs": 311727584971,
+          "committed": true,
+          "committedRevision": 41,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 9,
+          "elapsedMs": 2.820891,
+          "startNs": 311727602406,
+          "endNs": 311730423297,
+          "committed": true,
+          "committedRevision": 42,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 10,
+          "elapsedMs": 8.547296,
+          "startNs": 311730436855,
+          "endNs": 311738984151,
+          "committed": true,
+          "committedRevision": 43,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 11,
+          "elapsedMs": 14.150945,
+          "startNs": 311738998666,
+          "endNs": 311753149611,
+          "committed": true,
+          "committedRevision": 44,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 12,
+          "elapsedMs": 2.740778,
+          "startNs": 311753162219,
+          "endNs": 311755902997,
+          "committed": true,
+          "committedRevision": 45,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 13,
+          "elapsedMs": 3.264514,
+          "startNs": 311755915878,
+          "endNs": 311759180392,
+          "committed": true,
+          "committedRevision": 46,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 14,
+          "elapsedMs": 9.017926,
+          "startNs": 311759213792,
+          "endNs": 311768231718,
+          "committed": true,
+          "committedRevision": 47,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 15,
+          "elapsedMs": 7.305046,
+          "startNs": 311768251660,
+          "endNs": 311775556706,
+          "committed": true,
+          "committedRevision": 48,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 16,
+          "elapsedMs": 3.355261,
+          "startNs": 311775617020,
+          "endNs": 311778972281,
+          "committed": true,
+          "committedRevision": 49,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 17,
+          "elapsedMs": 5.751129,
+          "startNs": 311778986281,
+          "endNs": 311784737410,
+          "committed": true,
+          "committedRevision": 50,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 18,
+          "elapsedMs": 6.93321,
+          "startNs": 311784751653,
+          "endNs": 311791684863,
+          "committed": true,
+          "committedRevision": 51,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 19,
+          "elapsedMs": 26.508898,
+          "startNs": 311791705281,
+          "endNs": 311818214179,
+          "committed": true,
+          "committedRevision": 52,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1291
+        },
+        {
+          "sample": 20,
+          "elapsedMs": 2.31547,
+          "startNs": 311818230165,
+          "endNs": 311820545635,
+          "committed": true,
+          "committedRevision": 53,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 1291,
+          "sourceChecksEnd": 1293
+        },
+        {
+          "sample": 21,
+          "elapsedMs": 2.484238,
+          "startNs": 311820559431,
+          "endNs": 311823043669,
+          "committed": true,
+          "committedRevision": 54,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 1293,
+          "sourceChecksEnd": 1293
+        },
+        {
+          "sample": 22,
+          "elapsedMs": 3.058755,
+          "startNs": 311823058564,
+          "endNs": 311826117319,
+          "committed": true,
+          "committedRevision": 55,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 1293,
+          "sourceChecksEnd": 1293
+        },
+        {
+          "sample": 23,
+          "elapsedMs": 2.01768,
+          "startNs": 311826133833,
+          "endNs": 311828151513,
+          "committed": true,
+          "committedRevision": 56,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 1293,
+          "sourceChecksEnd": 1293
+        },
+        {
+          "sample": 24,
+          "elapsedMs": 2.47286,
+          "startNs": 311828164253,
+          "endNs": 311830637113,
+          "committed": true,
+          "committedRevision": 57,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 1293,
+          "sourceChecksEnd": 1293
+        },
+        {
+          "sample": 25,
+          "elapsedMs": 2.000124,
+          "startNs": 311830654871,
+          "endNs": 311832654995,
+          "committed": true,
+          "committedRevision": 58,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 1293,
+          "sourceChecksEnd": 1293
+        },
+        {
+          "sample": 26,
+          "elapsedMs": 2.430698,
+          "startNs": 311832668239,
+          "endNs": 311835098937,
+          "committed": true,
+          "committedRevision": 59,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 1293,
+          "sourceChecksEnd": 1293
+        },
+        {
+          "sample": 27,
+          "elapsedMs": 9.643965,
+          "startNs": 311835110988,
+          "endNs": 311844754953,
+          "committed": true,
+          "committedRevision": 60,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 1293,
+          "sourceChecksEnd": 1293
+        },
+        {
+          "sample": 28,
+          "elapsedMs": 4.8032,
+          "startNs": 311844768247,
+          "endNs": 311849571447,
+          "committed": true,
+          "committedRevision": 61,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 1293,
+          "sourceChecksEnd": 1293
+        },
+        {
+          "sample": 29,
+          "elapsedMs": 6.630309,
+          "startNs": 311849586340,
+          "endNs": 311856216649,
+          "committed": true,
+          "committedRevision": 62,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 1293,
+          "sourceChecksEnd": 1293
+        }
+      ],
+      "sourceChecksAfterSaves": 1293
+    }
+  },
+  {
+    "marker": "INDEX_SAVE_PROGRESS",
+    "data": {
+      "rows": 4096,
+      "elapsedMs": 5756.799558
+    }
+  },
+  {
+    "marker": "INDEX_SAVE_PROGRESS",
+    "data": {
+      "rows": 8192,
+      "elapsedMs": 11005.036393
+    }
+  },
+  {
+    "marker": "INDEX_SAVE_PROGRESS",
+    "data": {
+      "rows": 12288,
+      "elapsedMs": 16269.682017
+    }
+  },
+  {
+    "marker": "INDEX_SAVE_PROGRESS",
+    "data": {
+      "rows": 16384,
+      "elapsedMs": 21459.660829
+    }
+  },
+  {
+    "marker": "INDEX_SAVE_PROGRESS",
+    "data": {
+      "rows": 20000,
+      "elapsedMs": 26079.715421
+    }
+  },
+  {
+    "marker": "KVM_INDEX_INTERVALS",
+    "data": {
+      "observeStartNs": 311552114738,
+      "batches": [
+        {
+          "rows": 64,
+          "committedNs": 311672666627
+        },
+        {
+          "rows": 128,
+          "committedNs": 311815974069
+        },
+        {
+          "rows": 192,
+          "committedNs": 311932833969
+        },
+        {
+          "rows": 256,
+          "committedNs": 312036573567
+        },
+        {
+          "rows": 320,
+          "committedNs": 312142337218
+        },
+        {
+          "rows": 384,
+          "committedNs": 312245505570
+        },
+        {
+          "rows": 448,
+          "committedNs": 312346834623
+        },
+        {
+          "rows": 512,
+          "committedNs": 312444780456
+        },
+        {
+          "rows": 576,
+          "committedNs": 312539557202
+        },
+        {
+          "rows": 640,
+          "committedNs": 312645162036
+        },
+        {
+          "rows": 704,
+          "committedNs": 312756658851
+        },
+        {
+          "rows": 768,
+          "committedNs": 312847903685
+        },
+        {
+          "rows": 832,
+          "committedNs": 312945478188
+        },
+        {
+          "rows": 896,
+          "committedNs": 313044772160
+        },
+        {
+          "rows": 960,
+          "committedNs": 313143197711
+        },
+        {
+          "rows": 1024,
+          "committedNs": 313242311953
+        },
+        {
+          "rows": 1088,
+          "committedNs": 313343296181
+        },
+        {
+          "rows": 1152,
+          "committedNs": 313436436988
+        },
+        {
+          "rows": 1216,
+          "committedNs": 313527494888
+        },
+        {
+          "rows": 1280,
+          "committedNs": 313625076118
+        },
+        {
+          "rows": 1344,
+          "committedNs": 313725002037
+        },
+        {
+          "rows": 1408,
+          "committedNs": 313825611109
+        },
+        {
+          "rows": 1472,
+          "committedNs": 313924637430
+        },
+        {
+          "rows": 1536,
+          "committedNs": 314026366793
+        },
+        {
+          "rows": 1600,
+          "committedNs": 314112584016
+        },
+        {
+          "rows": 1664,
+          "committedNs": 314194458209
+        },
+        {
+          "rows": 1728,
+          "committedNs": 314272598214
+        },
+        {
+          "rows": 1792,
+          "committedNs": 314354412920
+        },
+        {
+          "rows": 1856,
+          "committedNs": 314434780545
+        },
+        {
+          "rows": 1920,
+          "committedNs": 314514734718
+        },
+        {
+          "rows": 1984,
+          "committedNs": 314598961390
+        },
+        {
+          "rows": 2048,
+          "committedNs": 314698734091
+        },
+        {
+          "rows": 2112,
+          "committedNs": 314783383657
+        },
+        {
+          "rows": 2176,
+          "committedNs": 314861872448
+        },
+        {
+          "rows": 2240,
+          "committedNs": 314941370245
+        },
+        {
+          "rows": 2304,
+          "committedNs": 315025592185
+        },
+        {
+          "rows": 2368,
+          "committedNs": 315112687771
+        },
+        {
+          "rows": 2432,
+          "committedNs": 315190282111
+        },
+        {
+          "rows": 2496,
+          "committedNs": 315270983035
+        },
+        {
+          "rows": 2560,
+          "committedNs": 315361619130
+        },
+        {
+          "rows": 2624,
+          "committedNs": 315448243339
+        },
+        {
+          "rows": 2688,
+          "committedNs": 315531640589
+        },
+        {
+          "rows": 2752,
+          "committedNs": 315614001481
+        },
+        {
+          "rows": 2816,
+          "committedNs": 315695736142
+        },
+        {
+          "rows": 2880,
+          "committedNs": 315774784460
+        },
+        {
+          "rows": 2944,
+          "committedNs": 315855840447
+        },
+        {
+          "rows": 3008,
+          "committedNs": 315935253543
+        },
+        {
+          "rows": 3072,
+          "committedNs": 316025898014
+        },
+        {
+          "rows": 3136,
+          "committedNs": 316104277940
+        },
+        {
+          "rows": 3200,
+          "committedNs": 316184535698
+        },
+        {
+          "rows": 3264,
+          "committedNs": 316264497257
+        },
+        {
+          "rows": 3328,
+          "committedNs": 316342400279
+        },
+        {
+          "rows": 3392,
+          "committedNs": 316422896806
+        },
+        {
+          "rows": 3456,
+          "committedNs": 316502143491
+        },
+        {
+          "rows": 3520,
+          "committedNs": 316583020066
+        },
+        {
+          "rows": 3584,
+          "committedNs": 316668491173
+        },
+        {
+          "rows": 3648,
+          "committedNs": 316748723989
+        },
+        {
+          "rows": 3712,
+          "committedNs": 316828512115
+        },
+        {
+          "rows": 3776,
+          "committedNs": 316905630094
+        },
+        {
+          "rows": 3840,
+          "committedNs": 316984783317
+        },
+        {
+          "rows": 3904,
+          "committedNs": 317063566544
+        },
+        {
+          "rows": 3968,
+          "committedNs": 317140718128
+        },
+        {
+          "rows": 4032,
+          "committedNs": 317220663106
+        },
+        {
+          "rows": 4096,
+          "committedNs": 317308890372
+        },
+        {
+          "rows": 4160,
+          "committedNs": 317394094671
+        },
+        {
+          "rows": 4224,
+          "committedNs": 317472534908
+        },
+        {
+          "rows": 4288,
+          "committedNs": 317557063195
+        },
+        {
+          "rows": 4352,
+          "committedNs": 317642596159
+        },
+        {
+          "rows": 4416,
+          "committedNs": 317723692530
+        },
+        {
+          "rows": 4480,
+          "committedNs": 317802643302
+        },
+        {
+          "rows": 4544,
+          "committedNs": 317894718370
+        },
+        {
+          "rows": 4608,
+          "committedNs": 317979597681
+        },
+        {
+          "rows": 4672,
+          "committedNs": 318061872406
+        },
+        {
+          "rows": 4736,
+          "committedNs": 318141943245
+        },
+        {
+          "rows": 4800,
+          "committedNs": 318223157518
+        },
+        {
+          "rows": 4864,
+          "committedNs": 318304652408
+        },
+        {
+          "rows": 4928,
+          "committedNs": 318381772310
+        },
+        {
+          "rows": 4992,
+          "committedNs": 318461953090
+        },
+        {
+          "rows": 5056,
+          "committedNs": 318553166769
+        },
+        {
+          "rows": 5120,
+          "committedNs": 318639853483
+        },
+        {
+          "rows": 5184,
+          "committedNs": 318719009954
+        },
+        {
+          "rows": 5248,
+          "committedNs": 318807003161
+        },
+        {
+          "rows": 5312,
+          "committedNs": 318888631075
+        },
+        {
+          "rows": 5376,
+          "committedNs": 318966704738
+        },
+        {
+          "rows": 5440,
+          "committedNs": 319046656694
+        },
+        {
+          "rows": 5504,
+          "committedNs": 319133961318
+        },
+        {
+          "rows": 5568,
+          "committedNs": 319220604903
+        },
+        {
+          "rows": 5632,
+          "committedNs": 319297395263
+        },
+        {
+          "rows": 5696,
+          "committedNs": 319376466285
+        },
+        {
+          "rows": 5760,
+          "committedNs": 319455778737
+        },
+        {
+          "rows": 5824,
+          "committedNs": 319535167865
+        },
+        {
+          "rows": 5888,
+          "committedNs": 319615769680
+        },
+        {
+          "rows": 5952,
+          "committedNs": 319694965266
+        },
+        {
+          "rows": 6016,
+          "committedNs": 319784387093
+        },
+        {
+          "rows": 6080,
+          "committedNs": 319862580856
+        },
+        {
+          "rows": 6144,
+          "committedNs": 319943063880
+        },
+        {
+          "rows": 6208,
+          "committedNs": 320025697665
+        },
+        {
+          "rows": 6272,
+          "committedNs": 320103314953
+        },
+        {
+          "rows": 6336,
+          "committedNs": 320186235237
+        },
+        {
+          "rows": 6400,
+          "committedNs": 320266189411
+        },
+        {
+          "rows": 6464,
+          "committedNs": 320349072263
+        },
+        {
+          "rows": 6528,
+          "committedNs": 320438047639
+        },
+        {
+          "rows": 6592,
+          "committedNs": 320522896118
+        },
+        {
+          "rows": 6656,
+          "committedNs": 320602327996
+        },
+        {
+          "rows": 6720,
+          "committedNs": 320683849350
+        },
+        {
+          "rows": 6784,
+          "committedNs": 320765431836
+        },
+        {
+          "rows": 6848,
+          "committedNs": 320847884639
+        },
+        {
+          "rows": 6912,
+          "committedNs": 320928978437
+        },
+        {
+          "rows": 6976,
+          "committedNs": 321005259314
+        },
+        {
+          "rows": 7040,
+          "committedNs": 321094257860
+        },
+        {
+          "rows": 7104,
+          "committedNs": 321174505994
+        },
+        {
+          "rows": 7168,
+          "committedNs": 321256440059
+        },
+        {
+          "rows": 7232,
+          "committedNs": 321334103704
+        },
+        {
+          "rows": 7296,
+          "committedNs": 321414451980
+        },
+        {
+          "rows": 7360,
+          "committedNs": 321494207718
+        },
+        {
+          "rows": 7424,
+          "committedNs": 321571890561
+        },
+        {
+          "rows": 7488,
+          "committedNs": 321651869468
+        },
+        {
+          "rows": 7552,
+          "committedNs": 321739900683
+        },
+        {
+          "rows": 7616,
+          "committedNs": 321826935541
+        },
+        {
+          "rows": 7680,
+          "committedNs": 321903799896
+        },
+        {
+          "rows": 7744,
+          "committedNs": 321984718165
+        },
+        {
+          "rows": 7808,
+          "committedNs": 322063975960
+        },
+        {
+          "rows": 7872,
+          "committedNs": 322142301148
+        },
+        {
+          "rows": 7936,
+          "committedNs": 322222946042
+        },
+        {
+          "rows": 8000,
+          "committedNs": 322302078234
+        },
+        {
+          "rows": 8064,
+          "committedNs": 322397325581
+        },
+        {
+          "rows": 8128,
+          "committedNs": 322475297988
+        },
+        {
+          "rows": 8192,
+          "committedNs": 322557123594
+        },
+        {
+          "rows": 8256,
+          "committedNs": 322646573294
+        },
+        {
+          "rows": 8320,
+          "committedNs": 322731976853
+        },
+        {
+          "rows": 8384,
+          "committedNs": 322808906719
+        },
+        {
+          "rows": 8448,
+          "committedNs": 322888464101
+        },
+        {
+          "rows": 8512,
+          "committedNs": 322983821149
+        },
+        {
+          "rows": 8576,
+          "committedNs": 323065929496
+        },
+        {
+          "rows": 8640,
+          "committedNs": 323145598858
+        },
+        {
+          "rows": 8704,
+          "committedNs": 323225790986
+        },
+        {
+          "rows": 8768,
+          "committedNs": 323307979450
+        },
+        {
+          "rows": 8832,
+          "committedNs": 323385318397
+        },
+        {
+          "rows": 8896,
+          "committedNs": 323466444898
+        },
+        {
+          "rows": 8960,
+          "committedNs": 323546036924
+        },
+        {
+          "rows": 9024,
+          "committedNs": 323636560400
+        },
+        {
+          "rows": 9088,
+          "committedNs": 323714416926
+        },
+        {
+          "rows": 9152,
+          "committedNs": 323794425383
+        },
+        {
+          "rows": 9216,
+          "committedNs": 323874108544
+        },
+        {
+          "rows": 9280,
+          "committedNs": 323952988152
+        },
+        {
+          "rows": 9344,
+          "committedNs": 324029396213
+        },
+        {
+          "rows": 9408,
+          "committedNs": 324108157344
+        },
+        {
+          "rows": 9472,
+          "committedNs": 324198057015
+        },
+        {
+          "rows": 9536,
+          "committedNs": 324275826726
+        },
+        {
+          "rows": 9600,
+          "committedNs": 324360154812
+        },
+        {
+          "rows": 9664,
+          "committedNs": 324439898422
+        },
+        {
+          "rows": 9728,
+          "committedNs": 324522845635
+        },
+        {
+          "rows": 9792,
+          "committedNs": 324603808037
+        },
+        {
+          "rows": 9856,
+          "committedNs": 324683965199
+        },
+        {
+          "rows": 9920,
+          "committedNs": 324764829782
+        },
+        {
+          "rows": 9984,
+          "committedNs": 324851624926
+        },
+        {
+          "rows": 10048,
+          "committedNs": 324932593405
+        },
+        {
+          "rows": 10112,
+          "committedNs": 325017091560
+        },
+        {
+          "rows": 10176,
+          "committedNs": 325098691257
+        },
+        {
+          "rows": 10240,
+          "committedNs": 325176088951
+        },
+        {
+          "rows": 10304,
+          "committedNs": 325258663054
+        },
+        {
+          "rows": 10368,
+          "committedNs": 325338588771
+        },
+        {
+          "rows": 10432,
+          "committedNs": 325426158834
+        },
+        {
+          "rows": 10496,
+          "committedNs": 325506896924
+        },
+        {
+          "rows": 10560,
+          "committedNs": 325592945456
+        },
+        {
+          "rows": 10624,
+          "committedNs": 325673861225
+        },
+        {
+          "rows": 10688,
+          "committedNs": 325750551437
+        },
+        {
+          "rows": 10752,
+          "committedNs": 325832592478
+        },
+        {
+          "rows": 10816,
+          "committedNs": 325913926609
+        },
+        {
+          "rows": 10880,
+          "committedNs": 326002909897
+        },
+        {
+          "rows": 10944,
+          "committedNs": 326088202372
+        },
+        {
+          "rows": 11008,
+          "committedNs": 326168149904
+        },
+        {
+          "rows": 11072,
+          "committedNs": 326250123870
+        },
+        {
+          "rows": 11136,
+          "committedNs": 326327015726
+        },
+        {
+          "rows": 11200,
+          "committedNs": 326406180762
+        },
+        {
+          "rows": 11264,
+          "committedNs": 326485511893
+        },
+        {
+          "rows": 11328,
+          "committedNs": 326572405989
+        },
+        {
+          "rows": 11392,
+          "committedNs": 326659476044
+        },
+        {
+          "rows": 11456,
+          "committedNs": 326745995260
+        },
+        {
+          "rows": 11520,
+          "committedNs": 326826235476
+        },
+        {
+          "rows": 11584,
+          "committedNs": 326904442729
+        },
+        {
+          "rows": 11648,
+          "committedNs": 326983490571
+        },
+        {
+          "rows": 11712,
+          "committedNs": 327064096674
+        },
+        {
+          "rows": 11776,
+          "committedNs": 327153081516
+        },
+        {
+          "rows": 11840,
+          "committedNs": 327231567924
+        },
+        {
+          "rows": 11904,
+          "committedNs": 327313108330
+        },
+        {
+          "rows": 11968,
+          "committedNs": 327398056809
+        },
+        {
+          "rows": 12032,
+          "committedNs": 327481389370
+        },
+        {
+          "rows": 12096,
+          "committedNs": 327567098546
+        },
+        {
+          "rows": 12160,
+          "committedNs": 327652816665
+        },
+        {
+          "rows": 12224,
+          "committedNs": 327744770212
+        },
+        {
+          "rows": 12288,
+          "committedNs": 327821784800
+        },
+        {
+          "rows": 12352,
+          "committedNs": 327903219780
+        },
+        {
+          "rows": 12416,
+          "committedNs": 327983442968
+        },
+        {
+          "rows": 12480,
+          "committedNs": 328060207371
+        },
+        {
+          "rows": 12544,
+          "committedNs": 328139207905
+        },
+        {
+          "rows": 12608,
+          "committedNs": 328225613942
+        },
+        {
+          "rows": 12672,
+          "committedNs": 328306401514
+        },
+        {
+          "rows": 12736,
+          "committedNs": 328386649632
+        },
+        {
+          "rows": 12800,
+          "committedNs": 328469863092
+        },
+        {
+          "rows": 12864,
+          "committedNs": 328555917724
+        },
+        {
+          "rows": 12928,
+          "committedNs": 328642829807
+        },
+        {
+          "rows": 12992,
+          "committedNs": 328719924469
+        },
+        {
+          "rows": 13056,
+          "committedNs": 328807660270
+        },
+        {
+          "rows": 13120,
+          "committedNs": 328889708227
+        },
+        {
+          "rows": 13184,
+          "committedNs": 328966389947
+        },
+        {
+          "rows": 13248,
+          "committedNs": 329046134753
+        },
+        {
+          "rows": 13312,
+          "committedNs": 329127789307
+        },
+        {
+          "rows": 13376,
+          "committedNs": 329209909486
+        },
+        {
+          "rows": 13440,
+          "committedNs": 329293926869
+        },
+        {
+          "rows": 13504,
+          "committedNs": 329373668314
+        },
+        {
+          "rows": 13568,
+          "committedNs": 329455888969
+        },
+        {
+          "rows": 13632,
+          "committedNs": 329538793688
+        },
+        {
+          "rows": 13696,
+          "committedNs": 329616127934
+        },
+        {
+          "rows": 13760,
+          "committedNs": 329695161764
+        },
+        {
+          "rows": 13824,
+          "committedNs": 329775905353
+        },
+        {
+          "rows": 13888,
+          "committedNs": 329862315997
+        },
+        {
+          "rows": 13952,
+          "committedNs": 329941736210
+        },
+        {
+          "rows": 14016,
+          "committedNs": 330020569974
+        },
+        {
+          "rows": 14080,
+          "committedNs": 330100286791
+        },
+        {
+          "rows": 14144,
+          "committedNs": 330176698086
+        },
+        {
+          "rows": 14208,
+          "committedNs": 330255522306
+        },
+        {
+          "rows": 14272,
+          "committedNs": 330335255675
+        },
+        {
+          "rows": 14336,
+          "committedNs": 330420626996
+        },
+        {
+          "rows": 14400,
+          "committedNs": 330501981809
+        },
+        {
+          "rows": 14464,
+          "committedNs": 330581351745
+        },
+        {
+          "rows": 14528,
+          "committedNs": 330661724897
+        },
+        {
+          "rows": 14592,
+          "committedNs": 330738396886
+        },
+        {
+          "rows": 14656,
+          "committedNs": 330822886372
+        },
+        {
+          "rows": 14720,
+          "committedNs": 330910937032
+        },
+        {
+          "rows": 14784,
+          "committedNs": 330991330116
+        },
+        {
+          "rows": 14848,
+          "committedNs": 331067406778
+        },
+        {
+          "rows": 14912,
+          "committedNs": 331146417644
+        },
+        {
+          "rows": 14976,
+          "committedNs": 331224498033
+        },
+        {
+          "rows": 15040,
+          "committedNs": 331300270215
+        },
+        {
+          "rows": 15104,
+          "committedNs": 331379100579
+        },
+        {
+          "rows": 15168,
+          "committedNs": 331466419836
+        },
+        {
+          "rows": 15232,
+          "committedNs": 331547560449
+        },
+        {
+          "rows": 15296,
+          "committedNs": 331624606707
+        },
+        {
+          "rows": 15360,
+          "committedNs": 331703233995
+        },
+        {
+          "rows": 15424,
+          "committedNs": 331790497888
+        },
+        {
+          "rows": 15488,
+          "committedNs": 331869343200
+        },
+        {
+          "rows": 15552,
+          "committedNs": 331960310477
+        },
+        {
+          "rows": 15616,
+          "committedNs": 332039955097
+        },
+        {
+          "rows": 15680,
+          "committedNs": 332120954785
+        },
+        {
+          "rows": 15744,
+          "committedNs": 332197367830
+        },
+        {
+          "rows": 15808,
+          "committedNs": 332277940366
+        },
+        {
+          "rows": 15872,
+          "committedNs": 332363620060
+        },
+        {
+          "rows": 15936,
+          "committedNs": 332450391048
+        },
+        {
+          "rows": 16000,
+          "committedNs": 332530660420
+        },
+        {
+          "rows": 16064,
+          "committedNs": 332610549917
+        },
+        {
+          "rows": 16128,
+          "committedNs": 332693819477
+        },
+        {
+          "rows": 16192,
+          "committedNs": 332770866475
+        },
+        {
+          "rows": 16256,
+          "committedNs": 332850152017
+        },
+        {
+          "rows": 16320,
+          "committedNs": 332927458981
+        },
+        {
+          "rows": 16384,
+          "committedNs": 333011753213
+        },
+        {
+          "rows": 16448,
+          "committedNs": 333091865502
+        },
+        {
+          "rows": 16512,
+          "committedNs": 333171517799
+        },
+        {
+          "rows": 16576,
+          "committedNs": 333256234772
+        },
+        {
+          "rows": 16640,
+          "committedNs": 333333591835
+        },
+        {
+          "rows": 16704,
+          "committedNs": 333413553173
+        },
+        {
+          "rows": 16768,
+          "committedNs": 333492748884
+        },
+        {
+          "rows": 16832,
+          "committedNs": 333580429502
+        },
+        {
+          "rows": 16896,
+          "committedNs": 333667272404
+        },
+        {
+          "rows": 16960,
+          "committedNs": 333749837851
+        },
+        {
+          "rows": 17024,
+          "committedNs": 333830902834
+        },
+        {
+          "rows": 17088,
+          "committedNs": 333908312042
+        },
+        {
+          "rows": 17152,
+          "committedNs": 333993671731
+        },
+        {
+          "rows": 17216,
+          "committedNs": 334073436158
+        },
+        {
+          "rows": 17280,
+          "committedNs": 334159671127
+        },
+        {
+          "rows": 17344,
+          "committedNs": 334237696895
+        },
+        {
+          "rows": 17408,
+          "committedNs": 334316671540
+        },
+        {
+          "rows": 17472,
+          "committedNs": 334423865587
+        },
+        {
+          "rows": 17536,
+          "committedNs": 334500433900
+        },
+        {
+          "rows": 17600,
+          "committedNs": 334584635374
+        },
+        {
+          "rows": 17664,
+          "committedNs": 334663707967
+        },
+        {
+          "rows": 17728,
+          "committedNs": 334746553924
+        },
+        {
+          "rows": 17792,
+          "committedNs": 334824775255
+        },
+        {
+          "rows": 17856,
+          "committedNs": 334903113675
+        },
+        {
+          "rows": 17920,
+          "committedNs": 334981753555
+        },
+        {
+          "rows": 17984,
+          "committedNs": 335068536639
+        },
+        {
+          "rows": 18048,
+          "committedNs": 335156620599
+        },
+        {
+          "rows": 18112,
+          "committedNs": 335235800861
+        },
+        {
+          "rows": 18176,
+          "committedNs": 335317389630
+        },
+        {
+          "rows": 18240,
+          "committedNs": 335400456525
+        },
+        {
+          "rows": 18304,
+          "committedNs": 335485726234
+        },
+        {
+          "rows": 18368,
+          "committedNs": 335565511526
+        },
+        {
+          "rows": 18432,
+          "committedNs": 335653635323
+        },
+        {
+          "rows": 18496,
+          "committedNs": 335735335324
+        },
+        {
+          "rows": 18560,
+          "committedNs": 335816491931
+        },
+        {
+          "rows": 18624,
+          "committedNs": 335903575539
+        },
+        {
+          "rows": 18688,
+          "committedNs": 335982179169
+        },
+        {
+          "rows": 18752,
+          "committedNs": 336066815223
+        },
+        {
+          "rows": 18816,
+          "committedNs": 336144849115
+        },
+        {
+          "rows": 18880,
+          "committedNs": 336221479449
+        },
+        {
+          "rows": 18944,
+          "committedNs": 336305917955
+        },
+        {
+          "rows": 19008,
+          "committedNs": 336386169308
+        },
+        {
+          "rows": 19072,
+          "committedNs": 336467125311
+        },
+        {
+          "rows": 19136,
+          "committedNs": 336542657258
+        },
+        {
+          "rows": 19200,
+          "committedNs": 336625605603
+        },
+        {
+          "rows": 19264,
+          "committedNs": 336704563078
+        },
+        {
+          "rows": 19328,
+          "committedNs": 336781911074
+        },
+        {
+          "rows": 19392,
+          "committedNs": 336861750607
+        },
+        {
+          "rows": 19456,
+          "committedNs": 336945471335
+        },
+        {
+          "rows": 19520,
+          "committedNs": 337027299825
+        },
+        {
+          "rows": 19584,
+          "committedNs": 337109237914
+        },
+        {
+          "rows": 19648,
+          "committedNs": 337189527606
+        },
+        {
+          "rows": 19712,
+          "committedNs": 337268052011
+        },
+        {
+          "rows": 19776,
+          "committedNs": 337345764484
+        },
+        {
+          "rows": 19840,
+          "committedNs": 337429185930
+        },
+        {
+          "rows": 19904,
+          "committedNs": 337508779097
+        },
+        {
+          "rows": 19968,
+          "committedNs": 337588711200
+        },
+        {
+          "rows": 20000,
+          "committedNs": 337631791685
+        }
+      ]
+    }
+  },
+  {
+    "marker": "LIBRARY_READ_EVIDENCE",
+    "data": {
+      "books": 500,
+      "pages": 20000,
+      "noteBodyChars": 20020,
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      },
+      "headerReadMs": 19.726805,
+      "headerReturnedBodyChars": 0,
+      "coldMs": 2016.270647,
+      "coldSourceChecks": 20000,
+      "warmMedianMs": 576.835749,
+      "warmSamplesMs": [
+        576.835749,
+        580.675681,
+        576.444693,
+        574.018306,
+        584.027017
+      ],
+      "saveCount": 30,
+      "saveP50Ms": 2.306475,
+      "saveP95Ms": 8.644212,
+      "saveMaxMs": 9.877278,
+      "saveSamplesMs": [
+        9.877278,
+        3.46092,
+        2.604641,
+        2.352933,
+        2.047267,
+        2.185927,
+        2.000998,
+        2.246088,
+        1.883644,
+        2.409689,
+        2.05717,
+        3.302068,
+        2.364641,
+        1.993372,
+        2.306475,
+        1.935945,
+        2.421203,
+        2.056227,
+        2.361033,
+        2.127789,
+        2.151554,
+        2.562656,
+        2.28382,
+        7.461966,
+        8.644212,
+        2.681196,
+        2.579933,
+        1.821711,
+        2.305862,
+        1.942549
+      ],
+      "observeIndexConcurrentSaves": {
+        "indexRowsBeforeSaves": 64,
+        "indexRowsAfterSaves": 128,
+        "firstCommittedBatchMs": 120.558539,
+        "saveCount": 30,
+        "saveP50Ms": 4.809065,
+        "saveP95Ms": 14.150945,
+        "saveMaxMs": 26.508898,
+        "saveSamplesMs": [
+          4.464916,
+          5.890851,
+          3.925567,
+          9.09948,
+          6.013542,
+          6.359144,
+          3.529648,
+          4.809065,
+          5.956284,
+          2.820891,
+          8.547296,
+          14.150945,
+          2.740778,
+          3.264514,
+          9.017926,
+          7.305046,
+          3.355261,
+          5.751129,
+          6.93321,
+          26.508898,
+          2.31547,
+          2.484238,
+          3.058755,
+          2.01768,
+          2.47286,
+          2.000124,
+          2.430698,
+          9.643965,
+          4.8032,
+          6.630309
+        ],
+        "saveProgressSamples": [
+          {
+            "sample": 0,
+            "elapsedMs": 4.464916,
+            "startNs": 311677386741,
+            "endNs": 311681851657,
+            "committed": true,
+            "committedRevision": 33,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1240,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 1,
+            "elapsedMs": 5.890851,
+            "startNs": 311681908424,
+            "endNs": 311687799275,
+            "committed": true,
+            "committedRevision": 34,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 2,
+            "elapsedMs": 3.925567,
+            "startNs": 311687813615,
+            "endNs": 311691739182,
+            "committed": true,
+            "committedRevision": 35,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 3,
+            "elapsedMs": 9.09948,
+            "startNs": 311691752246,
+            "endNs": 311700851726,
+            "committed": true,
+            "committedRevision": 36,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 4,
+            "elapsedMs": 6.013542,
+            "startNs": 311700864873,
+            "endNs": 311706878415,
+            "committed": true,
+            "committedRevision": 37,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 5,
+            "elapsedMs": 6.359144,
+            "startNs": 311706891485,
+            "endNs": 311713250629,
+            "committed": true,
+            "committedRevision": 38,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 6,
+            "elapsedMs": 3.529648,
+            "startNs": 311713263540,
+            "endNs": 311716793188,
+            "committed": true,
+            "committedRevision": 39,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 7,
+            "elapsedMs": 4.809065,
+            "startNs": 311716806400,
+            "endNs": 311721615465,
+            "committed": true,
+            "committedRevision": 40,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 8,
+            "elapsedMs": 5.956284,
+            "startNs": 311721628687,
+            "endNs": 311727584971,
+            "committed": true,
+            "committedRevision": 41,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 9,
+            "elapsedMs": 2.820891,
+            "startNs": 311727602406,
+            "endNs": 311730423297,
+            "committed": true,
+            "committedRevision": 42,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 10,
+            "elapsedMs": 8.547296,
+            "startNs": 311730436855,
+            "endNs": 311738984151,
+            "committed": true,
+            "committedRevision": 43,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 11,
+            "elapsedMs": 14.150945,
+            "startNs": 311738998666,
+            "endNs": 311753149611,
+            "committed": true,
+            "committedRevision": 44,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 12,
+            "elapsedMs": 2.740778,
+            "startNs": 311753162219,
+            "endNs": 311755902997,
+            "committed": true,
+            "committedRevision": 45,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 13,
+            "elapsedMs": 3.264514,
+            "startNs": 311755915878,
+            "endNs": 311759180392,
+            "committed": true,
+            "committedRevision": 46,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 14,
+            "elapsedMs": 9.017926,
+            "startNs": 311759213792,
+            "endNs": 311768231718,
+            "committed": true,
+            "committedRevision": 47,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 15,
+            "elapsedMs": 7.305046,
+            "startNs": 311768251660,
+            "endNs": 311775556706,
+            "committed": true,
+            "committedRevision": 48,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 16,
+            "elapsedMs": 3.355261,
+            "startNs": 311775617020,
+            "endNs": 311778972281,
+            "committed": true,
+            "committedRevision": 49,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 17,
+            "elapsedMs": 5.751129,
+            "startNs": 311778986281,
+            "endNs": 311784737410,
+            "committed": true,
+            "committedRevision": 50,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 18,
+            "elapsedMs": 6.93321,
+            "startNs": 311784751653,
+            "endNs": 311791684863,
+            "committed": true,
+            "committedRevision": 51,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 19,
+            "elapsedMs": 26.508898,
+            "startNs": 311791705281,
+            "endNs": 311818214179,
+            "committed": true,
+            "committedRevision": 52,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1291
+          },
+          {
+            "sample": 20,
+            "elapsedMs": 2.31547,
+            "startNs": 311818230165,
+            "endNs": 311820545635,
+            "committed": true,
+            "committedRevision": 53,
+            "indexRowsStart": 128,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 1291,
+            "sourceChecksEnd": 1293
+          },
+          {
+            "sample": 21,
+            "elapsedMs": 2.484238,
+            "startNs": 311820559431,
+            "endNs": 311823043669,
+            "committed": true,
+            "committedRevision": 54,
+            "indexRowsStart": 128,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 1293,
+            "sourceChecksEnd": 1293
+          },
+          {
+            "sample": 22,
+            "elapsedMs": 3.058755,
+            "startNs": 311823058564,
+            "endNs": 311826117319,
+            "committed": true,
+            "committedRevision": 55,
+            "indexRowsStart": 128,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 1293,
+            "sourceChecksEnd": 1293
+          },
+          {
+            "sample": 23,
+            "elapsedMs": 2.01768,
+            "startNs": 311826133833,
+            "endNs": 311828151513,
+            "committed": true,
+            "committedRevision": 56,
+            "indexRowsStart": 128,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 1293,
+            "sourceChecksEnd": 1293
+          },
+          {
+            "sample": 24,
+            "elapsedMs": 2.47286,
+            "startNs": 311828164253,
+            "endNs": 311830637113,
+            "committed": true,
+            "committedRevision": 57,
+            "indexRowsStart": 128,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 1293,
+            "sourceChecksEnd": 1293
+          },
+          {
+            "sample": 25,
+            "elapsedMs": 2.000124,
+            "startNs": 311830654871,
+            "endNs": 311832654995,
+            "committed": true,
+            "committedRevision": 58,
+            "indexRowsStart": 128,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 1293,
+            "sourceChecksEnd": 1293
+          },
+          {
+            "sample": 26,
+            "elapsedMs": 2.430698,
+            "startNs": 311832668239,
+            "endNs": 311835098937,
+            "committed": true,
+            "committedRevision": 59,
+            "indexRowsStart": 128,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 1293,
+            "sourceChecksEnd": 1293
+          },
+          {
+            "sample": 27,
+            "elapsedMs": 9.643965,
+            "startNs": 311835110988,
+            "endNs": 311844754953,
+            "committed": true,
+            "committedRevision": 60,
+            "indexRowsStart": 128,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 1293,
+            "sourceChecksEnd": 1293
+          },
+          {
+            "sample": 28,
+            "elapsedMs": 4.8032,
+            "startNs": 311844768247,
+            "endNs": 311849571447,
+            "committed": true,
+            "committedRevision": 61,
+            "indexRowsStart": 128,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 1293,
+            "sourceChecksEnd": 1293
+          },
+          {
+            "sample": 29,
+            "elapsedMs": 6.630309,
+            "startNs": 311849586340,
+            "endNs": 311856216649,
+            "committed": true,
+            "committedRevision": 62,
+            "indexRowsStart": 128,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 1293,
+            "sourceChecksEnd": 1293
+          }
+        ],
+        "sourceChecksAfterSaves": 1293,
+        "indexRowsFinal": 20000,
+        "allIndexRowsCommittedMs": 26079.682056,
+        "searchIndexReadyMs": 26671.754372,
+        "sourceChecks": 21166
+      },
+      "writerCompletedDuringPausedSearch": true,
+      "shelfReturnedPreviewChars": 35425,
+      "shelfDirectoryBodyChars": 0,
+      "projectionRows": 61,
+      "projectionChars": 36025,
+      "fullBodyOnDemandMatches": true
+    }
+  }
+]

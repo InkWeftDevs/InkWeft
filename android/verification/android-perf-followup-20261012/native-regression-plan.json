@@ -1,0 +1,82 @@
+[
+  {
+    "label": "data-core",
+    "module": "data",
+    "selection": "org.inkweft.data.NoteRepositoryTest,org.inkweft.data.InkRepositoryTest,org.inkweft.data.HistoryStorageTest,org.inkweft.data.HistoryConcurrencyTest,org.inkweft.data.HistoryCollectionTest,org.inkweft.data.RasterReadCacheTest,org.inkweft.data.LibraryPagingTest,org.inkweft.data.SpatialInkRepositoryTest#viewportCandidatesRespectBoundaryVisibilityPayloadChangesAndDeletion,org.inkweft.data.SpatialInkRepositoryTest#boundedWindowNeverPretendsDenseCandidatesAreCompleteAndStreamingHasNoMissingRows,org.inkweft.data.SpatialInkRepositoryTest#pageChangeAndCancellationAbortStreamingRatherThanReturningACompletePrefix,org.inkweft.data.InkEditingSnapshotTest#resumeRetainsNoHiddenGeometryAndPreservesReplacementMaskUndoRedo",
+    "expected": 39
+  },
+  {
+    "label": "search-regressions",
+    "module": "data",
+    "selection": "org.inkweft.data.LibrarySearchRepositoryTest",
+    "expected": 5
+  },
+  {
+    "label": "backup-regressions",
+    "module": "data",
+    "selection": "org.inkweft.data.LibraryBackupRepositoryTest#roundTripPreservesOriginalIdsHiddenInkMasksHistoryAndMetadata,org.inkweft.data.LibraryBackupRepositoryTest#restoredRecordsRemainAfterRealCloseAndReopen,org.inkweft.data.LibraryBackupRepositoryTest#preCommitFailureRollsBackAllLiveTables,org.inkweft.data.LibraryBackupRepositoryTest#damagedFooterNeverTouchesLiveLibrary,org.inkweft.data.LibraryBackupRepositoryTest#streamReadFailureOnlyAffectsIsolatedStage,org.inkweft.data.LibraryBackupRepositoryTest#cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary",
+    "expected": 6
+  },
+  {
+    "label": "app-core",
+    "module": "app",
+    "selection": "org.inkweft.app.NotebookHeaderLoadingTest,org.inkweft.app.StreamedInkRasterTest,org.inkweft.app.LayerRasterBudgetTest",
+    "expected": 8
+  },
+  {
+    "label": "ui-NotebookShelfUiTest-shelfRenameCancelBlankAndPersistedIdentity",
+    "module": "app",
+    "selection": "org.inkweft.app.NotebookShelfUiTest#shelfRenameCancelBlankAndPersistedIdentity",
+    "expected": 1,
+    "clear_owned_app_first": true
+  },
+  {
+    "label": "ui-NotebookShelfUiTest-coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview",
+    "module": "app",
+    "selection": "org.inkweft.app.NotebookShelfUiTest#coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview",
+    "expected": 1,
+    "clear_owned_app_first": true
+  },
+  {
+    "label": "ui-NotebookShelfUiTest-editorRenameKeepsUnsavedBodyUntilExplicitTextSave",
+    "module": "app",
+    "selection": "org.inkweft.app.NotebookShelfUiTest#editorRenameKeepsUnsavedBodyUntilExplicitTextSave",
+    "expected": 1,
+    "clear_owned_app_first": true
+  },
+  {
+    "label": "ui-NotebookShelfUiTest-drawerUsesOneSearchAndClosesWithBackWithAnimationsEnabled",
+    "module": "app",
+    "selection": "org.inkweft.app.NotebookShelfUiTest#drawerUsesOneSearchAndClosesWithBackWithAnimationsEnabled",
+    "expected": 1,
+    "clear_owned_app_first": true
+  },
+  {
+    "label": "ui-LibraryPaginationUiTest-nextPreviousAndQueryResetShowBoundedPages",
+    "module": "app",
+    "selection": "org.inkweft.app.LibraryPaginationUiTest#nextPreviousAndQueryResetShowBoundedPages",
+    "expected": 1,
+    "clear_owned_app_first": true
+  },
+  {
+    "label": "ui-LibrarySourceNavigationUiTest-learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock",
+    "module": "app",
+    "selection": "org.inkweft.app.LibrarySourceNavigationUiTest#learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock",
+    "expected": 1,
+    "clear_owned_app_first": true
+  },
+  {
+    "label": "ui-LibrarySourceNavigationUiTest-recycledLibrarySourceRetainsCurrentCardSnapshotAndMapWithoutNavigating",
+    "module": "app",
+    "selection": "org.inkweft.app.LibrarySourceNavigationUiTest#recycledLibrarySourceRetainsCurrentCardSnapshotAndMapWithoutNavigating",
+    "expected": 1,
+    "clear_owned_app_first": true
+  },
+  {
+    "label": "ui-LibrarySourceNavigationUiTest-closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard",
+    "module": "app",
+    "selection": "org.inkweft.app.LibrarySourceNavigationUiTest#closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard",
+    "expected": 1,
+    "clear_owned_app_first": true
+  }
+]

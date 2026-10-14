@@ -1,0 +1,25 @@
+[
+  {
+    "marker": "TILE_PAN_STAGE",
+    "data": {
+      "stage": "initial-cached",
+      "event": "failed",
+      "error": "InterruptedPanWait",
+      "elapsedMs": 5.897951,
+      "pending": true,
+      "frameReady": false,
+      "lastCompletedBuild": null,
+      "resources": {
+        "totalBytes": 0,
+        "budgetBytes": 134217728,
+        "peakTrackedBytes": 0,
+        "inFlightJobs": 1,
+        "cancelledJobs": 0,
+        "cacheBytes": 0,
+        "in_flightBytes": 0,
+        "activeBytes": 0,
+        "live_inkBytes": 0
+      }
+    }
+  }
+]

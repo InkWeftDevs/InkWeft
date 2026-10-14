@@ -1,0 +1,4766 @@
+{
+  "schema": 1,
+  "run_id": "38498392929",
+  "workflow_sha": "d20b37a00d084ddea8a59698b926d94ce2f1a633",
+  "status": "AUDIT_MATCHES_RAW_AND_FROZEN_ANALYSIS_NOT_FINAL_PERFORMANCE_ACCEPTANCE",
+  "scope": "Read-only independent parse of 12 public raster calls / 36 records, 18 comparisons / 72 pairs, plus candidate correctness 19-30; no build/device/benchmark execution.",
+  "sources": {
+    "schema": 1,
+    "status": "FROZEN_SOURCE_ONLY_UNDER_CONTINUATION_NOT_RUN",
+    "materialized_scope": [
+      "android",
+      "ci"
+    ],
+    "excluded_from_build_inputs": [
+      "android/verification"
+    ],
+    "identities": {
+      "B": {
+        "git": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+        "tree": "2eefbf879679d29f5ae4b1d6b9715a4cef14d5d9",
+        "production_overrides": [
+          {
+            "from_git": "7949011ca2b84492f6438d275a09d28faef3b472",
+            "from_path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+            "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+            "bytes": 4426,
+            "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d"
+          }
+        ],
+        "canonical_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+        "file_count": 947
+      },
+      "C0": {
+        "git": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+        "tree": "9df9003679881668bf90db98d3f5efce750afe1d",
+        "production_overrides": [],
+        "canonical_manifest_sha256": "7592c7990537bde681d0179539f58e1cd79822695bfcfd4b19882d9e1f738e90",
+        "file_count": 964
+      },
+      "C1": {
+        "git": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+        "tree": "e773d660abbc15fd727000eb60631d3b72a19a92",
+        "production_overrides": [],
+        "canonical_manifest_sha256": "06e7cea253c061891e10f658400143a7da34ba23f6ec95224bee31f5c0d13eb6",
+        "file_count": 964
+      }
+    },
+    "common_probes": [
+      {
+        "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+        "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLibraryPairProbe.kt",
+        "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+        "bytes": 18281,
+        "sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+      },
+      {
+        "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+        "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLocalAppendPairProbe.kt",
+        "path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+        "bytes": 12932,
+        "sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+      }
+    ],
+    "native_execution": "NOT_RUN",
+    "notes": [
+      "B retains originala128 with established common writer factory and probes only.",
+      "C0 in this plan is45b4861, the prior run38441089594 C1; historicalC0=ebb is not this run C0.",
+      "C1 is this committed SQL-boundary cancellation candidate.",
+      "Common probes, four seeds, original samples and thresholds remain byte-identical; add only one correctness method.",
+      "No build/network/native operation is performed by source freezing."
+    ],
+    "version_aliases": {
+      "B": "controlled-original-baseline-a128bb0",
+      "C0": "previous-candidate-45b4861",
+      "C1": "sql-boundary-cancellation-candidate"
+    }
+  },
+  "source_manifest_C0_C1_differences": [
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt",
+      "C0": {
+        "bytes": 8035,
+        "sha256": "b0c5b0b9f33b1dbe83cdc9b9f754884b221fba16c1fdc6c98754c59e756b807a"
+      },
+      "C1": {
+        "bytes": 10501,
+        "sha256": "4deefcf739ebbdd1ead6e4e2259b72e4b5af07a122d2ff766ccff311f3e188de"
+      }
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt",
+      "C0": {
+        "bytes": 16444,
+        "sha256": "744cda25180c3f8411b2816d5025b65c5b5ab122f5a0b83bb0597b379c935522"
+      },
+      "C1": {
+        "bytes": 16836,
+        "sha256": "33b4e9cc4fcf3fac593f0abc5dc6e2c070e10603a179979ec57be2d554198f48"
+      }
+    }
+  ],
+  "apk_receipts": {
+    "B": {
+      "base_commit": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+      "source_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+      "apks": [
+        {
+          "path": "app/build/outputs/apk/debug/app-debug.apk",
+          "bytes": 229655255,
+          "sha256": "9888ba7b1d6440e764a8b779eca2d174b7e9ad09b35cac446cf10bbd707a00a7"
+        },
+        {
+          "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+          "bytes": 10308467,
+          "sha256": "498f9c4ac389087f5cec533ee763a2bd0fc3f6b994890301bba3ae8f5b7e5dc5"
+        },
+        {
+          "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+          "bytes": 22522824,
+          "sha256": "5c87d15055a61b3251685ab9861cf323541d702db784f0451dafc6c6f5964ce5"
+        }
+      ]
+    },
+    "C0": {
+      "base_commit": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+      "source_manifest_sha256": "7592c7990537bde681d0179539f58e1cd79822695bfcfd4b19882d9e1f738e90",
+      "apks": [
+        {
+          "path": "app/build/outputs/apk/debug/app-debug.apk",
+          "bytes": 229748855,
+          "sha256": "64721b66c5a6d24694ff60da37f9998e792cc291804799fcfee37a3ae582ffa9"
+        },
+        {
+          "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+          "bytes": 10637051,
+          "sha256": "5dd99dd0d3a9d1c4584fd91a5d86a1baf8b0ab63abe397fbd27aa0bd3d60628c"
+        },
+        {
+          "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+          "bytes": 23276568,
+          "sha256": "a145e2adb3adcf9f2b675191720bdecba87fb32b4821a89879ccd86801309582"
+        }
+      ]
+    },
+    "C1": {
+      "base_commit": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+      "source_manifest_sha256": "06e7cea253c061891e10f658400143a7da34ba23f6ec95224bee31f5c0d13eb6",
+      "apks": [
+        {
+          "path": "app/build/outputs/apk/debug/app-debug.apk",
+          "bytes": 229748839,
+          "sha256": "e717ca4bfc2a10b3651a7d231b6e361b924f5e503ed710c3c93ee9731cbd7b05"
+        },
+        {
+          "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+          "bytes": 10637051,
+          "sha256": "e72b24af980135d242bb4ce3c0c2d7e6742bfa8c55387002190a1352e0d553bc"
+        },
+        {
+          "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+          "bytes": 23292952,
+          "sha256": "38049a8c4a4b4a5e0d7bf02488fbf1a0115ef59eb94318c284ff68dac9c5d435"
+        }
+      ]
+    }
+  },
+  "apk_scope": "Receipts only; ZIP does not contain APK binaries; no new binary signature/native validation.",
+  "probe_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+  "calls": [
+    {
+      "ordinal": 32,
+      "identity": "B",
+      "seed": 4101,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-01-B",
+      "host_status": "PASS",
+      "junit_status": "PASS",
+      "junit_seconds": 3.856,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "raw_log": "raw/method-32-B-instrumentation.log"
+    },
+    {
+      "ordinal": 34,
+      "identity": "C0",
+      "seed": 4101,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-02-C0",
+      "host_status": "PASS",
+      "junit_status": "PASS",
+      "junit_seconds": 3.695,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "raw_log": "raw/method-34-C0-instrumentation.log"
+    },
+    {
+      "ordinal": 36,
+      "identity": "C1",
+      "seed": 4101,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-03-C1",
+      "host_status": "PASS",
+      "junit_status": "PASS",
+      "junit_seconds": 3.705,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "raw_log": "raw/method-36-C1-instrumentation.log"
+    },
+    {
+      "ordinal": 38,
+      "identity": "C1",
+      "seed": 4102,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-04-C1",
+      "host_status": "PASS",
+      "junit_status": "PASS",
+      "junit_seconds": 3.62,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "raw_log": "raw/method-38-C1-instrumentation.log"
+    },
+    {
+      "ordinal": 40,
+      "identity": "B",
+      "seed": 4102,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-05-B",
+      "host_status": "PASS",
+      "junit_status": "PASS",
+      "junit_seconds": 3.869,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "raw_log": "raw/method-40-B-instrumentation.log"
+    },
+    {
+      "ordinal": 42,
+      "identity": "C0",
+      "seed": 4102,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-06-C0",
+      "host_status": "PASS",
+      "junit_status": "PASS",
+      "junit_seconds": 3.597,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "raw_log": "raw/method-42-C0-instrumentation.log"
+    },
+    {
+      "ordinal": 44,
+      "identity": "C0",
+      "seed": 4103,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-07-C0",
+      "host_status": "PASS",
+      "junit_status": "PASS",
+      "junit_seconds": 3.658,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "raw_log": "raw/method-44-C0-instrumentation.log"
+    },
+    {
+      "ordinal": 46,
+      "identity": "C1",
+      "seed": 4103,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-08-C1",
+      "host_status": "PASS",
+      "junit_status": "PASS",
+      "junit_seconds": 3.65,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "raw_log": "raw/method-46-C1-instrumentation.log"
+    },
+    {
+      "ordinal": 48,
+      "identity": "B",
+      "seed": 4103,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-09-B",
+      "host_status": "PASS",
+      "junit_status": "PASS",
+      "junit_seconds": 3.851,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "raw_log": "raw/method-48-B-instrumentation.log"
+    },
+    {
+      "ordinal": 50,
+      "identity": "B",
+      "seed": 4104,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-10-B",
+      "host_status": "PASS",
+      "junit_status": "PASS",
+      "junit_seconds": 3.74,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "raw_log": "raw/method-50-B-instrumentation.log"
+    },
+    {
+      "ordinal": 52,
+      "identity": "C1",
+      "seed": 4104,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-11-C1",
+      "host_status": "PASS",
+      "junit_status": "PASS",
+      "junit_seconds": 3.679,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "raw_log": "raw/method-52-C1-instrumentation.log"
+    },
+    {
+      "ordinal": 54,
+      "identity": "C0",
+      "seed": 4104,
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "install_group": "visit-12-C0",
+      "host_status": "PASS",
+      "junit_status": "PASS",
+      "junit_seconds": 3.707,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "raw_log": "raw/method-54-C0-instrumentation.log"
+    }
+  ],
+  "records": [
+    {
+      "ordinal": 32,
+      "identity": "B",
+      "seed": 4101,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4101,
+        "logicalSha256": "e42134ad686969604696eca0c8b1e509642eb8cb0f394806f4463a7a0c51b4f5",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 278.26434,
+        "appendCompleteMs": 53.78068,
+        "forcedFullCompleteMs": 202.062089,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 22.399918,
+        "rasterMs": 16.446408,
+        "publicationMs": 0.448697,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200
+      },
+      "nativeStrokeBuilds_or_null": null,
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 32,
+      "identity": "B",
+      "seed": 4101,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4101,
+        "logicalSha256": "ce90b22b09e96ba9c39c605ab6789cf87d488152388a36d473416cdbd9b4c241",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 212.389286,
+        "appendCompleteMs": 106.426519,
+        "forcedFullCompleteMs": 184.79397,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 52.808815,
+        "rasterMs": 79.02718399999999,
+        "publicationMs": 67.31842300000001,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408
+      },
+      "nativeStrokeBuilds_or_null": null,
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 32,
+      "identity": "B",
+      "seed": 4101,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4101,
+        "logicalSha256": "0df59d18c4c4dea150455471d713e6110524e93bbb78b82d0389c1ea29e36990",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 299.568576,
+        "appendCompleteMs": 191.587168,
+        "forcedFullCompleteMs": 268.038799,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 85.028019,
+        "rasterMs": 87.107085,
+        "publicationMs": 241.295377,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816
+      },
+      "nativeStrokeBuilds_or_null": null,
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 48589632,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 34,
+      "identity": "C0",
+      "seed": 4101,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4101,
+        "logicalSha256": "e42134ad686969604696eca0c8b1e509642eb8cb0f394806f4463a7a0c51b4f5",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 284.324156,
+        "appendCompleteMs": 35.984269,
+        "forcedFullCompleteMs": 202.478931,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 11.149244,
+        "rasterMs": 15.652024,
+        "publicationMs": 0.512477,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "nativeStrokeBuilds_or_null": 13,
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 34,
+      "identity": "C0",
+      "seed": 4101,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4101,
+        "logicalSha256": "ce90b22b09e96ba9c39c605ab6789cf87d488152388a36d473416cdbd9b4c241",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 227.428811,
+        "appendCompleteMs": 95.906129,
+        "forcedFullCompleteMs": 181.45963,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 36.538565,
+        "rasterMs": 57.754832,
+        "publicationMs": 77.080878,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "nativeStrokeBuilds_or_null": 21,
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 34,
+      "identity": "C0",
+      "seed": 4101,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4101,
+        "logicalSha256": "0df59d18c4c4dea150455471d713e6110524e93bbb78b82d0389c1ea29e36990",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 292.881215,
+        "appendCompleteMs": 127.818574,
+        "forcedFullCompleteMs": 247.443093,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 50.142827000000004,
+        "rasterMs": 56.306299,
+        "publicationMs": 178.65005299999999,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "nativeStrokeBuilds_or_null": 11,
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 36,
+      "identity": "C1",
+      "seed": 4101,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4101,
+        "logicalSha256": "e42134ad686969604696eca0c8b1e509642eb8cb0f394806f4463a7a0c51b4f5",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 272.396387,
+        "appendCompleteMs": 53.101253,
+        "forcedFullCompleteMs": 202.583379,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 14.933214,
+        "rasterMs": 16.314942,
+        "publicationMs": 0.449049,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "nativeStrokeBuilds_or_null": 13,
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 36,
+      "identity": "C1",
+      "seed": 4101,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4101,
+        "logicalSha256": "ce90b22b09e96ba9c39c605ab6789cf87d488152388a36d473416cdbd9b4c241",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 226.027522,
+        "appendCompleteMs": 105.833601,
+        "forcedFullCompleteMs": 204.39254,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 36.984446000000005,
+        "rasterMs": 57.74775299999999,
+        "publicationMs": 90.752395,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "nativeStrokeBuilds_or_null": 21,
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 36,
+      "identity": "C1",
+      "seed": 4101,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4101,
+        "logicalSha256": "0df59d18c4c4dea150455471d713e6110524e93bbb78b82d0389c1ea29e36990",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 243.429566,
+        "appendCompleteMs": 127.26518,
+        "forcedFullCompleteMs": 246.47219,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 43.60518400000001,
+        "rasterMs": 45.249781,
+        "publicationMs": 208.39582199999998,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "nativeStrokeBuilds_or_null": 11,
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 38,
+      "identity": "C1",
+      "seed": 4102,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4102,
+        "logicalSha256": "a041ece6c5b1a6fd1cbec080ffc738c6ad63b374516cb722d4266ca0023909df",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 262.737897,
+        "appendCompleteMs": 36.988764,
+        "forcedFullCompleteMs": 201.50214,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 14.407678,
+        "rasterMs": 14.914547,
+        "publicationMs": 0.483382,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "nativeStrokeBuilds_or_null": 13,
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 38,
+      "identity": "C1",
+      "seed": 4102,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4102,
+        "logicalSha256": "21519a3876f8f6c9ac6434a0111d1da10fec364ce0ea31ddefe6a0a2d2967386",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 225.103073,
+        "appendCompleteMs": 100.525297,
+        "forcedFullCompleteMs": 189.658864,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 30.756794999999997,
+        "rasterMs": 63.907217,
+        "publicationMs": 81.368367,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "nativeStrokeBuilds_or_null": 21,
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 38,
+      "identity": "C1",
+      "seed": 4102,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4102,
+        "logicalSha256": "fd5134454ed2f4518823fb0265a0fe40c9089ce0c645bb5a39dde3af070cfc16",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 313.13532,
+        "appendCompleteMs": 131.075266,
+        "forcedFullCompleteMs": 235.041535,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 46.620195,
+        "rasterMs": 45.76329500000001,
+        "publicationMs": 200.340093,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "nativeStrokeBuilds_or_null": 11,
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 40,
+      "identity": "B",
+      "seed": 4102,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4102,
+        "logicalSha256": "a041ece6c5b1a6fd1cbec080ffc738c6ad63b374516cb722d4266ca0023909df",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 271.685274,
+        "appendCompleteMs": 53.306613,
+        "forcedFullCompleteMs": 202.222805,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 22.305702,
+        "rasterMs": 16.639699,
+        "publicationMs": 0.506126,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200
+      },
+      "nativeStrokeBuilds_or_null": null,
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 40,
+      "identity": "B",
+      "seed": 4102,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4102,
+        "logicalSha256": "21519a3876f8f6c9ac6434a0111d1da10fec364ce0ea31ddefe6a0a2d2967386",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 233.945584,
+        "appendCompleteMs": 106.872619,
+        "forcedFullCompleteMs": 209.916615,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 42.640051,
+        "rasterMs": 77.801073,
+        "publicationMs": 68.332559,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408
+      },
+      "nativeStrokeBuilds_or_null": null,
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 40,
+      "identity": "B",
+      "seed": 4102,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4102,
+        "logicalSha256": "fd5134454ed2f4518823fb0265a0fe40c9089ce0c645bb5a39dde3af070cfc16",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 269.233317,
+        "appendCompleteMs": 186.332677,
+        "forcedFullCompleteMs": 257.429746,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 87.75759099999999,
+        "rasterMs": 112.431361,
+        "publicationMs": 211.81207700000002,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816
+      },
+      "nativeStrokeBuilds_or_null": null,
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 48589632,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 42,
+      "identity": "C0",
+      "seed": 4102,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4102,
+        "logicalSha256": "a041ece6c5b1a6fd1cbec080ffc738c6ad63b374516cb722d4266ca0023909df",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 263.446714,
+        "appendCompleteMs": 35.168245,
+        "forcedFullCompleteMs": 202.581411,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 11.472928,
+        "rasterMs": 14.83584,
+        "publicationMs": 0.467784,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "nativeStrokeBuilds_or_null": 13,
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 42,
+      "identity": "C0",
+      "seed": 4102,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4102,
+        "logicalSha256": "21519a3876f8f6c9ac6434a0111d1da10fec364ce0ea31ddefe6a0a2d2967386",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 249.498863,
+        "appendCompleteMs": 113.551286,
+        "forcedFullCompleteMs": 200.744528,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 44.111749,
+        "rasterMs": 59.541700000000006,
+        "publicationMs": 103.803882,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "nativeStrokeBuilds_or_null": 21,
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 42,
+      "identity": "C0",
+      "seed": 4102,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4102,
+        "logicalSha256": "fd5134454ed2f4518823fb0265a0fe40c9089ce0c645bb5a39dde3af070cfc16",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 255.763821,
+        "appendCompleteMs": 131.982851,
+        "forcedFullCompleteMs": 249.823539,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 43.370554000000006,
+        "rasterMs": 47.02281800000001,
+        "publicationMs": 217.38906,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "nativeStrokeBuilds_or_null": 11,
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 44,
+      "identity": "C0",
+      "seed": 4103,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4103,
+        "logicalSha256": "dab1c2e0041b38f5d3ffd8c89e17ee9fff375a4f41bec6ac426e34b8c69386c9",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 265.015785,
+        "appendCompleteMs": 34.420208,
+        "forcedFullCompleteMs": 202.062934,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 11.116322,
+        "rasterMs": 15.453343,
+        "publicationMs": 0.438079,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "nativeStrokeBuilds_or_null": 13,
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 44,
+      "identity": "C0",
+      "seed": 4103,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4103,
+        "logicalSha256": "5ad5ed9192a0eeb43b6978c2ae8d5a410fef1ab67099888cdd62f643511d50e8",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 224.010647,
+        "appendCompleteMs": 106.471087,
+        "forcedFullCompleteMs": 202.445118,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 41.80211799999999,
+        "rasterMs": 57.343593,
+        "publicationMs": 107.002873,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "nativeStrokeBuilds_or_null": 21,
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 44,
+      "identity": "C0",
+      "seed": 4103,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4103,
+        "logicalSha256": "f1107ae9b0de2b2bd16830b423bc32aa9b8f890d6c91bb54bd1b00f4ec4f900d",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 241.135689,
+        "appendCompleteMs": 129.421157,
+        "forcedFullCompleteMs": 244.81658,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 46.821062000000005,
+        "rasterMs": 50.77695799999999,
+        "publicationMs": 198.236919,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "nativeStrokeBuilds_or_null": 11,
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 46,
+      "identity": "C1",
+      "seed": 4103,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4103,
+        "logicalSha256": "dab1c2e0041b38f5d3ffd8c89e17ee9fff375a4f41bec6ac426e34b8c69386c9",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 277.565111,
+        "appendCompleteMs": 52.069215,
+        "forcedFullCompleteMs": 201.874915,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 17.998797,
+        "rasterMs": 15.122456,
+        "publicationMs": 0.490707,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "nativeStrokeBuilds_or_null": 13,
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 46,
+      "identity": "C1",
+      "seed": 4103,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4103,
+        "logicalSha256": "5ad5ed9192a0eeb43b6978c2ae8d5a410fef1ab67099888cdd62f643511d50e8",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 240.742498,
+        "appendCompleteMs": 98.196186,
+        "forcedFullCompleteMs": 189.107254,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 37.544567,
+        "rasterMs": 54.136455,
+        "publicationMs": 73.067613,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "nativeStrokeBuilds_or_null": 21,
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 46,
+      "identity": "C1",
+      "seed": 4103,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4103,
+        "logicalSha256": "f1107ae9b0de2b2bd16830b423bc32aa9b8f890d6c91bb54bd1b00f4ec4f900d",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 255.546308,
+        "appendCompleteMs": 129.182119,
+        "forcedFullCompleteMs": 245.181694,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 47.720577,
+        "rasterMs": 58.405716000000005,
+        "publicationMs": 191.14784600000002,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "nativeStrokeBuilds_or_null": 11,
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 48,
+      "identity": "B",
+      "seed": 4103,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4103,
+        "logicalSha256": "dab1c2e0041b38f5d3ffd8c89e17ee9fff375a4f41bec6ac426e34b8c69386c9",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 279.880909,
+        "appendCompleteMs": 53.342902,
+        "forcedFullCompleteMs": 202.054328,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 22.822226,
+        "rasterMs": 15.994564,
+        "publicationMs": 0.44999,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200
+      },
+      "nativeStrokeBuilds_or_null": null,
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 48,
+      "identity": "B",
+      "seed": 4103,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4103,
+        "logicalSha256": "5ad5ed9192a0eeb43b6978c2ae8d5a410fef1ab67099888cdd62f643511d50e8",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 224.813191,
+        "appendCompleteMs": 106.638926,
+        "forcedFullCompleteMs": 186.075303,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 55.437405,
+        "rasterMs": 80.075683,
+        "publicationMs": 75.699829,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408
+      },
+      "nativeStrokeBuilds_or_null": null,
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 48,
+      "identity": "B",
+      "seed": 4103,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4103,
+        "logicalSha256": "f1107ae9b0de2b2bd16830b423bc32aa9b8f890d6c91bb54bd1b00f4ec4f900d",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 249.167494,
+        "appendCompleteMs": 187.759309,
+        "forcedFullCompleteMs": 314.636559,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 73.273032,
+        "rasterMs": 97.81194099999999,
+        "publicationMs": 250.765066,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816
+      },
+      "nativeStrokeBuilds_or_null": null,
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 48589632,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 50,
+      "identity": "B",
+      "seed": 4104,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4104,
+        "logicalSha256": "3b22700197bc4a81a3676386a52337b08263d01f28ea83f33f3303ecea9ceea4",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 274.49768,
+        "appendCompleteMs": 53.506046,
+        "forcedFullCompleteMs": 201.912571,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 24.297923,
+        "rasterMs": 16.405832,
+        "publicationMs": 0.480458,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200
+      },
+      "nativeStrokeBuilds_or_null": null,
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 50,
+      "identity": "B",
+      "seed": 4104,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4104,
+        "logicalSha256": "0f853304b0164070ce18cd74c855e4a926c3481b1eab24f3830ea85dc9c57fe8",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 234.363043,
+        "appendCompleteMs": 107.557831,
+        "forcedFullCompleteMs": 203.432032,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 46.377661,
+        "rasterMs": 77.56796700000001,
+        "publicationMs": 74.371836,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408
+      },
+      "nativeStrokeBuilds_or_null": null,
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 50,
+      "identity": "B",
+      "seed": 4104,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4104,
+        "logicalSha256": "8f3d7c1e08bee55f9efa2504f70b3b7fe346e15a76b8b16a15043bca5e21dbf2",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 258.519161,
+        "appendCompleteMs": 190.358593,
+        "forcedFullCompleteMs": 261.95065,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 84.520565,
+        "rasterMs": 91.467792,
+        "publicationMs": 240.18418900000003,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816
+      },
+      "nativeStrokeBuilds_or_null": null,
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 48589632,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 52,
+      "identity": "C1",
+      "seed": 4104,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4104,
+        "logicalSha256": "3b22700197bc4a81a3676386a52337b08263d01f28ea83f33f3303ecea9ceea4",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 271.276837,
+        "appendCompleteMs": 37.054168,
+        "forcedFullCompleteMs": 202.166768,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 14.693193,
+        "rasterMs": 14.901802,
+        "publicationMs": 0.47644,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "nativeStrokeBuilds_or_null": 13,
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 52,
+      "identity": "C1",
+      "seed": 4104,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4104,
+        "logicalSha256": "0f853304b0164070ce18cd74c855e4a926c3481b1eab24f3830ea85dc9c57fe8",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 216.963223,
+        "appendCompleteMs": 96.489699,
+        "forcedFullCompleteMs": 201.083054,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 40.765969999999996,
+        "rasterMs": 55.190422000000005,
+        "publicationMs": 75.090531,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "nativeStrokeBuilds_or_null": 21,
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 52,
+      "identity": "C1",
+      "seed": 4104,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4104,
+        "logicalSha256": "8f3d7c1e08bee55f9efa2504f70b3b7fe346e15a76b8b16a15043bca5e21dbf2",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 258.086414,
+        "appendCompleteMs": 132.428682,
+        "forcedFullCompleteMs": 242.897243,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 42.679413,
+        "rasterMs": 43.91060400000001,
+        "publicationMs": 201.13706700000003,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "nativeStrokeBuilds_or_null": 11,
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 54,
+      "identity": "C0",
+      "seed": 4104,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4104,
+        "logicalSha256": "3b22700197bc4a81a3676386a52337b08263d01f28ea83f33f3303ecea9ceea4",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 281.163139,
+        "appendCompleteMs": 36.204486,
+        "forcedFullCompleteMs": 202.604235,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 11.244983,
+        "rasterMs": 14.642239,
+        "publicationMs": 0.46541,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "nativeStrokeBuilds_or_null": 13,
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 54,
+      "identity": "C0",
+      "seed": 4104,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4104,
+        "logicalSha256": "0f853304b0164070ce18cd74c855e4a926c3481b1eab24f3830ea85dc9c57fe8",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 242.36117,
+        "appendCompleteMs": 99.184953,
+        "forcedFullCompleteMs": 194.428309,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 33.632869,
+        "rasterMs": 53.716829000000004,
+        "publicationMs": 87.520567,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "nativeStrokeBuilds_or_null": 21,
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 54,
+      "identity": "C0",
+      "seed": 4104,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4104,
+        "logicalSha256": "8f3d7c1e08bee55f9efa2504f70b3b7fe346e15a76b8b16a15043bca5e21dbf2",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "evidence": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 279.453825,
+        "appendCompleteMs": 126.006128,
+        "forcedFullCompleteMs": 241.540629,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 43.23309700000001,
+        "rasterMs": 47.87552,
+        "publicationMs": 198.79663500000004,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "nativeStrokeBuilds_or_null": 11,
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "comparison": "B->C1",
+      "metric": "raster.1.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 278.26434,
+          "right_ms": 272.396387,
+          "delta_ms": -5.867953,
+          "relative_change": -0.021087693090677706,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 271.685274,
+          "right_ms": 262.737897,
+          "delta_ms": -8.947377000000017,
+          "relative_change": -0.032932874381701005,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 279.880909,
+          "right_ms": 277.565111,
+          "delta_ms": -2.3157979999999725,
+          "relative_change": -0.008274226378191307,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 274.49768,
+          "right_ms": 271.276837,
+          "delta_ms": -3.220843000000002,
+          "relative_change": -0.011733589150917378,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -4.544398000000001,
+      "median_relative_change": -0.016410641120797542,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.1.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 53.78068,
+          "right_ms": 53.101253,
+          "delta_ms": -0.6794269999999969,
+          "relative_change": -0.012633291360391818,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 53.306613,
+          "right_ms": 36.988764,
+          "delta_ms": -16.317848999999995,
+          "relative_change": -0.3061130332928861,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 53.342902,
+          "right_ms": 52.069215,
+          "delta_ms": -1.2736870000000025,
+          "relative_change": -0.02387734735541769,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 53.506046,
+          "right_ms": 37.054168,
+          "delta_ms": -16.451878,
+          "relative_change": -0.30747699054420885,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -8.795767999999999,
+      "median_relative_change": -0.16499519032415189,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.1.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 202.062089,
+          "right_ms": 202.583379,
+          "delta_ms": 0.5212900000000218,
+          "relative_change": 0.002579850592359323,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 202.222805,
+          "right_ms": 201.50214,
+          "delta_ms": -0.7206649999999968,
+          "relative_change": -0.003563717751813411,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 202.054328,
+          "right_ms": 201.874915,
+          "delta_ms": -0.17941300000001092,
+          "relative_change": -0.0008879443552429755,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 201.912571,
+          "right_ms": 202.166768,
+          "delta_ms": 0.25419699999997647,
+          "relative_change": 0.0012589458830671862,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 0,
+      "median_delta_ms": 0.03739199999998277,
+      "median_relative_change": 0.00018550076391210535,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.4.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 212.389286,
+          "right_ms": 226.027522,
+          "delta_ms": 13.638236000000006,
+          "relative_change": 0.06421338974697632,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 233.945584,
+          "right_ms": 225.103073,
+          "delta_ms": -8.842511000000002,
+          "relative_change": -0.037797298195635154,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 224.813191,
+          "right_ms": 240.742498,
+          "delta_ms": 15.929307000000023,
+          "relative_change": 0.0708557488514987,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 234.363043,
+          "right_ms": 216.963223,
+          "delta_ms": -17.399820000000005,
+          "relative_change": -0.07424301962148527,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 0,
+      "median_delta_ms": 2.3978625000000022,
+      "median_relative_change": 0.013208045775670585,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.4.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 106.426519,
+          "right_ms": 105.833601,
+          "delta_ms": -0.5929179999999974,
+          "relative_change": -0.005571149047917223,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 106.872619,
+          "right_ms": 100.525297,
+          "delta_ms": -6.3473220000000055,
+          "relative_change": -0.05939147051313498,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 106.638926,
+          "right_ms": 98.196186,
+          "delta_ms": -8.44274,
+          "relative_change": -0.07917127747516883,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 107.557831,
+          "right_ms": 96.489699,
+          "delta_ms": -11.068131999999991,
+          "relative_change": -0.10290400891405105,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -7.395031000000003,
+      "median_relative_change": -0.0692813739941519,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.4.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 184.79397,
+          "right_ms": 204.39254,
+          "delta_ms": 19.598569999999995,
+          "relative_change": 0.10605632856959568,
+          "over_band": true
+        },
+        {
+          "seed": 4102,
+          "left_ms": 209.916615,
+          "right_ms": 189.658864,
+          "delta_ms": -20.257751000000013,
+          "relative_change": -0.09650379985405166,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 186.075303,
+          "right_ms": 189.107254,
+          "delta_ms": 3.0319510000000207,
+          "relative_change": 0.01629421503615669,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 203.432032,
+          "right_ms": 201.083054,
+          "delta_ms": -2.3489779999999882,
+          "relative_change": -0.01154674599130967,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 1,
+      "median_delta_ms": 0.34148650000001624,
+      "median_relative_change": 0.0023737345224235096,
+      "screening_status": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 299.568576,
+          "right_ms": 243.429566,
+          "delta_ms": -56.13901000000001,
+          "relative_change": -0.18739952884777877,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 269.233317,
+          "right_ms": 313.13532,
+          "delta_ms": 43.90200299999998,
+          "relative_change": 0.16306303948259115,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 249.167494,
+          "right_ms": 255.546308,
+          "delta_ms": 6.3788140000000055,
+          "relative_change": 0.025600506300392567,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 258.519161,
+          "right_ms": 258.086414,
+          "delta_ms": -0.4327470000000062,
+          "relative_change": -0.0016739455533046899,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 1,
+      "median_delta_ms": 2.9730334999999997,
+      "median_relative_change": 0.011963280373543939,
+      "screening_status": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 191.587168,
+          "right_ms": 127.26518,
+          "delta_ms": -64.32198799999999,
+          "relative_change": -0.33573223442605504,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 186.332677,
+          "right_ms": 131.075266,
+          "delta_ms": -55.25741099999999,
+          "relative_change": -0.2965524452804378,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 187.759309,
+          "right_ms": 129.182119,
+          "delta_ms": -58.57719,
+          "relative_change": -0.3119802171832663,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 190.358593,
+          "right_ms": 132.428682,
+          "delta_ms": -57.929911000000004,
+          "relative_change": -0.3043199158337969,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -58.2535505,
+      "median_relative_change": -0.3081500665085316,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 268.038799,
+          "right_ms": 246.47219,
+          "delta_ms": -21.56660899999997,
+          "relative_change": -0.08046077314351785,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 257.429746,
+          "right_ms": 235.041535,
+          "delta_ms": -22.388211000000013,
+          "relative_change": -0.08696823637467288,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 314.636559,
+          "right_ms": 245.181694,
+          "delta_ms": -69.45486499999998,
+          "relative_change": -0.22074632782899206,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 261.95065,
+          "right_ms": 242.897243,
+          "delta_ms": -19.053406999999993,
+          "relative_change": -0.07273662806333936,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -21.977409999999992,
+      "median_relative_change": -0.08371450475909537,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.1.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 284.324156,
+          "right_ms": 272.396387,
+          "delta_ms": -11.927769000000012,
+          "relative_change": -0.041951303638091186,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 263.446714,
+          "right_ms": 262.737897,
+          "delta_ms": -0.7088170000000105,
+          "relative_change": -0.002690551684011555,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 265.015785,
+          "right_ms": 277.565111,
+          "delta_ms": 12.549326000000008,
+          "relative_change": 0.04735312653168955,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 281.163139,
+          "right_ms": 271.276837,
+          "delta_ms": -9.886302,
+          "relative_change": -0.03516215544883361,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 1,
+      "over_band_pairs": 0,
+      "median_delta_ms": -5.2975595000000055,
+      "median_relative_change": -0.018926353566422582,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.1.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 35.984269,
+          "right_ms": 53.101253,
+          "delta_ms": 17.116984000000002,
+          "relative_change": 0.4756796365656337,
+          "over_band": true
+        },
+        {
+          "seed": 4102,
+          "left_ms": 35.168245,
+          "right_ms": 36.988764,
+          "delta_ms": 1.8205190000000044,
+          "relative_change": 0.05176598946009392,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 34.420208,
+          "right_ms": 52.069215,
+          "delta_ms": 17.649006999999997,
+          "relative_change": 0.5127513174818699,
+          "over_band": true
+        },
+        {
+          "seed": 4104,
+          "left_ms": 36.204486,
+          "right_ms": 37.054168,
+          "delta_ms": 0.8496819999999943,
+          "relative_change": 0.023468970116023558,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 4,
+      "over_band_pairs": 2,
+      "median_delta_ms": 9.468751500000003,
+      "median_relative_change": 0.2637228130128638,
+      "screening_status": "REGRESSION_SIGNAL"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.1.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 202.478931,
+          "right_ms": 202.583379,
+          "delta_ms": 0.10444800000001919,
+          "relative_change": 0.0005158462635306282,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 202.581411,
+          "right_ms": 201.50214,
+          "delta_ms": -1.0792710000000056,
+          "relative_change": -0.005327591483702321,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 202.062934,
+          "right_ms": 201.874915,
+          "delta_ms": -0.18801900000002547,
+          "relative_change": -0.0009304972281557466,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 202.604235,
+          "right_ms": 202.166768,
+          "delta_ms": -0.43746699999999805,
+          "relative_change": -0.0021592194259907327,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 1,
+      "over_band_pairs": 0,
+      "median_delta_ms": -0.31274300000001176,
+      "median_relative_change": -0.0015448583270732397,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.4.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 227.428811,
+          "right_ms": 226.027522,
+          "delta_ms": -1.4012889999999913,
+          "relative_change": -0.006161440117628647,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 249.498863,
+          "right_ms": 225.103073,
+          "delta_ms": -24.395790000000005,
+          "relative_change": -0.09777916302568479,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 224.010647,
+          "right_ms": 240.742498,
+          "delta_ms": 16.731851000000006,
+          "relative_change": 0.07469221317859942,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 242.36117,
+          "right_ms": 216.963223,
+          "delta_ms": -25.397946999999988,
+          "relative_change": -0.10479379596987415,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 1,
+      "over_band_pairs": 0,
+      "median_delta_ms": -12.898539499999998,
+      "median_relative_change": -0.05197030157165672,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.4.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 95.906129,
+          "right_ms": 105.833601,
+          "delta_ms": 9.927471999999995,
+          "relative_change": 0.10351238344736013,
+          "over_band": true
+        },
+        {
+          "seed": 4102,
+          "left_ms": 113.551286,
+          "right_ms": 100.525297,
+          "delta_ms": -13.02598900000001,
+          "relative_change": -0.11471458808489421,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 106.471087,
+          "right_ms": 98.196186,
+          "delta_ms": -8.274901,
+          "relative_change": -0.07771970056058508,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 99.184953,
+          "right_ms": 96.489699,
+          "delta_ms": -2.6952539999999914,
+          "relative_change": -0.027174021043292695,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 1,
+      "over_band_pairs": 1,
+      "median_delta_ms": -5.485077499999996,
+      "median_relative_change": -0.05244686080193889,
+      "screening_status": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.4.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 181.45963,
+          "right_ms": 204.39254,
+          "delta_ms": 22.932909999999993,
+          "relative_change": 0.12638023123931208,
+          "over_band": true
+        },
+        {
+          "seed": 4102,
+          "left_ms": 200.744528,
+          "right_ms": 189.658864,
+          "delta_ms": -11.085664000000008,
+          "relative_change": -0.05522274559832585,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 202.445118,
+          "right_ms": 189.107254,
+          "delta_ms": -13.337863999999996,
+          "relative_change": -0.06588385104944838,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 194.428309,
+          "right_ms": 201.083054,
+          "delta_ms": 6.654744999999991,
+          "relative_change": 0.034227243112009864,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 1,
+      "median_delta_ms": -2.2154595000000086,
+      "median_relative_change": -0.010497751243157993,
+      "screening_status": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 292.881215,
+          "right_ms": 243.429566,
+          "delta_ms": -49.451649,
+          "relative_change": -0.16884541058736047,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 255.763821,
+          "right_ms": 313.13532,
+          "delta_ms": 57.37149899999997,
+          "relative_change": 0.22431436461844223,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 241.135689,
+          "right_ms": 255.546308,
+          "delta_ms": 14.410618999999997,
+          "relative_change": 0.05976145239952424,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 279.453825,
+          "right_ms": 258.086414,
+          "delta_ms": -21.367411000000004,
+          "relative_change": -0.07646132952375939,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 1,
+      "median_delta_ms": -3.4783960000000036,
+      "median_relative_change": -0.008349938562117576,
+      "screening_status": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 127.818574,
+          "right_ms": 127.26518,
+          "delta_ms": -0.5533939999999973,
+          "relative_change": -0.004329527256343835,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 131.982851,
+          "right_ms": 131.075266,
+          "delta_ms": -0.9075850000000116,
+          "relative_change": -0.006876537316200304,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 129.421157,
+          "right_ms": 129.182119,
+          "delta_ms": -0.23903799999999364,
+          "relative_change": -0.0018469777704119839,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 126.006128,
+          "right_ms": 132.428682,
+          "delta_ms": 6.422554000000005,
+          "relative_change": 0.05097017186338748,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 1,
+      "over_band_pairs": 0,
+      "median_delta_ms": -0.39621599999999546,
+      "median_relative_change": -0.0030882525133779093,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 247.443093,
+          "right_ms": 246.47219,
+          "delta_ms": -0.9709029999999927,
+          "relative_change": -0.0039237425794705905,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 249.823539,
+          "right_ms": 235.041535,
+          "delta_ms": -14.782004,
+          "relative_change": -0.05916978063464229,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 244.81658,
+          "right_ms": 245.181694,
+          "delta_ms": 0.3651140000000055,
+          "relative_change": 0.0014913777490070945,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 241.540629,
+          "right_ms": 242.897243,
+          "delta_ms": 1.3566140000000075,
+          "relative_change": 0.005616504376992459,
+          "over_band": false
+        }
+      ],
+      "slower_pairs": 2,
+      "over_band_pairs": 0,
+      "median_delta_ms": -0.3028944999999936,
+      "median_relative_change": -0.001216182415231748,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    }
+  ],
+  "classification_counts": {
+    "B->C1": {
+      "WITHIN_PROPOSED_BAND": 7,
+      "INCONCLUSIVE": 2
+    },
+    "C0->C1": {
+      "WITHIN_PROPOSED_BAND": 5,
+      "REGRESSION_SIGNAL": 1,
+      "INCONCLUSIVE": 3
+    }
+  },
+  "single_layer_stage_comparison": [
+    {
+      "seed": 4101,
+      "C0": {
+        "appendCompleteMs": 35.984269,
+        "metadataMs": 11.149244,
+        "rasterMs": 15.652024,
+        "publicationMs": 0.512477,
+        "unpartitioned_wall_ms": 8.670523999999997
+      },
+      "C1": {
+        "appendCompleteMs": 53.101253,
+        "metadataMs": 14.933214,
+        "rasterMs": 16.314942,
+        "publicationMs": 0.449049,
+        "unpartitioned_wall_ms": 21.404048000000003
+      },
+      "C1_minus_C0": {
+        "appendCompleteMs": 17.116984000000002,
+        "metadataMs": 3.78397,
+        "rasterMs": 0.6629179999999977,
+        "publicationMs": -0.06342799999999998,
+        "unpartitioned_wall_ms": 12.733524000000006
+      }
+    },
+    {
+      "seed": 4102,
+      "C0": {
+        "appendCompleteMs": 35.168245,
+        "metadataMs": 11.472928,
+        "rasterMs": 14.83584,
+        "publicationMs": 0.467784,
+        "unpartitioned_wall_ms": 8.391693
+      },
+      "C1": {
+        "appendCompleteMs": 36.988764,
+        "metadataMs": 14.407678,
+        "rasterMs": 14.914547,
+        "publicationMs": 0.483382,
+        "unpartitioned_wall_ms": 7.183157000000001
+      },
+      "C1_minus_C0": {
+        "appendCompleteMs": 1.8205190000000044,
+        "metadataMs": 2.934750000000001,
+        "rasterMs": 0.07870700000000141,
+        "publicationMs": 0.015598,
+        "unpartitioned_wall_ms": -1.2085359999999987
+      }
+    },
+    {
+      "seed": 4103,
+      "C0": {
+        "appendCompleteMs": 34.420208,
+        "metadataMs": 11.116322,
+        "rasterMs": 15.453343,
+        "publicationMs": 0.438079,
+        "unpartitioned_wall_ms": 7.4124640000000035
+      },
+      "C1": {
+        "appendCompleteMs": 52.069215,
+        "metadataMs": 17.998797,
+        "rasterMs": 15.122456,
+        "publicationMs": 0.490707,
+        "unpartitioned_wall_ms": 18.457255000000004
+      },
+      "C1_minus_C0": {
+        "appendCompleteMs": 17.649006999999997,
+        "metadataMs": 6.8824749999999995,
+        "rasterMs": -0.3308870000000006,
+        "publicationMs": 0.05262800000000001,
+        "unpartitioned_wall_ms": 11.044791
+      }
+    },
+    {
+      "seed": 4104,
+      "C0": {
+        "appendCompleteMs": 36.204486,
+        "metadataMs": 11.244983,
+        "rasterMs": 14.642239,
+        "publicationMs": 0.46541,
+        "unpartitioned_wall_ms": 9.851854000000003
+      },
+      "C1": {
+        "appendCompleteMs": 37.054168,
+        "metadataMs": 14.693193,
+        "rasterMs": 14.901802,
+        "publicationMs": 0.47644,
+        "unpartitioned_wall_ms": 6.982732999999996
+      },
+      "C1_minus_C0": {
+        "appendCompleteMs": 0.8496819999999943,
+        "metadataMs": 3.4482100000000013,
+        "rasterMs": 0.259563,
+        "publicationMs": 0.011029999999999984,
+        "unpartitioned_wall_ms": -2.869121000000007
+      }
+    }
+  ],
+  "correctness": [
+    {
+      "ordinal": 19,
+      "selection": "org.inkweft.data.RasterReadCacheTest#separatedRegionsSkipEmptyMetadataBatchesAndDecodeCrossingStrokeOnce",
+      "junit_seconds": 0.872,
+      "status": "PASS"
+    },
+    {
+      "ordinal": 20,
+      "selection": "org.inkweft.data.RasterReadCacheTest#payloadMaskAndRevisionChangesCannotReuseStaleDecodedGeometry",
+      "junit_seconds": 0.318,
+      "status": "PASS"
+    },
+    {
+      "ordinal": 21,
+      "selection": "org.inkweft.data.RasterReadCacheTest#explicitAppendReuseSkipsOldPayloadsAcrossRevisionJumpsAndDefaultsToInvalidation",
+      "junit_seconds": 0.277,
+      "status": "PASS"
+    },
+    {
+      "ordinal": 22,
+      "selection": "org.inkweft.data.RasterReadCacheTest#appendPermissionStillRefreshesChangedPayloadVisibilityUndoAndMasks",
+      "junit_seconds": 0.357,
+      "status": "PASS"
+    },
+    {
+      "ordinal": 23,
+      "selection": "org.inkweft.data.RasterReadCacheTest#appendReuseRejectsHeadOrMaskChangesDuringCachedBatches",
+      "junit_seconds": 0.662,
+      "status": "PASS"
+    },
+    {
+      "ordinal": 24,
+      "selection": "org.inkweft.data.RasterReadCacheTest#decodedCacheRemainsBoundedForManyStrokesAndDenseMasks",
+      "junit_seconds": 0.825,
+      "status": "PASS"
+    },
+    {
+      "ordinal": 25,
+      "selection": "org.inkweft.data.RasterReadCacheTest#sameRevisionMaskChangeDuringCachedVisitRejectsTheWholeRead",
+      "junit_seconds": 0.677,
+      "status": "PASS"
+    },
+    {
+      "ordinal": 26,
+      "selection": "org.inkweft.app.TileLocalRedrawTest#appendRetainsGeometryAcrossIdleLayerRevisionsAndDestructiveChangesMatchColdFrames",
+      "junit_seconds": 0.738,
+      "status": "PASS"
+    },
+    {
+      "ordinal": 27,
+      "selection": "org.inkweft.app.TileLocalRedrawTest#integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+      "junit_seconds": 0.832,
+      "status": "PASS"
+    },
+    {
+      "ordinal": 28,
+      "selection": "org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources",
+      "junit_seconds": 0.183,
+      "status": "PASS"
+    },
+    {
+      "ordinal": 29,
+      "selection": "org.inkweft.app.StreamedInkRasterTest#clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+      "junit_seconds": 0.211,
+      "status": "PASS"
+    },
+    {
+      "ordinal": 30,
+      "selection": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+      "junit_seconds": 0.749,
+      "status": "PASS"
+    }
+  ],
+  "environments": [
+    {
+      "install_group": "visit-01-B",
+      "ordinal": 32,
+      "identity": "B",
+      "seed": 4101,
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "device": {
+        "sdk": "35",
+        "abi": "x86_64",
+        "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+        "qemu": "1",
+        "hw_timeout_multiplier": "",
+        "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+        "density": "Physical density: 420\nOverride density: 240",
+        "font_scale": "1.0",
+        "animations": {
+          "window_animation_scale": "1.0",
+          "transition_animation_scale": "1.0",
+          "animator_duration_scale": "null"
+        }
+      },
+      "host_before": {
+        "epoch": 1791944638.2687821,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.86962890625,
+          2.615234375,
+          2.44970703125
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11991668 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 73259651072,
+          "free": 81617760256
+        }
+      },
+      "host_after": {
+        "epoch": 1791944692.011301,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.40771484375,
+          2.3779296875,
+          2.376953125
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11916892 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 73663619072,
+          "free": 81213792256
+        }
+      }
+    },
+    {
+      "install_group": "visit-02-C0",
+      "ordinal": 34,
+      "identity": "C0",
+      "seed": 4101,
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "device": {
+        "sdk": "35",
+        "abi": "x86_64",
+        "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+        "qemu": "1",
+        "hw_timeout_multiplier": "",
+        "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+        "density": "Physical density: 420\nOverride density: 240",
+        "font_scale": "1.0",
+        "animations": {
+          "window_animation_scale": "1.0",
+          "transition_animation_scale": "1.0",
+          "animator_duration_scale": "null"
+        }
+      },
+      "host_before": {
+        "epoch": 1791944692.1580079,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.40771484375,
+          2.3779296875,
+          2.376953125
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11916208 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 73663631360,
+          "free": 81213779968
+        }
+      },
+      "host_after": {
+        "epoch": 1791944741.963421,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.3935546875,
+          2.224609375,
+          2.32373046875
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11845320 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 74054897664,
+          "free": 80822513664
+        }
+      }
+    },
+    {
+      "install_group": "visit-03-C1",
+      "ordinal": 36,
+      "identity": "C1",
+      "seed": 4101,
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "device": {
+        "sdk": "35",
+        "abi": "x86_64",
+        "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+        "qemu": "1",
+        "hw_timeout_multiplier": "",
+        "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+        "density": "Physical density: 420\nOverride density: 240",
+        "font_scale": "1.0",
+        "animations": {
+          "window_animation_scale": "1.0",
+          "transition_animation_scale": "1.0",
+          "animator_duration_scale": "null"
+        }
+      },
+      "host_before": {
+        "epoch": 1791944742.1124005,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.3935546875,
+          2.224609375,
+          2.32373046875
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11845328 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 74054905856,
+          "free": 80822505472
+        }
+      },
+      "host_after": {
+        "epoch": 1791944791.9224083,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.32373046875,
+          2.06689453125,
+          2.2626953125
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11864608 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 74445848576,
+          "free": 80431562752
+        }
+      }
+    },
+    {
+      "install_group": "visit-04-C1",
+      "ordinal": 38,
+      "identity": "C1",
+      "seed": 4102,
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "device": {
+        "sdk": "35",
+        "abi": "x86_64",
+        "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+        "qemu": "1",
+        "hw_timeout_multiplier": "",
+        "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+        "density": "Physical density: 420\nOverride density: 240",
+        "font_scale": "1.0",
+        "animations": {
+          "window_animation_scale": "1.0",
+          "transition_animation_scale": "1.0",
+          "animator_duration_scale": "null"
+        }
+      },
+      "host_before": {
+        "epoch": 1791944792.0741386,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.32373046875,
+          2.06689453125,
+          2.2626953125
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11862856 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 74445856768,
+          "free": 80431554560
+        }
+      },
+      "host_after": {
+        "epoch": 1791944841.4914157,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          5.1337890625,
+          2.78271484375,
+          2.4833984375
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11863204 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 74836791296,
+          "free": 80040620032
+        }
+      }
+    },
+    {
+      "install_group": "visit-05-B",
+      "ordinal": 40,
+      "identity": "B",
+      "seed": 4102,
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "device": {
+        "sdk": "35",
+        "abi": "x86_64",
+        "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+        "qemu": "1",
+        "hw_timeout_multiplier": "",
+        "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+        "density": "Physical density: 420\nOverride density: 240",
+        "font_scale": "1.0",
+        "animations": {
+          "window_animation_scale": "1.0",
+          "transition_animation_scale": "1.0",
+          "animator_duration_scale": "null"
+        }
+      },
+      "host_before": {
+        "epoch": 1791944841.6321056,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          5.1337890625,
+          2.78271484375,
+          2.4833984375
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11862684 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 74836803584,
+          "free": 80040607744
+        }
+      },
+      "host_after": {
+        "epoch": 1791944895.2097948,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          2.68408203125,
+          2.49365234375,
+          2.400390625
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11846624 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 75226439680,
+          "free": 79650971648
+        }
+      }
+    },
+    {
+      "install_group": "visit-06-C0",
+      "ordinal": 42,
+      "identity": "C0",
+      "seed": 4102,
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "device": {
+        "sdk": "35",
+        "abi": "x86_64",
+        "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+        "qemu": "1",
+        "hw_timeout_multiplier": "",
+        "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+        "density": "Physical density: 420\nOverride density: 240",
+        "font_scale": "1.0",
+        "animations": {
+          "window_animation_scale": "1.0",
+          "transition_animation_scale": "1.0",
+          "animator_duration_scale": "null"
+        }
+      },
+      "host_before": {
+        "epoch": 1791944895.3527904,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          2.68408203125,
+          2.49365234375,
+          2.400390625
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11845400 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 75226447872,
+          "free": 79650963456
+        }
+      },
+      "host_after": {
+        "epoch": 1791944945.2142828,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.86083984375,
+          2.30517578125,
+          2.33984375
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11857904 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 75617124352,
+          "free": 79260286976
+        }
+      }
+    },
+    {
+      "install_group": "visit-07-C0",
+      "ordinal": 44,
+      "identity": "C0",
+      "seed": 4103,
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "device": {
+        "sdk": "35",
+        "abi": "x86_64",
+        "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+        "qemu": "1",
+        "hw_timeout_multiplier": "",
+        "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+        "density": "Physical density: 420\nOverride density: 240",
+        "font_scale": "1.0",
+        "animations": {
+          "window_animation_scale": "1.0",
+          "transition_animation_scale": "1.0",
+          "animator_duration_scale": "null"
+        }
+      },
+      "host_before": {
+        "epoch": 1791944945.355485,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.86083984375,
+          2.30517578125,
+          2.33984375
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11856836 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 75617132544,
+          "free": 79260278784
+        }
+      },
+      "host_after": {
+        "epoch": 1791944995.2162962,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.41552734375,
+          2.1162109375,
+          2.27197265625
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11844456 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 76008267776,
+          "free": 78869143552
+        }
+      }
+    },
+    {
+      "install_group": "visit-08-C1",
+      "ordinal": 46,
+      "identity": "C1",
+      "seed": 4103,
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "device": {
+        "sdk": "35",
+        "abi": "x86_64",
+        "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+        "qemu": "1",
+        "hw_timeout_multiplier": "",
+        "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+        "density": "Physical density: 420\nOverride density: 240",
+        "font_scale": "1.0",
+        "animations": {
+          "window_animation_scale": "1.0",
+          "transition_animation_scale": "1.0",
+          "animator_duration_scale": "null"
+        }
+      },
+      "host_before": {
+        "epoch": 1791944995.3645337,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.41552734375,
+          2.1162109375,
+          2.27197265625
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11844396 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 76008275968,
+          "free": 78869135360
+        }
+      },
+      "host_after": {
+        "epoch": 1791945044.9918764,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.3544921875,
+          1.98828125,
+          2.2197265625
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11830212 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 76251238400,
+          "free": 78626172928
+        }
+      }
+    },
+    {
+      "install_group": "visit-09-B",
+      "ordinal": 48,
+      "identity": "B",
+      "seed": 4103,
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "device": {
+        "sdk": "35",
+        "abi": "x86_64",
+        "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+        "qemu": "1",
+        "hw_timeout_multiplier": "",
+        "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+        "density": "Physical density: 420\nOverride density: 240",
+        "font_scale": "1.0",
+        "animations": {
+          "window_animation_scale": "1.0",
+          "transition_animation_scale": "1.0",
+          "animator_duration_scale": "null"
+        }
+      },
+      "host_before": {
+        "epoch": 1791945045.1372874,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.3544921875,
+          1.98828125,
+          2.2197265625
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11828624 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 76251246592,
+          "free": 78626164736
+        }
+      },
+      "host_after": {
+        "epoch": 1791945098.5110419,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.21630859375,
+          1.84912109375,
+          2.15673828125
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11798640 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 76254347264,
+          "free": 78623064064
+        }
+      }
+    },
+    {
+      "install_group": "visit-10-B",
+      "ordinal": 50,
+      "identity": "B",
+      "seed": 4104,
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "device": {
+        "sdk": "35",
+        "abi": "x86_64",
+        "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+        "qemu": "1",
+        "hw_timeout_multiplier": "",
+        "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+        "density": "Physical density: 420\nOverride density: 240",
+        "font_scale": "1.0",
+        "animations": {
+          "window_animation_scale": "1.0",
+          "transition_animation_scale": "1.0",
+          "animator_duration_scale": "null"
+        }
+      },
+      "host_before": {
+        "epoch": 1791945098.65747,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.21630859375,
+          1.84912109375,
+          2.15673828125
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11798784 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 76254359552,
+          "free": 78623051776
+        }
+      },
+      "host_after": {
+        "epoch": 1791945151.9575367,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.0546875,
+          1.7021484375,
+          2.087890625
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11868752 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 76643467264,
+          "free": 78233944064
+        }
+      }
+    },
+    {
+      "install_group": "visit-11-C1",
+      "ordinal": 52,
+      "identity": "C1",
+      "seed": 4104,
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "device": {
+        "sdk": "35",
+        "abi": "x86_64",
+        "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+        "qemu": "1",
+        "hw_timeout_multiplier": "",
+        "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+        "density": "Physical density: 420\nOverride density: 240",
+        "font_scale": "1.0",
+        "animations": {
+          "window_animation_scale": "1.0",
+          "transition_animation_scale": "1.0",
+          "animator_duration_scale": "null"
+        }
+      },
+      "host_before": {
+        "epoch": 1791945152.1208558,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.0546875,
+          1.7021484375,
+          2.087890625
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11868520 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 76643475456,
+          "free": 78233935872
+        }
+      },
+      "host_after": {
+        "epoch": 1791945202.0295994,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.03515625,
+          1.6171875,
+          2.0390625
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11867400 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 77034762240,
+          "free": 77842649088
+        }
+      }
+    },
+    {
+      "install_group": "visit-12-C0",
+      "ordinal": 54,
+      "identity": "C0",
+      "seed": 4104,
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "device": {
+        "sdk": "35",
+        "abi": "x86_64",
+        "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+        "qemu": "1",
+        "hw_timeout_multiplier": "",
+        "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+        "density": "Physical density: 420\nOverride density: 240",
+        "font_scale": "1.0",
+        "animations": {
+          "window_animation_scale": "1.0",
+          "transition_animation_scale": "1.0",
+          "animator_duration_scale": "null"
+        }
+      },
+      "host_before": {
+        "epoch": 1791945202.1762938,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.03515625,
+          1.6171875,
+          2.0390625
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11866156 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 77034770432,
+          "free": 77842640896
+        }
+      },
+      "host_after": {
+        "epoch": 1791945251.8786838,
+        "uid": 1001,
+        "cpu_count": 4,
+        "kernel": "6.17.0-1022-azure",
+        "load_1_5_15": [
+          1.0771484375,
+          1.54931640625,
+          1.9921875
+        ],
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "memory": {
+          "MemTotal": "16373448 kB",
+          "MemAvailable": "11837692 kB",
+          "SwapTotal": "3145724 kB",
+          "SwapFree": "3145704 kB"
+        },
+        "disk_bytes": {
+          "total": 154894188544,
+          "used": 77145993216,
+          "free": 77731418112
+        }
+      }
+    }
+  ],
+  "conclusions": [
+    "All36 within-version local/cold pixel checks pass, decoded B13/21/11 vs C0/C1 1/1/1, C0/C1 native13/21/11, B native missing/null; local rebuild1 and full decode321/rebuild24/24/48.",
+    "C0->C1 single-layer append remains REGRESSION_SIGNAL under frozen rules despite identical raster sources; four pairs slow, two exceed the per-pair band.",
+    "Unchanged raster sources and counts do not prove wall differences are noise. No per-frame CPU/GC/JIT/scheduling evidence identifies a causal mechanism.",
+    "C1 single-layer metadata wall is higher in all four pairs. In slow seeds4101/4103 metadata explains only part; unpartitioned ready wall is also higher. Do not equate either with CPU/lock wait.",
+    "No evidence-supported production raster fix is identified. If further authorized, diagnose per-frame ready/draw/worker/publication transitions and existing default-off metadata wall/CPU on the unchanged fixture; preserve all samples and thresholds."
+  ],
+  "limitations": [
+    "Four paired seeds, not a statistical significance/equivalence result; no cross-run pooling.",
+    "Common probe has no reusedStrokes/readObserver/geometryBytes; do not invent payload-read or cache-hit telemetry.",
+    "Pixels are within-version local versus cold builds, not cross-version hashes or physical-device capture.",
+    "Metadata/raster/publication are append-only and layer sums overlap; not explanatory first/full timings.",
+    "Single-layer residual is unpartitioned wall, not a named queue, vsync, lock, CPU or GC measurement.",
+    "Host snapshots span installation plus raster/library visits; no causal mapping to individual frames.",
+    "Tracked resource totalBytes0 is not a zero native/process heap claim.",
+    "Candidate-only transform correctness is not continuous transform performance, original dense30s revalidation, or NativeStrokeTileReuse differential revalidation.",
+    "Cache remains bounded, append-permission guarded; no cross-frame native stroke/mesh caching."
+  ],
+  "input_provenance": {
+    "analysis/analysis.json": {
+      "bytes": 1957816,
+      "sha256": "6f56b2982744721f90568cf6b7a2c265cecb780b326e1b8c00dc662207aa8db8"
+    },
+    "raw/summary.json": {
+      "bytes": 202889,
+      "sha256": "bd7568f09148f298044dc47a0b436f861eaf3e6ed0a507258483585301c068e8"
+    },
+    "raw/frozen-method-plan.json": {
+      "bytes": 43235,
+      "sha256": "e1d02f73ed8b417949282a729de8133f16deb2fda47a6ae5ec9f2f3671da9346"
+    },
+    "raw/frozen-source-spec.json": {
+      "bytes": 2979,
+      "sha256": "d8ba1042334d8a6386ed6d1d54fbaad4a00fc6d76acc7fbb39005e6bcf897ba3"
+    },
+    "raw/frozen-original-protocol.json": {
+      "bytes": 1942,
+      "sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+    },
+    "raw/probe-KvmLocalAppendPairProbe.kt": {
+      "bytes": 12932,
+      "sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    },
+    "raw/frozen-B-source-manifest.json": {
+      "bytes": 170777,
+      "sha256": "28ee85b6a27b6b99ed6375f486258894abed840a1e1da4181250b84a8d8cfd75"
+    },
+    "raw/frozen-C0-source-manifest.json": {
+      "bytes": 174222,
+      "sha256": "cc9f52367a30ea10914ee05236fe8713b2cea25af8b834ccf0cf2a0f83742b96"
+    },
+    "raw/frozen-C1-source-manifest.json": {
+      "bytes": 174223,
+      "sha256": "eca008f14589d662b93110a18f1f935c193ae89e926ee5873824ffd9022153ea"
+    },
+    "raw/apk-B.json": {
+      "bytes": 3498,
+      "sha256": "77071a6af4bcb6c138408820a9dbe06c027396fc723c95f395139a64c4c68e55"
+    },
+    "raw/apk-C0.json": {
+      "bytes": 3499,
+      "sha256": "dcb4190fcf7e039595cb5f4364403c56ed17df4027134ff441c98bd30500878a"
+    },
+    "raw/apk-C1.json": {
+      "bytes": 3499,
+      "sha256": "f06e6f16b80d043251afd83be824a9fa51539a3274c7e0452d4c7b6abf2d2bcb"
+    },
+    "raw/method-32-B-instrumentation.log": {
+      "bytes": 4360,
+      "sha256": "2f10ad27d714ea62bfc0c5c5b44d84f9c441086f12848594e66922a0bf5e1883"
+    },
+    "raw/method-32-B-records.json": {
+      "bytes": 4593,
+      "sha256": "8e0da65e50e3871295789a3c62a52e9286e926b08700c55a11a6514a8d08a923"
+    },
+    "raw/method-32-B-junit.xml": {
+      "bytes": 418,
+      "sha256": "f5c56fd6f28c258d1e786801cafb4082b40079bc0b5e615c7a1384e3fec376b4"
+    },
+    "raw/install-visit-01-B-environment-before.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-01-B-environment-after.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-01-B-host-before.json": {
+      "bytes": 472,
+      "sha256": "4cc5185c6d0a7653fa876149432901183a5c0f6b41192c301063ad1aa6b507c1"
+    },
+    "raw/install-visit-01-B-host-after.json": {
+      "bytes": 470,
+      "sha256": "924f25b9d83833bdec16441e1d86cebce7d5eb0613a384b36389aa61ed6b8601"
+    },
+    "raw/method-34-C0-instrumentation.log": {
+      "bytes": 4431,
+      "sha256": "8bbd892f80ff38479cd25430e3ee3b74839b3c56ebdbdcb4f6436779d2c48663"
+    },
+    "raw/method-34-C0-records.json": {
+      "bytes": 4688,
+      "sha256": "9441df8064669b3de509af1351bc734d45680f23232c8b7ebdbbad2b223187bd"
+    },
+    "raw/method-34-C0-junit.xml": {
+      "bytes": 418,
+      "sha256": "20383f8f3e791b6c9c383726707f8eeac28c8fcaf4e0ee10b3b1a2064ac59b55"
+    },
+    "raw/install-visit-02-C0-environment-before.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-02-C0-environment-after.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-02-C0-host-before.json": {
+      "bytes": 471,
+      "sha256": "0378043db171d190aaec2d1804f92ce5207297e8c5a0570a465250005abb5094"
+    },
+    "raw/install-visit-02-C0-host-after.json": {
+      "bytes": 470,
+      "sha256": "e81f38f3453af035074738cfa1cdf63fec2d7fab49e5ba75ac578f346bab31b3"
+    },
+    "raw/method-36-C1-instrumentation.log": {
+      "bytes": 4446,
+      "sha256": "6a64b19bf85cb80b04ba87a172454d68532a5f2b4c001f8bc95cc6ea31a5bcfd"
+    },
+    "raw/method-36-C1-records.json": {
+      "bytes": 4703,
+      "sha256": "bc0374ed4943b1beaebc42b20dba53822e15cd3ecf75c5f9a0679ba2610e4e9f"
+    },
+    "raw/method-36-C1-junit.xml": {
+      "bytes": 418,
+      "sha256": "06f06d312833982d902f77397df0c8de2447be951f75bfefb53cd2af6841be6f"
+    },
+    "raw/install-visit-03-C1-environment-before.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-03-C1-environment-after.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-03-C1-host-before.json": {
+      "bytes": 471,
+      "sha256": "c2021fea7f974764c8555f56fdf58f6dc638e0165fbb889c63401594a78f67f6"
+    },
+    "raw/install-visit-03-C1-host-after.json": {
+      "bytes": 473,
+      "sha256": "44c1147070fe7eade6b2a3c2e436da3479e546fa449d81349a241e84d7b3fd81"
+    },
+    "raw/method-38-C1-instrumentation.log": {
+      "bytes": 4430,
+      "sha256": "b091e196580d733318ad2f4090fe7e0a6507beb001fe2502b403fbb8ea09963e"
+    },
+    "raw/method-38-C1-records.json": {
+      "bytes": 4688,
+      "sha256": "fdba8244cfc197a901111591c68f40d7a882e8876a58e35c54b35d5ef4d7ed56"
+    },
+    "raw/method-38-C1-junit.xml": {
+      "bytes": 418,
+      "sha256": "f6b89842083c45e1b4082bdf2b69e724434de33665422853f7bcdf01b4cf8e56"
+    },
+    "raw/install-visit-04-C1-environment-before.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-04-C1-environment-after.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-04-C1-host-before.json": {
+      "bytes": 473,
+      "sha256": "fc3f0d8c736e1c9d19cd261da908ba2d658e4d2bc98f8256b6f7ad389436a7c1"
+    },
+    "raw/install-visit-04-C1-host-after.json": {
+      "bytes": 472,
+      "sha256": "2df0e38e9244efff6f39e61271f2503d147d8f0fd296eb8c271375a3f3d14384"
+    },
+    "raw/method-40-B-instrumentation.log": {
+      "bytes": 4364,
+      "sha256": "a450e7f20b6f0204375482246a43303ce1ad891170c3c83dd815d19cb944c7c5"
+    },
+    "raw/method-40-B-records.json": {
+      "bytes": 4597,
+      "sha256": "cc1c176dd498b50c2250d2f0e6771be1b06cdbc58b270d7ec5168a560e36053c"
+    },
+    "raw/method-40-B-junit.xml": {
+      "bytes": 420,
+      "sha256": "2a427b6c98273299a406d9baae071600889d5010cdb97786bc3e5a6830fe19b6"
+    },
+    "raw/install-visit-05-B-environment-before.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-05-B-environment-after.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-05-B-host-before.json": {
+      "bytes": 472,
+      "sha256": "174a905e33fdef7350885a7b77ac31ccc54653b48bd206024dc9907d3e760eef"
+    },
+    "raw/install-visit-05-B-host-after.json": {
+      "bytes": 472,
+      "sha256": "a7f348b48789c11dfa66cb5976e5a173f297a9375b7fb9504c726d8eb06983cf"
+    },
+    "raw/method-42-C0-instrumentation.log": {
+      "bytes": 4441,
+      "sha256": "b4efff47628dd3f2413deac255bddc91d64097552b4bcf56739404f57964141e"
+    },
+    "raw/method-42-C0-records.json": {
+      "bytes": 4698,
+      "sha256": "49221834fa667389f76efce2572dbff6ff4d502914cff6d0d0f6824e180fb2a5"
+    },
+    "raw/method-42-C0-junit.xml": {
+      "bytes": 418,
+      "sha256": "80262537901707675ce55c46e82f83f66bd537b03a012dc1a26f20c414e62de0"
+    },
+    "raw/install-visit-06-C0-environment-before.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-06-C0-environment-after.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-06-C0-host-before.json": {
+      "bytes": 472,
+      "sha256": "6d83ea8a294d54e4dd2b3eb0e07c18637bd611160f47e000c04c060524a6419f"
+    },
+    "raw/install-visit-06-C0-host-after.json": {
+      "bytes": 471,
+      "sha256": "38a2df55a63cb88d38d5358056f78c91fae7d2379ea6f21f28b9c84bee15b53a"
+    },
+    "raw/method-44-C0-instrumentation.log": {
+      "bytes": 4441,
+      "sha256": "0a0c390a3a4acddb22c2ee2ff972b529271ba93690fcb135250b7734988ca280"
+    },
+    "raw/method-44-C0-records.json": {
+      "bytes": 4698,
+      "sha256": "1b479dc3aa591e6be0b2f78bad5acc0fd0be40c2aa9f0886c552cc68d9ec297a"
+    },
+    "raw/method-44-C0-junit.xml": {
+      "bytes": 418,
+      "sha256": "9d0146bd76cf6c71c19129d93b457535d161df4553f99125763e449a635314f8"
+    },
+    "raw/install-visit-07-C0-environment-before.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-07-C0-environment-after.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-07-C0-host-before.json": {
+      "bytes": 470,
+      "sha256": "b52268cd57dc30b09fa89e73d2262775a317f15d1dbb7c5020a7d71da748dc2b"
+    },
+    "raw/install-visit-07-C0-host-after.json": {
+      "bytes": 473,
+      "sha256": "eaaec64d1ac13cf61b622dee13eec98cc5a280d02938770608a0f789a8815121"
+    },
+    "raw/method-46-C1-instrumentation.log": {
+      "bytes": 4431,
+      "sha256": "48d2385614fa2a489e07d4459fa89e35897c0aef5a0bf3d796c7478f675fa9d2"
+    },
+    "raw/method-46-C1-records.json": {
+      "bytes": 4689,
+      "sha256": "516fb42da1e7a452bb2d3c0ff27c6524170d31634a48c4928b83a71ef4d7024c"
+    },
+    "raw/method-46-C1-junit.xml": {
+      "bytes": 420,
+      "sha256": "d95b388d912eb0a021c86fa994d878918466c95c6185ae2143bc4bcf640d5843"
+    },
+    "raw/install-visit-08-C1-environment-before.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-08-C1-environment-after.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-08-C1-host-before.json": {
+      "bytes": 473,
+      "sha256": "20c276c498eecd59020ae3bf079e0a361fff5387f3360dbbeffd775959def9fc"
+    },
+    "raw/install-visit-08-C1-host-after.json": {
+      "bytes": 469,
+      "sha256": "d2dd0236ee1b294e910ed8916036e303187f0bd492fb1e2397f56fdff7886e77"
+    },
+    "raw/method-48-B-instrumentation.log": {
+      "bytes": 4354,
+      "sha256": "660f805af9274222f810f2892f7fbb052691f9728f212f72e7015daef84a2170"
+    },
+    "raw/method-48-B-records.json": {
+      "bytes": 4587,
+      "sha256": "48a315c01afe46d75cfd41bb4e39a67f5caf47d92838fc1c39a0497e4124aebe"
+    },
+    "raw/method-48-B-junit.xml": {
+      "bytes": 418,
+      "sha256": "690e75ddeefd2f714b1b4ea4430f5b43782987c1a443c8f5473b655ba93d82e4"
+    },
+    "raw/install-visit-09-B-environment-before.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-09-B-environment-after.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-09-B-host-before.json": {
+      "bytes": 469,
+      "sha256": "50f3a8fccf7db754b73d2033840be8ba507865c6efacaa06531e2d66e10ccfdc"
+    },
+    "raw/install-visit-09-B-host-after.json": {
+      "bytes": 474,
+      "sha256": "52e5c558a4d9a985ff69a16b6f126e0615aa658b8bf65db28afaea758b53451d"
+    },
+    "raw/method-50-B-instrumentation.log": {
+      "bytes": 4360,
+      "sha256": "b87b3349ce5bc7f93a7434a1681d8b9120d74e22e8e0ee60b718c3d66e61d49e"
+    },
+    "raw/method-50-B-records.json": {
+      "bytes": 4594,
+      "sha256": "9ebe86130fc01f72cbd0057a52e2bc7ad94f8e34a4d9135f55e81deec3ad39f4"
+    },
+    "raw/method-50-B-junit.xml": {
+      "bytes": 418,
+      "sha256": "9b4fc7a6fce7faf9d1be61ceaa91c885946e6511db18d6ca85bc083059f465b4"
+    },
+    "raw/install-visit-10-B-environment-before.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-10-B-environment-after.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-10-B-host-before.json": {
+      "bytes": 472,
+      "sha256": "5769977f293e5a9cd65c7ca3fe951065e4027a5de4c508416ca0e1ef13a4f7dc"
+    },
+    "raw/install-visit-10-B-host-after.json": {
+      "bytes": 467,
+      "sha256": "98b0d954a451b6a1e6993c1ccfb1a46c1ebb7cc423e224550e3c9f47dbd476a9"
+    },
+    "raw/method-52-C1-instrumentation.log": {
+      "bytes": 4448,
+      "sha256": "e1d5a1a5d5f2525b54ed95ca775b020761585fd117e3d08130880b8b313fea90"
+    },
+    "raw/method-52-C1-records.json": {
+      "bytes": 4705,
+      "sha256": "b0d8829744c237b583423835e07c5069b6d2fecb5e12265971761ec958d75bd0"
+    },
+    "raw/method-52-C1-junit.xml": {
+      "bytes": 418,
+      "sha256": "6593937abeff2052f4b88bdc460793f54f8b4fa3c56b4600766a635f737c2fad"
+    },
+    "raw/install-visit-11-C1-environment-before.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-11-C1-environment-after.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-11-C1-host-before.json": {
+      "bytes": 467,
+      "sha256": "a32cc77a8492b4643536bd91d86a9aaf55e77c0cc9def1c256711ff84a11ce6c"
+    },
+    "raw/install-visit-11-C1-host-after.json": {
+      "bytes": 463,
+      "sha256": "8bc1b80dbcb336f92deee857b762f04065ca53a0301519938a83f390d4a6069d"
+    },
+    "raw/method-54-C0-instrumentation.log": {
+      "bytes": 4437,
+      "sha256": "9e751b6f2f0b9fb5360511cd1a944a721fb8718cbf9a2265a13ee8ac3f77c778"
+    },
+    "raw/method-54-C0-records.json": {
+      "bytes": 4694,
+      "sha256": "286fc30488b8ae52ecf924b7001264ce1a9addfd3961a37b551d575402e8b484"
+    },
+    "raw/method-54-C0-junit.xml": {
+      "bytes": 418,
+      "sha256": "2a89de7dae3751cfd67dfb13fa0db9da8196e1e81f02249a29b580858aefff82"
+    },
+    "raw/install-visit-12-C0-environment-before.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-12-C0-environment-after.json": {
+      "bytes": 469,
+      "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "raw/install-visit-12-C0-host-before.json": {
+      "bytes": 463,
+      "sha256": "9bebd73a41b92e3519ad78ecaeeda856810a419d937e7d90d6d77056f72b43c7"
+    },
+    "raw/install-visit-12-C0-host-after.json": {
+      "bytes": 469,
+      "sha256": "f1cd4c4166bd86360cb33889b2f9fcdd9189b7e4639b0c2451f1e3282b8417d8"
+    },
+    "raw/method-19-C1-instrumentation.log": {
+      "bytes": 808,
+      "sha256": "448c470a401d724e62bfdb7bb4557687a19e488645bd2dd71d5cd2a927fe82f8"
+    },
+    "raw/method-20-C1-instrumentation.log": {
+      "bytes": 794,
+      "sha256": "458ade034f57b66d69d7b8dccc6fd85d63dea4d1fb79722b6e3efea9aa7ab793"
+    },
+    "raw/method-21-C1-instrumentation.log": {
+      "bytes": 832,
+      "sha256": "f1516545b677bbb8334127577a20474961fa8c28a6639245952d3fa9700b101d"
+    },
+    "raw/method-22-C1-instrumentation.log": {
+      "bytes": 806,
+      "sha256": "221d46ea9135ded0179c519b6351670e21aa4357641555891a404934562e55f0"
+    },
+    "raw/method-23-C1-instrumentation.log": {
+      "bytes": 782,
+      "sha256": "26abc8cb06a4d094b4a165421974233a9f8f083d1454bece78a320e0fc4decbb"
+    },
+    "raw/method-24-C1-instrumentation.log": {
+      "bytes": 780,
+      "sha256": "a8e16e5f54db862dffa0a2c2acd5a2a93a59d84a59fe976a81400262d28c3577"
+    },
+    "raw/method-25-C1-instrumentation.log": {
+      "bytes": 790,
+      "sha256": "84517abcf54a19cf155ff6503d5a95e4fac00dd6f82b61732c1293ac457185ca"
+    },
+    "raw/method-26-C1-instrumentation.log": {
+      "bytes": 833,
+      "sha256": "f8547976dbe7e38bd67bb7745cdfd3c0a79e600f2ef421b2cd00363d3c854764"
+    },
+    "raw/method-27-C1-instrumentation.log": {
+      "bytes": 981,
+      "sha256": "4b0521397755df74a15560159aef7e420e907ad9b3d44df7be4bee2d3b063bbb"
+    },
+    "raw/method-28-C1-instrumentation.log": {
+      "bytes": 1188,
+      "sha256": "080518f11668204b216f364faed0312ad58aebbeed9dcce1b891e61439dabf19"
+    },
+    "raw/method-29-C1-instrumentation.log": {
+      "bytes": 803,
+      "sha256": "68a26dd58d2307d6ae80ccbfebb72ee71be08f967b0a68165efad1c33b1d5624"
+    },
+    "raw/method-30-C1-instrumentation.log": {
+      "bytes": 797,
+      "sha256": "a85d78be4a29d296e3fd7c1612dceddc5632da4a66b2207ae98b3e410e0e17ab"
+    }
+  }
+}

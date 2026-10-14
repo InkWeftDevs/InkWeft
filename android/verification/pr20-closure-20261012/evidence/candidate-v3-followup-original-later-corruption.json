@@ -1,0 +1,26 @@
+{
+  "phase": "candidate-v3-followup",
+  "selection": "org.inkweft.data.OriginalStorageRepositoryTest#laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes",
+  "command": [
+    "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "am",
+    "instrument",
+    "-w",
+    "-e",
+    "class",
+    "org.inkweft.data.OriginalStorageRepositoryTest#laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes",
+    "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+  ],
+  "started_utc": "2026-10-12T23:05:17.706392+00:00",
+  "seconds": 17.058189659001073,
+  "exit_code": 0,
+  "expected": 1,
+  "tests": null,
+  "executed": 1,
+  "failures": 1,
+  "passed": false,
+  "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+}

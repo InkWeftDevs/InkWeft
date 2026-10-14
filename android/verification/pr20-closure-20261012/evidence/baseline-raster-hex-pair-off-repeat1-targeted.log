@@ -1,0 +1,12 @@
+
+org.inkweft.app.TileLocalRedrawTest:TILE_PAN_EVIDENCE {"rebuilt":12,"tiles":20,"panPixelsEqual":true,"zoomPixelsEqual":true,"previewCaptureReady":false}
+.TILE_LOCAL_EVIDENCE {"layers":1,"initialStrokes":320,"finalStrokes":321,"firstCompleteMs":7218.785132,"appendCompleteMs":1571.931195,"forcedFullCompleteMs":7238.649493,"localDecoded":13,"fullDecoded":321,"localRebuiltTiles":1,"fullRebuiltTiles":24,"metadataMs":775.465385,"rasterMs":554.966603,"publicationMs":9.564291,"pixelsEqual":true,"bitmapBytes":14371200}
+TILE_LOCAL_EVIDENCE {"layers":4,"initialStrokes":320,"finalStrokes":321,"firstCompleteMs":8214.461511,"appendCompleteMs":4739.357099,"forcedFullCompleteMs":8538.908119,"localDecoded":21,"fullDecoded":321,"localRebuiltTiles":1,"fullRebuiltTiles":24,"metadataMs":1889.838667,"rasterMs":2741.200552,"publicationMs":2441.382296,"pixelsEqual":true,"bitmapBytes":12147408}
+TILE_LOCAL_EVIDENCE {"layers":8,"initialStrokes":320,"finalStrokes":321,"firstCompleteMs":11834.876561,"appendCompleteMs":8483.346893,"forcedFullCompleteMs":11544.331278,"localDecoded":11,"fullDecoded":321,"localRebuiltTiles":1,"fullRebuiltTiles":48,"metadataMs":2964.245364,"rasterMs":1746.4930319999999,"publicationMs":18532.630011000005,"pixelsEqual":true,"bitmapBytes":24294816}
+.
+
+Time: 178.87
+
+OK (2 tests)
+
+

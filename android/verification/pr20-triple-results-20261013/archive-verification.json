@@ -1,0 +1,11 @@
+{
+  "status": "ARCHIVE_AND_MANIFEST_VERIFIED",
+  "artifact_id": 11828590610,
+  "archive_sha256": "aab2be49c45bb833c9b8304f05698a3c392d561cdd92bb997f0a9b3a69dc8485",
+  "archive_bytes": 749201,
+  "payload_files": 248,
+  "uncompressed_bytes": 3541571,
+  "fixed_plan_git": "6e6391c7de228b69453499ea106ffed7615afb29",
+  "workflow_git": "30acef2e082eb1cd2d70471737824da32fbe9c24",
+  "note": "Integrity is separate from execution correctness/performance; raw logs still require review."
+}

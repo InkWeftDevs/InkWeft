@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.*
 import org.inkweft.core.*
 import java.util.UUID
 
+/** notes contains title/revision headers; only drafts contain editable complete bodies. */
 data class NotebookUi(val notes:List<Note> = emptyList(),val drafts:Map<String,NoteDraft> = emptyMap(),
     val selectedId:String?=null,val openIds:List<String> = emptyList(),val loading:Boolean=true,val readFailed:Boolean=false) {
     val current:NoteDraft? get()=drafts[selectedId]
@@ -26,40 +27,88 @@ class NotebookViewModel(application:Application,private val saved:SavedStateHand
     private val mutableUi=MutableStateFlow(NotebookUi(selectedId=saved["notebook.selected"],openIds=rememberedTabs));val ui:StateFlow<NotebookUi> = mutableUi.asStateFlow()
     private val renameState=MutableStateFlow<RenameUi?>(null);val renaming=renameState.asStateFlow()
     private var observation:Job?=null
+    private var selection:Job?=null
+    private var selectionGeneration=0L
+    private var pendingSelection:Note?=null
+    internal var readSelection:suspend(String)->Note?=repository::read
+    private var renameLoad:Job?=null
     init{retryRead()}
     fun retryRead(){
         observation?.cancel();mutableUi.update{it.copy(loading=true,readFailed=false)}
-        observation=viewModelScope.launch{try{repository.observeNotes().collect{notes->
+        pendingSelection?.takeIf{selection?.isActive!=true}?.let(::select)
+        observation=viewModelScope.launch{try{repository.observeNoteHeaders().collect{notes->
                 mutableUi.update{old->
-                    val note=notes.firstOrNull{it.id==old.selectedId}
-                    val selected=old.selectedId?.takeIf{note!=null||it in old.drafts}
-                    old.copy(notes=notes,loading=false,readFailed=false,selectedId=selected,
-                        drafts=if(note!=null&&note.id !in old.drafts)old.drafts+(note.id to NoteDraft(note))else old.drafts,
-                        openIds=(old.openIds+listOfNotNull(note?.id)).distinct().filter{id->notes.any{n->n.id==id}||id in old.drafts})
+                    val ids=notes.mapTo(HashSet()){it.id}
+                    old.copy(notes=notes,loading=false,readFailed=old.readFailed&&pendingSelection!=null,
+                        selectedId=old.selectedId?.takeIf{it in ids||it in old.drafts},
+                        openIds=old.openIds.filter{it in ids||it in old.drafts})
                 }
+                // A restored route has only directory metadata until its body is read.
+                val state=ui.value
+                state.selectedId?.takeIf{it !in state.drafts&&selection?.isActive!=true}?.let{id->notes.firstOrNull{it.id==id}?.let(::select)}
                 saved["notebook.selected"]=ui.value.selectedId
             }}
         catch(c:CancellationException){throw c}catch(_:Exception){mutableUi.update{it.copy(loading=false,readFailed=true)}}}
     }
     fun create(title:String){
         if(title.isBlank()||title.length>120)return
+        selectionGeneration++;selection?.cancel();pendingSelection=null
         val n=Note(UUID.randomUUID().toString(),0,title.trim(),"")
         mutableUi.update{it.copy(drafts=it.drafts+(n.id to NoteDraft(n)),selectedId=n.id)}
         saved["notebook.selected"]=n.id
     }
     private fun persistTabs(){saved["notebook.selected"]=ui.value.selectedId;tabPreferences.edit().putString("ids",ui.value.openIds.joinToString("|")).apply()}
-    fun select(note:Note){mutableUi.update{it.copy(selectedId=note.id,openIds=(it.openIds+note.id).distinct(),drafts=if(note.id in it.drafts)it.drafts else it.drafts+(note.id to NoteDraft(note)))};persistTabs()}
-    fun selectTab(id:String){ui.value.notes.firstOrNull{it.id==id}?.let{select(it)}}
+    fun select(note:Note){
+        val generation=beginSelection(note)
+        if(note.id in ui.value.drafts||note.revision==0L){publishSelection(note);return}
+        selection=viewModelScope.launch{loadSelection(note,generation)}
+    }
+    /** Navigation callers only consume source/return state after the complete body opens. */
+    suspend fun selectAwait(note:Note):Boolean {
+        currentCoroutineContext().ensureActive()
+        val generation=beginSelection(note)
+        if(note.id in ui.value.drafts||note.revision==0L){publishSelection(note);return true}
+        return try{coroutineScope {
+            // Stay in the navigation caller after the read: publication and its success
+            // acknowledgement must finish before Compose can dispose the source panel.
+            selection=currentCoroutineContext().job
+            loadSelection(note,generation)
+        }}catch(c:CancellationException){currentCoroutineContext().ensureActive();false}
+    }
+
+    private fun beginSelection(note:Note):Long {
+        selectionGeneration++;selection?.cancel();pendingSelection=note
+        return selectionGeneration
+    }
+    private fun publishSelection(head:Note){
+        pendingSelection=null
+        mutableUi.update{state->state.copy(selectedId=head.id,openIds=(state.openIds+head.id).distinct(),readFailed=false,
+            drafts=if(head.id in state.drafts)state.drafts else state.drafts+(head.id to NoteDraft(head)))}
+        persistTabs()
+    }
+    private suspend fun loadSelection(note:Note,generation:Long):Boolean=try{
+        // Shelf notes contain short previews. Only this complete read may create a draft.
+        val head=readSelection(note.id)
+        currentCoroutineContext().ensureActive()
+        if(generation!=selectionGeneration)false
+        else if(head==null){mutableUi.update{it.copy(readFailed=true)};false}
+        else{publishSelection(head);true}
+    }catch(c:CancellationException){if(generation==selectionGeneration)pendingSelection=null;throw c}catch(_:Exception){
+        if(generation==selectionGeneration)mutableUi.update{it.copy(readFailed=true)}
+        false
+    }
+    fun selectTab(id:String){(ui.value.notes.firstOrNull{it.id==id}?:ui.value.drafts[id]?.base)?.let(::select)}
     fun closeTab(id:String):Boolean {
         val d=ui.value.drafts[id]
         if(d!=null&&(d.dirty||d.phase!=SavePhase.EDITING))return false
+        selectionGeneration++;selection?.cancel();pendingSelection=null
         mutableUi.update{old->val remaining=old.openIds-id
             val next=if(old.selectedId==id)remaining.getOrNull(old.openIds.indexOf(id).coerceAtMost(remaining.lastIndex).coerceAtLeast(0))else old.selectedId
-            val note=old.notes.firstOrNull{it.id==next}
-            old.copy(openIds=remaining,selectedId=next,drafts=if(note!=null&&next !in old.drafts)old.drafts+(note.id to NoteDraft(note))else old.drafts)}
+            old.copy(openIds=remaining,selectedId=next)}
+        ui.value.selectedId?.takeIf{it !in ui.value.drafts}?.let(::selectTab)
         persistTabs();return true
     }
-    fun back(){mutableUi.update{it.copy(selectedId=null)};persistTabs()}
+    fun back(){selectionGeneration++;selection?.cancel();pendingSelection=null;mutableUi.update{it.copy(selectedId=null)};persistTabs()}
     fun edit(title:String,text:String){val d=ui.value.current?:return;if(!d.canEdit||title.length>120||text.length>100_000)return;replace(d.base.id,d.edit(title,text))}
     fun save(){
         val d=ui.value.current?:return
@@ -72,17 +121,23 @@ class NotebookViewModel(application:Application,private val saved:SavedStateHand
         }
     }
     fun openRename(note:Note){
-        if(renameState.value!=null)return
-        val d=ui.value.drafts[note.id]
-        val base=d?.base?:ui.value.notes.firstOrNull{it.id==note.id}?:note
-        if(base.revision==0L)return
-        val blocked=d!=null && d.phase!=SavePhase.EDITING
-        renameState.value=RenameUi(base,d?.title?:base.title,d?.title?:base.title,
-            phase=if(blocked)SavePhase.REJECTED else SavePhase.EDITING,
-            message=if(blocked)"这份笔记还有待核对的文字保存，请先处理后再重命名。"else null)
+        if(renameState.value!=null||renameLoad?.isActive==true)return
+        fun show(base:Note){
+            val d=ui.value.drafts[note.id];val head=d?.base?:base
+            if(head.revision==0L)return
+            val blocked=d!=null&&d.phase!=SavePhase.EDITING
+            renameState.value=RenameUi(head,d?.title?:head.title,d?.title?:head.title,
+                phase=if(blocked)SavePhase.REJECTED else SavePhase.EDITING,
+                message=if(blocked)"这份笔记还有待核对的文字保存，请先处理后再重命名。"else null)
+        }
+        ui.value.drafts[note.id]?.let{show(it.base);return}
+        // Renaming can finish after the same note is opened. Its requested base must be
+        // a complete head so acceptRenamedHead can still prove the body was unchanged.
+        renameLoad=viewModelScope.launch{try{repository.read(note.id)?.let(::show)}
+            catch(c:CancellationException){throw c}catch(_:Exception){mutableUi.update{it.copy(readFailed=true)}}}
     }
     fun editRename(value:String){val r=renameState.value?:return;if(r.phase!=SavePhase.EDITING||value.length>120)return;renameState.value=r.copy(value=value,message=null)}
-    fun closeRename(){val r=renameState.value?:return;if(r.phase !in listOf(SavePhase.SAVING,SavePhase.UNKNOWN))renameState.value=null}
+    fun closeRename(){renameLoad?.cancel();val r=renameState.value?:return;if(r.phase !in listOf(SavePhase.SAVING,SavePhase.UNKNOWN))renameState.value=null}
     fun saveRename(){
         val requested=renameState.value?:return
         if(requested.phase !in listOf(SavePhase.EDITING,SavePhase.UNKNOWN))return
@@ -98,7 +153,7 @@ class NotebookViewModel(application:Application,private val saved:SavedStateHand
                     mutableUi.update { state ->
                         val d=state.drafts[command.noteId]
                         val replacement=d?.acceptRenamedHead(requested.base,requested.titleAtRequest,result.note)
-                        state.copy(notes=state.notes.map{if(it.id==result.note.id && it.revision<=result.note.revision)result.note else it},
+                        state.copy(notes=state.notes.map{if(it.id==result.note.id && it.revision<=result.note.revision)result.note.copy(text="") else it},
                             drafts=if(replacement!=null)state.drafts+(command.noteId to replacement)else state.drafts)
                     }
                     renameState.value=null

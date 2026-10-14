@@ -1,0 +1,17 @@
+[
+  {
+    "path": "app/build/outputs/apk/debug/app-debug.apk",
+    "exit": 0,
+    "output": "Verifies\nVerified using v1 scheme (JAR signing): false\nVerified using v2 scheme (APK Signature Scheme v2): true\nVerified using v3 scheme (APK Signature Scheme v3): false\nVerified using v3.1 scheme (APK Signature Scheme v3.1): false\nVerified using v4 scheme (APK Signature Scheme v4): false\nVerified for SourceStamp: false\nNumber of signers: 1\nSigner #1 certificate DN: C=US, O=Android, CN=Android Debug\nSigner #1 certificate SHA-256 digest: 5797aab7f2e0157d9c9c94d25fad39fb31e44a35954cb22e570d861b0b5c5fb3\nSigner #1 certificate SHA-1 digest: 967c59d2aeb9bd6c3045620c8c4a0fd283270a31\nSigner #1 certificate MD5 digest: 8e2efc0ff0ead55a3df11a88c7094272\nSigner #1 key algorithm: RSA\nSigner #1 key size (bits): 2048\nSigner #1 public key SHA-256 digest: 0aa9fd440ab0cfa27426038c902c79e3661c6d68fec16b768d4822419122a1ef\nSigner #1 public key SHA-1 digest: 4852339c246cf931cba693472374fe6aa3f2b4dd\nSigner #1 public key MD5 digest: eb055ebd7fc57a55cc5a838206bcf7eb\n"
+  },
+  {
+    "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+    "exit": 0,
+    "output": "Verifies\nVerified using v1 scheme (JAR signing): false\nVerified using v2 scheme (APK Signature Scheme v2): true\nVerified using v3 scheme (APK Signature Scheme v3): false\nVerified using v3.1 scheme (APK Signature Scheme v3.1): false\nVerified using v4 scheme (APK Signature Scheme v4): false\nVerified for SourceStamp: false\nNumber of signers: 1\nSigner #1 certificate DN: C=US, O=Android, CN=Android Debug\nSigner #1 certificate SHA-256 digest: 5797aab7f2e0157d9c9c94d25fad39fb31e44a35954cb22e570d861b0b5c5fb3\nSigner #1 certificate SHA-1 digest: 967c59d2aeb9bd6c3045620c8c4a0fd283270a31\nSigner #1 certificate MD5 digest: 8e2efc0ff0ead55a3df11a88c7094272\nSigner #1 key algorithm: RSA\nSigner #1 key size (bits): 2048\nSigner #1 public key SHA-256 digest: 0aa9fd440ab0cfa27426038c902c79e3661c6d68fec16b768d4822419122a1ef\nSigner #1 public key SHA-1 digest: 4852339c246cf931cba693472374fe6aa3f2b4dd\nSigner #1 public key MD5 digest: eb055ebd7fc57a55cc5a838206bcf7eb\n"
+  },
+  {
+    "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+    "exit": 0,
+    "output": "Verifies\nVerified using v1 scheme (JAR signing): false\nVerified using v2 scheme (APK Signature Scheme v2): true\nVerified using v3 scheme (APK Signature Scheme v3): false\nVerified using v3.1 scheme (APK Signature Scheme v3.1): false\nVerified using v4 scheme (APK Signature Scheme v4): false\nVerified for SourceStamp: false\nNumber of signers: 1\nSigner #1 certificate DN: C=US, O=Android, CN=Android Debug\nSigner #1 certificate SHA-256 digest: 5797aab7f2e0157d9c9c94d25fad39fb31e44a35954cb22e570d861b0b5c5fb3\nSigner #1 certificate SHA-1 digest: 967c59d2aeb9bd6c3045620c8c4a0fd283270a31\nSigner #1 certificate MD5 digest: 8e2efc0ff0ead55a3df11a88c7094272\nSigner #1 key algorithm: RSA\nSigner #1 key size (bits): 2048\nSigner #1 public key SHA-256 digest: 0aa9fd440ab0cfa27426038c902c79e3661c6d68fec16b768d4822419122a1ef\nSigner #1 public key SHA-1 digest: 4852339c246cf931cba693472374fe6aa3f2b4dd\nSigner #1 public key MD5 digest: eb055ebd7fc57a55cc5a838206bcf7eb\n"
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "approved": true,
+  "scope": "One standard GitHub-hosted ubuntu-24.04 job, fixed four paired rounds, maximum 60 minutes, no retry. Per approved PLAN.md/protocol.json.",
+  "user_approval_reference": "Sentinel_b5cac2e3dbd481918c8364ac474e2396",
+  "recorded_utc": "2026-10-13T09:31:53.012221+00:00",
+  "approved_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+  "approved_plan_sha256": "028e1b7051626235636c08d7f6627a0d1f9298d3ce9009d0cae3803caad38ee4",
+  "source_spec_sha256": "b247d4ad3c955c36bdbfc442879b0bbb6f7a3d047ffb61c7a50169c7867f4d0e",
+  "preapproval_files_retained_unchanged": true
+}

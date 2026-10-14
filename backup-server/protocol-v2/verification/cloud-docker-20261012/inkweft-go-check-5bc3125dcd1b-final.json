@@ -1,0 +1,48 @@
+{
+  "Id": "547a7f22488034f3a499dae6a469746861de27f716966b9bbd2ffc6022b207f8",
+  "Name": "/inkweft-go-check-5bc3125dcd1b",
+  "Image": "sha256:42ce3060e72235b15389833a89b0b85f381c0918a542f6bee246230a7d1031af",
+  "State": {
+    "Status": "exited",
+    "Running": false,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 0,
+    "ExitCode": 1,
+    "Error": "",
+    "StartedAt": "2026-10-12T14:29:58.541745219Z",
+    "FinishedAt": "2026-10-12T14:29:58.802859135Z"
+  },
+  "User": "10001:10001",
+  "HostConfig": {
+    "ReadonlyRootfs": true,
+    "CapDrop": [
+      "ALL"
+    ],
+    "SecurityOpt": [
+      "no-new-privileges"
+    ],
+    "PortBindings": {
+      "18751/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": ""
+        }
+      ]
+    },
+    "Tmpfs": {
+      "/tmp": "size=16m"
+    }
+  },
+  "Ports": {},
+  "Mounts": [
+    {
+      "Type": "volume",
+      "Name": "inkweft-go-check-5bc3125dcd1b-data",
+      "Destination": "/state",
+      "RW": true
+    }
+  ]
+}

@@ -1,0 +1,266 @@
+{
+  "status": "SYNTHETIC_VALIDATION_ONLY_NOT_NATIVE_PERFORMANCE",
+  "positive_cases": 2,
+  "fault_cases": 33,
+  "fault_results": [
+    {
+      "fault": "missing-record",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Record order/identity mismatch"
+      ]
+    },
+    {
+      "fault": "duplicate-record",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Record order/identity mismatch"
+      ]
+    },
+    {
+      "fault": "payload-hash-wrong",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Payload byte count/hash mismatch"
+      ]
+    },
+    {
+      "fault": "payload-bytes-wrong",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Payload byte count/hash mismatch"
+      ]
+    },
+    {
+      "fault": "record-order-wrong",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Record order/identity mismatch"
+      ]
+    },
+    {
+      "fault": "footer-hash-wrong",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Footer order/hash mismatch"
+      ]
+    },
+    {
+      "fault": "missing-footer",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Missing complete library block"
+      ]
+    },
+    {
+      "fault": "unknown-marker",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Unknown marker/type"
+      ]
+    },
+    {
+      "fault": "source-commit-wrong",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Source manifest mismatch"
+      ]
+    },
+    {
+      "fault": "source-manifest-wrong",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Source manifest mismatch"
+      ]
+    },
+    {
+      "fault": "plan-hash-wrong",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Frozen input hash mismatch"
+      ]
+    },
+    {
+      "fault": "probe-hash-wrong",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Frozen input hash mismatch"
+      ]
+    },
+    {
+      "fault": "installed-hash-wrong",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Installed APK differs from built hash"
+      ]
+    },
+    {
+      "fault": "records-hash-wrong",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Reconstructed records hash differs"
+      ]
+    },
+    {
+      "fault": "method-status-fail",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD failure/incomplete/isolation failure"
+      ]
+    },
+    {
+      "fault": "method-isolation-fail",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD failure/incomplete/isolation failure"
+      ]
+    },
+    {
+      "fault": "missing-method",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD order/plan mismatch"
+      ]
+    },
+    {
+      "fault": "missing-clock",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Missing CLOCK"
+      ]
+    },
+    {
+      "fault": "missing-final",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Missing/unfinished receipt set"
+      ]
+    },
+    {
+      "fault": "duplicate-final",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Receipt after FINAL"
+      ]
+    },
+    {
+      "fault": "unknown-receipt",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Unknown receipt WHATEVER"
+      ]
+    },
+    {
+      "fault": "packaging-incomplete",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL execution/packaging incomplete"
+      ]
+    },
+    {
+      "fault": "packaging-missing-file",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL execution/packaging incomplete"
+      ]
+    },
+    {
+      "fault": "cleanup-unverified",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL execution/packaging incomplete"
+      ]
+    },
+    {
+      "fault": "device-changed",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Device changed"
+      ]
+    },
+    {
+      "fault": "unknown-payload-key",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Payload object keys differ"
+      ]
+    },
+    {
+      "fault": "array-payload",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Payload object keys differ"
+      ]
+    },
+    {
+      "fault": "duplicate-key",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Duplicate JSON key: label"
+      ]
+    },
+    {
+      "fault": "nonfinite",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Invalid JSON constant: NaN"
+      ]
+    },
+    {
+      "fault": "truncated-payload",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "JSONDecodeError: Expecting value: line 1 column 10 (char 9)"
+      ]
+    },
+    {
+      "fault": "official-binding-job_conclusion",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Official run/job did not finish successfully"
+      ]
+    },
+    {
+      "fault": "official-binding-run_conclusion",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Official run/job did not finish successfully"
+      ]
+    },
+    {
+      "fault": "official-binding-workflow_sha",
+      "status": "REJECTED_INCOMPLETE",
+      "issues": [
+        "ValueError: Official run/job identity mismatch"
+      ]
+    }
+  ],
+  "counts": {
+    "raw_saves": 480,
+    "save_distributions": 16,
+    "paired_values": 36,
+    "comparisons": 9,
+    "warm_comparisons": 4
+  },
+  "old_input": "/workspace/scratch/pr20-candidate3-results-20261014",
+  "old_analysis_sha256": "6f56b2982744721f90568cf6b7a2c265cecb780b326e1b8c00dc662207aa8db8",
+  "payload_origins": {
+    "synthetic_C0": "old run38498392929 C0=45b",
+    "synthetic_C1": "old run38498392929 C1=d66"
+  },
+  "warning": "Synthetic d66/a9cc envelope identities and receipt hashes are fabricated parser fixtures. No result is evidence for a9cc performance or any new native run.",
+  "all_36_pairs_9_classifications_480_saves_16_distributions_warm_match_previous_frozen_analysis": true,
+  "frozen_input_hashes": {
+    "approved_plan_sha256": "64921517343ba2dfddf3cba3f319b15b61757501744c87f43d4217bd37d4a08a",
+    "source_spec_sha256": "e57296ec73cea28ba22c5ee5871d77a0e5b22f0d0503c2bd453b987653ed6499",
+    "method_plan_sha256": "7dd485f678aa16d89fc0a1ef3e69421a376b4054cc31918f2b393c8212033284",
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "marker_contract_sha256": "3f3bc2a6bc5b0a663a4e03a54be65c2193a8ed868ba31014e344a95595d6aa4d",
+    "prepare_sources_sha256": "7e42199cd01da917a0a141982a963fd6db51f6411c7516c85ea27406a0744ce5"
+  },
+  "files": {
+    "analyze_logs.py": "aa6419f5aecbd04fbf79ed2b4a2c1bdf29a262db387f6529f2ae7899ade57f75",
+    "legacy_math.py": "4ce527cb00ce5e9e72d8c740f7bb011e72aae703c38699db77c79a4b43cca265",
+    "test_analyzer.py": "1dc1a541504529cd328d77f05dd3e93914947d6ca9626dfa5de66a139219907a"
+  }
+}

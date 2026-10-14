@@ -1,0 +1,1 @@
+{"status":"PASS","checks":1869,"casesPerLocale":267,"locales":["und","en-US","zh-CN","tr-TR","ar-EG","fa-IR","hi-IN"],"all256ByteValuesIndividually":true,"ascendingAndDescending256ByteArrays":true,"emptyArray":true,"zeroAndFF32ByteArrays":true,"sha256Arrays":6,"defaultLowercaseTwoCharactersPerByte":true,"scope":"HOST_REPRESENTATION_COMPATIBILITY_ONLY_NOT_NATIVE_PERFORMANCE"}

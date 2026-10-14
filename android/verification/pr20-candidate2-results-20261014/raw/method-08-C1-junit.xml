@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.data.HistoryCollectionTest#oneScanSurvivesRoomObserverRefreshAcrossSevenBatches" tests="1" failures="0" errors="0" time="0.9598202705383301"><testcase classname="org.inkweft.data.HistoryCollectionTest" name="oneScanSurvivesRoomObserverRefreshAcrossSevenBatches" time="0.9598202705383301" /></testsuite>

@@ -1,0 +1,5565 @@
+{
+  "schema": 1,
+  "run_id": "38498392929",
+  "candidate_git": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+  "prior_45b_sample_pooling": "NONE",
+  "review_scope": {
+    "correctness_method_ordinals": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "natural_diagnostic_method_ordinals": [
+      56,
+      57
+    ],
+    "excluded_public_comparison_ordinals": "32-55",
+    "no_cross_version_or_cross_run_pooling": true,
+    "excluded_stage_diagnostic_ordinal": 58
+  },
+  "source_binding": {
+    "C1_commit": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+    "canonical_source_manifest_sha256": "06e7cea253c061891e10f658400143a7da34ba23f6ec95224bee31f5c0d13eb6",
+    "files": {
+      "android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt": {
+        "sha256": "07046d5d7653723153744cff81ca63430a778112b49c31d16bd6e7535f856677",
+        "bytes": 13268,
+        "matches_frozen_manifest": true,
+        "byte_identical_to_current_C0_45b4861": true
+      },
+      "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt": {
+        "sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5",
+        "bytes": 14734,
+        "matches_frozen_manifest": true,
+        "byte_identical_to_current_C0_45b4861": true
+      },
+      "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionExposureTest.kt": {
+        "sha256": "7e98a67eec4f9242fc4c18e6bf662ec1d86c346796ebc28ab0971be1a9f0224f",
+        "bytes": 12930,
+        "matches_frozen_manifest": true,
+        "byte_identical_to_current_C0_45b4861": true
+      }
+    },
+    "selected_source_bytes_recomputed_from_local_git": true,
+    "apk_receipt": {
+      "path": "raw/apk-C1.json",
+      "base_commit": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+      "source_manifest_sha256": "06e7cea253c061891e10f658400143a7da34ba23f6ec95224bee31f5c0d13eb6",
+      "apks": [
+        {
+          "path": "app/build/outputs/apk/debug/app-debug.apk",
+          "bytes": 229748839,
+          "sha256": "e717ca4bfc2a10b3651a7d231b6e361b924f5e503ed710c3c93ee9731cbd7b05"
+        },
+        {
+          "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+          "bytes": 10637051,
+          "sha256": "e72b24af980135d242bb4ce3c0c2d7e6742bfa8c55387002190a1352e0d553bc"
+        },
+        {
+          "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+          "bytes": 23292952,
+          "sha256": "38049a8c4a4b4a5e0d7bf02488fbf1a0115ef59eb94318c284ff68dac9c5d435"
+        }
+      ]
+    },
+    "limit": "Original ZIP and selected text evidence bytes verified. APK hash/signature/source identity information remains recorded receipts; APK binaries are intentionally absent from this text artifact and were not independently re-extracted/re-signed here."
+  },
+  "environment": {
+    "emulator_configuration": {
+      "command_flags": [
+        "-avd",
+        "pr20-kvm-triple",
+        "-port",
+        "5554",
+        "-no-window",
+        "-no-snapshot",
+        "-noaudio",
+        "-no-boot-anim",
+        "-gpu",
+        "swiftshader",
+        "-accel",
+        "on",
+        "-cores",
+        "2",
+        "-memory",
+        "2048"
+      ],
+      "emulator_version": "INFO         | Android emulator version 37.2.12.0 (build_id 16428233) (CL:N/A)",
+      "emulator_source_properties": "Pkg.UserSrc=false\nPkg.Revision=37.2.12\nPkg.Path=emulator\nPkg.Desc=Android Emulator\nPkg.BuildId=16428233",
+      "image_source_properties": "Pkg.Desc=AOSP Automated Test Device System Image x86_64\nPkg.Revision=1\nPkg.Dependencies=emulator#30.9.2\nAndroidVersion.ApiLevel=35\nSystemImage.Abi=x86_64\nSystemImage.TagId=aosp_atd\nSystemImage.TagDisplay=AOSP ATD\nSystemImage.GpuSupport=true\nAddon.VendorId=google\nAddon.VendorDisplay=Google Inc.\n\n"
+    },
+    "four_C1_before_after_environment_records_identical": true,
+    "recorded_device": {
+      "sdk": "35",
+      "abi": "x86_64",
+      "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+      "qemu": "1",
+      "hw_timeout_multiplier": "",
+      "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+      "density": "Physical density: 420\nOverride density: 240",
+      "font_scale": "1.0",
+      "animations": {
+        "window_animation_scale": "1.0",
+        "transition_animation_scale": "1.0",
+        "animator_duration_scale": "null"
+      }
+    },
+    "both_writer_settings_all_60_trials": {
+      "page_size": 1024,
+      "auto_vacuum": 1,
+      "journal_mode": "wal",
+      "synchronous": 2
+    },
+    "scope": "Archived native Android instrumentation in one API35 x86_64 KVM emulator using synthetic debug fixtures; no physical-device performance claim."
+  },
+  "quantile_definition": "Nearest rank ceil(p*n)-1, zero based; n=30 p50=sorted[14], p95=sorted[28], max=sorted[29]. Not the average of the two central samples.",
+  "duration_definitions": {
+    "saveMs": "(saveEndNs-saveStartNs)/1e6; repository-call and watchdog boundaries, with Committed and final content/revision verified. Not pure SQL writer wait or commit duration.",
+    "firstCallTime": "(collectorEndNs-collectorStartNs)/1e6; includes root/stat scan, guard checks and cleanup; overlaps author save in all 60 trials.",
+    "finishCallTime": "(finishEndNs-finishStartNs)/1e6; a separate collect after save and first collect finish.",
+    "firstPlusFinishCallTime": "Sum of the two GC call intervals, excluding the inter-call gap; never add overlapping save duration.",
+    "firstStartToFinishEndTime": "(finishEndNs-collectorStartNs)/1e6; includes inter-call gap, excludes fixture creation, final verification and cleanup.",
+    "rootScans": "after-roots callback count, one root-enumeration pass per collect; not all SELECT statements or source-body reads. These natural fixtures contain zero explicit roots."
+  },
+  "exposure_definition": "saveStartNs <= before-batch-commit timestamp <= saveEndNs. Hook is inside the GC writer transaction after actual DELETE statements of a nonempty batch and before commit. Point-in-call coverage, not lock-wait measurement. No such hook occurred in any first collect of methods 56/57.",
+  "correctness": [
+    {
+      "ordinal": 8,
+      "selection": "org.inkweft.data.HistoryCollectionTest#oneScanSurvivesRoomObserverRefreshAcrossSevenBatches",
+      "status": "PASS",
+      "junit_tests": 1,
+      "junit_seconds": 0.616,
+      "host_seconds": 1.0063409805297852,
+      "log_sha256": "be8b142e8d504273f19a127fbc9c0b6757406de5befc4e3811de908f7b1ac080",
+      "raw_log": "raw/method-08-C1-instrumentation.log",
+      "records_file": "raw/method-08-C1-records.json",
+      "process_exit": "NATURAL_EXIT",
+      "verified_source_assertions": "One root pass and one statistics pass across seven committed batches; 1280 sources and 257 previews deleted. Explicit Room refresh, actual observer notification, latest source retained, final audit reclaimableBytes=0.",
+      "raw_records": []
+    },
+    {
+      "ordinal": 9,
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "status": "PASS",
+      "junit_tests": 1,
+      "junit_seconds": 0.577,
+      "host_seconds": 0.955573558807373,
+      "log_sha256": "35d6198d210073c6d681577aebf4dee8cbf6ea316689213437bbf5bda93adc4f",
+      "raw_log": "raw/method-09-C1-instrumentation.log",
+      "records_file": "raw/method-09-C1-records.json",
+      "process_exit": "NATURAL_EXIT",
+      "verified_source_assertions": "Same Room author adds live root 300 after batch 1 commits: first deletes 256 then defers; follow-up deletes 1023; roots 300 and 1281 survive.",
+      "raw_records": []
+    },
+    {
+      "ordinal": 10,
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "status": "PASS",
+      "junit_tests": 1,
+      "junit_seconds": 0.583,
+      "host_seconds": 0.9565274715423584,
+      "log_sha256": "c1159ecafa34db85ab2c00834057e6cc479788d0cabe11fa2171625bf7f0d070",
+      "raw_log": "raw/method-10-C1-instrumentation.log",
+      "records_file": "raw/method-10-C1-records.json",
+      "process_exit": "NATURAL_EXIT",
+      "verified_source_assertions": "Separate Room author adds live root 300 after batch 1 commits: first deletes 256 then defers; follow-up deletes 1023; roots 300 and 1281 survive.",
+      "raw_records": []
+    },
+    {
+      "ordinal": 11,
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "status": "PASS",
+      "junit_tests": 1,
+      "junit_seconds": 0.643,
+      "host_seconds": 1.0100390911102295,
+      "log_sha256": "4e16e91474fb5daa79915e7543aaa3547b9b72aa1f7bfa9d35c9640a5298db80",
+      "raw_log": "raw/method-11-C1-instrumentation.log",
+      "records_file": "raw/method-11-C1-records.json",
+      "process_exit": "NATURAL_EXIT",
+      "verified_source_assertions": "Same Room author starts while an actual 256-row DELETE transaction is held before commit. It cannot enter the held writer. After release, rename and new root 300 commit; subsequent GC guard defers. Follow-up deletes 1023; exact retained [300,1281], root snapshot and author revision/title/body verified.",
+      "raw_records": [
+        {
+          "marker": "HISTORY_DELETE_WRITER_CORRECTNESS",
+          "data": {
+            "connection": "same-room",
+            "artificialGates": true,
+            "performanceMeasurement": false,
+            "firstDeleted": 256,
+            "firstDeferred": true,
+            "finishDeleted": 1023,
+            "authorCommitted": true,
+            "initialRevision": 2,
+            "finalRevision": 3,
+            "retainedRevisions": [
+              300,
+              1281
+            ],
+            "contentVerified": true
+          }
+        }
+      ],
+      "timing_limit_note": "10s phase/gate waits and 2s post-release author await unchanged; deterministic correctness gates, not natural latency samples."
+    },
+    {
+      "ordinal": 12,
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "status": "PASS",
+      "junit_tests": 1,
+      "junit_seconds": 0.635,
+      "host_seconds": 1.0116245746612549,
+      "log_sha256": "1f19033aa177e3b2dd4b60adb3fc0a65b79d9ee6037cf9c4194bed14c5de371b",
+      "raw_log": "raw/method-12-C1-instrumentation.log",
+      "records_file": "raw/method-12-C1-records.json",
+      "process_exit": "NATURAL_EXIT",
+      "verified_source_assertions": "Separate Room author starts while an actual 256-row DELETE transaction is held before commit. It cannot enter the held writer. After release, rename and new root 300 commit; subsequent GC guard defers. Follow-up deletes 1023; exact retained [300,1281], root snapshot and author revision/title/body verified.",
+      "raw_records": [
+        {
+          "marker": "HISTORY_DELETE_WRITER_CORRECTNESS",
+          "data": {
+            "connection": "separate-room",
+            "artificialGates": true,
+            "performanceMeasurement": false,
+            "firstDeleted": 256,
+            "firstDeferred": true,
+            "finishDeleted": 1023,
+            "authorCommitted": true,
+            "initialRevision": 2,
+            "finalRevision": 3,
+            "retainedRevisions": [
+              300,
+              1281
+            ],
+            "contentVerified": true
+          }
+        }
+      ],
+      "timing_limit_note": "10s phase/gate waits and 2s post-release author await unchanged; deterministic correctness gates, not natural latency samples."
+    },
+    {
+      "ordinal": 13,
+      "selection": "org.inkweft.data.HistoryCollectionTest#overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion",
+      "status": "PASS",
+      "junit_tests": 1,
+      "junit_seconds": 0.552,
+      "host_seconds": 0.9063825607299805,
+      "log_sha256": "3907a2d5c07529c3807973afd5a6042d38b9274f4db4c333f0d518889ea92265",
+      "raw_log": "raw/method-13-C1-instrumentation.log",
+      "records_file": "raw/method-13-C1-records.json",
+      "process_exit": "NATURAL_EXIT",
+      "verified_source_assertions": "Duplicate roots across a full 128-entry insertion batch and partial tail retain exactly revisions 1..257 plus 1281; 1023 deleted.",
+      "raw_records": []
+    },
+    {
+      "ordinal": 14,
+      "selection": "org.inkweft.data.HistoryCollectionTest#malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+      "status": "PASS",
+      "junit_tests": 1,
+      "junit_seconds": 0.528,
+      "host_seconds": 0.9063985347747803,
+      "log_sha256": "7cb8ee0ae5aac47bb8cfabf4263ccfccd9d491113367f6d0b893b01b6f423d30",
+      "raw_log": "raw/method-14-C1-instrumentation.log",
+      "records_file": "raw/method-14-C1-records.json",
+      "process_exit": "NATURAL_EXIT",
+      "verified_source_assertions": "Malformed transform decoded after a full root insertion batch raises IllegalArgumentException before deletion; all 1281 versions retained.",
+      "raw_records": []
+    },
+    {
+      "ordinal": 15,
+      "selection": "org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes",
+      "status": "PASS",
+      "junit_tests": 1,
+      "junit_seconds": 0.597,
+      "host_seconds": 0.9557311534881592,
+      "log_sha256": "76a357dcb5482ad73d427284fafc48f441506f7b53f52f0bd2f5ce16f2f4ef01",
+      "raw_log": "raw/method-15-C1-instrumentation.log",
+      "records_file": "raw/method-15-C1-records.json",
+      "process_exit": "NATURAL_EXIT",
+      "verified_source_assertions": "Cancellation before batch 2 commits rolls it back; first 256 stay deleted and 257 survives. After reopen, 1024 deleted and only latest 1281 retained.",
+      "raw_records": []
+    },
+    {
+      "ordinal": 16,
+      "selection": "org.inkweft.data.HistoryCollectionTest#missingRoomGuardLogAbortsWithoutDeletingCandidates",
+      "status": "PASS",
+      "junit_tests": 1,
+      "junit_seconds": 0.538,
+      "host_seconds": 0.9067833423614502,
+      "log_sha256": "fb9260b404d3b54e7d52c55df23346bc788f860a586da2f53a011067a3eefc20",
+      "raw_log": "raw/method-16-C1-instrumentation.log",
+      "records_file": "raw/method-16-C1-records.json",
+      "process_exit": "NATURAL_EXIT",
+      "verified_source_assertions": "Missing Room guard log raises SQLException and retains all 1281 source versions.",
+      "raw_records": []
+    }
+  ],
+  "natural_diagnostics": [
+    {
+      "ordinal": 56,
+      "selection": "org.inkweft.data.HistoryDeletionExposureTest#sameRoomWriterNaturalDeletionExposure",
+      "status": "PASS",
+      "junit_tests": 1,
+      "junit_seconds": 5.715,
+      "host_seconds": 6.132878541946411,
+      "log_sha256": "067bd548a91e3adc449faa6271f1d915b355d1e458473b6bac933fb9be327cac",
+      "raw_log": "raw/method-56-C1-instrumentation.log",
+      "records_file": "raw/method-56-C1-records.json",
+      "process_exit": "NATURAL_EXIT",
+      "connection": "same-room",
+      "plannedTrials": 30,
+      "recordedTrials": 30,
+      "committedSaves": 30,
+      "unknownCommitOutcomes": 0,
+      "failedTrials": 0,
+      "deletionExposedTrials": 0,
+      "requiredExposedForQuantiles": 20,
+      "exposureStatus": "INSUFFICIENT_EXPOSURE",
+      "latencyAcceptance": "NOT_EVALUATED",
+      "firstDeferredTrials": 30,
+      "firstDeletedTotal": 0,
+      "finishDeletedTotal": 38400,
+      "totalDeleted": 38400,
+      "firstCommittedBatchesTotal": 0,
+      "firstRootScansTotal": 30,
+      "finishRootScansTotal": 30,
+      "rootScansTotal": 60,
+      "finishNotDeferredEvidence": "Each passing trial asserts finalReport.collectionDeferred == false; raw trial schema does not emit finishDeferred.",
+      "allSaveDistribution": {
+        "count": 30,
+        "sampleIndices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29
+        ],
+        "saveSamplesMs": [
+          4.609484,
+          7.266983,
+          3.492686,
+          3.043354,
+          3.715242,
+          3.474502,
+          3.403322,
+          3.29647,
+          3.11845,
+          3.900964,
+          2.862709,
+          2.995016,
+          2.599686,
+          3.865462,
+          3.087509,
+          2.505861,
+          2.670753,
+          2.793107,
+          3.071747,
+          3.221106,
+          2.988612,
+          2.9018,
+          2.688661,
+          3.007327,
+          7.047771,
+          2.921676,
+          2.810509,
+          2.686218,
+          2.748974,
+          3.50563
+        ],
+        "maxMs": 7.266983,
+        "p50Ms": 3.043354,
+        "p95Ms": 7.047771
+      },
+      "exposedSaveDistribution": {
+        "count": 0,
+        "sampleIndices": [],
+        "saveSamplesMs": [],
+        "maxMs": null,
+        "p50Ms": null,
+        "p95Ms": null
+      },
+      "firstCallTime": {
+        "count": 30,
+        "sumMs": 431.113079,
+        "p50Ms": 13.225437,
+        "p95Ms": 23.527503,
+        "maxMs": 27.585142,
+        "samplesMs": [
+          27.585142,
+          19.77745,
+          13.566108,
+          13.473364,
+          13.973999,
+          13.722248,
+          14.554369,
+          13.363883,
+          13.225437,
+          14.519448,
+          12.80171,
+          13.007535,
+          12.500485,
+          16.16387,
+          13.298341,
+          12.333146,
+          12.365481,
+          12.864821,
+          12.564417,
+          13.810935,
+          16.020723,
+          13.084979,
+          12.550261,
+          12.482564,
+          23.527503,
+          12.523871,
+          12.572923,
+          12.084459,
+          12.37821,
+          14.415397
+        ]
+      },
+      "finishCallTime": {
+        "count": 30,
+        "sumMs": 1296.726774,
+        "p50Ms": 41.568733,
+        "p95Ms": 57.485609,
+        "maxMs": 65.308105,
+        "samplesMs": [
+          65.308105,
+          57.485609,
+          51.509805,
+          46.586182,
+          50.363266,
+          49.8674,
+          50.586127,
+          48.733551,
+          43.573124,
+          44.907489,
+          40.809623,
+          41.923764,
+          39.576168,
+          44.343583,
+          41.568733,
+          38.286491,
+          42.732261,
+          38.89726,
+          38.297937,
+          36.447005,
+          37.449797,
+          36.593798,
+          35.699447,
+          41.329332,
+          44.898057,
+          39.576992,
+          35.479518,
+          35.981582,
+          35.999098,
+          41.91567
+        ]
+      },
+      "firstPlusFinishCallTime": {
+        "count": 30,
+        "sumMs": 1727.839853,
+        "p50Ms": 54.867074,
+        "p95Ms": 77.263059,
+        "maxMs": 92.893247,
+        "samplesMs": [
+          92.893247,
+          77.263059,
+          65.075913,
+          60.059546,
+          64.337265,
+          63.589648000000004,
+          65.140496,
+          62.097434,
+          56.798561,
+          59.426936999999995,
+          53.611333,
+          54.931298999999996,
+          52.076653,
+          60.507453,
+          54.867074,
+          50.619637,
+          55.097742000000004,
+          51.762081,
+          50.862353999999996,
+          50.25794,
+          53.47051999999999,
+          49.678777,
+          48.249708,
+          53.811896000000004,
+          68.42556,
+          52.100863,
+          48.052441,
+          48.066041000000006,
+          48.377308,
+          56.331067
+        ]
+      },
+      "firstStartToFinishEndTime": {
+        "count": 30,
+        "sumMs": 1736.411853,
+        "p50Ms": 55.097622,
+        "p95Ms": 77.966533,
+        "maxMs": 93.615376,
+        "samplesMs": [
+          93.615376,
+          77.966533,
+          65.385501,
+          60.39326,
+          64.578578,
+          63.885883,
+          65.386721,
+          62.428038,
+          57.004075,
+          59.653428,
+          53.855071,
+          55.190082,
+          52.297807,
+          60.891102,
+          55.097622,
+          50.837611,
+          55.302935,
+          52.015663,
+          51.107587,
+          50.549554,
+          53.712712,
+          49.903269,
+          48.507094,
+          54.01743,
+          68.694363,
+          52.373583,
+          48.271489,
+          48.277278,
+          48.570754,
+          56.641454
+        ]
+      },
+      "interCallGap": {
+        "count": 30,
+        "sumMs": 8.572000000000001,
+        "p50Ms": 0.245233,
+        "p95Ms": 0.703474,
+        "maxMs": 0.722129,
+        "samplesMs": [
+          0.722129,
+          0.703474,
+          0.309588,
+          0.333714,
+          0.241313,
+          0.296235,
+          0.246225,
+          0.330604,
+          0.205514,
+          0.226491,
+          0.243738,
+          0.258783,
+          0.221154,
+          0.383649,
+          0.230548,
+          0.217974,
+          0.205193,
+          0.253582,
+          0.245233,
+          0.291614,
+          0.242192,
+          0.224492,
+          0.257386,
+          0.205534,
+          0.268803,
+          0.27272,
+          0.219048,
+          0.211237,
+          0.193446,
+          0.310387
+        ]
+      },
+      "saveStartAfterScan": {
+        "count": 30,
+        "sumMs": 6.092744,
+        "p50Ms": 0.183922,
+        "p95Ms": 0.250726,
+        "maxMs": 0.434738,
+        "samplesMs": [
+          0.434738,
+          0.24501,
+          0.167931,
+          0.165151,
+          0.166659,
+          0.189621,
+          0.210798,
+          0.180454,
+          0.15798,
+          0.227517,
+          0.181807,
+          0.183922,
+          0.200344,
+          0.250726,
+          0.224978,
+          0.156414,
+          0.158562,
+          0.163719,
+          0.161426,
+          0.244144,
+          0.242692,
+          0.229496,
+          0.168891,
+          0.21953,
+          0.248486,
+          0.165299,
+          0.219982,
+          0.150984,
+          0.148572,
+          0.226911
+        ]
+      },
+      "saveStartToBeforeReceipt": {
+        "count": 30,
+        "sumMs": 59.66225,
+        "p50Ms": 1.757042,
+        "p95Ms": 3.364033,
+        "maxMs": 3.595996,
+        "samplesMs": [
+          3.01427,
+          3.364033,
+          2.161477,
+          1.996689,
+          2.272244,
+          2.047926,
+          1.903015,
+          2.089894,
+          1.868786,
+          2.442783,
+          1.635695,
+          1.621248,
+          1.663567,
+          2.373683,
+          1.70281,
+          1.618213,
+          1.476157,
+          1.658628,
+          1.799462,
+          2.194027,
+          1.757042,
+          1.646395,
+          1.656934,
+          1.749939,
+          3.595996,
+          1.691468,
+          1.561516,
+          1.632209,
+          1.414722,
+          2.051422
+        ]
+      },
+      "firstEndAfterSaveEnd": {
+        "count": 30,
+        "sumMs": 40.824504,
+        "p50Ms": 1.191456,
+        "p95Ms": 2.673351,
+        "maxMs": 2.755316,
+        "samplesMs": [
+          1.727817,
+          2.755316,
+          1.138274,
+          1.394544,
+          0.978044,
+          1.15717,
+          1.042322,
+          1.178592,
+          1.207886,
+          1.495956,
+          0.946665,
+          1.763083,
+          1.406907,
+          2.673351,
+          1.146892,
+          1.404473,
+          1.102259,
+          1.390767,
+          1.191456,
+          1.082291,
+          1.136614,
+          1.240366,
+          1.090277,
+          0.95287,
+          1.812535,
+          1.294047,
+          1.27953,
+          1.138103,
+          1.190825,
+          1.505272
+        ]
+      },
+      "rawSummary": {
+        "connection": "same-room",
+        "plannedTrials": 30,
+        "recordedTrials": 30,
+        "passedTrials": 30,
+        "committedSaves": 30,
+        "functionalStatus": "PASS",
+        "exposureStatus": "INSUFFICIENT_EXPOSURE",
+        "minimumExposedSamplesForQuantiles": 20,
+        "latencyAcceptance": "NOT_EVALUATED",
+        "saveWatchdogMs": 5000,
+        "watchdogIsLatencyAcceptance": false,
+        "quantileDefinition": "nearest rank: ceil(p*n)-1, zero based; n=30 p50=14 p95=28",
+        "allSaves": {
+          "count": 30,
+          "sampleIndices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29
+          ],
+          "saveSamplesMs": [
+            4.609484,
+            7.266983,
+            3.492686,
+            3.043354,
+            3.715242,
+            3.474502,
+            3.403322,
+            3.29647,
+            3.11845,
+            3.900964,
+            2.862709,
+            2.995016,
+            2.599686,
+            3.865462,
+            3.087509,
+            2.505861,
+            2.670753,
+            2.793107,
+            3.071747,
+            3.221106,
+            2.988612,
+            2.9018,
+            2.688661,
+            3.007327,
+            7.047771,
+            2.921676,
+            2.810509,
+            2.686218,
+            2.748974,
+            3.50563
+          ],
+          "maxMs": 7.266983,
+          "p50Ms": 3.043354,
+          "p95Ms": 7.047771
+        },
+        "exposedSaves": {
+          "count": 0,
+          "sampleIndices": [],
+          "saveSamplesMs": [],
+          "maxMs": null,
+          "p50Ms": null,
+          "p95Ms": null
+        }
+      },
+      "rawTrials": [
+        {
+          "sample": 0,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 689176354187,
+          "collectorEndNs": 689203939329,
+          "saveStartNs": 689197602028,
+          "saveEndNs": 689202211512,
+          "saveMs": 4.609484,
+          "beforeRenameReceiptNs": 689200616298,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 689204661458,
+          "finishEndNs": 689269969563,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 689182049294
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 689195138932
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 689197167290
+            }
+          ]
+        },
+        {
+          "sample": 1,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 689467631571,
+          "collectorEndNs": 689487409021,
+          "saveStartNs": 689477386722,
+          "saveEndNs": 689484653705,
+          "saveMs": 7.266983,
+          "beforeRenameReceiptNs": 689480750755,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 689488112495,
+          "finishEndNs": 689545598104,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 689470621994
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 689475425326
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 689477141712
+            }
+          ]
+        },
+        {
+          "sample": 2,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 689723377941,
+          "collectorEndNs": 689736944049,
+          "saveStartNs": 689732313089,
+          "saveEndNs": 689735805775,
+          "saveMs": 3.492686,
+          "beforeRenameReceiptNs": 689734474566,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 689737253637,
+          "finishEndNs": 689788763442,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 689725799346
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 689730479517
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 689732145158
+            }
+          ]
+        },
+        {
+          "sample": 3,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 689928737765,
+          "collectorEndNs": 689942211129,
+          "saveStartNs": 689937773231,
+          "saveEndNs": 689940816585,
+          "saveMs": 3.043354,
+          "beforeRenameReceiptNs": 689939769920,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 689942544843,
+          "finishEndNs": 689989131025,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 689931153144
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 689935984568
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 689937608080
+            }
+          ]
+        },
+        {
+          "sample": 4,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 690125435113,
+          "collectorEndNs": 690139409112,
+          "saveStartNs": 690134715826,
+          "saveEndNs": 690138431068,
+          "saveMs": 3.715242,
+          "beforeRenameReceiptNs": 690136988070,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 690139650425,
+          "finishEndNs": 690190013691,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 690127767821
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 690132796824
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 690134549167
+            }
+          ]
+        },
+        {
+          "sample": 5,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 690317251210,
+          "collectorEndNs": 690330973458,
+          "saveStartNs": 690326341786,
+          "saveEndNs": 690329816288,
+          "saveMs": 3.474502,
+          "beforeRenameReceiptNs": 690328389712,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 690331269693,
+          "finishEndNs": 690381137093,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 690319519745
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 690324563007
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 690326152165
+            }
+          ]
+        },
+        {
+          "sample": 6,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 690511813753,
+          "collectorEndNs": 690526368122,
+          "saveStartNs": 690521922478,
+          "saveEndNs": 690525325800,
+          "saveMs": 3.403322,
+          "beforeRenameReceiptNs": 690523825493,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 690526614347,
+          "finishEndNs": 690577200474,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 690514475364
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 690519640682
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 690521711680
+            }
+          ]
+        },
+        {
+          "sample": 7,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 690714429773,
+          "collectorEndNs": 690727793656,
+          "saveStartNs": 690723318594,
+          "saveEndNs": 690726615064,
+          "saveMs": 3.29647,
+          "beforeRenameReceiptNs": 690725408488,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 690728124260,
+          "finishEndNs": 690776857811,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 690716771408
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 690721541067
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 690723138140
+            }
+          ]
+        },
+        {
+          "sample": 8,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 690892724856,
+          "collectorEndNs": 690905950293,
+          "saveStartNs": 690901623957,
+          "saveEndNs": 690904742407,
+          "saveMs": 3.11845,
+          "beforeRenameReceiptNs": 690903492743,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 690906155807,
+          "finishEndNs": 690949728931,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 690895021781
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 690899635068
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 690901465977
+            }
+          ]
+        },
+        {
+          "sample": 9,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 691066454198,
+          "collectorEndNs": 691080973646,
+          "saveStartNs": 691075576726,
+          "saveEndNs": 691079477690,
+          "saveMs": 3.900964,
+          "beforeRenameReceiptNs": 691078019509,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 691081200137,
+          "finishEndNs": 691126107626,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 691069223678
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 691073685933
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 691075349209
+            }
+          ]
+        },
+        {
+          "sample": 10,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 691243830593,
+          "collectorEndNs": 691256632303,
+          "saveStartNs": 691252822929,
+          "saveEndNs": 691255685638,
+          "saveMs": 2.862709,
+          "beforeRenameReceiptNs": 691254458624,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 691256876041,
+          "finishEndNs": 691297685664,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 691246303254
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 691250927290
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 691252641122
+            }
+          ]
+        },
+        {
+          "sample": 11,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 691408937923,
+          "collectorEndNs": 691421945458,
+          "saveStartNs": 691417187359,
+          "saveEndNs": 691420182375,
+          "saveMs": 2.995016,
+          "beforeRenameReceiptNs": 691418808607,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 691422204241,
+          "finishEndNs": 691464128005,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 691411142561
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 691415368204
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 691417003437
+            }
+          ]
+        },
+        {
+          "sample": 12,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 691576074596,
+          "collectorEndNs": 691588575081,
+          "saveStartNs": 691584568488,
+          "saveEndNs": 691587168174,
+          "saveMs": 2.599686,
+          "beforeRenameReceiptNs": 691586232055,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 691588796235,
+          "finishEndNs": 691628372403,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 691578358038
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 691582534309
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 691584368144
+            }
+          ]
+        },
+        {
+          "sample": 13,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 691753130649,
+          "collectorEndNs": 691769294519,
+          "saveStartNs": 691762755706,
+          "saveEndNs": 691766621168,
+          "saveMs": 3.865462,
+          "beforeRenameReceiptNs": 691765129389,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 691769678168,
+          "finishEndNs": 691814021751,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 691756098053
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 691760735736
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 691762504980
+            }
+          ]
+        },
+        {
+          "sample": 14,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 691931030952,
+          "collectorEndNs": 691944329293,
+          "saveStartNs": 691940094892,
+          "saveEndNs": 691943182401,
+          "saveMs": 3.087509,
+          "beforeRenameReceiptNs": 691941797702,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 691944559841,
+          "finishEndNs": 691986128574,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 691933472275
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 691938110969
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 691939869914
+            }
+          ]
+        },
+        {
+          "sample": 15,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 692100884161,
+          "collectorEndNs": 692113217307,
+          "saveStartNs": 692109306973,
+          "saveEndNs": 692111812834,
+          "saveMs": 2.505861,
+          "beforeRenameReceiptNs": 692110925186,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 692113435281,
+          "finishEndNs": 692151721772,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 692103306473
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 692107542265
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 692109150559
+            }
+          ]
+        },
+        {
+          "sample": 16,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 692261708457,
+          "collectorEndNs": 692274073938,
+          "saveStartNs": 692270300926,
+          "saveEndNs": 692272971679,
+          "saveMs": 2.670753,
+          "beforeRenameReceiptNs": 692271777083,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 692274279131,
+          "finishEndNs": 692317011392,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 692264048804
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 692268488044
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 692270142364
+            }
+          ]
+        },
+        {
+          "sample": 17,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 692426437292,
+          "collectorEndNs": 692439302113,
+          "saveStartNs": 692435118239,
+          "saveEndNs": 692437911346,
+          "saveMs": 2.793107,
+          "beforeRenameReceiptNs": 692436776867,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 692439555695,
+          "finishEndNs": 692478452955,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 692428918938
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 692433204112
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 692434954520
+            }
+          ]
+        },
+        {
+          "sample": 18,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 692588951988,
+          "collectorEndNs": 692601516405,
+          "saveStartNs": 692597253202,
+          "saveEndNs": 692600324949,
+          "saveMs": 3.071747,
+          "beforeRenameReceiptNs": 692599052664,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 692601761638,
+          "finishEndNs": 692640059575,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 692591178110
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 692595441303
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 692597091776
+            }
+          ]
+        },
+        {
+          "sample": 19,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 692745266708,
+          "collectorEndNs": 692759077643,
+          "saveStartNs": 692754774246,
+          "saveEndNs": 692757995352,
+          "saveMs": 3.221106,
+          "beforeRenameReceiptNs": 692756968273,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 692759369257,
+          "finishEndNs": 692795816262,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 692747892234
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 692752766939
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 692754530102
+            }
+          ]
+        },
+        {
+          "sample": 20,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 692903042204,
+          "collectorEndNs": 692919062927,
+          "saveStartNs": 692914937701,
+          "saveEndNs": 692917926313,
+          "saveMs": 2.988612,
+          "beforeRenameReceiptNs": 692916694743,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 692919305119,
+          "finishEndNs": 692956754916,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 692908309261
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 692913114066
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 692914695009
+            }
+          ]
+        },
+        {
+          "sample": 21,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 693063476015,
+          "collectorEndNs": 693076560994,
+          "saveStartNs": 693072418828,
+          "saveEndNs": 693075320628,
+          "saveMs": 2.9018,
+          "beforeRenameReceiptNs": 693074065223,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 693076785486,
+          "finishEndNs": 693113379284,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 693065811069
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 693070399188
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 693072189332
+            }
+          ]
+        },
+        {
+          "sample": 22,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 693221043765,
+          "collectorEndNs": 693233594026,
+          "saveStartNs": 693229815088,
+          "saveEndNs": 693232503749,
+          "saveMs": 2.688661,
+          "beforeRenameReceiptNs": 693231472022,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 693233851412,
+          "finishEndNs": 693269550859,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 693223442941
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 693227887482
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 693229646197
+            }
+          ]
+        },
+        {
+          "sample": 23,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 693374498509,
+          "collectorEndNs": 693386981073,
+          "saveStartNs": 693383020876,
+          "saveEndNs": 693386028203,
+          "saveMs": 3.007327,
+          "beforeRenameReceiptNs": 693384770815,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 693387186607,
+          "finishEndNs": 693428515939,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 693376861101
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 693381122431
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 693382801346
+            }
+          ]
+        },
+        {
+          "sample": 24,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 693555867141,
+          "collectorEndNs": 693579394644,
+          "saveStartNs": 693570534338,
+          "saveEndNs": 693577582109,
+          "saveMs": 7.047771,
+          "beforeRenameReceiptNs": 693574130334,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 693579663447,
+          "finishEndNs": 693624561504,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 693561322379
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 693568416580
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 693570285852
+            }
+          ]
+        },
+        {
+          "sample": 25,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 693738248134,
+          "collectorEndNs": 693750772005,
+          "saveStartNs": 693746556282,
+          "saveEndNs": 693749477958,
+          "saveMs": 2.921676,
+          "beforeRenameReceiptNs": 693748247750,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 693751044725,
+          "finishEndNs": 693790621717,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 693740505270
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 693744770255
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 693746390983
+            }
+          ]
+        },
+        {
+          "sample": 26,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 693894397453,
+          "collectorEndNs": 693906970376,
+          "saveStartNs": 693902880337,
+          "saveEndNs": 693905690846,
+          "saveMs": 2.810509,
+          "beforeRenameReceiptNs": 693904441853,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 693907189424,
+          "finishEndNs": 693942668942,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 693896636815
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 693901092747
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 693902660355
+            }
+          ]
+        },
+        {
+          "sample": 27,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 694045299853,
+          "collectorEndNs": 694057384312,
+          "saveStartNs": 694053559991,
+          "saveEndNs": 694056246209,
+          "saveMs": 2.686218,
+          "beforeRenameReceiptNs": 694055192200,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 694057595549,
+          "finishEndNs": 694093577131,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 694047483690
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 694051781106
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 694053409007
+            }
+          ]
+        },
+        {
+          "sample": 28,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 694196728019,
+          "collectorEndNs": 694209106229,
+          "saveStartNs": 694205166430,
+          "saveEndNs": 694207915404,
+          "saveMs": 2.748974,
+          "beforeRenameReceiptNs": 694206581152,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 694209299675,
+          "finishEndNs": 694245298773,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 694199016358
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 694203326759
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 694205017858
+            }
+          ]
+        },
+        {
+          "sample": 29,
+          "connection": "same-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 694353781279,
+          "collectorEndNs": 694368196676,
+          "saveStartNs": 694363185774,
+          "saveEndNs": 694366691404,
+          "saveMs": 3.50563,
+          "beforeRenameReceiptNs": 694365237196,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 694368507063,
+          "finishEndNs": 694410422733,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 694356869489
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 694361225906
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 694362958863
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ordinal": 57,
+      "selection": "org.inkweft.data.HistoryDeletionExposureTest#separateRoomWriterNaturalDeletionExposure",
+      "status": "PASS",
+      "junit_tests": 1,
+      "junit_seconds": 6.132,
+      "host_seconds": 6.477279186248779,
+      "log_sha256": "6152bbbf8dc25b673a299bdf695ac595251f807d71d8318721bbc0850b068ee8",
+      "raw_log": "raw/method-57-C1-instrumentation.log",
+      "records_file": "raw/method-57-C1-records.json",
+      "process_exit": "NATURAL_EXIT",
+      "connection": "separate-room",
+      "plannedTrials": 30,
+      "recordedTrials": 30,
+      "committedSaves": 30,
+      "unknownCommitOutcomes": 0,
+      "failedTrials": 0,
+      "deletionExposedTrials": 0,
+      "requiredExposedForQuantiles": 20,
+      "exposureStatus": "INSUFFICIENT_EXPOSURE",
+      "latencyAcceptance": "NOT_EVALUATED",
+      "firstDeferredTrials": 30,
+      "firstDeletedTotal": 0,
+      "finishDeletedTotal": 38400,
+      "totalDeleted": 38400,
+      "firstCommittedBatchesTotal": 0,
+      "firstRootScansTotal": 30,
+      "finishRootScansTotal": 30,
+      "rootScansTotal": 60,
+      "finishNotDeferredEvidence": "Each passing trial asserts finalReport.collectionDeferred == false; raw trial schema does not emit finishDeferred.",
+      "allSaveDistribution": {
+        "count": 30,
+        "sampleIndices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29
+        ],
+        "saveSamplesMs": [
+          5.360892,
+          6.850215,
+          3.470242,
+          3.516989,
+          3.315633,
+          3.259028,
+          2.954219,
+          3.090302,
+          3.31451,
+          3.330701,
+          4.033444,
+          3.062169,
+          2.626055,
+          8.316213,
+          2.922779,
+          3.084332,
+          2.746059,
+          2.856676,
+          2.724168,
+          3.328166,
+          2.682189,
+          2.66658,
+          2.985716,
+          3.046671,
+          3.250131,
+          3.308605,
+          3.825205,
+          2.760806,
+          3.279386,
+          2.679104
+        ],
+        "maxMs": 8.316213,
+        "p50Ms": 3.090302,
+        "p95Ms": 6.850215
+      },
+      "exposedSaveDistribution": {
+        "count": 0,
+        "sampleIndices": [],
+        "saveSamplesMs": [],
+        "maxMs": null,
+        "p50Ms": null,
+        "p95Ms": null
+      },
+      "firstCallTime": {
+        "count": 30,
+        "sumMs": 450.526104,
+        "p50Ms": 14.200261,
+        "p95Ms": 19.696699,
+        "maxMs": 32.126404,
+        "samplesMs": [
+          32.126404,
+          19.696699,
+          14.954343,
+          15.355683,
+          14.400072,
+          14.608075,
+          14.582466,
+          14.176288,
+          14.503351,
+          15.306186,
+          15.80895,
+          13.381959,
+          14.422468,
+          18.695389,
+          13.599371,
+          13.588825,
+          14.315199,
+          13.135015,
+          13.185983,
+          13.616932,
+          13.176921,
+          13.601389,
+          13.375111,
+          13.438425,
+          14.713491,
+          13.399176,
+          14.200261,
+          13.094763,
+          14.888545,
+          13.178364
+        ]
+      },
+      "finishCallTime": {
+        "count": 30,
+        "sumMs": 1350.123973,
+        "p50Ms": 42.837993,
+        "p95Ms": 63.263257,
+        "maxMs": 68.48453,
+        "samplesMs": [
+          68.48453,
+          63.263257,
+          52.21803,
+          55.554151,
+          51.526356,
+          49.480517,
+          47.989633,
+          45.07532,
+          46.426306,
+          43.246664,
+          43.231276,
+          42.837993,
+          40.889802,
+          40.855748,
+          40.736182,
+          40.796809,
+          41.053668,
+          39.715163,
+          38.599349,
+          45.041817,
+          43.369461,
+          39.82974,
+          43.138467,
+          44.503555,
+          42.234817,
+          41.93002,
+          38.300215,
+          38.631946,
+          42.600077,
+          38.563104
+        ]
+      },
+      "firstPlusFinishCallTime": {
+        "count": 30,
+        "sumMs": 1800.650077,
+        "p50Ms": 56.948308,
+        "p95Ms": 82.959956,
+        "maxMs": 100.61093400000001,
+        "samplesMs": [
+          100.61093400000001,
+          82.959956,
+          67.172373,
+          70.909834,
+          65.926428,
+          64.088592,
+          62.572098999999994,
+          59.251608,
+          60.929657,
+          58.55285000000001,
+          59.040226000000004,
+          56.219952,
+          55.312270000000005,
+          59.551137,
+          54.335553,
+          54.385634,
+          55.368867,
+          52.850178,
+          51.785332,
+          58.658749,
+          56.546382,
+          53.431129,
+          56.513577999999995,
+          57.94198,
+          56.948308,
+          55.329195999999996,
+          52.500476,
+          51.726709,
+          57.488622,
+          51.741468000000005
+        ]
+      },
+      "firstStartToFinishEndTime": {
+        "count": 30,
+        "sumMs": 1809.116111,
+        "p50Ms": 57.307987,
+        "p95Ms": 83.403154,
+        "maxMs": 101.096632,
+        "samplesMs": [
+          101.096632,
+          83.403154,
+          67.467943,
+          71.22467,
+          66.174004,
+          64.449366,
+          62.86066,
+          59.500114,
+          61.183328,
+          58.816625,
+          59.376581,
+          56.448063,
+          55.543192,
+          59.806494,
+          54.742914,
+          54.663247,
+          55.601108,
+          53.064476,
+          52.000169,
+          58.909363,
+          56.775821,
+          53.75708,
+          56.74214,
+          58.189076,
+          57.307987,
+          55.592783,
+          52.725679,
+          51.95511,
+          57.794907,
+          51.943425
+        ]
+      },
+      "interCallGap": {
+        "count": 30,
+        "sumMs": 8.466034,
+        "p50Ms": 0.253671,
+        "p95Ms": 0.443198,
+        "maxMs": 0.485698,
+        "samplesMs": [
+          0.485698,
+          0.443198,
+          0.29557,
+          0.314836,
+          0.247576,
+          0.360774,
+          0.288561,
+          0.248506,
+          0.253671,
+          0.263775,
+          0.336355,
+          0.228111,
+          0.230922,
+          0.255357,
+          0.407361,
+          0.277613,
+          0.232241,
+          0.214298,
+          0.214837,
+          0.250614,
+          0.229439,
+          0.325951,
+          0.228562,
+          0.247096,
+          0.359679,
+          0.263587,
+          0.225203,
+          0.228401,
+          0.306285,
+          0.201957
+        ]
+      },
+      "saveStartAfterScan": {
+        "count": 30,
+        "sumMs": 6.651813,
+        "p50Ms": 0.183969,
+        "p95Ms": 0.286287,
+        "maxMs": 1.174281,
+        "samplesMs": [
+          1.174281,
+          0.286287,
+          0.195733,
+          0.197426,
+          0.192632,
+          0.161764,
+          0.162761,
+          0.18866,
+          0.197597,
+          0.16458,
+          0.221115,
+          0.183969,
+          0.193222,
+          0.180026,
+          0.179706,
+          0.154954,
+          0.228925,
+          0.173923,
+          0.177838,
+          0.189949,
+          0.175098,
+          0.179458,
+          0.185973,
+          0.180292,
+          0.221591,
+          0.173219,
+          0.216657,
+          0.143153,
+          0.219261,
+          0.151763
+        ]
+      },
+      "saveStartToBeforeReceipt": {
+        "count": 30,
+        "sumMs": 65.251463,
+        "p50Ms": 1.967455,
+        "p95Ms": 3.834532,
+        "maxMs": 4.002275,
+        "samplesMs": [
+          4.002275,
+          3.834532,
+          2.493116,
+          2.492997,
+          2.196833,
+          2.117325,
+          1.810883,
+          1.966193,
+          2.143653,
+          2.249552,
+          2.790042,
+          1.833865,
+          1.661152,
+          3.389681,
+          1.760117,
+          1.885001,
+          1.8417,
+          1.88471,
+          1.817694,
+          1.992261,
+          1.609316,
+          1.56399,
+          1.915538,
+          1.967455,
+          2.05613,
+          2.089573,
+          2.513555,
+          1.716455,
+          2.073614,
+          1.582255
+        ]
+      },
+      "firstEndAfterSaveEnd": {
+        "count": 30,
+        "sumMs": 67.84738899999999,
+        "p50Ms": 2.203939,
+        "p95Ms": 3.11595,
+        "maxMs": 3.839471,
+        "samplesMs": [
+          3.839471,
+          3.11595,
+          2.549053,
+          2.575312,
+          2.390842,
+          2.433515,
+          2.615274,
+          2.428727,
+          2.277476,
+          2.237848,
+          2.860994,
+          2.155942,
+          2.519505,
+          1.982603,
+          2.435268,
+          2.030086,
+          2.203939,
+          2.094023,
+          2.111468,
+          1.3975,
+          2.196893,
+          2.238178,
+          1.995838,
+          1.645368,
+          2.221241,
+          1.349345,
+          1.733355,
+          1.998608,
+          2.178906,
+          2.034861
+        ]
+      },
+      "rawSummary": {
+        "connection": "separate-room",
+        "plannedTrials": 30,
+        "recordedTrials": 30,
+        "passedTrials": 30,
+        "committedSaves": 30,
+        "functionalStatus": "PASS",
+        "exposureStatus": "INSUFFICIENT_EXPOSURE",
+        "minimumExposedSamplesForQuantiles": 20,
+        "latencyAcceptance": "NOT_EVALUATED",
+        "saveWatchdogMs": 5000,
+        "watchdogIsLatencyAcceptance": false,
+        "quantileDefinition": "nearest rank: ceil(p*n)-1, zero based; n=30 p50=14 p95=28",
+        "allSaves": {
+          "count": 30,
+          "sampleIndices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29
+          ],
+          "saveSamplesMs": [
+            5.360892,
+            6.850215,
+            3.470242,
+            3.516989,
+            3.315633,
+            3.259028,
+            2.954219,
+            3.090302,
+            3.31451,
+            3.330701,
+            4.033444,
+            3.062169,
+            2.626055,
+            8.316213,
+            2.922779,
+            3.084332,
+            2.746059,
+            2.856676,
+            2.724168,
+            3.328166,
+            2.682189,
+            2.66658,
+            2.985716,
+            3.046671,
+            3.250131,
+            3.308605,
+            3.825205,
+            2.760806,
+            3.279386,
+            2.679104
+          ],
+          "maxMs": 8.316213,
+          "p50Ms": 3.090302,
+          "p95Ms": 6.850215
+        },
+        "exposedSaves": {
+          "count": 0,
+          "sampleIndices": [],
+          "saveSamplesMs": [],
+          "maxMs": null,
+          "p50Ms": null,
+          "p95Ms": null
+        }
+      },
+      "rawTrials": [
+        {
+          "sample": 0,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 695317454213,
+          "collectorEndNs": 695349580617,
+          "saveStartNs": 695340380254,
+          "saveEndNs": 695345741146,
+          "saveMs": 5.360892,
+          "beforeRenameReceiptNs": 695344382529,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 695350066315,
+          "finishEndNs": 695418550845,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 695324345327
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 695337443271
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 695339205973
+            }
+          ]
+        },
+        {
+          "sample": 1,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 695632164317,
+          "collectorEndNs": 695651861016,
+          "saveStartNs": 695641894851,
+          "saveEndNs": 695648745066,
+          "saveMs": 6.850215,
+          "beforeRenameReceiptNs": 695645729383,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 695652304214,
+          "finishEndNs": 695715567471,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 695635199614
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 695639944566
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 695641608564
+            }
+          ]
+        },
+        {
+          "sample": 2,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 695894808380,
+          "collectorEndNs": 695909762723,
+          "saveStartNs": 695903743428,
+          "saveEndNs": 695907213670,
+          "saveMs": 3.470242,
+          "beforeRenameReceiptNs": 695906236544,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 695910058293,
+          "finishEndNs": 695962276323,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 695897209526
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 695901969508
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 695903547695
+            }
+          ]
+        },
+        {
+          "sample": 3,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 696127517072,
+          "collectorEndNs": 696142872755,
+          "saveStartNs": 696136780454,
+          "saveEndNs": 696140297443,
+          "saveMs": 3.516989,
+          "beforeRenameReceiptNs": 696139273451,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 696143187591,
+          "finishEndNs": 696198741742,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 696130032714
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 696134754432
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 696136583028
+            }
+          ]
+        },
+        {
+          "sample": 4,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 696351604125,
+          "collectorEndNs": 696366004197,
+          "saveStartNs": 696360297722,
+          "saveEndNs": 696363613355,
+          "saveMs": 3.315633,
+          "beforeRenameReceiptNs": 696362494555,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 696366251773,
+          "finishEndNs": 696417778129,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 696354027919
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 696358440481
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 696360105090
+            }
+          ]
+        },
+        {
+          "sample": 5,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 696565179087,
+          "collectorEndNs": 696579787162,
+          "saveStartNs": 696574094619,
+          "saveEndNs": 696577353647,
+          "saveMs": 3.259028,
+          "beforeRenameReceiptNs": 696576211944,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 696580147936,
+          "finishEndNs": 696629628453,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 696567698911
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 696572339569
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 696573932855
+            }
+          ]
+        },
+        {
+          "sample": 6,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 696771493002,
+          "collectorEndNs": 696786075468,
+          "saveStartNs": 696780505975,
+          "saveEndNs": 696783460194,
+          "saveMs": 2.954219,
+          "beforeRenameReceiptNs": 696782316858,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 696786364029,
+          "finishEndNs": 696834353662,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 696773947017
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 696778703131
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 696780343214
+            }
+          ]
+        },
+        {
+          "sample": 7,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 696975057330,
+          "collectorEndNs": 696989233618,
+          "saveStartNs": 696983714589,
+          "saveEndNs": 696986804891,
+          "saveMs": 3.090302,
+          "beforeRenameReceiptNs": 696985680782,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 696989482124,
+          "finishEndNs": 697034557444,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 696977432478
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 696981981836
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 696983525929
+            }
+          ]
+        },
+        {
+          "sample": 8,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 697166564508,
+          "collectorEndNs": 697181067859,
+          "saveStartNs": 697175475873,
+          "saveEndNs": 697178790383,
+          "saveMs": 3.31451,
+          "beforeRenameReceiptNs": 697177619526,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 697181321530,
+          "finishEndNs": 697227747836,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 697168972408
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 697173540781
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 697175278276
+            }
+          ]
+        },
+        {
+          "sample": 9,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 697355472014,
+          "collectorEndNs": 697370778200,
+          "saveStartNs": 697365209651,
+          "saveEndNs": 697368540352,
+          "saveMs": 3.330701,
+          "beforeRenameReceiptNs": 697367459203,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 697371041975,
+          "finishEndNs": 697414288639,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 697358142559
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 697363336460
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 697365045071
+            }
+          ]
+        },
+        {
+          "sample": 10,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 697543050211,
+          "collectorEndNs": 697558859161,
+          "saveStartNs": 697551964723,
+          "saveEndNs": 697555998167,
+          "saveMs": 4.033444,
+          "beforeRenameReceiptNs": 697554754765,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 697559195516,
+          "finishEndNs": 697602426792,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 697545851253
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 697550111219
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 697551743608
+            }
+          ]
+        },
+        {
+          "sample": 11,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 697725687891,
+          "collectorEndNs": 697739069850,
+          "saveStartNs": 697733851739,
+          "saveEndNs": 697736913908,
+          "saveMs": 3.062169,
+          "beforeRenameReceiptNs": 697735685604,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 697739297961,
+          "finishEndNs": 697782135954,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 697727864562
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 697732117826
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 697733667770
+            }
+          ]
+        },
+        {
+          "sample": 12,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 697915656087,
+          "collectorEndNs": 697930078555,
+          "saveStartNs": 697924932995,
+          "saveEndNs": 697927559050,
+          "saveMs": 2.626055,
+          "beforeRenameReceiptNs": 697926594147,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 697930309477,
+          "finishEndNs": 697971199279,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 697918048296
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 697923118816
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 697924739773
+            }
+          ]
+        },
+        {
+          "sample": 13,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 698090318073,
+          "collectorEndNs": 698109013462,
+          "saveStartNs": 698098714646,
+          "saveEndNs": 698107030859,
+          "saveMs": 8.316213,
+          "beforeRenameReceiptNs": 698102104327,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 698109268819,
+          "finishEndNs": 698150124567,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 698092560351
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 698096990365
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 698098534620
+            }
+          ]
+        },
+        {
+          "sample": 14,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 698271013377,
+          "collectorEndNs": 698284612748,
+          "saveStartNs": 698279254701,
+          "saveEndNs": 698282177480,
+          "saveMs": 2.922779,
+          "beforeRenameReceiptNs": 698281014818,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 698285020109,
+          "finishEndNs": 698325756291,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 698273275433
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 698277469757
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 698279074995
+            }
+          ]
+        },
+        {
+          "sample": 15,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 698449290048,
+          "collectorEndNs": 698462878873,
+          "saveStartNs": 698457764455,
+          "saveEndNs": 698460848787,
+          "saveMs": 3.084332,
+          "beforeRenameReceiptNs": 698459649456,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 698463156486,
+          "finishEndNs": 698503953295,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 698451748314
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 698455987141
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 698457609501
+            }
+          ]
+        },
+        {
+          "sample": 16,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 698627640388,
+          "collectorEndNs": 698641955587,
+          "saveStartNs": 698637005589,
+          "saveEndNs": 698639751648,
+          "saveMs": 2.746059,
+          "beforeRenameReceiptNs": 698638847289,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 698642187828,
+          "finishEndNs": 698683241496,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 698630098832
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 698634988554
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 698636776664
+            }
+          ]
+        },
+        {
+          "sample": 17,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 698802247631,
+          "collectorEndNs": 698815382646,
+          "saveStartNs": 698810431947,
+          "saveEndNs": 698813288623,
+          "saveMs": 2.856676,
+          "beforeRenameReceiptNs": 698812316657,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 698815596944,
+          "finishEndNs": 698855312107,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 698804433826
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 698808573287
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 698810258024
+            }
+          ]
+        },
+        {
+          "sample": 18,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 698977967322,
+          "collectorEndNs": 698991153305,
+          "saveStartNs": 698986317669,
+          "saveEndNs": 698989041837,
+          "saveMs": 2.724168,
+          "beforeRenameReceiptNs": 698988135363,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 698991368142,
+          "finishEndNs": 699029967491,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 698980189738
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 698984435679
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 698986139831
+            }
+          ]
+        },
+        {
+          "sample": 19,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 699154677699,
+          "collectorEndNs": 699168294631,
+          "saveStartNs": 699163568965,
+          "saveEndNs": 699166897131,
+          "saveMs": 3.328166,
+          "beforeRenameReceiptNs": 699165561226,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 699168545245,
+          "finishEndNs": 699213587062,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 699157024727
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 699161604702
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 699163379016
+            }
+          ]
+        },
+        {
+          "sample": 20,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 699336751385,
+          "collectorEndNs": 699349928306,
+          "saveStartNs": 699345049224,
+          "saveEndNs": 699347731413,
+          "saveMs": 2.682189,
+          "beforeRenameReceiptNs": 699346658540,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 699350157745,
+          "finishEndNs": 699393527206,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 699339074424
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 699343232400
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 699344874126
+            }
+          ]
+        },
+        {
+          "sample": 21,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 699520218409,
+          "collectorEndNs": 699533819798,
+          "saveStartNs": 699528915040,
+          "saveEndNs": 699531581620,
+          "saveMs": 2.66658,
+          "beforeRenameReceiptNs": 699530479030,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 699534145749,
+          "finishEndNs": 699573975489,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 699522632763
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 699527137908
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 699528735582
+            }
+          ]
+        },
+        {
+          "sample": 22,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 699691741272,
+          "collectorEndNs": 699705116383,
+          "saveStartNs": 699700134829,
+          "saveEndNs": 699703120545,
+          "saveMs": 2.985716,
+          "beforeRenameReceiptNs": 699702050367,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 699705344945,
+          "finishEndNs": 699748483412,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 699693966052
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 699698278116
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 699699948856
+            }
+          ]
+        },
+        {
+          "sample": 23,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 699866523367,
+          "collectorEndNs": 699879961792,
+          "saveStartNs": 699875269753,
+          "saveEndNs": 699878316424,
+          "saveMs": 3.046671,
+          "beforeRenameReceiptNs": 699877237208,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 699880208888,
+          "finishEndNs": 699924712443,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 699868986202
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 699873411567
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 699875089461
+            }
+          ]
+        },
+        {
+          "sample": 24,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 700040170490,
+          "collectorEndNs": 700054883981,
+          "saveStartNs": 700049412609,
+          "saveEndNs": 700052662740,
+          "saveMs": 3.250131,
+          "beforeRenameReceiptNs": 700051468739,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 700055243660,
+          "finishEndNs": 700097478477,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 700042826550
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 700047378042
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 700049191018
+            }
+          ]
+        },
+        {
+          "sample": 25,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 700214318243,
+          "collectorEndNs": 700227717419,
+          "saveStartNs": 700223059469,
+          "saveEndNs": 700226368074,
+          "saveMs": 3.308605,
+          "beforeRenameReceiptNs": 700225149042,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 700227981006,
+          "finishEndNs": 700269911026,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 700216474294
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 700221167530
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 700222886250
+            }
+          ]
+        },
+        {
+          "sample": 26,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 700384852623,
+          "collectorEndNs": 700399052884,
+          "saveStartNs": 700393494324,
+          "saveEndNs": 700397319529,
+          "saveMs": 3.825205,
+          "beforeRenameReceiptNs": 700396007879,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 700399278087,
+          "finishEndNs": 700437578302,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 700387299812
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 700391614000
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 700393277667
+            }
+          ]
+        },
+        {
+          "sample": 27,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 700552637159,
+          "collectorEndNs": 700565731922,
+          "saveStartNs": 700560972508,
+          "saveEndNs": 700563733314,
+          "saveMs": 2.760806,
+          "beforeRenameReceiptNs": 700562688963,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 700565960323,
+          "finishEndNs": 700604592269,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 700555037157
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 700559114412
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 700560829355
+            }
+          ]
+        },
+        {
+          "sample": 28,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 700720203086,
+          "collectorEndNs": 700735091631,
+          "saveStartNs": 700729633339,
+          "saveEndNs": 700732912725,
+          "saveMs": 3.279386,
+          "beforeRenameReceiptNs": 700731706953,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 700735397916,
+          "finishEndNs": 700777997993,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 700722936349
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 700727543093
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 700729414078
+            }
+          ]
+        },
+        {
+          "sample": 29,
+          "connection": "separate-room",
+          "fixtureSourceVersions": 1281,
+          "fixtureDetachedSources": 1280,
+          "fixtureExplicitRoots": 0,
+          "fixtureLatestRetained": 1,
+          "artificialGates": false,
+          "committed": true,
+          "saveOutcome": "COMMITTED",
+          "saveWatchdogMs": 5000,
+          "initialRevision": 2,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "authorWriterSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "savedRevision": 3,
+          "finalRevision": 3,
+          "contentVerified": true,
+          "retainedRevisions": [
+            1281
+          ],
+          "status": "PASS",
+          "stage": "complete",
+          "failureClass": null,
+          "suppressedFailureClasses": [],
+          "collectorFailureClass": null,
+          "collectorStartNs": 700893309925,
+          "collectorEndNs": 700906488289,
+          "saveStartNs": 700901774324,
+          "saveEndNs": 700904453428,
+          "saveMs": 2.679104,
+          "beforeRenameReceiptNs": 700903356579,
+          "firstDeleted": 0,
+          "firstDeferred": true,
+          "firstRootScans": 1,
+          "firstCommittedBatches": 0,
+          "finishStartNs": 700906690246,
+          "finishEndNs": 700945253350,
+          "finishDeleted": 1280,
+          "finishRootScans": 1,
+          "deletionTransactionExposed": false,
+          "coveredBeforeBatchCommitNs": [],
+          "phases": [
+            {
+              "phase": "after-roots",
+              "atNs": 700895519221
+            },
+            {
+              "phase": "after-stats",
+              "atNs": 700899762577
+            },
+            {
+              "phase": "after-scan",
+              "atNs": 700901622561
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "conclusions": {
+    "correctness_passed": 9,
+    "correctness_total": 9,
+    "natural_functional_methods_passed": 2,
+    "natural_functional_trials_passed": 60,
+    "natural_exposure_sufficient": false,
+    "save_failures": 0,
+    "unknown_commit_outcomes": 0,
+    "sustained_delete_save_parallelism_demonstrated": false,
+    "B_to_C1_regression_conclusion": "NOT_EVALUATED"
+  },
+  "limits": [
+    "Both groups are 0/30, below unchanged minimum 20. Exposed p50/p95/max remain null; all-save distributions are not actual-deletion-contention distributions.",
+    "All first calls scanned once, deleted zero and deferred; actual deletion of 1280 versions occurred only in each second call after save. Deferred means guard mismatch in this source path, but exact guard-vector deltas are not logged.",
+    "Methods 11/12 cover author requests queued behind actual DELETE work, commit/content and live-root safety under deterministic gates. Gate durations are not natural latency samples.",
+    "Each natural sample is a fresh 1281-source fixture and one rename. No high-root-cardinality, continuous writes, full-round concurrent deletion, fairness-under-sustained-writes or cross-version equivalence conclusion.",
+    "beforeRenameReceiptNs is inside the rename transaction, before its receipt; not transaction entry or physical commit timing.",
+    "Raw JUnit seconds and host/XML seconds describe whole-method windows, not per-save or deletion-only latency."
+  ],
+  "missing_evidence": [
+    "At least 20 naturally exposed complete saves per connection mode under a prospectively frozen workload, retaining all outcomes.",
+    "Nonblocking writer transaction-entry and deletion batch/commit timing, or equivalent tracing, for a pure writer-queue/lock-hold claim.",
+    "Separately scoped common-source paired GC benchmark for a B-to-C1 GC or save regression conclusion."
+  ],
+  "minimal_next_step": [
+    "Keep current production code, probes and thresholds unchanged; retain this run as functional PASS with INSUFFICIENT_EXPOSURE. Do not reclassify the all-save distribution as deletion blocking or pool prior45b samples.",
+    "Do not blindly repeat the same after-scan race to seek a passing exposure count. First freeze a separately named contention diagnostic if actual-delete latency is still required.",
+    "A minimal concrete future design would use one nonblocking notification immediately after a deletion batch guard succeeds and before its DELETE loop, launching the independent author from its coordinator. The current hooks do not expose that start boundary, so this needs separately reviewed instrumentation, not an interpretation change to existing records. The GC hook must never await, sleep, or prolong the writer transaction.",
+    "Retain the1281-source fixture,256 batch size,30 trials per connection,original5s watchdog,Committed/revision/content/retention checks and original exposure rule saveStart<=before-batch-commit<=saveEnd; preserve every sample and report INSUFFICIENT_EXPOSURE again if fewer than20 qualify. Name the event-triggered diagnostic separately because it changes request timing, not the current natural workload.",
+    "Do not require full-round deletion plus continuously committing authors: the intended conservative guard can defer the remaining stale candidate list after a commit. Deterministic gated safety tests prove protection; their artificial hold time is never a performance sample."
+  ],
+  "integrity": {
+    "all_scoped_package_hashes_match_original_and_uploaded_manifest": true,
+    "all_scoped_log_hashes_match_summary": true,
+    "raw_trial_summary_match_archived_records_and_fixed_analysis": true,
+    "all_11_raw_junit_summary_xml_match": true,
+    "all_60_trials_timestamps_exposure_quantiles_order_outcomes_configs_recomputed": true,
+    "checked_files": {
+      "summary.json": {
+        "sha256": "bd7568f09148f298044dc47a0b436f861eaf3e6ed0a507258483585301c068e8",
+        "bytes": 202889
+      },
+      "frozen-C1-source-manifest.json": {
+        "sha256": "eca008f14589d662b93110a18f1f935c193ae89e926ee5873824ffd9022153ea",
+        "bytes": 174223
+      },
+      "apk-C1.json": {
+        "sha256": "f06e6f16b80d043251afd83be824a9fa51539a3274c7e0452d4c7b6abf2d2bcb",
+        "bytes": 3499
+      },
+      "emulator-configuration.json": {
+        "sha256": "4de87d42c97e73a1ef15c47313e2049857d2c9b23a0537ee3fd710ec964d56cc",
+        "bytes": 855
+      },
+      "kvm-identity.json": {
+        "sha256": "d22a6ab43f2cfeadf41c142b55681b51f9bcf9dbf2b7a6a8b52522fda7e8313b",
+        "bytes": 23
+      },
+      "install-C1-correctness.log": {
+        "sha256": "ed158818e603f56b2a4592bb0d76fb3ef9b88158db7e8f990d5293933599bdba",
+        "bytes": 553
+      },
+      "install-C1-correctness-environment-before.json": {
+        "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+        "bytes": 469
+      },
+      "install-C1-correctness-environment-after.json": {
+        "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+        "bytes": 469
+      },
+      "install-C1-diagnostics.log": {
+        "sha256": "783bd6bdda3c19d0c8a4e0490a6cb5163bf16e3bca1451cfcfd0e8167982ff29",
+        "bytes": 950
+      },
+      "install-C1-diagnostics-environment-before.json": {
+        "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+        "bytes": 469
+      },
+      "install-C1-diagnostics-environment-after.json": {
+        "sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+        "bytes": 469
+      },
+      "method-08-C1-instrumentation.log": {
+        "sha256": "be8b142e8d504273f19a127fbc9c0b6757406de5befc4e3811de908f7b1ac080",
+        "bytes": 784
+      },
+      "method-08-C1-records.json": {
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "bytes": 3
+      },
+      "method-08-C1-junit.xml": {
+        "sha256": "f4166108d439ce1d16bfa77416ce478e7b3b266700af7ef9c572865e9e305d01",
+        "bytes": 370
+      },
+      "method-09-C1-instrumentation.log": {
+        "sha256": "35d6198d210073c6d681577aebf4dee8cbf6ea316689213437bbf5bda93adc4f",
+        "bytes": 808
+      },
+      "method-09-C1-records.json": {
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "bytes": 3
+      },
+      "method-09-C1-junit.xml": {
+        "sha256": "b7aae44b1baa1f59a5233f3ce2206d762048125d07d708b33cc394898baa96e1",
+        "bytes": 392
+      },
+      "method-10-C1-instrumentation.log": {
+        "sha256": "c1159ecafa34db85ab2c00834057e6cc479788d0cabe11fa2171625bf7f0d070",
+        "bytes": 816
+      },
+      "method-10-C1-records.json": {
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "bytes": 3
+      },
+      "method-10-C1-junit.xml": {
+        "sha256": "2fb5f5b715821b867f2180d5d8ecda93ef21ce8a5fdb45077e86f1e4abbac69a",
+        "bytes": 402
+      },
+      "method-11-C1-instrumentation.log": {
+        "sha256": "4e16e91474fb5daa79915e7543aaa3547b9b72aa1f7bfa9d35c9640a5298db80",
+        "bytes": 1142
+      },
+      "method-11-C1-records.json": {
+        "sha256": "f3f1ae2280b440dabb9612f4bd2ebaa7477bf11c6d4b15604b7eaf5aa7efe8d7",
+        "bytes": 450
+      },
+      "method-11-C1-junit.xml": {
+        "sha256": "6b1ee6d37db99c2f4cf4da493fd68bb2225b287afee6cce7bde5376fb751801b",
+        "bytes": 374
+      },
+      "method-12-C1-instrumentation.log": {
+        "sha256": "1f19033aa177e3b2dd4b60adb3fc0a65b79d9ee6037cf9c4194bed14c5de371b",
+        "bytes": 1154
+      },
+      "method-12-C1-records.json": {
+        "sha256": "bfbcd60904444eead7506f033276a3a03c6d72e4c7776b8b815af467e0ad8f0f",
+        "bytes": 454
+      },
+      "method-12-C1-junit.xml": {
+        "sha256": "4908da0ee748ca1b21d5fdfdd39695ec458c68c10b3635b4f37aab2db0c6b963",
+        "bytes": 382
+      },
+      "method-13-C1-instrumentation.log": {
+        "sha256": "3907a2d5c07529c3807973afd5a6042d38b9274f4db4c333f0d518889ea92265",
+        "bytes": 808
+      },
+      "method-13-C1-records.json": {
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "bytes": 3
+      },
+      "method-13-C1-junit.xml": {
+        "sha256": "94f4bd5cef029d77c58fed519f9a143df9e316d6eab023adecae2cdae554affb",
+        "bytes": 394
+      },
+      "method-14-C1-instrumentation.log": {
+        "sha256": "7cb8ee0ae5aac47bb8cfabf4263ccfccd9d491113367f6d0b893b01b6f423d30",
+        "bytes": 800
+      },
+      "method-14-C1-records.json": {
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "bytes": 3
+      },
+      "method-14-C1-junit.xml": {
+        "sha256": "3fe7b0a6c485be191a7d890a95182b3a19e92c87a3fbc90d10b158bb3c51efb1",
+        "bytes": 386
+      },
+      "method-15-C1-instrumentation.log": {
+        "sha256": "76a357dcb5482ad73d427284fafc48f441506f7b53f52f0bd2f5ce16f2f4ef01",
+        "bytes": 786
+      },
+      "method-15-C1-records.json": {
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "bytes": 3
+      },
+      "method-15-C1-junit.xml": {
+        "sha256": "2d47adec57782ccfd2f0accdb06692d8e5e564d423e4cfd1eaa8c24c006f06cc",
+        "bytes": 372
+      },
+      "method-16-C1-instrumentation.log": {
+        "sha256": "fb9260b404d3b54e7d52c55df23346bc788f860a586da2f53a011067a3eefc20",
+        "bytes": 780
+      },
+      "method-16-C1-records.json": {
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "bytes": 3
+      },
+      "method-16-C1-junit.xml": {
+        "sha256": "f67ec45dd90e378f07bcbdab366a38b055d549f5ceac5f31d492595520025312",
+        "bytes": 366
+      },
+      "method-56-C1-instrumentation.log": {
+        "sha256": "067bd548a91e3adc449faa6271f1d915b355d1e458473b6bac933fb9be327cac",
+        "bytes": 40529
+      },
+      "method-56-C1-records.json": {
+        "sha256": "b33852be0f628110a130c9106f9edfcf6533622423e0f466c96d28b2a710ecf5",
+        "bytes": 56714
+      },
+      "method-56-C1-junit.xml": {
+        "sha256": "51e9edeccb217ec1cd45bf2a5e6d346df64aef7256425b0eddc2d992a16bd1b6",
+        "bytes": 350
+      },
+      "method-57-C1-instrumentation.log": {
+        "sha256": "6152bbbf8dc25b673a299bdf695ac595251f807d71d8318721bbc0850b068ee8",
+        "bytes": 40667
+      },
+      "method-57-C1-records.json": {
+        "sha256": "b46e464c84458dcc5fba44655001a36fb02e708c070ac671963e69b2363d9d71",
+        "bytes": 56844
+      },
+      "method-57-C1-junit.xml": {
+        "sha256": "f60fbee3dcef4dd4bb6ecf1123f40847a2b0e0aae6158769b71d7eb8e3743f02",
+        "bytes": 358
+      }
+    },
+    "original_ZIP_selected_bytes_match": true
+  },
+  "original_archive": {
+    "path": "/workspace/scratch/pr20-candidate3-original-20261014/pr20-kvm-triple-38498392929.zip",
+    "sha256_recomputed": "79c53a73e262a22205519f5a994e10e6f2c75ca396a39bbd251d5bbd6b17993c",
+    "bytes": 772054,
+    "archive_members": 294,
+    "selected_extracted_files_equal_original_ZIP": 46,
+    "parent_verifier_receipt_sha256": "24dba66efbd4369973e6f5fc33d0d0bc7965da40d718e246c3f61dee05ee26d2",
+    "parent_verifier_runtime_issues": [],
+    "parent_verifier_runtime_pending": [],
+    "scope": "This independent review rehashed the original ZIP and compared44 scoped evidence files plus manifest and packaging byte-for-byte. The existing parent verifier checked the full archive and58-method ledger."
+  },
+  "concurrency_guard_review": {
+    "source_commit": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+    "source_identical_to_previous_45b": true,
+    "snapshot": "Capture the writer guard before one private read snapshot; roots and ordered candidates are private TEMP tables. The read snapshot ends before deletion.",
+    "guard": "Every <=256 candidate batch checks primary-connection data_version and total_changes()+count(Room invalidated=1) inside the short Room writer transaction. A mismatch returns deferred before issuing DELETEs.",
+    "own_changes": "After own DELETEs, expected guard is read on that same writer transaction before commit; Room2.8.5 invalidation reset is offset by pending-row count. No guessed data_version increment.",
+    "external_changes": "Same-Room author changes and other-connection commits have independent guard components; adding a new root after a batch is conservatively detected before the next candidate DELETE.",
+    "fail_closed": "Missing Room guard log or malformed historical roots abort; no assumed zero guard. Cancellation rolls the active batch back, preserving earlier committed batches.",
+    "tested_here": [
+      "one root/stat pass with seven committed batches and actual observer refresh",
+      "same/other Room adds root300 between committed batches",
+      "same/other Room requests author transaction while actual256 DELETEs are pending commit, then first collector defers and fresh collector retains new root",
+      "overlapping/deduplicated roots",
+      "malformed transform abort",
+      "interrupted-batch rollback/reopen",
+      "missing invalidation log abort"
+    ],
+    "raw_limit": "Natural phase logs contain no guard-vector samples or writer-entry/commit timestamps. They establish zero first-pass deletion and deferred outcome, not a decomposition of SQL wait/commit time."
+  },
+  "remaining_substantive_issues": [
+    {
+      "status": "OPEN_EVIDENCE_GAP",
+      "issue": "Neither connection mode has any save interval covering actual deletion (0/30 each), below unchanged20. Actual deletion-contention latency remains unmeasured.",
+      "product_bug_confirmed": false
+    },
+    {
+      "status": "OPEN_MEASUREMENT_SCOPE",
+      "issue": "A single rename following after-scan and zero explicit roots do not characterize high-root-cardinality scans, continuous edits, sustained reclamation under commits or long-run fairness.",
+      "product_bug_confirmed": false
+    },
+    {
+      "status": "NO_NEW_CONFIRMED_CORRECTNESS_DEFECT_IN_REVIEWED_SCOPE",
+      "issue": "All nine frozen HistoryCollection correctness cases passed with their original assertions and limits; this is scoped evidence, not proof of all possible database histories.",
+      "product_bug_confirmed": false
+    }
+  ],
+  "no_cross_run_pooling": {
+    "prior_run_38441089594_samples_imported": false,
+    "prior_45b_distributions_compared_or_combined": false,
+    "public_common_calls32_to55_imported": false,
+    "stage58_imported": false,
+    "source_byte_identity_comparison_only": true
+  }
+}

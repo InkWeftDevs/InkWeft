@@ -1,0 +1,26 @@
+{
+  "phase": "candidate-v4-raster-repeat2",
+  "selection": "org.inkweft.app.TileLocalRedrawTest",
+  "command": [
+    "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "am",
+    "instrument",
+    "-w",
+    "-e",
+    "class",
+    "org.inkweft.app.TileLocalRedrawTest",
+    "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+  ],
+  "started_utc": "2026-10-13T01:59:11.260792+00:00",
+  "seconds": 208.06279060400266,
+  "exit_code": 0,
+  "expected": 2,
+  "tests": 2,
+  "executed": 2,
+  "failures": 0,
+  "passed": true,
+  "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+}

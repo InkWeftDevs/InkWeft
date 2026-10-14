@@ -1,0 +1,200 @@
+{
+  "utc": "2026-10-13T02:15:28.591878+00:00",
+  "status": "TOOLS_PREPARED_HOST_PARSER_CHECKS_ONLY",
+  "new_tools": [
+    {
+      "path": "/workspace/scratch/pr20-raster-targeted-instrumentation.py",
+      "sha256": "1ee0c088e32a67a92480c24c9d6b06dfbb3104b3255e206114ed62fd8c1034fc",
+      "bytes": 5403
+    },
+    {
+      "path": "/workspace/scratch/pr20-raster-targeted-apks.py",
+      "sha256": "346971c46fd58ccdf1fcf12bf4025da4489126753ad997c726a28015beb7a854",
+      "bytes": 6392
+    }
+  ],
+  "syntax": "PASS",
+  "pure_junit_parser_checks": [
+    {
+      "case": "one_pass",
+      "expected_passed": true,
+      "actual": {
+        "tests": 1,
+        "executed": 1,
+        "failures": 0,
+        "passed": true
+      }
+    },
+    {
+      "case": "two_pass",
+      "expected_passed": true,
+      "actual": {
+        "tests": 2,
+        "executed": 2,
+        "failures": 0,
+        "passed": true
+      }
+    },
+    {
+      "case": "wrong_count",
+      "expected_passed": false,
+      "actual": {
+        "tests": 1,
+        "executed": 1,
+        "failures": null,
+        "passed": false
+      }
+    },
+    {
+      "case": "duplicate_ok",
+      "expected_passed": false,
+      "actual": {
+        "tests": 2,
+        "executed": 2,
+        "failures": null,
+        "passed": false
+      }
+    },
+    {
+      "case": "failure",
+      "expected_passed": false,
+      "actual": {
+        "tests": null,
+        "executed": 2,
+        "failures": 1,
+        "passed": false
+      }
+    },
+    {
+      "case": "timeout",
+      "expected_passed": false,
+      "actual": {
+        "tests": 2,
+        "executed": 2,
+        "failures": null,
+        "passed": false
+      }
+    },
+    {
+      "case": "exit_error",
+      "expected_passed": false,
+      "actual": {
+        "tests": 2,
+        "executed": 2,
+        "failures": null,
+        "passed": false
+      }
+    },
+    {
+      "case": "no_junit",
+      "expected_passed": false,
+      "actual": {
+        "tests": null,
+        "executed": null,
+        "failures": null,
+        "passed": false
+      }
+    },
+    {
+      "case": "contradictory_failure",
+      "expected_passed": false,
+      "actual": {
+        "tests": 2,
+        "executed": 2,
+        "failures": 1,
+        "passed": false
+      }
+    }
+  ],
+  "cli_help_checks": [
+    {
+      "script": "/workspace/scratch/pr20-raster-targeted-instrumentation.py",
+      "exit_code": 0,
+      "help": "usage: pr20-raster-targeted-instrumentation.py [-h] [--diagnostics]\n                                               phase selection expected\n\nOne app instrumentation selection on the owned emulator; no builds or data\nreset.\n\npositional arguments:\n  phase          Unique output prefix; existing evidence is never overwritten\n  selection      Fully qualified app test class or Class#method\n  expected\n\noptions:\n  -h, --help     show this help message and exit\n  --diagnostics  Only adds -e rasterMetadataDiagnostics true\n"
+    },
+    {
+      "script": "/workspace/scratch/pr20-raster-targeted-apks.py",
+      "exit_code": 0,
+      "help": "usage: pr20-raster-targeted-apks.py [-h] [--install]\n                                    phase app_apk app_test_apk\n\nRecord/verify only app and appTest APKs; install only with explicit --install.\n\npositional arguments:\n  phase         Unique output prefix; existing evidence is never overwritten\n  app_apk\n  app_test_apk\n\noptions:\n  -h, --help    show this help message and exit\n  --install     Install the two verified APKs on emulator-5554\n"
+    }
+  ],
+  "historical_tools_unchanged": [
+    {
+      "path": "/workspace/scratch/pr20-closure-apks.py",
+      "sha256": "5933e107e013bd3d415812506b1d0d41e4553edb9af695d0458419fdc33d332b",
+      "matches_stage_record": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-awake-checks.py",
+      "sha256": "a0822da56e0b263876d8529cac2e4d342dc46bd47383f9c4739cc593a0d47169",
+      "matches_stage_record": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-instrumentation.py",
+      "sha256": "21cb306143c0aedf0280280c0af8f835719cc7716d5789fd09661b1708de991f",
+      "matches_stage_record": true
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-record-build.py",
+      "sha256": "9aee9207b07921a9e0a8eab3f0c1ed64b7d7fd3da256f38c5fda83b1aad93f49",
+      "matches_stage_record": true
+    }
+  ],
+  "preserved_apks_receipt": "/workspace/scratch/pr20-preserved-apks/v4-baseline-app-preservation.json",
+  "preserved_apks_receipt_sha256": "422acdbfef0600a932834dc21555e2680ef61eb99eba093c6992a1effdeea01f",
+  "preserved_apks": [
+    {
+      "label": "candidate-v4",
+      "source": "/workspace/InkWeft/android/app/build/outputs/apk/debug/app-debug.apk",
+      "preserved": "/workspace/scratch/pr20-preserved-apks/candidate-v4/app-debug.apk",
+      "bytes": 241512357,
+      "sha256": "79fe8a40024d0cbd7283145f52febc3d54a6312ec231acea11182822e8f6aaf4",
+      "expected_sha256": "79fe8a40024d0cbd7283145f52febc3d54a6312ec231acea11182822e8f6aaf4",
+      "matches": true,
+      "artifact_manifest": "/workspace/scratch/pr20-closure-evidence/candidate-v4-artifacts.json",
+      "artifact_manifest_sha256": "84ce38bb2acacb53e027e7f56a43253e717bd9e53ed47a547d3acfa7e5b79851"
+    },
+    {
+      "label": "candidate-v4",
+      "source": "/workspace/InkWeft/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "preserved": "/workspace/scratch/pr20-preserved-apks/candidate-v4/app-debug-androidTest.apk",
+      "bytes": 18387376,
+      "sha256": "37dc4f858fdf13fde56fd514515f6e043356e482db0a8a0bc7339fce4504c5b2",
+      "expected_sha256": "37dc4f858fdf13fde56fd514515f6e043356e482db0a8a0bc7339fce4504c5b2",
+      "matches": true,
+      "artifact_manifest": "/workspace/scratch/pr20-closure-evidence/candidate-v4-artifacts.json",
+      "artifact_manifest_sha256": "84ce38bb2acacb53e027e7f56a43253e717bd9e53ed47a547d3acfa7e5b79851"
+    },
+    {
+      "label": "baseline-final",
+      "source": "/workspace/scratch/inkweft-baseline-closure-a128bb07/android/app/build/outputs/apk/debug/app-debug.apk",
+      "preserved": "/workspace/scratch/pr20-preserved-apks/baseline-final/app-debug.apk",
+      "bytes": 229655127,
+      "sha256": "c820103a3dae3b52f7a6d30aa345112c5c71c47f00ad89900eb6fe8ec5dd70fe",
+      "expected_sha256": "c820103a3dae3b52f7a6d30aa345112c5c71c47f00ad89900eb6fe8ec5dd70fe",
+      "matches": true,
+      "artifact_manifest": "/workspace/scratch/pr20-closure-evidence/baseline-final-artifacts.json",
+      "artifact_manifest_sha256": "2595faf440b7978a61468401b6db147f954b4dbd77bf6c7759a444f1a9487648"
+    },
+    {
+      "label": "baseline-final",
+      "source": "/workspace/scratch/inkweft-baseline-closure-a128bb07/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "preserved": "/workspace/scratch/pr20-preserved-apks/baseline-final/app-debug-androidTest.apk",
+      "bytes": 10266683,
+      "sha256": "d706b3b015d6111e7721f6881405726fe97da66c6799a456531b7bccf50909cd",
+      "expected_sha256": "d706b3b015d6111e7721f6881405726fe97da66c6799a456531b7bccf50909cd",
+      "matches": true,
+      "artifact_manifest": "/workspace/scratch/pr20-closure-evidence/baseline-final-artifacts.json",
+      "artifact_manifest_sha256": "2595faf440b7978a61468401b6db147f954b4dbd77bf6c7759a444f1a9487648"
+    }
+  ],
+  "device_actions": "NOT_RUN",
+  "build": "NOT_RUN",
+  "apksigner_in_new_tool": "NOT_RUN",
+  "new_apk_native_inspection": "NOT_RUN",
+  "limitations": [
+    "Only syntax, CLI help and pure JUnit parsing were exercised; device setup, signing verification and installation code are prepared for root to run serially.",
+    "Old APK copies were hash-verified against original artifact manifests; native/signature verification is preserved in existing phase receipts, not re-executed here.",
+    "Current working source is no longer assumed to be v4. The saved APKs remain bound to c60/v4 or a128/common-factory-probes via their prior manifests."
+  ]
+}

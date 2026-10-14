@@ -1,0 +1,8 @@
+{
+  "checked_utc": "2026-10-14T01:43:12.578938+00:00",
+  "files": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt": "33b4e9cc4fcf3fac593f0abc5dc6e2c070e10603a179979ec57be2d554198f48",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt": "4deefcf739ebbdd1ead6e4e2259b72e4b5af07a122d2ff766ccff311f3e188de"
+  },
+  "prior_pass_status": "Superseded compilation: snapshot-open moved inside transaction try/finally after compile task, while prior lint was still running. No final-input claim from that invocation."
+}

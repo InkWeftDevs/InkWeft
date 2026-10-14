@@ -1,0 +1,58 @@
+Downloading https://services.gradle.org/distributions/gradle-9.4.1-bin.zip
+.............10%.............20%.............30%.............40%.............50%.............60%..............70%.............80%.............90%.............100%
+
+Welcome to Gradle 9.4.1!
+
+Here are the highlights of this release:
+ - Java 26 support
+ - Non-class-based JVM tests
+ - Enhanced console progress bar
+
+For more details see https://docs.gradle.org/9.4.1/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/B/android/app/build.gradle.kts:80:41: 'fun srcDir(srcDir: Any): Any' is deprecated. Use `directories` mutable set instead.
+w: file:///home/runner/work/_temp/pr20-kvm-triple/sources/B/android/app/build.gradle.kts:85:46: 'fun srcDir(srcDir: Any): Any' is deprecated. Use `directories` mutable set instead.
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :core-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core-domain:compileKotlin
+> Task :core-domain:compileJava NO-SOURCE
+> Task :core-domain:processResources NO-SOURCE
+> Task :core-domain:classes UP-TO-DATE
+> Task :core-domain:jar
+> Task :app:generateDebugBuildConfig
+> Task :app:generateDebugResources
+> Task :app:packageDebugResources
+> Task :data-local:preBuild UP-TO-DATE
+> Task :data-local:preDebugBuild UP-TO-DATE
+> Task :data-local:processDebugNavigationResources
+> Task :app:processDebugNavigationResources
+> Task :app:processDebugNavigationResources FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:processDebugNavigationResources'.
+> Could not resolve all files for configuration ':app:debugRuntimeClasspath'.
+   > Could not resolve com.artifex.mupdf:fitz:1.28.5.
+     Required by:
+         project ':app'
+      > Could not resolve com.artifex.mupdf:fitz:1.28.5.
+         > Could not get resource 'https://maven.ghostscript.com/com/artifex/mupdf/fitz/1.28.5/fitz-1.28.5.pom'.
+            > Could not GET 'https://maven.ghostscript.com/com/artifex/mupdf/fitz/1.28.5/fitz-1.28.5.pom'.
+               > Connect to maven.ghostscript.com:443 [maven.ghostscript.com/184.73.189.105] failed: Connect timed out
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 3m 35s
+7 actionable tasks: 7 executed

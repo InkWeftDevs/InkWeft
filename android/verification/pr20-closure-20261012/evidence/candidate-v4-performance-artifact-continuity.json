@@ -1,0 +1,21 @@
+{
+  "utc": "2026-10-13T00:42:25.573927+00:00",
+  "status": "MATCH",
+  "artifacts": [
+    {
+      "path": "app/build/outputs/apk/debug/app-debug.apk",
+      "sha256": "79fe8a40024d0cbd7283145f52febc3d54a6312ec231acea11182822e8f6aaf4",
+      "expected": "79fe8a40024d0cbd7283145f52febc3d54a6312ec231acea11182822e8f6aaf4"
+    },
+    {
+      "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "sha256": "37dc4f858fdf13fde56fd514515f6e043356e482db0a8a0bc7339fce4504c5b2",
+      "expected": "37dc4f858fdf13fde56fd514515f6e043356e482db0a8a0bc7339fce4504c5b2"
+    },
+    {
+      "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "sha256": "79a7280c9667ef4721b4606ffc17a4bd7c476ceeb661d4d015ec9c19769324a3",
+      "expected": "79a7280c9667ef4721b4606ffc17a4bd7c476ceeb661d4d015ec9c19769324a3"
+    }
+  ]
+}

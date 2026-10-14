@@ -1,0 +1,30 @@
+{
+  "utc": "2026-10-13T01:31:18.239164+00:00",
+  "phase": "baseline-final-performance-after",
+  "root": "/workspace/scratch/inkweft-baseline-closure-a128bb07/android",
+  "recorded_artifacts": "baseline-final-artifacts.json",
+  "status": "MATCH",
+  "files": [
+    {
+      "path": "app/build/outputs/apk/debug/app-debug.apk",
+      "bytes": 229655127,
+      "sha256": "c820103a3dae3b52f7a6d30aa345112c5c71c47f00ad89900eb6fe8ec5dd70fe",
+      "expected_sha256": "c820103a3dae3b52f7a6d30aa345112c5c71c47f00ad89900eb6fe8ec5dd70fe",
+      "matches": true
+    },
+    {
+      "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "bytes": 10266683,
+      "sha256": "d706b3b015d6111e7721f6881405726fe97da66c6799a456531b7bccf50909cd",
+      "expected_sha256": "d706b3b015d6111e7721f6881405726fe97da66c6799a456531b7bccf50909cd",
+      "matches": true
+    },
+    {
+      "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "bytes": 22588360,
+      "sha256": "bbd78f8daa9139acdaeaac7c01fd0dc9fe762723c3750a0f26a55f5df2e2b505",
+      "expected_sha256": "bbd78f8daa9139acdaeaac7c01fd0dc9fe762723c3750a0f26a55f5df2e2b505",
+      "matches": true
+    }
+  ]
+}

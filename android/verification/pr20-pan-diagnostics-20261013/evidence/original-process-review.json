@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-13T04:26:02.055129+00:00",
+  "checks": [
+    {
+      "package": "org.inkweft.app.a0",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "package": "org.inkweft.app.a0.test",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "force_stop_requested": false,
+  "note": "Test receipts separately prove worker join; process absence alone is not that proof."
+}

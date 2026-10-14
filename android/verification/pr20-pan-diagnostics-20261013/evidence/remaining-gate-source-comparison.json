@@ -1,0 +1,24 @@
+{
+  "result": "FOUR_SPECIFIED_FILES_IDENTICAL",
+  "versions": {
+    "candidate-v2": {
+      "android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt": "0824c6502e5187484310437c6a8be71739bf86db55a509d91e51a57a284aa4dd",
+      "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt": "bfeea13319f995adbe6567036f295459664919b6e062e75d1fa0897250fa41f1",
+      "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt": "1ae798f1a481bf452a3edde852cb3b9042faf9d93b960813dbcedc4d189bbdd1",
+      "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt": "6c8de5807f85f739f65eb0d99a9e6ceb0328841a2d9a03c2b583eab9d551700d"
+    },
+    "candidate-v4": {
+      "android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt": "0824c6502e5187484310437c6a8be71739bf86db55a509d91e51a57a284aa4dd",
+      "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt": "bfeea13319f995adbe6567036f295459664919b6e062e75d1fa0897250fa41f1",
+      "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt": "1ae798f1a481bf452a3edde852cb3b9042faf9d93b960813dbcedc4d189bbdd1",
+      "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt": "6c8de5807f85f739f65eb0d99a9e6ceb0328841a2d9a03c2b583eab9d551700d"
+    },
+    "candidate-pan-cleanup-v3": {
+      "android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt": "0824c6502e5187484310437c6a8be71739bf86db55a509d91e51a57a284aa4dd",
+      "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt": "bfeea13319f995adbe6567036f295459664919b6e062e75d1fa0897250fa41f1",
+      "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt": "1ae798f1a481bf452a3edde852cb3b9042faf9d93b960813dbcedc4d189bbdd1",
+      "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt": "6c8de5807f85f739f65eb0d99a9e6ceb0328841a2d9a03c2b583eab9d551700d"
+    }
+  },
+  "scope": "Does not assert full APK equivalence or rerun either gate."
+}

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+export JAVA_HOME=/workspace/.setup/tools/jdk-17.0.16+8
+export GRADLE_USER_HOME=/workspace/.setup/gradle
+export ANDROID_HOME=/workspace/.setup/tools/android-sdk
+export ANDROID_USER_HOME=/workspace/.setup/android-user
+export JAVA_TOOL_OPTIONS="-Duser.home=/workspace/.setup/java-home -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts"
+read -r TASK_PROXY_HOST TASK_PROXY_PORT < <(python3 -c "import os,urllib.parse; u=urllib.parse.urlparse(os.environ.get('HTTPS_PROXY','')); print(u.hostname or 'none',u.port or 8080)")
+if [[ "$TASK_PROXY_HOST" != none ]]; then
+export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Dhttps.proxyHost=$TASK_PROXY_HOST -Dhttps.proxyPort=$TASK_PROXY_PORT -Dhttp.proxyHost=$TASK_PROXY_HOST -Dhttp.proxyPort=$TASK_PROXY_PORT"
+fi
+exec /workspace/.setup/tools/gradle-9.4.1/bin/gradle --no-daemon --max-workers=2 -Pkotlin.compiler.execution.strategy=in-process "$@"

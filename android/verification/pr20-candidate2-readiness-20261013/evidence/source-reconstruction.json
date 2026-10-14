@@ -1,0 +1,24 @@
+{
+  "status": "PASS_SOURCE_ONLY",
+  "native_execution": "NOT_RUN",
+  "identities": {
+    "B": {
+      "git": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+      "file_count": 947,
+      "canonical_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+      "matches": true
+    },
+    "C0": {
+      "git": "ebb48481e7e995288c1844d43011398c513b4f4e",
+      "file_count": 964,
+      "canonical_manifest_sha256": "c0e3b9a4cfa9b5a602e47422f080add43353d64acacea505cc8f3ebee4c91e63",
+      "matches": true
+    },
+    "C1": {
+      "git": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+      "file_count": 964,
+      "canonical_manifest_sha256": "7592c7990537bde681d0179539f58e1cd79822695bfcfd4b19882d9e1f738e90",
+      "matches": true
+    }
+  }
+}

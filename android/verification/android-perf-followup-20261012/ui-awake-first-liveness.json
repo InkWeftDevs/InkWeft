@@ -1,0 +1,36 @@
+[
+  {
+    "utc": "2026-10-12T19:05:47.363772+00:00",
+    "command": [
+      "shell",
+      "pidof",
+      "org.inkweft.app.a0"
+    ],
+    "exit": 0,
+    "stdout": "7140",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-12T19:05:49.570808+00:00",
+    "command": [
+      "shell",
+      "dumpsys",
+      "power"
+    ],
+    "exit": 0,
+    "stdout": "  mWakefulness=Awake",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-12T19:05:50.757538+00:00",
+    "command": [
+      "shell",
+      "dumpsys",
+      "activity",
+      "instrumentation"
+    ],
+    "exit": 0,
+    "stdout": "Unknown command: instrumentation\nBad activity command, or no activities match: instrumentation\nUse -h for help.",
+    "stderr": ""
+  }
+]

@@ -1,0 +1,66 @@
+{
+  "source_sha": "7949011ca2b84492f6438d275a09d28faef3b472",
+  "workflow_sha": "8d927024ee76f30e7970d44d4e55efa1b896d8ff",
+  "run_id": "38362557447",
+  "run_attempt": "1",
+  "status": "BLOCKED",
+  "phases": [
+    {
+      "name": "sdk",
+      "started_epoch": 1791876343.7352593,
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 22.43084168434143
+    },
+    {
+      "name": "acceleration",
+      "started_epoch": 1791876366.1668406,
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 0.1557009220123291
+    },
+    {
+      "name": "build",
+      "started_epoch": 1791876366.3232443,
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 638.8931863307953
+    },
+    {
+      "name": "avd",
+      "started_epoch": 1791877006.9436898,
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 1.2758066654205322
+    }
+  ],
+  "methods": [
+    {
+      "name": "search",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+      "status": "NOT_RUN"
+    },
+    {
+      "name": "backup",
+      "selection": "org.inkweft.data.LibraryBackupRepositoryTest#cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary",
+      "status": "NOT_RUN"
+    },
+    {
+      "name": "dense",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "status": "NOT_RUN"
+    },
+    {
+      "name": "pan",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+      "status": "NOT_RUN"
+    },
+    {
+      "name": "local-append",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "NOT_RUN"
+    }
+  ],
+  "limitation": "One candidate execution per method, no paired baseline, no physical-device performance claim.",
+  "error": "CalledProcessError: Command '['/usr/local/lib/android/sdk/emulator/emulator', '-version']' returned non-zero exit status 127."
+}

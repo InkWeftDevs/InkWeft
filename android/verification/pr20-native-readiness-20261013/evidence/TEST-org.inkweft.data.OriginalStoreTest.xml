@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.data.OriginalStoreTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-13T11:33:06.597Z" hostname="de1aed537721" time="0.341">
+  <properties/>
+  <testcase name="restartDetectsTamperingWithoutDeletingReferencedBytes" classname="org.inkweft.data.OriginalStoreTest" time="0.01"/>
+  <testcase name="openStreamRetainsItsFileUntilClosed" classname="org.inkweft.data.OriginalStoreTest" time="0.005"/>
+  <testcase name="directoryDurabilityFailureLeavesOnlyARecoverableOrphan" classname="org.inkweft.data.OriginalStoreTest" time="0.007"/>
+  <testcase name="stalePartsAreCollectedButUnknownFilesArePreserved" classname="org.inkweft.data.OriginalStoreTest" time="0.002"/>
+  <testcase name="failedDigestTruncationAndCancellationNeverPublish" classname="org.inkweft.data.OriginalStoreTest" time="0.006"/>
+  <testcase name="largeOriginalUsesBoundedTransfersAndOnePhysicalCopy" classname="org.inkweft.data.OriginalStoreTest" time="0.302"/>
+  <testcase name="retryAfterRootCreationMustRepeatParentDirectorySync" classname="org.inkweft.data.OriginalStoreTest" time="0.001"/>
+  <testcase name="lowSpaceRejectsNewBytesBeforeStagingButKeepsExistingOriginalsUsable" classname="org.inkweft.data.OriginalStoreTest" time="0.003"/>
+  <testcase name="duplicatesShareOneFileAndEveryLeaseProtectsCollection" classname="org.inkweft.data.OriginalStoreTest" time="0.003"/>
+  <system-out><![CDATA[ORIGINAL_STORE_EVIDENCE bytes=41943040 physicalBytes=41943040 largestTransferBytes=65536 copies=1
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

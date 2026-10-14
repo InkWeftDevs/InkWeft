@@ -1,0 +1,14 @@
+
+org.inkweft.app.StreamedInkRasterTest:.STREAMED_FRAME_STAGE {"case":"bounded-two-batch","stage":"fixture-start","elapsedMs":5239.359562,"fixtureStrokes":258,"fixturePoints":8226,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"case":"bounded-two-batch","stage":"fixture-complete","elapsedMs":10901.349905,"fixtureStrokes":258,"fixturePoints":8226,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"windowStrokes":256,"windowPoints":8192,"case":"bounded-two-batch","stage":"editor-window-complete","elapsedMs":22787.490924,"fixtureStrokes":258,"fixturePoints":8226,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"case":"bounded-two-batch","stage":"frame-start","elapsedMs":22806.146483,"fixtureStrokes":258,"fixturePoints":8226,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"frameElapsedMs":13362.845732,"snapshotReads":[{"frameElapsedMs":2697.632307,"rows":256,"points":8192,"freezeMs":669.707578,"decodeMs":1009.980316},{"frameElapsedMs":13055.371111,"rows":2,"points":34,"freezeMs":105.802123,"decodeMs":7.1027}],"snapshotRows":258,"changeCallbacks":1,"publishedStats":"BuildStats(tiles=4, rebuilt=4, decoded=258, bitmapBytes=800000, metadataMs=441.782706, rasterMs=12779.832576, publicationMs=16.553838, reusedStrokes=0, geometryBytes=658560, nativeStrokeBuilds=258)","case":"bounded-two-batch","stage":"frame-complete","elapsedMs":36169.732977,"fixtureStrokes":258,"fixturePoints":8226,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"case":"bounded-two-batch","stage":"verified-and-released","elapsedMs":36202.837016,"fixtureStrokes":258,"fixturePoints":8226,"frameDeadlineMs":30000}
+..
+
+Time: 62.083
+
+OK (3 tests)
+
+

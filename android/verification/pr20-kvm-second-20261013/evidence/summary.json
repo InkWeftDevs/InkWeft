@@ -1,0 +1,289 @@
+{
+  "source_sha": "7949011ca2b84492f6438d275a09d28faef3b472",
+  "workflow_sha": "a65f8599300b42444ab516714645b4e6f28d0432",
+  "run_id": "38365926272",
+  "run_attempt": "1",
+  "status": "PASS",
+  "phases": [
+    {
+      "name": "sdk",
+      "started_epoch": 1791878208.6636329,
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 24.893547534942627
+    },
+    {
+      "name": "acceleration",
+      "started_epoch": 1791878233.5575929,
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 0.03273582458496094
+    },
+    {
+      "name": "build",
+      "started_epoch": 1791878233.5906644,
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 660.9901297092438
+    },
+    {
+      "name": "avd",
+      "started_epoch": 1791878896.2562664,
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 1.4252498149871826
+    },
+    {
+      "name": "install",
+      "started_epoch": 1791878928.3811417,
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 1.871307611465454
+    },
+    {
+      "name": "install-app-test",
+      "started_epoch": 1791878930.2532237,
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 0.11710381507873535
+    },
+    {
+      "name": "install-room-test",
+      "started_epoch": 1791878930.3708863,
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 0.2163240909576416
+    }
+  ],
+  "methods": [
+    {
+      "name": "search",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+      "status": "PASS",
+      "started_epoch": 1791878930.587735,
+      "seconds": 37.80115556716919,
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "junit_failures": [],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "log_sha256": "e8584942f76e4d199b9dbb3fad64e8ca00048a5ea05dda1634405855188f4ae7",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "backup",
+      "selection": "org.inkweft.data.LibraryBackupRepositoryTest#cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary",
+      "status": "PASS",
+      "started_epoch": 1791878968.4321418,
+      "seconds": 10.387870073318481,
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "junit_failures": [],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "log_sha256": "d78586b02659e629d0ef03c5b3bfecd542c7c36040d7b147f2cf6261a83e1248",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "dense",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "status": "PASS",
+      "started_epoch": 1791878978.8688352,
+      "seconds": 3.472851276397705,
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "junit_failures": [],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "log_sha256": "57312906fc0905b58963e30edbfe9c7939c469acb9168aa20bc33de5a5151105",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "pan",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+      "status": "PASS",
+      "started_epoch": 1791878982.3852172,
+      "seconds": 1.618161916732788,
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "junit_failures": [],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "log_sha256": "087c9d61d2059b7ced05e4e24c3ba99859530647ae586aa002b2094d2f6d1d7e",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "local-append",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "started_epoch": 1791878984.047791,
+      "seconds": 4.525162696838379,
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "junit_failures": [],
+      "status_codes": [
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "log_sha256": "c3f09db12c14ecbaab108a33140a5a3d5d1258698676bd45a83d3221e06bc94c",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    }
+  ],
+  "limitation": "One candidate execution per method, no paired baseline, no physical-device performance claim."
+}

@@ -1,0 +1,69 @@
+/workspace/InkWeft/android/data-local/build.gradle.kts:7: Warning: A newer version of compileSdk than 36 is available: 37 [GradleDependency]
+    compileSdk = 36
+    ~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "GradleDependency":
+   This detector looks for usages of libraries where the version you are using
+   is not the current stable release. Using older versions is fine, and there
+   are cases where you deliberately want to stick with an older version.
+   However, you may simply not be aware that a more recent version is
+   available, and that is what this lint check helps find.
+
+/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/ContentArchive.kt:63: Warning: Consider also using StorageManager#getAllocatableBytes and allocateBytes which will consider clearable cached data [UsableSpace]
+                    if(unchecked>=1024*1024){require(directory.usableSpace>=32L*1024*1024+length){"ORIGINAL_LOW_SPACE"};unchecked=0}
+                                                               ~~~~~~~~~~~
+/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/ContentArchive.kt:210: Warning: Consider also using StorageManager#getAllocatableBytes and allocateBytes which will consider clearable cached data [UsableSpace]
+                require(directory.usableSpace>=32L*1024*1024+row.sumOf{if(it is ByteArray)it.size.toLong()else 0L}){"ORIGINAL_LOW_SPACE"}
+                                  ~~~~~~~~~~~
+/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/DocumentRepository.kt:37: Warning: Consider also using StorageManager#getAllocatableBytes and allocateBytes which will consider clearable cached data [UsableSpace]
+        return OriginalStorageStatus(db.documents().totalBytes(),db.images().totalBytes(),db.originalFiles.diskBytes(),checkNotNull(db.documentScratch).usableSpace,
+                                                                                                                                                        ~~~~~~~~~~~
+/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt:35: Warning: Consider also using StorageManager#getAllocatableBytes and allocateBytes which will consider clearable cached data [UsableSpace]
+    private fun reserve(){require(scratch.usableSpace>=32L*1024*1024){"BACKUP_LOW_SPACE"}}
+                                          ~~~~~~~~~~~
+/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt:54: Warning: Consider also using StorageManager#getAllocatableBytes and allocateBytes which will consider clearable cached data [UsableSpace]
+            require(scratch.usableSpace>=required){"BACKUP_LOW_SPACE"}
+                            ~~~~~~~~~~~
+/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/OriginalFileCache.kt:52: Warning: Consider also using StorageManager#getAllocatableBytes and allocateBytes which will consider clearable cached data [UsableSpace]
+                while(it.hasNext()&&(used+size>budget||root.usableSpace<size.toLong()+RESERVE)){
+                                                            ~~~~~~~~~~~
+/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/OriginalFileCache.kt:56: Warning: Consider also using StorageManager#getAllocatableBytes and allocateBytes which will consider clearable cached data [UsableSpace]
+                require(root.usableSpace>=size.toLong()+RESERVE){"ORIGINAL_LOW_SPACE"}
+                             ~~~~~~~~~~~
+/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/OriginalStorage.kt:49: Warning: Consider also using StorageManager#getAllocatableBytes and allocateBytes which will consider clearable cached data [UsableSpace]
+class OriginalStorageMaintenance(private val db:NoteDatabase,private val availableBytes:(File)->Long={it.usableSpace}) {
+                                                                                                         ~~~~~~~~~~~
+/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/OriginalStorage.kt:49: Warning: Consider also using StorageManager#getAllocatableBytes and allocateBytes which will consider clearable cached data [UsableSpace]
+class OriginalStorageMaintenance(private val db:NoteDatabase,private val availableBytes:(File)->Long={it.usableSpace}) {
+                                                                                                         ~~~~~~~~~~~
+/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/OriginalStore.kt:12: Warning: Consider also using StorageManager#getAllocatableBytes and allocateBytes which will consider clearable cached data [UsableSpace]
+internal class OriginalStore(internal val root:File,private val availableBytes:()->Long={root.usableSpace},private val syncDirectory:(File)->Unit) {
+                                                                                              ~~~~~~~~~~~
+/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/OriginalStore.kt:12: Warning: Consider also using StorageManager#getAllocatableBytes and allocateBytes which will consider clearable cached data [UsableSpace]
+internal class OriginalStore(internal val root:File,private val availableBytes:()->Long={root.usableSpace},private val syncDirectory:(File)->Unit) {
+                                                                                              ~~~~~~~~~~~
+/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/ValidatedImportOriginals.kt:27: Warning: Consider also using StorageManager#getAllocatableBytes and allocateBytes which will consider clearable cached data [UsableSpace]
+                    require(directory.usableSpace>=source.size.toLong()*2+32L*1024*1024){"ORIGINAL_LOW_SPACE"}
+                                      ~~~~~~~~~~~
+/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/ValidatedImportOriginals.kt:36: Warning: Consider also using StorageManager#getAllocatableBytes and allocateBytes which will consider clearable cached data [UsableSpace]
+                    require(directory.usableSpace>=source.size.toLong()*2+32L*1024*1024){"ORIGINAL_LOW_SPACE"}
+                                      ~~~~~~~~~~~
+
+   Explanation for issues of type "UsableSpace":
+   When you need to allocate disk space for large files, consider using the
+   new allocateBytes(FileDescriptor, long) API, which will automatically clear
+   cached files belonging to other apps (as needed) to meet your request.
+
+   When deciding if the device has enough disk space to hold your new data,
+   call getAllocatableBytes(UUID) instead of using getUsableSpace(), since the
+   former will consider any cached data that the system is willing to clear on
+   your behalf.
+
+   Note that these methods require API level 26. If your app is running on
+   older devices, you will probably need to use both APIs, conditionally
+   switching on Build.VERSION.SDK_INT. Lint only looks in the same compilation
+   unit to see if you are already using both APIs, so if it warns even though
+   you are already using the new API, consider moving the calls to the same
+   file or suppressing the warning.
+
+0 errors, 14 warnings

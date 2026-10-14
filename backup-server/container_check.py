@@ -34,6 +34,10 @@ def main(output):
                 raise RuntimeError('Go container did not become ready')
             def http(container):
                 port=int(run('port',container,'18751').rsplit(':',1)[1]);return httpx.Client(base_url=f'http://127.0.0.1:{port}',timeout=30,trust_env=False,follow_redirects=False)
+            ready(name)
+            # Synthetic initialization is one-shot; restart the actual service without --fixture.
+            run('stop',name);run('rm',name)
+            run('run','-d','--name',name,*options,'-p','127.0.0.1::18751','-v',volume+':/state',image,'inkweft-backup','--db','/state/backup-v2.db','--host','0.0.0.0')
             ready(name);report['uid']=run('exec',name,'id','-u');assert report['uid']=='10001'
             device,library=str(uuid.uuid4()),str(uuid.uuid4());key=os.urandom(32);plain=scratch/'plain';plain.write_bytes(os.urandom(2*WIRE_BLOCK));cipher=scratch/'cipher'
             encrypt(plain,cipher,library,key,format=2)

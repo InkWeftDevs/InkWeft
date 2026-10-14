@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-13T03:08:34.912699+00:00",
+  "from_phase": "candidate-raster-diagnostic-v2",
+  "to_phase": "candidate-raster-hex-v1",
+  "source_files": 744,
+  "changed_paths": [
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+  ],
+  "patch": "candidate-raster-hex-v1-one-line.patch",
+  "same_app_test_source": true,
+  "build": "candidate-raster-hex-v1-build.json",
+  "jvm": "candidate-raster-hex-v1-jvm.json",
+  "run_wrapper_sha256": "24e611d917f361ebcaaa28096f05cf0df13d6e498947d21168ebbb826fe211ec",
+  "native_performance": "PENDING"
+}

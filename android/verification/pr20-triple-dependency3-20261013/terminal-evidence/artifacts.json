@@ -1,0 +1,25 @@
+{
+  "total_count": 1,
+  "artifacts": [
+    {
+      "id": 11824680369,
+      "node_id": "MDg6QXJ0aWZhY3QxMTgyNDY4MDM2OQ==",
+      "name": "pr20-kvm-triple-38411448143",
+      "size_in_bytes": 439244,
+      "url": "https://api.github.com/repos/InkWeftDevs/InkWeft/actions/artifacts/11824680369",
+      "archive_download_url": "https://api.github.com/repos/InkWeftDevs/InkWeft/actions/artifacts/11824680369/zip",
+      "expired": false,
+      "digest": "sha256:d3d3d31af26afd83eb8182cd0562b0f14277e8de03ea5cf5c566b9d8843ff2c5",
+      "created_at": "2026-10-13T14:38:48Z",
+      "updated_at": "2026-10-13T14:38:48Z",
+      "expires_at": "2026-10-16T14:38:46Z",
+      "workflow_run": {
+        "id": 38411448143,
+        "repository_id": 1383361500,
+        "head_repository_id": 1383361500,
+        "head_branch": "codex/kvm-pr20-triple-20261013-dependency3",
+        "head_sha": "71b84885bd4ecb3fe8a4406788ffa14abc189497"
+      }
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "command": [
+    "env",
+    "BUILDX_CONFIG=/workspace/inkweft-cloud-verification-20261012/buildx",
+    "docker",
+    "build",
+    "--progress=plain",
+    "--secret",
+    "id=session_ca,src=/etc/ssl/certs/ca-certificates.crt",
+    "--file",
+    "/workspace/inkweft-cloud-verification-20261012/Dockerfile.session-ca",
+    "--iidfile",
+    "/workspace/inkweft-cloud-verification-20261012/evidence/image-id.txt",
+    "--tag",
+    "inkweft-cloud-check:a128bb07-20261012",
+    "backup-server"
+  ],
+  "shell_display": "env BUILDX_CONFIG=/workspace/inkweft-cloud-verification-20261012/buildx docker build --progress=plain --secret id=session_ca,src=/etc/ssl/certs/ca-certificates.crt --file /workspace/inkweft-cloud-verification-20261012/Dockerfile.session-ca --iidfile /workspace/inkweft-cloud-verification-20261012/evidence/image-id.txt --tag inkweft-cloud-check:a128bb07-20261012 backup-server",
+  "cwd": "/workspace/inkweft-cloud-verification-20261012/InkWeft",
+  "started_utc": "2026-10-12T14:28:35.139491+00:00",
+  "sanitization": "URL userinfo and query strings removed",
+  "exit_code": 0,
+  "finished_utc": "2026-10-12T14:29:09.034195+00:00"
+}

@@ -1,0 +1,29 @@
+{
+  "phase": "baseline",
+  "selection": "org.inkweft.data.BundledSqliteFactoryTest",
+  "command": [
+    "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "am",
+    "instrument",
+    "-w",
+    "-e",
+    "class",
+    "org.inkweft.data.BundledSqliteFactoryTest",
+    "-e",
+    "historyScanBaseline",
+    "true",
+    "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+  ],
+  "started_utc": "2026-10-12T16:34:13.653723+00:00",
+  "seconds": 21.641941169999882,
+  "exit_code": 0,
+  "expected": 5,
+  "tests": 5,
+  "executed": 5,
+  "failures": 0,
+  "passed": true,
+  "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+}

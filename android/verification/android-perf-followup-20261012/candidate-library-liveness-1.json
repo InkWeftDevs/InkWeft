@@ -1,0 +1,36 @@
+{
+  "checked_utc": "2026-10-12T17:27:43.506841+00:00",
+  "reason": "Parent requested liveness check during long candidate library probe; read-only process/property/file metadata only",
+  "observations": [
+    {
+      "command": [
+        "getprop",
+        "sys.boot_completed"
+      ],
+      "exit_code": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "pidof",
+        "org.inkweft.data.test"
+      ],
+      "exit_code": 0,
+      "stdout": "5776\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "run-as",
+        "org.inkweft.data.test",
+        "ls",
+        "-lt",
+        "databases"
+      ],
+      "exit_code": 0,
+      "stdout": "total 64988\n-rw------- 1 u0_a140 u0_a140  1137152 2026-10-12 17:27 library-read-probe-230b1395-df31-4e3c-ae18-6063b7ff0b4a.db-wal\n-rw------- 1 u0_a140 u0_a140   131072 2026-10-12 17:27 library-read-probe-230b1395-df31-4e3c-ae18-6063b7ff0b4a.db-shm\n-rw------- 1 u0_a140 u0_a140 65249280 2026-10-12 17:27 library-read-probe-230b1395-df31-4e3c-ae18-6063b7ff0b4a.db\n-rw------- 1 u0_a140 u0_a140        0 2026-10-12 17:10 library-read-probe-230b1395-df31-4e3c-ae18-6063b7ff0b4a.db.inkweft-open-lock\n-rw------- 1 u0_a140 u0_a140        0 2026-10-12 17:06 history-collection-probe-d6b9bf4f-8a81-4514-8e8c-02129db0a296.db.inkweft-open-lock\n-rw------- 1 u0_a140 u0_a140        0 2026-10-12 16:40 library-read-probe-9eda906c-7c4b-4249-a700-53fe5e5f00bf.db.inkweft-open-lock\n-rw------- 1 u0_a140 u0_a140        0 2026-10-12 16:34 history-collection-probe-fb962e26-7586-4c76-bd18-f279c05451c0.db.inkweft-open-lock\n",
+      "stderr": ""
+    }
+  ]
+}

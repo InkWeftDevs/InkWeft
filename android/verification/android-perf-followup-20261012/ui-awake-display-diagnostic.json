@@ -1,0 +1,36 @@
+{
+  "observations": [
+    {
+      "utc": "2026-10-12T19:11:36.870021+00:00",
+      "service": "power",
+      "exit": 0,
+      "lines": [
+        "  mWakefulness=Awake",
+        "  mProximityPositive=false",
+        "  mHoldingDisplaySuspendBlocker=true",
+        "  mScreenBrightnessOverrideFromWindowManager=NaN"
+      ]
+    },
+    {
+      "utc": "2026-10-12T19:11:38.356746+00:00",
+      "service": "display",
+      "exit": 0,
+      "lines": [
+        "  mScreenState=ON"
+      ]
+    },
+    {
+      "utc": "2026-10-12T19:11:39.824679+00:00",
+      "service": "window",
+      "exit": 0,
+      "lines": [
+        "  mCurrentFocus=Window{757a280 u0 com.android.fakesystemapp/com.android.fakesystemapp.launcher.EmptyHomeActivity}",
+        "  mFocusedApp=ActivityRecord{3a07690 u0 com.android.fakesystemapp/.launcher.EmptyHomeActivity t4}",
+        "  mTopFocusedDisplayId=0"
+      ]
+    }
+  ],
+  "interpretation": "At the display diagnostic timestamp the focused window was the ATD EmptyHomeActivity after candidate cover-change test teardown. Thus the black screenshot does not establish an app rendering defect or a continued sleep state. UI assertions remain failed and require matched controls.",
+  "documentation": "https://developer.android.com/studio/test/managed-devices#atd",
+  "documented_atd_limit": "ATD disables hardware rendering; screenshot tests depending on hardware rendering are unsupported. Direct software Bitmap raster comparisons are a separate test path."
+}

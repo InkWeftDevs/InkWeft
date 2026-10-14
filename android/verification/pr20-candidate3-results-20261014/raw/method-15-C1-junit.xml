@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes" tests="1" failures="0" errors="0" time="0.9557311534881592"><testcase classname="org.inkweft.data.HistoryCollectionTest" name="interruptedBatchRollsBackAndReopenedCollectionResumes" time="0.9557311534881592" /></testsuite>

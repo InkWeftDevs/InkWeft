@@ -1,0 +1,158 @@
+{
+  "completed_utc": "2026-10-12T21:00:16.201453+00:00",
+  "comparator": "a128bb07 + identical common initialization fix",
+  "candidate_production_commit": "300e8c908b4c53a35b9c44cd2f99b044c4449767",
+  "published_followup_test_commit": "d2003a019be6aecf3b9aa7a4a05f69032fd6fb8f",
+  "environment": "Same API35 x86_64 TCG/SwiftShader Android emulator, no KVM; Awake checked before every case; serial execution",
+  "note": "Runner elapsed time includes preparation/teardown and is not a performance metric. This 8-case control plan is separate from 22 passing paired executions, the initial 66-case suite and the original-Awake 8-UI rerun. Original failures remain retained.",
+  "counts": {
+    "baseline-followup": {
+      "executed": 8,
+      "passed": 3,
+      "failed": 5
+    },
+    "candidate-followup": {
+      "executed": 8,
+      "passed": 3,
+      "failed": 5
+    }
+  },
+  "results": [
+    {
+      "label": "history-concurrency-control",
+      "selection": "org.inkweft.data.HistoryConcurrencyTest",
+      "assessment": "Both failed with the original 30000 ms timeout. The test has multiple 30s waits; the log does not identify which wait expired. Large-audit/cancellation acceptance remains unverified.",
+      "baseline-followup": {
+        "passed": false,
+        "runner_seconds": 272.97724142100196,
+        "log": "baseline-followup-history-concurrency-control.log",
+        "receipt": "baseline-followup-history-concurrency-control.json"
+      },
+      "candidate-followup": {
+        "passed": false,
+        "runner_seconds": 257.94712657299897,
+        "log": "candidate-followup-history-concurrency-control.log",
+        "receipt": "candidate-followup-history-concurrency-control.json"
+      }
+    },
+    {
+      "label": "search-regressions-control",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+      "assessment": "Both failed at the original 10000 ms first-index-batch gate, before later rapid-input/cancellation assertions. Separate paired cold/warm performance runs passed.",
+      "baseline-followup": {
+        "passed": false,
+        "runner_seconds": 289.9335967269981,
+        "log": "baseline-followup-search-regressions-control.log",
+        "receipt": "baseline-followup-search-regressions-control.json"
+      },
+      "candidate-followup": {
+        "passed": false,
+        "runner_seconds": 246.83188858299764,
+        "log": "candidate-followup-search-regressions-control.log",
+        "receipt": "candidate-followup-search-regressions-control.json"
+      }
+    },
+    {
+      "label": "backup-cancellation-control",
+      "selection": "org.inkweft.data.LibraryBackupRepositoryTest#cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary",
+      "assessment": "Both diagnostics report TimeoutCancellationException, partialObserved=false and cancelled=false. Explicit partial-file cancellation was not exercised successfully.",
+      "baseline-followup": {
+        "passed": false,
+        "runner_seconds": 171.34688497599927,
+        "log": "baseline-followup-backup-cancellation-control.log",
+        "receipt": "baseline-followup-backup-cancellation-control.json"
+      },
+      "candidate-followup": {
+        "passed": false,
+        "runner_seconds": 147.8969708830009,
+        "log": "candidate-followup-backup-cancellation-control.log",
+        "receipt": "candidate-followup-backup-cancellation-control.json"
+      }
+    },
+    {
+      "label": "streamed-frame-control",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "assessment": "Both failed at the original 30000 ms complete-frame deadline; completion and subsequent release assertions in this case remain unverified. Other pixel/clear/cache checks are separate.",
+      "baseline-followup": {
+        "passed": false,
+        "runner_seconds": 164.35242988900063,
+        "log": "baseline-followup-streamed-frame-control.log",
+        "receipt": "baseline-followup-streamed-frame-control.json"
+      },
+      "candidate-followup": {
+        "passed": false,
+        "runner_seconds": 129.03506628099785,
+        "log": "candidate-followup-streamed-frame-control.log",
+        "receipt": "candidate-followup-streamed-frame-control.json"
+      }
+    },
+    {
+      "label": "ui-NotebookShelfUiTest-shelfRenameCancelBlankAndPersistedIdentity",
+      "selection": "org.inkweft.app.NotebookShelfUiTest#shelfRenameCancelBlankAndPersistedIdentity",
+      "assessment": "Both failed during creation, at different stages: comparator Compose idling; candidate original 15000 ms singlePageEditor wait. Shelf rename behavior was not reached.",
+      "baseline-followup": {
+        "passed": false,
+        "runner_seconds": 166.771458635998,
+        "log": "baseline-followup-ui-NotebookShelfUiTest-shelfRenameCancelBlankAndPersistedIdentity.log",
+        "receipt": "baseline-followup-ui-NotebookShelfUiTest-shelfRenameCancelBlankAndPersistedIdentity.json"
+      },
+      "candidate-followup": {
+        "passed": false,
+        "runner_seconds": 157.9876066729994,
+        "log": "candidate-followup-ui-NotebookShelfUiTest-shelfRenameCancelBlankAndPersistedIdentity.log",
+        "receipt": "candidate-followup-ui-NotebookShelfUiTest-shelfRenameCancelBlankAndPersistedIdentity.json"
+      }
+    },
+    {
+      "label": "ui-NotebookShelfUiTest-coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview",
+      "selection": "org.inkweft.app.NotebookShelfUiTest#coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview",
+      "assessment": "Both passed all original cover, ink-preservation and content-preview assertions after the identical target-menu readiness correction. Same waitUntil(10000) parameter; no behavior assertion removed.",
+      "baseline-followup": {
+        "passed": true,
+        "runner_seconds": 212.3147241709994,
+        "log": "baseline-followup-ui-NotebookShelfUiTest-coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview.log",
+        "receipt": "baseline-followup-ui-NotebookShelfUiTest-coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview.json"
+      },
+      "candidate-followup": {
+        "passed": true,
+        "runner_seconds": 210.2880876340023,
+        "log": "candidate-followup-ui-NotebookShelfUiTest-coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview.log",
+        "receipt": "candidate-followup-ui-NotebookShelfUiTest-coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview.json"
+      }
+    },
+    {
+      "label": "ui-LibrarySourceNavigationUiTest-learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock",
+      "selection": "org.inkweft.app.LibrarySourceNavigationUiTest#learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock",
+      "assessment": "Both passed all original source selection, focus and read-lock assertions. No failure-only diagnostic ran.",
+      "baseline-followup": {
+        "passed": true,
+        "runner_seconds": 253.8128303960002,
+        "log": "baseline-followup-ui-LibrarySourceNavigationUiTest-learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock.log",
+        "receipt": "baseline-followup-ui-LibrarySourceNavigationUiTest-learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock.json"
+      },
+      "candidate-followup": {
+        "passed": true,
+        "runner_seconds": 245.9006092689997,
+        "log": "candidate-followup-ui-LibrarySourceNavigationUiTest-learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock.log",
+        "receipt": "candidate-followup-ui-LibrarySourceNavigationUiTest-learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock.json"
+      }
+    },
+    {
+      "label": "ui-LibrarySourceNavigationUiTest-closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard",
+      "selection": "org.inkweft.app.LibrarySourceNavigationUiTest#closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard",
+      "assessment": "Both passed all original pending-request cancellation/recreation/navigation assertions. No failure-only diagnostic ran.",
+      "baseline-followup": {
+        "passed": true,
+        "runner_seconds": 280.36577747200135,
+        "log": "baseline-followup-ui-LibrarySourceNavigationUiTest-closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard.log",
+        "receipt": "baseline-followup-ui-LibrarySourceNavigationUiTest-closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard.json"
+      },
+      "candidate-followup": {
+        "passed": true,
+        "runner_seconds": 259.57412172300246,
+        "log": "candidate-followup-ui-LibrarySourceNavigationUiTest-closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard.log",
+        "receipt": "candidate-followup-ui-LibrarySourceNavigationUiTest-closingOrRecreatingPendingLibrarySourceCannotJumpOrCloseAnotherCard.json"
+      }
+    }
+  ]
+}

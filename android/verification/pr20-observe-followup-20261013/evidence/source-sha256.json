@@ -1,0 +1,8 @@
+{
+  "android/app/src/androidTest/java/org/inkweft/app/NotebookShelfUiTest.kt": "bf660210fefb0dd0fd5c593556b3bf058e14a40f51084655fbb5c1d6e553563f",
+  "android/data-local/build.gradle.kts": "92b5b8cf75de2002a663dafc942d7cfd2fdda6d7d3b900e2dc2dcacc7d062792",
+  "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt": "502e999a609f8d3a90d4e58c182c00546d4e2b5aeb24f01c5ca2a474af295b18",
+  "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchObservation.kt": "2d71398e78639e6f4524ececdfb5bf418e98d7aff436d704865e2af00d77ce6c",
+  "android/data-local/src/test/kotlin/org/inkweft/data/LibrarySearchObservationTest.kt": "98d35374c87550eac19a7c9d40a75f5a16d87e79fe752baac49096e5fe770943",
+  "android/gradle/libs.versions.toml": "2bedab1699d8c47afa899674207927a10fce8c8abb93b049a3b659af89483403"
+}

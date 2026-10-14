@@ -1,0 +1,59 @@
+INSTRUMENTATION_STATUS: class=org.inkweft.app.TileLocalRedrawTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=
+org.inkweft.app.TileLocalRedrawTest:
+INSTRUMENTATION_STATUS: test=integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: stream=TILE_PAN_STAGE {"stage":"initial-cached","event":"start","deadlineMs":30000}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=TILE_PAN_STAGE {"stage":"initial-cached","event":"complete","elapsedMs":322.541726}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=TILE_PAN_STAGE {"stage":"pan-cached","event":"start","deadlineMs":30000}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=TILE_PAN_STAGE {"stage":"pan-cached","event":"complete","elapsedMs":61.899501}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=TILE_PAN_STAGE {"stage":"pan-cold","event":"start","deadlineMs":30000}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=TILE_PAN_STAGE {"stage":"pan-cold","event":"complete","elapsedMs":116.775247}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=TILE_PAN_STAGE {"stage":"zoom-cached","event":"start","deadlineMs":30000}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=TILE_PAN_STAGE {"stage":"zoom-cached","event":"complete","elapsedMs":87.143922}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=TILE_PAN_STAGE {"stage":"zoom-cold","event":"start","deadlineMs":30000}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=TILE_PAN_STAGE {"stage":"zoom-cold","event":"complete","elapsedMs":99.714627}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=TILE_PAN_EVIDENCE {"rebuilt":12,"tiles":20,"panPixelsEqual":true,"zoomPixelsEqual":true,"previewCaptureReady":false}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: stream=TILE_PAN_STAGE {"event":"workers-joined","resources":{"totalBytes":0,"budgetBytes":134217728,"peakTrackedBytes":27729920,"inFlightJobs":0,"cancelledJobs":0,"cacheBytes":0,"in_flightBytes":0,"activeBytes":0,"live_inkBytes":0}}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=org.inkweft.app.TileLocalRedrawTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_RESULT: stream=
+
+Time: 0.879
+
+OK (1 test)
+
+
+INSTRUMENTATION_CODE: -1

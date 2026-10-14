@@ -1,0 +1,12 @@
+diff --git a/android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt b/android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt
+--- a/android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt
++++ b/android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt
+@@ -38,7 +38,7 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
+         }}
+         combine(requests,db.invalidationTracker.createFlow(
+             "notes","notebook_workspace","notebook_pages","page_search_text","ink_pages","study_cards"
+-        ).runningFold(0L){version,_->version+1},completed){request,version,_->request to version}.mapLatest{(request,version)->
++        ).runningFold(0L){version,_->version+1}.drop(1),completed){request,version,_->request to version}.mapLatest{(request,version)->
+             val before=previous;previous=request
+             // Text edits debounce; deleting the query and changing a category take effect immediately.
+             if(request.query.isNotBlank()&&before?.query!=request.query&&

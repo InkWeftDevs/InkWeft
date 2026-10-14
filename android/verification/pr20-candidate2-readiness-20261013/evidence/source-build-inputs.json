@@ -1,0 +1,9 @@
+{
+  "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt": "a3705767b40ef594b06a91763823a10398233b0111988ce4e90166b35238ef83",
+  "android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt": "0001f4fbb5dd4bd297fc60558d0998b718a6fed318fcd51e281bbefb8905a221",
+  "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt": "b0c5b0b9f33b1dbe83cdc9b9f754884b221fba16c1fdc6c98754c59e756b807a",
+  "android/data-local/src/androidTest/kotlin/org/inkweft/data/RasterReadCacheTest.kt": "8a4d1bef8092ba418563695dd5709602be00033a37a7658f50602d6186661894",
+  "android/data-local/src/main/kotlin/org/inkweft/data/InkRasterCache.kt": "064890abd3249d88db94aeaeebd9c07fe3c359e9568a9e74b001509ff8aa77e4",
+  "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt": "e7241f4329ece5148f8d1e6f740e102f8326bd4ef0db7f0a6f0a2871e12c9950",
+  "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt": "744cda25180c3f8411b2816d5025b65c5b5ab122f5a0b83bb0597b379c935522"
+}

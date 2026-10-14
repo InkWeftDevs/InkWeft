@@ -1,0 +1,3032 @@
+{
+  "execution_status": "EXECUTION_COMPLETE_ANALYSIS_PENDING",
+  "completed_method_calls": 24,
+  "planned_method_calls": 24,
+  "observations": [
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "raster.1.firstCompleteMs",
+      "value_ms": 255.618846,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "raster.1.appendCompleteMs",
+      "value_ms": 51.175786,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "raster.1.forcedFullCompleteMs",
+      "value_ms": 171.737392,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "raster.4.firstCompleteMs",
+      "value_ms": 221.39343,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "raster.4.appendCompleteMs",
+      "value_ms": 102.207486,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "raster.4.forcedFullCompleteMs",
+      "value_ms": 174.623995,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "raster.8.firstCompleteMs",
+      "value_ms": 228.391874,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "raster.8.appendCompleteMs",
+      "value_ms": 129.517366,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "raster.8.forcedFullCompleteMs",
+      "value_ms": 218.550887,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "library.coldMs",
+      "value_ms": 2026.695321,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "library.direct.p50",
+      "value_ms": 2.286006,
+      "band": "save_p50"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "library.direct.p95",
+      "value_ms": 5.646858,
+      "band": "save_p95"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "library.direct.max",
+      "value_ms": 6.813756,
+      "band": "save_max"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "library.observe.p50",
+      "value_ms": 4.639417,
+      "band": "save_p50"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "library.observe.p95",
+      "value_ms": 13.340594,
+      "band": "save_p95"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "library.observe.max",
+      "value_ms": 39.366286,
+      "band": "save_max"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "library.allIndexRowsCommittedMs",
+      "value_ms": 26035.043962,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "library.searchIndexReadyMs",
+      "value_ms": 26639.703393,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "library.effective_index_rows_per_second",
+      "value": 768.1953611905332,
+      "band": null,
+      "scope": "subscribe through committed 20k rows, includes concurrent saves and scheduling"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "history.collectionMs",
+      "value_ms": 239.685958,
+      "band": "gc_completion"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "history.liveCollectionAndSavesMs",
+      "value_ms": 340.153038,
+      "band": "gc_completion"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "history.paused.p50",
+      "value_ms": 2.487726,
+      "band": "save_p50"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "history.paused.p95",
+      "value_ms": 4.727306,
+      "band": "save_p95"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "history.paused.max",
+      "value_ms": 7.172019,
+      "band": "save_max"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "history.live.p50",
+      "value_ms": 2.052827,
+      "band": "save_p50"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "history.live.p95",
+      "value_ms": 3.26293,
+      "band": "save_p95"
+    },
+    {
+      "pair": 1,
+      "side": "C",
+      "visit": 1,
+      "metric": "history.live.max",
+      "value_ms": 3.809712,
+      "band": "save_max"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "raster.1.firstCompleteMs",
+      "value_ms": 233.522322,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "raster.1.appendCompleteMs",
+      "value_ms": 50.627884,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "raster.1.forcedFullCompleteMs",
+      "value_ms": 171.750589,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "raster.4.firstCompleteMs",
+      "value_ms": 204.37819,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "raster.4.appendCompleteMs",
+      "value_ms": 102.818038,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "raster.4.forcedFullCompleteMs",
+      "value_ms": 171.651947,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "raster.8.firstCompleteMs",
+      "value_ms": 243.381023,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "raster.8.appendCompleteMs",
+      "value_ms": 189.385559,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "raster.8.forcedFullCompleteMs",
+      "value_ms": 237.307072,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "library.coldMs",
+      "value_ms": 3959.222903,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "library.direct.p50",
+      "value_ms": 2.005591,
+      "band": "save_p50"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "library.direct.p95",
+      "value_ms": 4.485889,
+      "band": "save_p95"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "library.direct.max",
+      "value_ms": 3791.085456,
+      "band": "save_max"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "library.observe.p50",
+      "value_ms": 2.291743,
+      "band": "save_p50"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "library.observe.p95",
+      "value_ms": 72.171816,
+      "band": "save_p95"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "library.observe.max",
+      "value_ms": 3822.137917,
+      "band": "save_max"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "library.allIndexRowsCommittedMs",
+      "value_ms": 26099.612635,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "library.searchIndexReadyMs",
+      "value_ms": 26627.313773,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "library.effective_index_rows_per_second",
+      "value": 766.2948979242581,
+      "band": null,
+      "scope": "subscribe through committed 20k rows, includes concurrent saves and scheduling"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "history.collectionMs",
+      "value_ms": 1646.734191,
+      "band": "gc_completion"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "history.liveCollectionAndSavesMs",
+      "value_ms": 1642.823222,
+      "band": "gc_completion"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "history.paused.p50",
+      "value_ms": 2.233888,
+      "band": "save_p50"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "history.paused.p95",
+      "value_ms": 2.798337,
+      "band": "save_p95"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "history.paused.max",
+      "value_ms": 3.998693,
+      "band": "save_max"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "history.live.p50",
+      "value_ms": 2.066857,
+      "band": "save_p50"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "history.live.p95",
+      "value_ms": 4.19386,
+      "band": "save_p95"
+    },
+    {
+      "pair": 1,
+      "side": "B",
+      "visit": 2,
+      "metric": "history.live.max",
+      "value_ms": 4.727291,
+      "band": "save_max"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "raster.1.firstCompleteMs",
+      "value_ms": 234.69004,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "raster.1.appendCompleteMs",
+      "value_ms": 50.241386,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "raster.1.forcedFullCompleteMs",
+      "value_ms": 188.479268,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "raster.4.firstCompleteMs",
+      "value_ms": 203.641329,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "raster.4.appendCompleteMs",
+      "value_ms": 97.607344,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "raster.4.forcedFullCompleteMs",
+      "value_ms": 161.306337,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "raster.8.firstCompleteMs",
+      "value_ms": 242.235448,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "raster.8.appendCompleteMs",
+      "value_ms": 125.969632,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "raster.8.forcedFullCompleteMs",
+      "value_ms": 233.275132,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "library.coldMs",
+      "value_ms": 4013.530398,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "library.direct.p50",
+      "value_ms": 2.005499,
+      "band": "save_p50"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "library.direct.p95",
+      "value_ms": 2.509394,
+      "band": "save_p95"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "library.direct.max",
+      "value_ms": 3850.771547,
+      "band": "save_max"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "library.observe.p50",
+      "value_ms": 2.168767,
+      "band": "save_p50"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "library.observe.p95",
+      "value_ms": 82.60873,
+      "band": "save_p95"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "library.observe.max",
+      "value_ms": 3854.209053,
+      "band": "save_max"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "library.allIndexRowsCommittedMs",
+      "value_ms": 26661.446463,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "library.searchIndexReadyMs",
+      "value_ms": 27204.776404,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "library.effective_index_rows_per_second",
+      "value": 750.1468469745417,
+      "band": null,
+      "scope": "subscribe through committed 20k rows, includes concurrent saves and scheduling"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "history.collectionMs",
+      "value_ms": 1666.093813,
+      "band": "gc_completion"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "history.liveCollectionAndSavesMs",
+      "value_ms": 1707.730916,
+      "band": "gc_completion"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "history.paused.p50",
+      "value_ms": 2.46731,
+      "band": "save_p50"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "history.paused.p95",
+      "value_ms": 3.149942,
+      "band": "save_p95"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "history.paused.max",
+      "value_ms": 6.186426,
+      "band": "save_max"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "history.live.p50",
+      "value_ms": 2.053205,
+      "band": "save_p50"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "history.live.p95",
+      "value_ms": 5.628241,
+      "band": "save_p95"
+    },
+    {
+      "pair": 2,
+      "side": "B",
+      "visit": 3,
+      "metric": "history.live.max",
+      "value_ms": 7.079894,
+      "band": "save_max"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "raster.1.firstCompleteMs",
+      "value_ms": 244.170106,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "raster.1.appendCompleteMs",
+      "value_ms": 32.19864,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "raster.1.forcedFullCompleteMs",
+      "value_ms": 171.693723,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "raster.4.firstCompleteMs",
+      "value_ms": 204.22872,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "raster.4.appendCompleteMs",
+      "value_ms": 101.804595,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "raster.4.forcedFullCompleteMs",
+      "value_ms": 190.616512,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "raster.8.firstCompleteMs",
+      "value_ms": 243.628204,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "raster.8.appendCompleteMs",
+      "value_ms": 135.940534,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "raster.8.forcedFullCompleteMs",
+      "value_ms": 225.092015,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "library.coldMs",
+      "value_ms": 1962.886793,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "library.direct.p50",
+      "value_ms": 2.228207,
+      "band": "save_p50"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "library.direct.p95",
+      "value_ms": 6.234961,
+      "band": "save_p95"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "library.direct.max",
+      "value_ms": 8.392852,
+      "band": "save_max"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "library.observe.p50",
+      "value_ms": 5.061388,
+      "band": "save_p50"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "library.observe.p95",
+      "value_ms": 17.059092,
+      "band": "save_p95"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "library.observe.max",
+      "value_ms": 29.965658,
+      "band": "save_max"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "library.allIndexRowsCommittedMs",
+      "value_ms": 25573.681857,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "library.searchIndexReadyMs",
+      "value_ms": 26159.716315,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "library.effective_index_rows_per_second",
+      "value": 782.0539925316081,
+      "band": null,
+      "scope": "subscribe through committed 20k rows, includes concurrent saves and scheduling"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "history.collectionMs",
+      "value_ms": 237.428231,
+      "band": "gc_completion"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "history.liveCollectionAndSavesMs",
+      "value_ms": 352.306308,
+      "band": "gc_completion"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "history.paused.p50",
+      "value_ms": 2.27857,
+      "band": "save_p50"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "history.paused.p95",
+      "value_ms": 2.956982,
+      "band": "save_p95"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "history.paused.max",
+      "value_ms": 4.220155,
+      "band": "save_max"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "history.live.p50",
+      "value_ms": 2.244948,
+      "band": "save_p50"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "history.live.p95",
+      "value_ms": 7.599791,
+      "band": "save_p95"
+    },
+    {
+      "pair": 2,
+      "side": "C",
+      "visit": 4,
+      "metric": "history.live.max",
+      "value_ms": 11.824768,
+      "band": "save_max"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "raster.1.firstCompleteMs",
+      "value_ms": 237.946625,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "raster.1.appendCompleteMs",
+      "value_ms": 52.342574,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "raster.1.forcedFullCompleteMs",
+      "value_ms": 187.099553,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "raster.4.firstCompleteMs",
+      "value_ms": 210.158823,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "raster.4.appendCompleteMs",
+      "value_ms": 104.458561,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "raster.4.forcedFullCompleteMs",
+      "value_ms": 172.353433,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "raster.8.firstCompleteMs",
+      "value_ms": 241.258237,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "raster.8.appendCompleteMs",
+      "value_ms": 127.648095,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "raster.8.forcedFullCompleteMs",
+      "value_ms": 230.988965,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "library.coldMs",
+      "value_ms": 4002.348768,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "library.direct.p50",
+      "value_ms": 2.032004,
+      "band": "save_p50"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "library.direct.p95",
+      "value_ms": 3.268177,
+      "band": "save_p95"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "library.direct.max",
+      "value_ms": 3833.732315,
+      "band": "save_max"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "library.observe.p50",
+      "value_ms": 2.508294,
+      "band": "save_p50"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "library.observe.p95",
+      "value_ms": 71.629601,
+      "band": "save_p95"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "library.observe.max",
+      "value_ms": 3855.178802,
+      "band": "save_max"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "library.allIndexRowsCommittedMs",
+      "value_ms": 26617.842948,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "library.searchIndexReadyMs",
+      "value_ms": 27146.251452,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "library.effective_index_rows_per_second",
+      "value": 751.3756858161473,
+      "band": null,
+      "scope": "subscribe through committed 20k rows, includes concurrent saves and scheduling"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "history.collectionMs",
+      "value_ms": 1643.198087,
+      "band": "gc_completion"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "history.liveCollectionAndSavesMs",
+      "value_ms": 1677.939525,
+      "band": "gc_completion"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "history.paused.p50",
+      "value_ms": 2.387712,
+      "band": "save_p50"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "history.paused.p95",
+      "value_ms": 5.178889,
+      "band": "save_p95"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "history.paused.max",
+      "value_ms": 7.256873,
+      "band": "save_max"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "history.live.p50",
+      "value_ms": 2.031673,
+      "band": "save_p50"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "history.live.p95",
+      "value_ms": 3.852748,
+      "band": "save_p95"
+    },
+    {
+      "pair": 3,
+      "side": "B",
+      "visit": 5,
+      "metric": "history.live.max",
+      "value_ms": 6.788618,
+      "band": "save_max"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "raster.1.firstCompleteMs",
+      "value_ms": 246.78516,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "raster.1.appendCompleteMs",
+      "value_ms": 35.089471,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "raster.1.forcedFullCompleteMs",
+      "value_ms": 188.049785,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "raster.4.firstCompleteMs",
+      "value_ms": 178.66468,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "raster.4.appendCompleteMs",
+      "value_ms": 111.576587,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "raster.4.forcedFullCompleteMs",
+      "value_ms": 163.916076,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "raster.8.firstCompleteMs",
+      "value_ms": 243.073979,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "raster.8.appendCompleteMs",
+      "value_ms": 125.521748,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "raster.8.forcedFullCompleteMs",
+      "value_ms": 256.316047,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "library.coldMs",
+      "value_ms": 2016.270647,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "library.direct.p50",
+      "value_ms": 2.305862,
+      "band": "save_p50"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "library.direct.p95",
+      "value_ms": 8.644212,
+      "band": "save_p95"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "library.direct.max",
+      "value_ms": 9.877278,
+      "band": "save_max"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "library.observe.p50",
+      "value_ms": 4.8032,
+      "band": "save_p50"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "library.observe.p95",
+      "value_ms": 14.150945,
+      "band": "save_p95"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "library.observe.max",
+      "value_ms": 26.508898,
+      "band": "save_max"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "library.allIndexRowsCommittedMs",
+      "value_ms": 26079.682056,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "library.searchIndexReadyMs",
+      "value_ms": 26671.754372,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "library.effective_index_rows_per_second",
+      "value": 766.8805147645086,
+      "band": null,
+      "scope": "subscribe through committed 20k rows, includes concurrent saves and scheduling"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "history.collectionMs",
+      "value_ms": 232.780579,
+      "band": "gc_completion"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "history.liveCollectionAndSavesMs",
+      "value_ms": 340.303992,
+      "band": "gc_completion"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "history.paused.p50",
+      "value_ms": 2.425823,
+      "band": "save_p50"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "history.paused.p95",
+      "value_ms": 4.189086,
+      "band": "save_p95"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "history.paused.max",
+      "value_ms": 5.277678,
+      "band": "save_max"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "history.live.p50",
+      "value_ms": 2.056301,
+      "band": "save_p50"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "history.live.p95",
+      "value_ms": 3.70441,
+      "band": "save_p95"
+    },
+    {
+      "pair": 3,
+      "side": "C",
+      "visit": 6,
+      "metric": "history.live.max",
+      "value_ms": 5.24073,
+      "band": "save_max"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "raster.1.firstCompleteMs",
+      "value_ms": 236.328124,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "raster.1.appendCompleteMs",
+      "value_ms": 34.622492,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "raster.1.forcedFullCompleteMs",
+      "value_ms": 171.74231,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "raster.4.firstCompleteMs",
+      "value_ms": 179.768289,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "raster.4.appendCompleteMs",
+      "value_ms": 118.995736,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "raster.4.forcedFullCompleteMs",
+      "value_ms": 173.748093,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "raster.8.firstCompleteMs",
+      "value_ms": 245.291468,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "raster.8.appendCompleteMs",
+      "value_ms": 125.396981,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "raster.8.forcedFullCompleteMs",
+      "value_ms": 266.684174,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "library.coldMs",
+      "value_ms": 1966.49611,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "library.direct.p50",
+      "value_ms": 2.361414,
+      "band": "save_p50"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "library.direct.p95",
+      "value_ms": 7.976,
+      "band": "save_p95"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "library.direct.max",
+      "value_ms": 10.971446,
+      "band": "save_max"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "library.observe.p50",
+      "value_ms": 4.963916,
+      "band": "save_p50"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "library.observe.p95",
+      "value_ms": 11.657339,
+      "band": "save_p95"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "library.observe.max",
+      "value_ms": 32.08347,
+      "band": "save_max"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "library.allIndexRowsCommittedMs",
+      "value_ms": 25803.60154,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "library.searchIndexReadyMs",
+      "value_ms": 26377.212876,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "library.effective_index_rows_per_second",
+      "value": 775.0856007056448,
+      "band": null,
+      "scope": "subscribe through committed 20k rows, includes concurrent saves and scheduling"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "history.collectionMs",
+      "value_ms": 240.58185,
+      "band": "gc_completion"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "history.liveCollectionAndSavesMs",
+      "value_ms": 343.630819,
+      "band": "gc_completion"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "history.paused.p50",
+      "value_ms": 2.352343,
+      "band": "save_p50"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "history.paused.p95",
+      "value_ms": 2.7562,
+      "band": "save_p95"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "history.paused.max",
+      "value_ms": 4.970007,
+      "band": "save_max"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "history.live.p50",
+      "value_ms": 2.070253,
+      "band": "save_p50"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "history.live.p95",
+      "value_ms": 4.152051,
+      "band": "save_p95"
+    },
+    {
+      "pair": 4,
+      "side": "C",
+      "visit": 7,
+      "metric": "history.live.max",
+      "value_ms": 8.153076,
+      "band": "save_max"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "raster.1.firstCompleteMs",
+      "value_ms": 231.417413,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "raster.1.appendCompleteMs",
+      "value_ms": 50.388603,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "raster.1.forcedFullCompleteMs",
+      "value_ms": 171.715009,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "raster.4.firstCompleteMs",
+      "value_ms": 222.278656,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "raster.4.appendCompleteMs",
+      "value_ms": 98.899453,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "raster.4.forcedFullCompleteMs",
+      "value_ms": 172.984003,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "raster.8.firstCompleteMs",
+      "value_ms": 245.032766,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "raster.8.appendCompleteMs",
+      "value_ms": 186.004891,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "raster.8.forcedFullCompleteMs",
+      "value_ms": 236.525048,
+      "band": "raster_all_phase_times"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "library.coldMs",
+      "value_ms": 4040.759251,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "library.direct.p50",
+      "value_ms": 1.879688,
+      "band": "save_p50"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "library.direct.p95",
+      "value_ms": 2.724673,
+      "band": "save_p95"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "library.direct.max",
+      "value_ms": 3876.877338,
+      "band": "save_max"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "library.observe.p50",
+      "value_ms": 2.401424,
+      "band": "save_p50"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "library.observe.p95",
+      "value_ms": 73.757812,
+      "band": "save_p95"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "library.observe.max",
+      "value_ms": 3837.377721,
+      "band": "save_max"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "library.allIndexRowsCommittedMs",
+      "value_ms": 26848.653373,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "library.searchIndexReadyMs",
+      "value_ms": 27366.586773,
+      "band": "search_and_index_completion"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "library.effective_index_rows_per_second",
+      "value": 744.9163174832723,
+      "band": null,
+      "scope": "subscribe through committed 20k rows, includes concurrent saves and scheduling"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "history.collectionMs",
+      "value_ms": 1670.106898,
+      "band": "gc_completion"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "history.liveCollectionAndSavesMs",
+      "value_ms": 1687.754063,
+      "band": "gc_completion"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "history.paused.p50",
+      "value_ms": 2.164474,
+      "band": "save_p50"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "history.paused.p95",
+      "value_ms": 3.04586,
+      "band": "save_p95"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "history.paused.max",
+      "value_ms": 9.941866,
+      "band": "save_max"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "history.live.p50",
+      "value_ms": 1.99649,
+      "band": "save_p50"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "history.live.p95",
+      "value_ms": 4.307677,
+      "band": "save_p95"
+    },
+    {
+      "pair": 4,
+      "side": "B",
+      "visit": 8,
+      "metric": "history.live.max",
+      "value_ms": 5.731791,
+      "band": "save_max"
+    }
+  ],
+  "comparisons": [
+    {
+      "metric": "history.collectionMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 100
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 1646.734191,
+          "C_ms": 239.685958,
+          "delta_ms": -1407.048233,
+          "ratio_C_to_B": 0.1455523054722315,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 1666.093813,
+          "C_ms": 237.428231,
+          "delta_ms": -1428.6655819999999,
+          "ratio_C_to_B": 0.1425059196231467,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 1643.198087,
+          "C_ms": 232.780579,
+          "delta_ms": -1410.417508,
+          "ratio_C_to_B": 0.1416631268266563,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 1670.106898,
+          "C_ms": 240.58185,
+          "delta_ms": -1429.525048,
+          "ratio_C_to_B": 0.1440517671582002,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "history.live.max",
+      "band": {
+        "relative": 0.25,
+        "absolute_ms": 20
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 4.727291,
+          "C_ms": 3.809712,
+          "delta_ms": -0.9175789999999999,
+          "ratio_C_to_B": 0.8058975002808162,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 7.079894,
+          "C_ms": 11.824768,
+          "delta_ms": 4.744874,
+          "ratio_C_to_B": 1.670189977420566,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 6.788618,
+          "C_ms": 5.24073,
+          "delta_ms": -1.5478879999999995,
+          "ratio_C_to_B": 0.7719877595115825,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 5.731791,
+          "C_ms": 8.153076,
+          "delta_ms": 2.421285,
+          "ratio_C_to_B": 1.4224307899572752,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "history.live.p50",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 1
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 2.066857,
+          "C_ms": 2.052827,
+          "delta_ms": -0.014029999999999987,
+          "ratio_C_to_B": 0.9932119154832676,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 2.053205,
+          "C_ms": 2.244948,
+          "delta_ms": 0.19174299999999977,
+          "ratio_C_to_B": 1.0933871678668228,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 2.031673,
+          "C_ms": 2.056301,
+          "delta_ms": 0.024627999999999872,
+          "ratio_C_to_B": 1.0121220294801376,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 1.99649,
+          "C_ms": 2.070253,
+          "delta_ms": 0.07376300000000002,
+          "ratio_C_to_B": 1.0369463408281534,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "history.live.p95",
+      "band": {
+        "relative": 0.15,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 4.19386,
+          "C_ms": 3.26293,
+          "delta_ms": -0.93093,
+          "ratio_C_to_B": 0.7780254944132613,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 5.628241,
+          "C_ms": 7.599791,
+          "delta_ms": 1.9715499999999997,
+          "ratio_C_to_B": 1.3502959450386007,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 3.852748,
+          "C_ms": 3.70441,
+          "delta_ms": -0.14833799999999986,
+          "ratio_C_to_B": 0.9614981306849034,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 4.307677,
+          "C_ms": 4.152051,
+          "delta_ms": -0.15562599999999982,
+          "ratio_C_to_B": 0.9638724073323046,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "history.liveCollectionAndSavesMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 100
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 1642.823222,
+          "C_ms": 340.153038,
+          "delta_ms": -1302.670184,
+          "ratio_C_to_B": 0.2070539504462885,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 1707.730916,
+          "C_ms": 352.306308,
+          "delta_ms": -1355.424608,
+          "ratio_C_to_B": 0.20630083152983103,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 1677.939525,
+          "C_ms": 340.303992,
+          "delta_ms": -1337.6355330000001,
+          "ratio_C_to_B": 0.20281064181976402,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 1687.754063,
+          "C_ms": 343.630819,
+          "delta_ms": -1344.123244,
+          "ratio_C_to_B": 0.20360242438948284,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "history.paused.max",
+      "band": {
+        "relative": 0.25,
+        "absolute_ms": 20
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 3.998693,
+          "C_ms": 7.172019,
+          "delta_ms": 3.173326,
+          "ratio_C_to_B": 1.7935908057957939,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 6.186426,
+          "C_ms": 4.220155,
+          "delta_ms": -1.9662709999999999,
+          "ratio_C_to_B": 0.6821636595992582,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 7.256873,
+          "C_ms": 5.277678,
+          "delta_ms": -1.9791949999999998,
+          "ratio_C_to_B": 0.7272661379081596,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 9.941866,
+          "C_ms": 4.970007,
+          "delta_ms": -4.971858999999999,
+          "ratio_C_to_B": 0.4999068585313864,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "history.paused.p50",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 1
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 2.233888,
+          "C_ms": 2.487726,
+          "delta_ms": 0.253838,
+          "ratio_C_to_B": 1.1136305848816055,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 2.46731,
+          "C_ms": 2.27857,
+          "delta_ms": -0.18873999999999969,
+          "ratio_C_to_B": 0.9235037348367251,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 2.387712,
+          "C_ms": 2.425823,
+          "delta_ms": 0.038110999999999784,
+          "ratio_C_to_B": 1.0159613052160394,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 2.164474,
+          "C_ms": 2.352343,
+          "delta_ms": 0.18786900000000006,
+          "ratio_C_to_B": 1.0867966073974555,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "history.paused.p95",
+      "band": {
+        "relative": 0.15,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 2.798337,
+          "C_ms": 4.727306,
+          "delta_ms": 1.9289689999999995,
+          "ratio_C_to_B": 1.689326910947466,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 3.149942,
+          "C_ms": 2.956982,
+          "delta_ms": -0.1929599999999998,
+          "ratio_C_to_B": 0.9387417292127919,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 5.178889,
+          "C_ms": 4.189086,
+          "delta_ms": -0.9898030000000002,
+          "ratio_C_to_B": 0.8088773480180788,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 3.04586,
+          "C_ms": 2.7562,
+          "delta_ms": -0.2896599999999996,
+          "ratio_C_to_B": 0.9049004222124458,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "library.allIndexRowsCommittedMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 26099.612635,
+          "C_ms": 26035.043962,
+          "delta_ms": -64.56867300000158,
+          "ratio_C_to_B": 0.997526067765718,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 26661.446463,
+          "C_ms": 25573.681857,
+          "delta_ms": -1087.7646060000006,
+          "ratio_C_to_B": 0.9592008405279298,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 26617.842948,
+          "C_ms": 26079.682056,
+          "delta_ms": -538.1608919999999,
+          "ratio_C_to_B": 0.9797819495347035,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 26848.653373,
+          "C_ms": 25803.60154,
+          "delta_ms": -1045.0518330000014,
+          "ratio_C_to_B": 0.9610761918491247,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "library.coldMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 3959.222903,
+          "C_ms": 2026.695321,
+          "delta_ms": -1932.527582,
+          "ratio_C_to_B": 0.5118921997203854,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 4013.530398,
+          "C_ms": 1962.886793,
+          "delta_ms": -2050.643605,
+          "ratio_C_to_B": 0.4890673791777271,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 4002.348768,
+          "C_ms": 2016.270647,
+          "delta_ms": -1986.0781209999998,
+          "ratio_C_to_B": 0.5037718509492974,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 4040.759251,
+          "C_ms": 1966.49611,
+          "delta_ms": -2074.263141,
+          "ratio_C_to_B": 0.4866650022550428,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "library.direct.max",
+      "band": {
+        "relative": 0.25,
+        "absolute_ms": 20
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 3791.085456,
+          "C_ms": 6.813756,
+          "delta_ms": -3784.2717,
+          "ratio_C_to_B": 0.0017973100525117787,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 3850.771547,
+          "C_ms": 8.392852,
+          "delta_ms": -3842.378695,
+          "ratio_C_to_B": 0.0021795247777133325,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 3833.732315,
+          "C_ms": 9.877278,
+          "delta_ms": -3823.8550370000003,
+          "ratio_C_to_B": 0.0025764130587192548,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 3876.877338,
+          "C_ms": 10.971446,
+          "delta_ms": -3865.9058919999998,
+          "ratio_C_to_B": 0.002829969855497141,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "library.direct.p50",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 1
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 2.005591,
+          "C_ms": 2.286006,
+          "delta_ms": 0.2804150000000001,
+          "ratio_C_to_B": 1.1398166425756797,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 2.005499,
+          "C_ms": 2.228207,
+          "delta_ms": 0.2227079999999999,
+          "ratio_C_to_B": 1.1110486716772234,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 2.032004,
+          "C_ms": 2.305862,
+          "delta_ms": 0.2738579999999997,
+          "ratio_C_to_B": 1.1347723724953296,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 1.879688,
+          "C_ms": 2.361414,
+          "delta_ms": 0.4817259999999999,
+          "ratio_C_to_B": 1.256279765578117,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "library.direct.p95",
+      "band": {
+        "relative": 0.15,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 4.485889,
+          "C_ms": 5.646858,
+          "delta_ms": 1.1609689999999997,
+          "ratio_C_to_B": 1.2588046650284925,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 2.509394,
+          "C_ms": 6.234961,
+          "delta_ms": 3.7255670000000003,
+          "ratio_C_to_B": 2.4846480863507288,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 3.268177,
+          "C_ms": 8.644212,
+          "delta_ms": 5.376035,
+          "ratio_C_to_B": 2.6449644557195033,
+          "over_band": true
+        },
+        {
+          "pair": 4,
+          "B_ms": 2.724673,
+          "C_ms": 7.976,
+          "delta_ms": 5.251327,
+          "ratio_C_to_B": 2.9273237559149297,
+          "over_band": true
+        }
+      ],
+      "screening_status": "INCONCLUSIVE"
+    },
+    {
+      "metric": "library.observe.max",
+      "band": {
+        "relative": 0.25,
+        "absolute_ms": 20
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 3822.137917,
+          "C_ms": 39.366286,
+          "delta_ms": -3782.771631,
+          "ratio_C_to_B": 0.010299546184586306,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 3854.209053,
+          "C_ms": 29.965658,
+          "delta_ms": -3824.243395,
+          "ratio_C_to_B": 0.00777478792352367,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 3855.178802,
+          "C_ms": 26.508898,
+          "delta_ms": -3828.669904,
+          "ratio_C_to_B": 0.006876178605839927,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 3837.377721,
+          "C_ms": 32.08347,
+          "delta_ms": -3805.294251,
+          "ratio_C_to_B": 0.008360779764896123,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "library.observe.p50",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 1
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 2.291743,
+          "C_ms": 4.639417,
+          "delta_ms": 2.347674,
+          "ratio_C_to_B": 2.024405441622381,
+          "over_band": true
+        },
+        {
+          "pair": 2,
+          "B_ms": 2.168767,
+          "C_ms": 5.061388,
+          "delta_ms": 2.892621,
+          "ratio_C_to_B": 2.333762916901631,
+          "over_band": true
+        },
+        {
+          "pair": 3,
+          "B_ms": 2.508294,
+          "C_ms": 4.8032,
+          "delta_ms": 2.2949060000000006,
+          "ratio_C_to_B": 1.9149270380585373,
+          "over_band": true
+        },
+        {
+          "pair": 4,
+          "B_ms": 2.401424,
+          "C_ms": 4.963916,
+          "delta_ms": 2.562492,
+          "ratio_C_to_B": 2.0670718706900573,
+          "over_band": true
+        }
+      ],
+      "screening_status": "REGRESSION_SIGNAL"
+    },
+    {
+      "metric": "library.observe.p95",
+      "band": {
+        "relative": 0.15,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 72.171816,
+          "C_ms": 13.340594,
+          "delta_ms": -58.83122200000001,
+          "ratio_C_to_B": 0.18484492616896323,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 82.60873,
+          "C_ms": 17.059092,
+          "delta_ms": -65.54963799999999,
+          "ratio_C_to_B": 0.20650471203225132,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 71.629601,
+          "C_ms": 14.150945,
+          "delta_ms": -57.478655999999994,
+          "ratio_C_to_B": 0.19755722218807278,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 73.757812,
+          "C_ms": 11.657339,
+          "delta_ms": -62.100473,
+          "ratio_C_to_B": 0.15804887216556804,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "library.searchIndexReadyMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 26627.313773,
+          "C_ms": 26639.703393,
+          "delta_ms": 12.389619999998104,
+          "ratio_C_to_B": 1.0004652974049737,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 27204.776404,
+          "C_ms": 26159.716315,
+          "delta_ms": -1045.0600889999987,
+          "ratio_C_to_B": 0.9615854189176007,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 27146.251452,
+          "C_ms": 26671.754372,
+          "delta_ms": -474.497080000001,
+          "ratio_C_to_B": 0.982520714477319,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 27366.586773,
+          "C_ms": 26377.212876,
+          "delta_ms": -989.3738969999977,
+          "ratio_C_to_B": 0.9638473769050323,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "raster.1.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 50.627884,
+          "C_ms": 51.175786,
+          "delta_ms": 0.5479020000000006,
+          "ratio_C_to_B": 1.0108221390410075,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 50.241386,
+          "C_ms": 32.19864,
+          "delta_ms": -18.042746,
+          "ratio_C_to_B": 0.6408788165199105,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 52.342574,
+          "C_ms": 35.089471,
+          "delta_ms": -17.253102999999996,
+          "ratio_C_to_B": 0.6703810744958779,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 50.388603,
+          "C_ms": 34.622492,
+          "delta_ms": -15.766111000000002,
+          "ratio_C_to_B": 0.6871095830936214,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "raster.1.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 233.522322,
+          "C_ms": 255.618846,
+          "delta_ms": 22.096523999999988,
+          "ratio_C_to_B": 1.0946227487409104,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 234.69004,
+          "C_ms": 244.170106,
+          "delta_ms": 9.480065999999994,
+          "ratio_C_to_B": 1.0403939851899977,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 237.946625,
+          "C_ms": 246.78516,
+          "delta_ms": 8.838534999999979,
+          "ratio_C_to_B": 1.0371450320003488,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 231.417413,
+          "C_ms": 236.328124,
+          "delta_ms": 4.910710999999992,
+          "ratio_C_to_B": 1.0212201447433862,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "raster.1.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 171.750589,
+          "C_ms": 171.737392,
+          "delta_ms": -0.013196999999991021,
+          "ratio_C_to_B": 0.9999231618355615,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 188.479268,
+          "C_ms": 171.693723,
+          "delta_ms": -16.785544999999985,
+          "ratio_C_to_B": 0.9109422209767921,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 187.099553,
+          "C_ms": 188.049785,
+          "delta_ms": 0.9502320000000282,
+          "ratio_C_to_B": 1.0050787507760643,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 171.715009,
+          "C_ms": 171.74231,
+          "delta_ms": 0.027300999999994247,
+          "ratio_C_to_B": 1.0001589901788956,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "raster.4.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 102.818038,
+          "C_ms": 102.207486,
+          "delta_ms": -0.6105519999999984,
+          "ratio_C_to_B": 0.994061820164279,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 97.607344,
+          "C_ms": 101.804595,
+          "delta_ms": 4.1972510000000085,
+          "ratio_C_to_B": 1.0430013852236366,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 104.458561,
+          "C_ms": 111.576587,
+          "delta_ms": 7.118026,
+          "ratio_C_to_B": 1.0681421027808338,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 98.899453,
+          "C_ms": 118.995736,
+          "delta_ms": 20.096283,
+          "ratio_C_to_B": 1.2031991319507096,
+          "over_band": true
+        }
+      ],
+      "screening_status": "INCONCLUSIVE"
+    },
+    {
+      "metric": "raster.4.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 204.37819,
+          "C_ms": 221.39343,
+          "delta_ms": 17.015240000000006,
+          "ratio_C_to_B": 1.0832536974713398,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 203.641329,
+          "C_ms": 204.22872,
+          "delta_ms": 0.5873909999999967,
+          "ratio_C_to_B": 1.0028844390423322,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 210.158823,
+          "C_ms": 178.66468,
+          "delta_ms": -31.494143000000008,
+          "ratio_C_to_B": 0.8501412286649511,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 222.278656,
+          "C_ms": 179.768289,
+          "delta_ms": -42.510367,
+          "ratio_C_to_B": 0.8087519163333433,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "raster.4.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 171.651947,
+          "C_ms": 174.623995,
+          "delta_ms": 2.972048000000001,
+          "ratio_C_to_B": 1.0173143856037938,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 161.306337,
+          "C_ms": 190.616512,
+          "delta_ms": 29.310174999999987,
+          "ratio_C_to_B": 1.1817050436152423,
+          "over_band": true
+        },
+        {
+          "pair": 3,
+          "B_ms": 172.353433,
+          "C_ms": 163.916076,
+          "delta_ms": -8.437356999999992,
+          "ratio_C_to_B": 0.951046191229623,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 172.984003,
+          "C_ms": 173.748093,
+          "delta_ms": 0.7640900000000101,
+          "ratio_C_to_B": 1.0044171136448958,
+          "over_band": false
+        }
+      ],
+      "screening_status": "INCONCLUSIVE"
+    },
+    {
+      "metric": "raster.8.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 189.385559,
+          "C_ms": 129.517366,
+          "delta_ms": -59.86819299999999,
+          "ratio_C_to_B": 0.6838819532169294,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 125.969632,
+          "C_ms": 135.940534,
+          "delta_ms": 9.97090200000001,
+          "ratio_C_to_B": 1.0791532200395728,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 127.648095,
+          "C_ms": 125.521748,
+          "delta_ms": -2.1263469999999955,
+          "ratio_C_to_B": 0.983342117248205,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 186.004891,
+          "C_ms": 125.396981,
+          "delta_ms": -60.60790999999999,
+          "ratio_C_to_B": 0.674159589706703,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "raster.8.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 243.381023,
+          "C_ms": 228.391874,
+          "delta_ms": -14.989148999999998,
+          "ratio_C_to_B": 0.9384128276919931,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 242.235448,
+          "C_ms": 243.628204,
+          "delta_ms": 1.3927560000000199,
+          "ratio_C_to_B": 1.0057495961532434,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 241.258237,
+          "C_ms": 243.073979,
+          "delta_ms": 1.8157420000000002,
+          "ratio_C_to_B": 1.0075261347449869,
+          "over_band": false
+        },
+        {
+          "pair": 4,
+          "B_ms": 245.032766,
+          "C_ms": 245.291468,
+          "delta_ms": 0.25870199999999954,
+          "ratio_C_to_B": 1.0010557853311748,
+          "over_band": false
+        }
+      ],
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "metric": "raster.8.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "B_ms": 237.307072,
+          "C_ms": 218.550887,
+          "delta_ms": -18.756185000000016,
+          "ratio_C_to_B": 0.9209623849726652,
+          "over_band": false
+        },
+        {
+          "pair": 2,
+          "B_ms": 233.275132,
+          "C_ms": 225.092015,
+          "delta_ms": -8.18311700000001,
+          "ratio_C_to_B": 0.964920748603413,
+          "over_band": false
+        },
+        {
+          "pair": 3,
+          "B_ms": 230.988965,
+          "C_ms": 256.316047,
+          "delta_ms": 25.32708200000002,
+          "ratio_C_to_B": 1.109646285483811,
+          "over_band": true
+        },
+        {
+          "pair": 4,
+          "B_ms": 236.525048,
+          "C_ms": 266.684174,
+          "delta_ms": 30.159125999999986,
+          "ratio_C_to_B": 1.1275092268451838,
+          "over_band": true
+        }
+      ],
+      "screening_status": "INCONCLUSIVE"
+    }
+  ],
+  "actual_overlap": [
+    {
+      "visit": 1,
+      "scenario": "library.direct",
+      "samples": 30,
+      "overlapping": 30,
+      "no_overlap": 0,
+      "tail_subset_reliable": true
+    },
+    {
+      "visit": 1,
+      "scenario": "library.observe",
+      "samples": 30,
+      "overlapping": 30,
+      "no_overlap": 0,
+      "tail_subset_reliable": true
+    },
+    {
+      "visit": 1,
+      "scenario": "history.live",
+      "samples": 30,
+      "overlapping": 9,
+      "no_overlap": 21,
+      "tail_subset_reliable": false
+    },
+    {
+      "visit": 2,
+      "scenario": "library.direct",
+      "samples": 30,
+      "overlapping": 1,
+      "no_overlap": 29,
+      "tail_subset_reliable": false
+    },
+    {
+      "visit": 2,
+      "scenario": "library.observe",
+      "samples": 30,
+      "overlapping": 30,
+      "no_overlap": 0,
+      "tail_subset_reliable": true
+    },
+    {
+      "visit": 2,
+      "scenario": "history.live",
+      "samples": 30,
+      "overlapping": 6,
+      "no_overlap": 24,
+      "tail_subset_reliable": false
+    },
+    {
+      "visit": 3,
+      "scenario": "library.direct",
+      "samples": 30,
+      "overlapping": 1,
+      "no_overlap": 29,
+      "tail_subset_reliable": false
+    },
+    {
+      "visit": 3,
+      "scenario": "library.observe",
+      "samples": 30,
+      "overlapping": 30,
+      "no_overlap": 0,
+      "tail_subset_reliable": true
+    },
+    {
+      "visit": 3,
+      "scenario": "history.live",
+      "samples": 30,
+      "overlapping": 6,
+      "no_overlap": 24,
+      "tail_subset_reliable": false
+    },
+    {
+      "visit": 4,
+      "scenario": "library.direct",
+      "samples": 30,
+      "overlapping": 30,
+      "no_overlap": 0,
+      "tail_subset_reliable": true
+    },
+    {
+      "visit": 4,
+      "scenario": "library.observe",
+      "samples": 30,
+      "overlapping": 30,
+      "no_overlap": 0,
+      "tail_subset_reliable": true
+    },
+    {
+      "visit": 4,
+      "scenario": "history.live",
+      "samples": 30,
+      "overlapping": 3,
+      "no_overlap": 27,
+      "tail_subset_reliable": false
+    },
+    {
+      "visit": 5,
+      "scenario": "library.direct",
+      "samples": 30,
+      "overlapping": 1,
+      "no_overlap": 29,
+      "tail_subset_reliable": false
+    },
+    {
+      "visit": 5,
+      "scenario": "library.observe",
+      "samples": 30,
+      "overlapping": 30,
+      "no_overlap": 0,
+      "tail_subset_reliable": true
+    },
+    {
+      "visit": 5,
+      "scenario": "history.live",
+      "samples": 30,
+      "overlapping": 7,
+      "no_overlap": 23,
+      "tail_subset_reliable": false
+    },
+    {
+      "visit": 6,
+      "scenario": "library.direct",
+      "samples": 30,
+      "overlapping": 30,
+      "no_overlap": 0,
+      "tail_subset_reliable": true
+    },
+    {
+      "visit": 6,
+      "scenario": "library.observe",
+      "samples": 30,
+      "overlapping": 30,
+      "no_overlap": 0,
+      "tail_subset_reliable": true
+    },
+    {
+      "visit": 6,
+      "scenario": "history.live",
+      "samples": 30,
+      "overlapping": 7,
+      "no_overlap": 23,
+      "tail_subset_reliable": false
+    },
+    {
+      "visit": 7,
+      "scenario": "library.direct",
+      "samples": 30,
+      "overlapping": 30,
+      "no_overlap": 0,
+      "tail_subset_reliable": true
+    },
+    {
+      "visit": 7,
+      "scenario": "library.observe",
+      "samples": 30,
+      "overlapping": 30,
+      "no_overlap": 0,
+      "tail_subset_reliable": true
+    },
+    {
+      "visit": 7,
+      "scenario": "history.live",
+      "samples": 30,
+      "overlapping": 7,
+      "no_overlap": 23,
+      "tail_subset_reliable": false
+    },
+    {
+      "visit": 8,
+      "scenario": "library.direct",
+      "samples": 30,
+      "overlapping": 1,
+      "no_overlap": 29,
+      "tail_subset_reliable": false
+    },
+    {
+      "visit": 8,
+      "scenario": "library.observe",
+      "samples": 30,
+      "overlapping": 30,
+      "no_overlap": 0,
+      "tail_subset_reliable": true
+    },
+    {
+      "visit": 8,
+      "scenario": "history.live",
+      "samples": 30,
+      "overlapping": 7,
+      "no_overlap": 23,
+      "tail_subset_reliable": false
+    }
+  ],
+  "limitation": "Provisional engineering screening only. Final acceptance also requires all 24 raw JUnit results, matched inputs/environments, exact cleanup, and exposure review. Four pairs cannot prove no regression; missing/short overlap cannot close sustained-contention tails."
+}

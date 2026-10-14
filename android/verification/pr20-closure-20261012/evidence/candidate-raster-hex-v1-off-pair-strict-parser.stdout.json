@@ -1,0 +1,16 @@
+{
+  "status": "INCOMPLETE",
+  "errors": [
+    {
+      "phase": "candidate-raster-hex-v1-off-repeat2",
+      "reason": "PASS receipt missing"
+    }
+  ],
+  "expected_runs": [
+    "candidate-raster-hex-v1-off-repeat1",
+    "baseline-raster-hex-pair-off-repeat1",
+    "baseline-raster-hex-pair-off-repeat2",
+    "candidate-raster-hex-v1-off-repeat2"
+  ],
+  "summary_files_written": false
+}

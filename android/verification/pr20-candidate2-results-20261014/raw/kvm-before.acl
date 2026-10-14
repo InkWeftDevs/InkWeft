@@ -1,0 +1,7 @@
+# file: /dev/kvm
+# owner: 0
+# group: 993
+user::rw-
+group::rw-
+other::---
+

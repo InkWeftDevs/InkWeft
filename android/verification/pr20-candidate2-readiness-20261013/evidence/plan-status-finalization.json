@@ -1,0 +1,13 @@
+{
+  "reason": "Correct a stale draft/source-pending top-level status after source45b and manifests were frozen",
+  "old_method_plan_sha256": "bdca5a5477893500150a2ed58115e363f053876573cba46c2b59b56b94d3e96b",
+  "new_method_plan_sha256": "808dd0cf1fece09185c59ae94ce41f51fdbc26dcde5ed196df7e803860f49765",
+  "changed_fields": [
+    "status"
+  ],
+  "steps_args_counts_unchanged": true,
+  "source_spec_sha256_unchanged": "6e9c422d8be60728967226de674b750cb7b3633485956d537dd0c2dac21a6dfb",
+  "analyzer_method_plan_binding_updated": true,
+  "prior_preparation_receipts": "Historical checks at their recorded input hashes; final execution preflight will bind this status-corrected plan",
+  "native_execution": "NOT_RUN"
+}

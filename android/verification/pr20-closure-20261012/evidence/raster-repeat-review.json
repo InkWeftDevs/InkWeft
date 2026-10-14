@@ -1,0 +1,924 @@
+{
+  "schema": 1,
+  "reviewed_utc": "2026-10-13T02:08:14.534356+00:00",
+  "status": "REGRESSION_NOT_CLOSED_MINIMAL_METADATA_DIAGNOSIS_RECOMMENDED",
+  "sample_policy": "All original final-pair and all four full-class repeat results retained; three observations per version/layer. No trimming, significance claim or favorable-tail selection. V3 is historical context, not pooled.",
+  "samples": [
+    {
+      "phase": "candidate-v4-performance",
+      "side": "candidate",
+      "prior_pair": true,
+      "runner": {
+        "phase": "candidate-v4-performance",
+        "selection": "org.inkweft.app.TileLocalRedrawTest",
+        "command": [
+          "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+          "-s",
+          "emulator-5554",
+          "shell",
+          "am",
+          "instrument",
+          "-w",
+          "-e",
+          "class",
+          "org.inkweft.app.TileLocalRedrawTest",
+          "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+        ],
+        "started_utc": "2026-10-13T00:37:59.292773+00:00",
+        "seconds": 237.6507879550045,
+        "exit_code": 0,
+        "expected": 2,
+        "tests": 2,
+        "executed": 2,
+        "failures": 0,
+        "passed": true,
+        "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+      },
+      "pan": {
+        "rebuilt": 12,
+        "tiles": 20,
+        "panPixelsEqual": true,
+        "zoomPixelsEqual": true,
+        "previewCaptureReady": false
+      },
+      "layers": [
+        {
+          "layers": 1,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 7815.863334,
+          "appendCompleteMs": 6427.580419,
+          "forcedFullCompleteMs": 9800.771093,
+          "localDecoded": 13,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 3020.312778,
+          "rasterMs": 2381.226841,
+          "publicationMs": 274.362927,
+          "pixelsEqual": true,
+          "bitmapBytes": 14371200
+        },
+        {
+          "layers": 4,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 13239.766597,
+          "appendCompleteMs": 6600.950884,
+          "forcedFullCompleteMs": 13071.940823,
+          "localDecoded": 21,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 2332.17613,
+          "rasterMs": 3409.4472410000003,
+          "publicationMs": 3608.2606209999994,
+          "pixelsEqual": true,
+          "bitmapBytes": 12147408
+        },
+        {
+          "layers": 8,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 14978.748316,
+          "appendCompleteMs": 8622.743043,
+          "forcedFullCompleteMs": 15021.319114,
+          "localDecoded": 11,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 48,
+          "metadataMs": 2813.998293,
+          "rasterMs": 1904.5556119999999,
+          "publicationMs": 17981.108738,
+          "pixelsEqual": true,
+          "bitmapBytes": 24294816
+        }
+      ]
+    },
+    {
+      "phase": "baseline-final-performance",
+      "side": "baseline",
+      "prior_pair": true,
+      "runner": {
+        "phase": "baseline-final-performance",
+        "selection": "org.inkweft.app.TileLocalRedrawTest",
+        "command": [
+          "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+          "-s",
+          "emulator-5554",
+          "shell",
+          "am",
+          "instrument",
+          "-w",
+          "-e",
+          "class",
+          "org.inkweft.app.TileLocalRedrawTest",
+          "-e",
+          "historyScanBaseline",
+          "true",
+          "-e",
+          "historyBaseline",
+          "true",
+          "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+        ],
+        "started_utc": "2026-10-13T01:27:34.927545+00:00",
+        "seconds": 197.194027344005,
+        "exit_code": 0,
+        "expected": 2,
+        "tests": 2,
+        "executed": 2,
+        "failures": 0,
+        "passed": true,
+        "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+      },
+      "pan": {
+        "rebuilt": 12,
+        "tiles": 20,
+        "panPixelsEqual": true,
+        "zoomPixelsEqual": true,
+        "previewCaptureReady": false
+      },
+      "layers": [
+        {
+          "layers": 1,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 7435.167819,
+          "appendCompleteMs": 1435.515577,
+          "forcedFullCompleteMs": 6352.816301,
+          "localDecoded": 13,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 728.762351,
+          "rasterMs": 518.699167,
+          "publicationMs": 9.981122,
+          "pixelsEqual": true,
+          "bitmapBytes": 14371200
+        },
+        {
+          "layers": 4,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 8467.589725,
+          "appendCompleteMs": 4689.2982,
+          "forcedFullCompleteMs": 8042.411655,
+          "localDecoded": 21,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 2063.775714,
+          "rasterMs": 2742.7797389999996,
+          "publicationMs": 2324.596823,
+          "pixelsEqual": true,
+          "bitmapBytes": 12147408
+        },
+        {
+          "layers": 8,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 11653.570095,
+          "appendCompleteMs": 8440.890924,
+          "forcedFullCompleteMs": 11622.601683,
+          "localDecoded": 11,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 48,
+          "metadataMs": 3066.4478099999997,
+          "rasterMs": 1823.3692129999997,
+          "publicationMs": 18057.491651,
+          "pixelsEqual": true,
+          "bitmapBytes": 24294816
+        }
+      ]
+    },
+    {
+      "phase": "candidate-v4-raster-repeat1",
+      "side": "candidate",
+      "prior_pair": false,
+      "runner": {
+        "phase": "candidate-v4-raster-repeat1",
+        "selection": "org.inkweft.app.TileLocalRedrawTest",
+        "command": [
+          "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+          "-s",
+          "emulator-5554",
+          "shell",
+          "am",
+          "instrument",
+          "-w",
+          "-e",
+          "class",
+          "org.inkweft.app.TileLocalRedrawTest",
+          "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+        ],
+        "started_utc": "2026-10-13T01:37:37.840854+00:00",
+        "seconds": 356.02730777800025,
+        "exit_code": 0,
+        "expected": 2,
+        "tests": 2,
+        "executed": 2,
+        "failures": 0,
+        "passed": true,
+        "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+      },
+      "pan": {
+        "rebuilt": 12,
+        "tiles": 20,
+        "panPixelsEqual": true,
+        "zoomPixelsEqual": true,
+        "previewCaptureReady": false
+      },
+      "layers": [
+        {
+          "layers": 1,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 15691.209709,
+          "appendCompleteMs": 4176.864908,
+          "forcedFullCompleteMs": 14148.253849,
+          "localDecoded": 13,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 2676.287779,
+          "rasterMs": 774.951939,
+          "publicationMs": 16.403976,
+          "pixelsEqual": true,
+          "bitmapBytes": 14371200
+        },
+        {
+          "layers": 4,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 16129.460387,
+          "appendCompleteMs": 8065.451158,
+          "forcedFullCompleteMs": 16201.226372,
+          "localDecoded": 21,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 3401.5915649999997,
+          "rasterMs": 5365.918544,
+          "publicationMs": 2183.839224,
+          "pixelsEqual": true,
+          "bitmapBytes": 12147408
+        },
+        {
+          "layers": 8,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 21060.606936,
+          "appendCompleteMs": 15461.608652,
+          "forcedFullCompleteMs": 20307.528398,
+          "localDecoded": 11,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 48,
+          "metadataMs": 5699.438134,
+          "rasterMs": 3242.0634,
+          "publicationMs": 44317.416444999995,
+          "pixelsEqual": true,
+          "bitmapBytes": 24294816
+        }
+      ]
+    },
+    {
+      "phase": "baseline-final-raster-repeat1",
+      "side": "baseline",
+      "prior_pair": false,
+      "runner": {
+        "phase": "baseline-final-raster-repeat1",
+        "selection": "org.inkweft.app.TileLocalRedrawTest",
+        "command": [
+          "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+          "-s",
+          "emulator-5554",
+          "shell",
+          "am",
+          "instrument",
+          "-w",
+          "-e",
+          "class",
+          "org.inkweft.app.TileLocalRedrawTest",
+          "-e",
+          "historyScanBaseline",
+          "true",
+          "-e",
+          "historyBaseline",
+          "true",
+          "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+        ],
+        "started_utc": "2026-10-13T01:46:15.576370+00:00",
+        "seconds": 282.680689943998,
+        "exit_code": 0,
+        "expected": 2,
+        "tests": 2,
+        "executed": 2,
+        "failures": 0,
+        "passed": true,
+        "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+      },
+      "pan": {
+        "rebuilt": 12,
+        "tiles": 20,
+        "panPixelsEqual": true,
+        "zoomPixelsEqual": true,
+        "previewCaptureReady": false
+      },
+      "layers": [
+        {
+          "layers": 1,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 7924.342136,
+          "appendCompleteMs": 1817.981931,
+          "forcedFullCompleteMs": 7349.085667,
+          "localDecoded": 13,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 890.599347,
+          "rasterMs": 651.219217,
+          "publicationMs": 22.450801,
+          "pixelsEqual": true,
+          "bitmapBytes": 14371200
+        },
+        {
+          "layers": 4,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 11223.716703,
+          "appendCompleteMs": 7575.869409,
+          "forcedFullCompleteMs": 13314.674013,
+          "localDecoded": 21,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 3536.045942,
+          "rasterMs": 3961.958641,
+          "publicationMs": 4802.978276,
+          "pixelsEqual": true,
+          "bitmapBytes": 12147408
+        },
+        {
+          "layers": 8,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 16602.505436,
+          "appendCompleteMs": 19706.450753,
+          "forcedFullCompleteMs": 15804.858427,
+          "localDecoded": 11,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 48,
+          "metadataMs": 7116.563566999999,
+          "rasterMs": 4334.315506,
+          "publicationMs": 46831.96797,
+          "pixelsEqual": true,
+          "bitmapBytes": 24294816
+        }
+      ]
+    },
+    {
+      "phase": "baseline-final-raster-repeat2",
+      "side": "baseline",
+      "prior_pair": false,
+      "runner": {
+        "phase": "baseline-final-raster-repeat2",
+        "selection": "org.inkweft.app.TileLocalRedrawTest",
+        "command": [
+          "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+          "-s",
+          "emulator-5554",
+          "shell",
+          "am",
+          "instrument",
+          "-w",
+          "-e",
+          "class",
+          "org.inkweft.app.TileLocalRedrawTest",
+          "-e",
+          "historyScanBaseline",
+          "true",
+          "-e",
+          "historyBaseline",
+          "true",
+          "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+        ],
+        "started_utc": "2026-10-13T01:52:59.235455+00:00",
+        "seconds": 221.3003353499953,
+        "exit_code": 0,
+        "expected": 2,
+        "tests": 2,
+        "executed": 2,
+        "failures": 0,
+        "passed": true,
+        "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+      },
+      "pan": {
+        "rebuilt": 12,
+        "tiles": 20,
+        "panPixelsEqual": true,
+        "zoomPixelsEqual": true,
+        "previewCaptureReady": false
+      },
+      "layers": [
+        {
+          "layers": 1,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 7655.261726,
+          "appendCompleteMs": 2358.943598,
+          "forcedFullCompleteMs": 6557.54163,
+          "localDecoded": 13,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 736.938101,
+          "rasterMs": 1349.826899,
+          "publicationMs": 20.045705,
+          "pixelsEqual": true,
+          "bitmapBytes": 14371200
+        },
+        {
+          "layers": 4,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 9901.137626,
+          "appendCompleteMs": 7532.983667,
+          "forcedFullCompleteMs": 11324.414611,
+          "localDecoded": 21,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 2042.3099149999998,
+          "rasterMs": 3145.853314,
+          "publicationMs": 4425.845102,
+          "pixelsEqual": true,
+          "bitmapBytes": 12147408
+        },
+        {
+          "layers": 8,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 11175.824367,
+          "appendCompleteMs": 8642.036328,
+          "forcedFullCompleteMs": 11267.902499,
+          "localDecoded": 11,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 48,
+          "metadataMs": 2839.26092,
+          "rasterMs": 1667.955288,
+          "publicationMs": 19319.752702,
+          "pixelsEqual": true,
+          "bitmapBytes": 24294816
+        }
+      ]
+    },
+    {
+      "phase": "candidate-v4-raster-repeat2",
+      "side": "candidate",
+      "prior_pair": false,
+      "runner": {
+        "phase": "candidate-v4-raster-repeat2",
+        "selection": "org.inkweft.app.TileLocalRedrawTest",
+        "command": [
+          "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+          "-s",
+          "emulator-5554",
+          "shell",
+          "am",
+          "instrument",
+          "-w",
+          "-e",
+          "class",
+          "org.inkweft.app.TileLocalRedrawTest",
+          "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+        ],
+        "started_utc": "2026-10-13T01:59:11.260792+00:00",
+        "seconds": 208.06279060400266,
+        "exit_code": 0,
+        "expected": 2,
+        "tests": 2,
+        "executed": 2,
+        "failures": 0,
+        "passed": true,
+        "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+      },
+      "pan": {
+        "rebuilt": 12,
+        "tiles": 20,
+        "panPixelsEqual": true,
+        "zoomPixelsEqual": true,
+        "previewCaptureReady": false
+      },
+      "layers": [
+        {
+          "layers": 1,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 7442.99679,
+          "appendCompleteMs": 1611.903138,
+          "forcedFullCompleteMs": 6770.079643,
+          "localDecoded": 13,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 710.59131,
+          "rasterMs": 594.302965,
+          "publicationMs": 15.828966,
+          "pixelsEqual": true,
+          "bitmapBytes": 14371200
+        },
+        {
+          "layers": 4,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 8400.08873,
+          "appendCompleteMs": 4836.37855,
+          "forcedFullCompleteMs": 9169.957184,
+          "localDecoded": 21,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 2035.6167219999998,
+          "rasterMs": 1704.7680129999999,
+          "publicationMs": 3870.49657,
+          "pixelsEqual": true,
+          "bitmapBytes": 12147408
+        },
+        {
+          "layers": 8,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 12291.151702,
+          "appendCompleteMs": 9130.194707,
+          "forcedFullCompleteMs": 12718.576155,
+          "localDecoded": 11,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 48,
+          "metadataMs": 3109.342089,
+          "rasterMs": 1960.5294419999998,
+          "publicationMs": 19291.330764,
+          "pixelsEqual": true,
+          "bitmapBytes": 24294816
+        }
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "layers": 1,
+      "sample_count_per_side": 3,
+      "baseline": {
+        "sample_order": [
+          "baseline-final-performance",
+          "baseline-final-raster-repeat1",
+          "baseline-final-raster-repeat2"
+        ],
+        "append_ms": [
+          1435.515577,
+          1817.981931,
+          2358.943598
+        ],
+        "median_ms": 1817.981931,
+        "mean_ms": 1870.813702,
+        "min_ms": 1435.515577,
+        "max_ms": 2358.943598
+      },
+      "candidate": {
+        "sample_order": [
+          "candidate-v4-performance",
+          "candidate-v4-raster-repeat1",
+          "candidate-v4-raster-repeat2"
+        ],
+        "append_ms": [
+          6427.580419,
+          4176.864908,
+          1611.903138
+        ],
+        "median_ms": 4176.864908,
+        "mean_ms": 4072.1161549999997,
+        "min_ms": 1611.903138,
+        "max_ms": 6427.580419
+      },
+      "candidate_median_change_percent": 129.75282849497142
+    },
+    {
+      "layers": 4,
+      "sample_count_per_side": 3,
+      "baseline": {
+        "sample_order": [
+          "baseline-final-performance",
+          "baseline-final-raster-repeat1",
+          "baseline-final-raster-repeat2"
+        ],
+        "append_ms": [
+          4689.2982,
+          7575.869409,
+          7532.983667
+        ],
+        "median_ms": 7532.983667,
+        "mean_ms": 6599.383758666667,
+        "min_ms": 4689.2982,
+        "max_ms": 7575.869409
+      },
+      "candidate": {
+        "sample_order": [
+          "candidate-v4-performance",
+          "candidate-v4-raster-repeat1",
+          "candidate-v4-raster-repeat2"
+        ],
+        "append_ms": [
+          6600.950884,
+          8065.451158,
+          4836.37855
+        ],
+        "median_ms": 6600.950884,
+        "mean_ms": 6500.926864,
+        "min_ms": 4836.37855,
+        "max_ms": 8065.451158
+      },
+      "candidate_median_change_percent": -12.372690877891968
+    },
+    {
+      "layers": 8,
+      "sample_count_per_side": 3,
+      "baseline": {
+        "sample_order": [
+          "baseline-final-performance",
+          "baseline-final-raster-repeat1",
+          "baseline-final-raster-repeat2"
+        ],
+        "append_ms": [
+          8440.890924,
+          19706.450753,
+          8642.036328
+        ],
+        "median_ms": 8642.036328,
+        "mean_ms": 12263.126001666667,
+        "min_ms": 8440.890924,
+        "max_ms": 19706.450753
+      },
+      "candidate": {
+        "sample_order": [
+          "candidate-v4-performance",
+          "candidate-v4-raster-repeat1",
+          "candidate-v4-raster-repeat2"
+        ],
+        "append_ms": [
+          8622.743043,
+          15461.608652,
+          9130.194707
+        ],
+        "median_ms": 9130.194707,
+        "mean_ms": 11071.515467333335,
+        "min_ms": 8622.743043,
+        "max_ms": 15461.608652
+      },
+      "candidate_median_change_percent": 5.648649930090888
+    }
+  ],
+  "environments": [
+    {
+      "file": "candidate-v4-raster-repeat1-environment.json",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378"
+    },
+    {
+      "file": "candidate-v4-raster-repeat1-environment-after.json",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378"
+    },
+    {
+      "file": "baseline-final-raster-repeat1-environment.json",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378"
+    },
+    {
+      "file": "baseline-final-raster-repeat1-environment-after.json",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378"
+    },
+    {
+      "file": "baseline-final-raster-repeat2-environment.json",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378"
+    },
+    {
+      "file": "baseline-final-raster-repeat2-environment-after.json",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378"
+    },
+    {
+      "file": "candidate-v4-raster-repeat2-environment.json",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378"
+    },
+    {
+      "file": "candidate-v4-raster-repeat2-environment-after.json",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378"
+    }
+  ],
+  "installations": [
+    {
+      "file": "candidate-v4-finalrestore-apk-installation.json",
+      "artifacts": [
+        {
+          "path": "/workspace/InkWeft/android/app/build/outputs/apk/debug/app-debug.apk",
+          "sha256": "79fe8a40024d0cbd7283145f52febc3d54a6312ec231acea11182822e8f6aaf4",
+          "exit_code": 0
+        },
+        {
+          "path": "/workspace/InkWeft/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+          "sha256": "37dc4f858fdf13fde56fd514515f6e043356e482db0a8a0bc7339fce4504c5b2",
+          "exit_code": 0
+        },
+        {
+          "path": "/workspace/InkWeft/android/data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+          "sha256": "79a7280c9667ef4721b4606ffc17a4bd7c476ceeb661d4d015ec9c19769324a3",
+          "exit_code": 0
+        }
+      ]
+    },
+    {
+      "file": "baseline-final-raster-repeat-apk-installation.json",
+      "artifacts": [
+        {
+          "path": "/workspace/scratch/inkweft-baseline-closure-a128bb07/android/app/build/outputs/apk/debug/app-debug.apk",
+          "sha256": "c820103a3dae3b52f7a6d30aa345112c5c71c47f00ad89900eb6fe8ec5dd70fe",
+          "exit_code": 0
+        },
+        {
+          "path": "/workspace/scratch/inkweft-baseline-closure-a128bb07/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+          "sha256": "d706b3b015d6111e7721f6881405726fe97da66c6799a456531b7bccf50909cd",
+          "exit_code": 0
+        },
+        {
+          "path": "/workspace/scratch/inkweft-baseline-closure-a128bb07/android/data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+          "sha256": "bbd78f8daa9139acdaeaac7c01fd0dc9fe762723c3750a0f26a55f5df2e2b505",
+          "exit_code": 0
+        }
+      ]
+    },
+    {
+      "file": "candidate-v4-raster-repeat2-apk-installation.json",
+      "artifacts": [
+        {
+          "path": "/workspace/InkWeft/android/app/build/outputs/apk/debug/app-debug.apk",
+          "sha256": "79fe8a40024d0cbd7283145f52febc3d54a6312ec231acea11182822e8f6aaf4",
+          "exit_code": 0
+        },
+        {
+          "path": "/workspace/InkWeft/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+          "sha256": "37dc4f858fdf13fde56fd514515f6e043356e482db0a8a0bc7339fce4504c5b2",
+          "exit_code": 0
+        },
+        {
+          "path": "/workspace/InkWeft/android/data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+          "sha256": "79a7280c9667ef4721b4606ffc17a4bd7c476ceeb661d4d015ec9c19769324a3",
+          "exit_code": 0
+        }
+      ]
+    }
+  ],
+  "v3_v4_identical_relevant_sources": [
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt",
+      "v3_and_v4_sha256": "d7d5e65d134ee9ae5ede9fa9c96fc8e324418fbeca4e432ec124842970d17613"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/InkBrushes.kt",
+      "v3_and_v4_sha256": "69abf19a294b657dee9a65f7b1a2be2ec04559148096565b81019ebb057f4c17"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt",
+      "v3_and_v4_sha256": "2be8d4605e514fbd9e93e325fa13539e5723b32f775ed559d405b953f04836ab"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/SpatialIndex.kt",
+      "v3_and_v4_sha256": "cc5116a4e22ad6767e7a87e81264ad51fcf0d09ba68d32cccd9cb03296638755"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/InkRasterCache.kt",
+      "v3_and_v4_sha256": "49068d46fe4031dcfea77ae3114222277510e18f37862e4dde09c0c8aab094c7"
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/RenderResources.kt",
+      "v3_and_v4_sha256": "f627ad17c7eb3b3e4e2c472d11c2f3222c167d3f021d2338ea65205f46454e00"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+      "v3_and_v4_sha256": "2c5171c37c5b688291843f2995fef6551d5507b07e0f928e100b8fdef35cc793"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+      "v3_and_v4_sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d"
+    }
+  ],
+  "single_layer_stages": [
+    {
+      "phase": "candidate-v4-performance",
+      "appendCompleteMs": 6427.580419,
+      "metadataMs": 3020.312778,
+      "rasterMs": 2381.226841,
+      "publicationMs": 274.362927,
+      "localDecoded": 13,
+      "localRebuiltTiles": 1
+    },
+    {
+      "phase": "baseline-final-performance",
+      "appendCompleteMs": 1435.515577,
+      "metadataMs": 728.762351,
+      "rasterMs": 518.699167,
+      "publicationMs": 9.981122,
+      "localDecoded": 13,
+      "localRebuiltTiles": 1
+    },
+    {
+      "phase": "candidate-v4-raster-repeat1",
+      "appendCompleteMs": 4176.864908,
+      "metadataMs": 2676.287779,
+      "rasterMs": 774.951939,
+      "publicationMs": 16.403976,
+      "localDecoded": 13,
+      "localRebuiltTiles": 1
+    },
+    {
+      "phase": "baseline-final-raster-repeat1",
+      "appendCompleteMs": 1817.981931,
+      "metadataMs": 890.599347,
+      "rasterMs": 651.219217,
+      "publicationMs": 22.450801,
+      "localDecoded": 13,
+      "localRebuiltTiles": 1
+    },
+    {
+      "phase": "baseline-final-raster-repeat2",
+      "appendCompleteMs": 2358.943598,
+      "metadataMs": 736.938101,
+      "rasterMs": 1349.826899,
+      "publicationMs": 20.045705,
+      "localDecoded": 13,
+      "localRebuiltTiles": 1
+    },
+    {
+      "phase": "candidate-v4-raster-repeat2",
+      "appendCompleteMs": 1611.903138,
+      "metadataMs": 710.59131,
+      "rasterMs": 594.302965,
+      "publicationMs": 15.828966,
+      "localDecoded": 13,
+      "localRebuiltTiles": 1
+    }
+  ],
+  "recommendation": {
+    "next_action": "Opt-in metadata-stage diagnostics on the same fixture; no production algorithm rollback yet.",
+    "minimum_segments": [
+      "before SpatialIndex.read to ready read callback: transaction admission plus preparation, not pure lock wait",
+      "query/layer/revision work and per-region digest update on actual transaction thread: wall and thread CPU",
+      "digest hex encoding/result construction: wall and same-thread CPU"
+    ],
+    "additional_counts": [
+      "region count",
+      "metadata rows/query batches",
+      "index preparation batches/rows",
+      "thread IDs for valid CPU deltas"
+    ],
+    "logging": "Accumulate one immutable timing record per metadata call; print after measured frame. Disabled by default. Do not log per row.",
+    "minimal_fix_if_supported": "Replace per-byte String.format with equivalent fixed lowercase hexadecimal only if hex-stage CPU/wall materially contributes. Preserve exact signatures and pixel tests.",
+    "why_not_native_rollback": "Single dirty tile has unchanged 13 native shapes. New native/cache visit executes after metadata; v3/v4 relevant source is identical.",
+    "why_not_complete": "Candidate three-sample single-layer median remains slower; one fast later sample does not resolve the original regression."
+  },
+  "limits": [
+    "Three observations per version/layer, sequential C/B/B/C repeats plus earlier pair, no statistical significance or stable production latency.",
+    "Same environment hashes do not capture instantaneous CPU/GC/cache/load.",
+    "Whole-bitmap assertions are within-version cold comparisons; unchanged pixel results do not mean timing regression resolved.",
+    "Per-layer stage sums can overlap for multiple layers.",
+    "Original dense 1201-stroke 30s gate remains unmet and is not rerun by these repetitions."
+  ],
+  "raw_sha256": {
+    "candidate-v4-performance-tile-local.log": "fdfa2736aab5b05f97a8dacd090ff7754efe977d91472ec5e50aef46f246f1d8",
+    "candidate-v4-performance-tile-local.json": "f0de25b9617712f3dfd64c537688c781d88236d49e72f495cc4c080c4f8f1829",
+    "baseline-final-performance-tile-local.log": "83521a5bc8a270a1d10edc3b17af497928cb456fbca6af8a2261f7e4a3415836",
+    "baseline-final-performance-tile-local.json": "1e361cd408989b7bc0b8fa390a5b28627cef51e94b09db00f7d62ae61a8a4e62",
+    "candidate-v4-raster-repeat1-tile-local.log": "ad44d83b74ae7621cee7380e81e8a4fc708c616c764773f8d27884e92cc53b51",
+    "candidate-v4-raster-repeat1-tile-local.json": "4d7ef10674d5081d69d01b24262cac1df6ee25242f575019efe9a2673ea181ee",
+    "candidate-v4-raster-repeat1-environment.json": "c13e61d0ad7b67fbdc2a07101d1be367a9411cbf5e9000b55a9049d8eb03c5ef",
+    "candidate-v4-raster-repeat1-environment-after.json": "b906da7ef7dfccb97791236295e87766e4d94ee3b82747c2d0a7511dc967cd63",
+    "baseline-final-raster-repeat1-tile-local.log": "1880a893a0ad88f6da5caa53442129dded5a00913dbe7acf35a0af02cbb2ad0b",
+    "baseline-final-raster-repeat1-tile-local.json": "6baadc1e24337a0d0a55d5a23fb72cd74a0654e276fb6df9e3f987d3f38b13bb",
+    "baseline-final-raster-repeat1-environment.json": "328abd145b09d7c2a9f9c6a9b45c48a6f09c9d3c3adbe7d77bd182edd8bb06aa",
+    "baseline-final-raster-repeat1-environment-after.json": "7ec20a6a08a8b0df124010bff09d5ae2eb351f99bdaf253fa73dd371c36f178b",
+    "baseline-final-raster-repeat2-tile-local.log": "3cc60f6a6406e550cbbf2f311f08397797c49e5eb14ebaeb36d62be67b0b0d2c",
+    "baseline-final-raster-repeat2-tile-local.json": "3f37658c15cdcb1032ce84ce7f5650cf689aeb8f719d3272f94a0abd79ce2a63",
+    "baseline-final-raster-repeat2-environment.json": "c845cffd0e408ab3bb1ea31426bf9a213f9f750f23e0ab0e7c2963b8a2819261",
+    "baseline-final-raster-repeat2-environment-after.json": "f94572044767130ea9832c286d52b1cd3438418ac40236dc0976e4742d24fd6c",
+    "candidate-v4-raster-repeat2-tile-local.log": "c7de9200e9c88db6ff4dc3e4ee0a24243b439237873a27cef89e1cf310b5ca4d",
+    "candidate-v4-raster-repeat2-tile-local.json": "cec0409d6835f9e4721f90d39dbc69ee6b8cc11212431358563f4261af067768",
+    "candidate-v4-raster-repeat2-environment.json": "ff63cd42f150e3c80c6b47a079b7572d2e1b533ebbc1555f22b88702fa257ed1",
+    "candidate-v4-raster-repeat2-environment-after.json": "03e9418fd3e4457dfb3c9e67fc9f2046ee661dc2dbf2ade20b6da77a4903245f",
+    "candidate-v4-finalrestore-apk-installation.json": "a20e1678a56bc89a89ed21022ab987bf43196792ddc05a1d594340fec59b7366",
+    "baseline-final-raster-repeat-apk-installation.json": "6fc2d13b0a432e463cdcfb473c26860f4d1cfe610edf80d705e90399cd208c37",
+    "candidate-v4-raster-repeat2-apk-installation.json": "4ebcc699d2216e2d0048ede16e1ccc680ad7d4c4f90717e73c0ba03962783c5f",
+    "raster-regression-followup-plan.json": "464d0348908a25c9e8204498f47a733336c1a0303b09e7939433f9ee8909bf57",
+    "raster-repeat-plan.json": "a25dfa5b569535f174dcde712755514da242dfb9d7eed83c876e76df604abf00",
+    "raster-single-tile-regression-investigation.md": "f3db0ddbc708a9a7a6dc722ab24c94518640a2a969893ec345c9b3d1d969388d"
+  }
+}

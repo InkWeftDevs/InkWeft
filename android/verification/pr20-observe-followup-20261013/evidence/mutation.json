@@ -1,0 +1,27 @@
+{
+  "command": [
+    "bash",
+    "/workspace/scratch/run-inkweft-gradle-pan",
+    "--offline",
+    ":data-local:testDebugUnitTest",
+    "--tests",
+    "org.inkweft.data.LibrarySearchObservationTest"
+  ],
+  "working_directory": "/workspace/InkWeft/android",
+  "mutation": "remove only .drop(1), restoring the virtual runningFold seed",
+  "fixed_source_sha256": "2d71398e78639e6f4524ececdfb5bf418e98d7aff436d704865e2af00d77ce6c",
+  "mutated_source_sha256": "5426ecfd3eaad182bb9c9f3e4c41f8424db0bc6441034ac88d1ef3ef49ce4d8f",
+  "gradle_exit_code": 1,
+  "tests": 8,
+  "failed_tests": [
+    "invalidationCancelsAnObsoleteReadAndCollectorCancellationNeverPublishesFailure",
+    "initialRoomEventStartsOneFullDebounceWithoutASyntheticRead",
+    "realInvalidationRefreshesSameRequestWhileIndexCompletionKeepsTheSourceVersion",
+    "clearingTextAndChangingCategoryTypeOrSortRemainImmediate",
+    "noReadOrVersionExistsUntilRoomEmitsItsFirstSnapshot",
+    "aRealEditDuringDebounceIsNotDroppedOrDelayed",
+    "failedReadRetainsRequestIdentityAndANewInvalidationCanRecover"
+  ],
+  "restored_byte_identical": true,
+  "elapsed_seconds": 72.5119309425354
+}

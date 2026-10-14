@@ -1,0 +1,38 @@
+{
+  "utc": "2026-10-13T02:47:41.794132+00:00",
+  "artifacts": [
+    {
+      "phase": "candidate-raster-diagnostic-v2",
+      "role": "app",
+      "preserved": "/workspace/scratch/pr20-preserved-apks/candidate-raster-diagnostic-v2/app-debug.apk",
+      "sha256": "825f59bf50c1104a51fcb4aac108822a712e768502c3c606d029bb450612253d",
+      "bytes": 241512357,
+      "matches_verified_apk": true
+    },
+    {
+      "phase": "candidate-raster-diagnostic-v2",
+      "role": "appTest",
+      "preserved": "/workspace/scratch/pr20-preserved-apks/candidate-raster-diagnostic-v2/app-debug-androidTest.apk",
+      "sha256": "5ce3e01030cc7ce27d93ed3aed7027a4f670716785235c569c0d4e84e3528407",
+      "bytes": 18398224,
+      "matches_verified_apk": true
+    },
+    {
+      "phase": "baseline-raster-diagnostic-v2",
+      "role": "app",
+      "preserved": "/workspace/scratch/pr20-preserved-apks/baseline-raster-diagnostic-v2/app-debug.apk",
+      "sha256": "a7e964809b12e937c7c54e23e27114a54bedaba49530363d1c345a73d2f7e9ed",
+      "bytes": 233099741,
+      "matches_verified_apk": true
+    },
+    {
+      "phase": "baseline-raster-diagnostic-v2",
+      "role": "appTest",
+      "preserved": "/workspace/scratch/pr20-preserved-apks/baseline-raster-diagnostic-v2/app-debug-androidTest.apk",
+      "sha256": "a500d8bb925adce209945acbe2de6672cb499b45f0b43706d58a9fa14ef8881e",
+      "bytes": 18113484,
+      "matches_verified_apk": true
+    }
+  ],
+  "status": "ALL_MATCH"
+}

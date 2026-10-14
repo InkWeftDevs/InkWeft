@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.data.RasterReadCacheTest#appendReuseRejectsHeadOrMaskChangesDuringCachedBatches" tests="1" failures="0" errors="0" time="1.0079872608184814"><testcase classname="org.inkweft.data.RasterReadCacheTest" name="appendReuseRejectsHeadOrMaskChangesDuringCachedBatches" time="1.0079872608184814" /></testsuite>

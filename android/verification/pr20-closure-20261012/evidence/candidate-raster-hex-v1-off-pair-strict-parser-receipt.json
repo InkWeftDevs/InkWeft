@@ -1,0 +1,20 @@
+{
+  "started_utc": "2026-10-13T03:35:29.962680+00:00",
+  "completed_utc": "2026-10-13T03:35:30.049036+00:00",
+  "command": [
+    "python",
+    "/workspace/scratch/pr20-closure-evidence/summarize-raster-hex-off-pair.py"
+  ],
+  "script_sha256": "1db5044da6cf294f742ed725affaaaf1ea557cb88aaeabbf2c794c1cf40586ab",
+  "exit_code": 2,
+  "stdout_path": "candidate-raster-hex-v1-off-pair-strict-parser.stdout.json",
+  "stdout_sha256": "33942151b1dd970a590b31470908b9f4845dcd9fdafc6b54a3243335ae8a9c4f",
+  "stderr_path": "candidate-raster-hex-v1-off-pair-strict-parser.stderr.log",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "parser_status": "INCOMPLETE",
+  "result": "EXPECTED_STRICT_INCOMPLETE_PRESERVED",
+  "summary_json_exists": false,
+  "summary_md_exists": false,
+  "parser_modified": false,
+  "rerun_substitution": false
+}

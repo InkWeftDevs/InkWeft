@@ -1,0 +1,21 @@
+{
+  "command_flags": [
+    "-avd",
+    "pr20-kvm-paired",
+    "-port",
+    "5554",
+    "-no-window",
+    "-no-snapshot",
+    "-noaudio",
+    "-no-boot-anim",
+    "-gpu",
+    "swiftshader",
+    "-accel",
+    "on",
+    "-cores",
+    "2",
+    "-memory",
+    "2048"
+  ],
+  "image_source_properties": "Pkg.Desc=AOSP Automated Test Device System Image x86_64\nPkg.Revision=1\nPkg.Dependencies=emulator#30.9.2\nAndroidVersion.ApiLevel=35\nSystemImage.Abi=x86_64\nSystemImage.TagId=aosp_atd\nSystemImage.TagDisplay=AOSP ATD\nSystemImage.GpuSupport=true\nAddon.VendorId=google\nAddon.VendorDisplay=Google Inc.\n\n"
+}

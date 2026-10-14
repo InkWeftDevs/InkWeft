@@ -98,6 +98,57 @@ class LibraryBackupIsolationTest {
         println("BACKUP_PREFLIGHT originalPhysicalBytes=${bytes.size} references=3 exactArchiveBytes=$estimate sharedOriginalRetained=true")
     }
 
+    @Test fun authorCommitContinuesWhilePrivateValidationTransactionIsPaused()=fixture{context,db,root->coroutineScope{
+        val note=WorkspaceRepository(db).create("验证前的作者版次",false,PaperStyle.BLANK)
+        val started=System.nanoTime();var stage="fixture-note-complete"
+        val lastFault=java.util.concurrent.atomic.AtomicReference("none")
+        fun phase(value:String){
+            androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{
+                putString("stream","BACKUP_VALIDATION_ISOLATION_PHASE phase=$value elapsedMs=${(System.nanoTime()-started)/1_000_000.0}\n")
+            })
+        }
+        phase(stage)
+        val entered=CompletableDeferred<Unit>();val release=CountDownLatch(1)
+        val backup=async(Dispatchers.IO){LibraryBackupRepository(context,db){fault->
+            lastFault.set(fault.name);phase("snapshot:${fault.name}")
+            // This hook runs after the isolated Room transaction has acquired its writer.
+            if(fault==LibraryBackupRepository.BackupFault.BEFORE_SNAPSHOT_VALIDATE){
+                entered.complete(Unit);check(release.await(10,TimeUnit.SECONDS))
+            }
+        }.snapshot()}
+        try{
+            stage="await-validation-hook";phase("$stage:start")
+            withTimeout(10_000){entered.await()}
+            phase("$stage:complete")
+            stage="author-save";phase("$stage:start")
+            withTimeout(2_000){NoteRepository(db).save(SaveNote(id(),note.id,1,"验证期间已保存","独立作者事务"))}
+            phase("$stage:complete")
+            assertEquals("验证期间已保存",db.notes().note(note.id)!!.title)
+            release.countDown()
+            stage="await-snapshot";phase("$stage:start")
+            withTimeout(10_000){backup.await()}.use{snapshot->
+                phase("$stage:complete")
+                stage="inspect";phase("$stage:start")
+                snapshot.file.inputStream().use{LibraryBackupRepository(context,db).inspect(it)}.use{preview->
+                    assertEquals(note.title,preview.stage.notes().note(note.id)!!.title)
+                    assertEquals(1L,preview.stage.notes().note(note.id)!!.revision)
+                    assertNull(preview.stage.notes().revision(note.id,2))
+                }
+                phase("$stage:complete")
+            }
+            stage="scratch-cleanup-assertion"
+            assertTrue(File(root,"library-backup").listFiles().orEmpty().isEmpty())
+            phase("complete")
+        }catch(failure:Throwable){
+            runCatching{phase("failure currentStage=$stage lastSnapshotFault=${lastFault.get()} exception=${failure.javaClass.simpleName}")}
+                .onFailure(failure::addSuppressed)
+            throw failure
+        }finally{
+            release.countDown()
+            withContext(NonCancellable){backup.cancelAndJoin();if(!backup.isCancelled)runCatching{backup.await().close()}}
+        }
+    }}
+
     @Test fun cloudLimitAndSpaceRejectBeforeIsolatedCopyOrArchive()=fixture{context,db,root->
         // Deliberately metadata-only: rejection must happen before attempting to open/copy 900 MB.
         val hash="a".repeat(64)

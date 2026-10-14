@@ -1,0 +1,11 @@
+
+org.inkweft.data.OriginalStorageRepositoryTest:..ORIGINAL_STORAGE_EVIDENCE {"kind":"legacy-physical-reclamation","databaseBytesBefore":7086080,"databaseBytesAfter":790528,"migratedBytes":6291456,"originalBytesAfter":6291456,"freePagesAfter":0,"pageSize":4096}
+.ORIGINAL_STORAGE_EVIDENCE {"kind":"partial-migration-reclamation","databaseBytesBefore":6012928,"databaseBytesAfter":1806336,"migratedBytes":4194304,"retainedDamagedChunkRows":3}
+......ORIGINAL_STORAGE_EVIDENCE {"kind":"deduplicated-files","logicalPdfBytes":16777216,"logicalImageBytes":208,"physicalOriginalBytes":8388712,"databaseFileBytes":1024,"documentChunkRows":0,"imageChunkRows":0,"restoredPhysicalBytes":8388712}
+..
+
+Time: 116.802
+
+OK (11 tests)
+
+

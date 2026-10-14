@@ -1,0 +1,53 @@
+
+org.inkweft.data.OriginalStorageRepositoryTest:
+Error in laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes(org.inkweft.data.OriginalStorageRepositoryTest):
+java.lang.AssertionError: expected:<2> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at org.inkweft.data.OriginalStorageRepositoryTest$laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes$1.invokeSuspend(OriginalStorageRepositoryTest.kt:197)
+	at org.inkweft.data.OriginalStorageRepositoryTest$laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes$1.invoke(Unknown Source:13)
+	at org.inkweft.data.OriginalStorageRepositoryTest$laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes$1.invoke(Unknown Source:10)
+	at org.inkweft.data.OriginalStorageRepositoryTest$fixture$1.invokeSuspend(OriginalStorageRepositoryTest.kt:33)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at org.inkweft.data.OriginalStorageRepositoryTest.fixture(OriginalStorageRepositoryTest.kt:18)
+	at org.inkweft.data.OriginalStorageRepositoryTest.fixture$default(OriginalStorageRepositoryTest.kt:18)
+	at org.inkweft.data.OriginalStorageRepositoryTest.laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes(OriginalStorageRepositoryTest.kt:195)
+
+
+Time: 7.3
+There was 1 failure:
+1) laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes(org.inkweft.data.OriginalStorageRepositoryTest)
+java.lang.AssertionError: expected:<2> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:633)
+	at org.inkweft.data.OriginalStorageRepositoryTest$laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes$1.invokeSuspend(OriginalStorageRepositoryTest.kt:197)
+	at org.inkweft.data.OriginalStorageRepositoryTest$laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes$1.invoke(Unknown Source:13)
+	at org.inkweft.data.OriginalStorageRepositoryTest$laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes$1.invoke(Unknown Source:10)
+	at org.inkweft.data.OriginalStorageRepositoryTest$fixture$1.invokeSuspend(OriginalStorageRepositoryTest.kt:33)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at org.inkweft.data.OriginalStorageRepositoryTest.fixture(OriginalStorageRepositoryTest.kt:18)
+	at org.inkweft.data.OriginalStorageRepositoryTest.fixture$default(OriginalStorageRepositoryTest.kt:18)
+	at org.inkweft.data.OriginalStorageRepositoryTest.laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes(OriginalStorageRepositoryTest.kt:195)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+

@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "preparation_git": "6e3438e0d03fe473979cc7e4b5f7d909ca148e0c",
+  "workflow_sha256": "bb24a9559b0e1bc3821eb893ef54bbc205ad584fcba26fd0d7a31da5e710f7a6",
+  "proposed_sha256": "036cd396213295f8613d4419e55e6ee8269948b9069f0e818127029a1f2fb4a4",
+  "unique_before_replacement": true,
+  "preparation_runs": 0,
+  "repository_in_progress": 0,
+  "repository_queued": 0,
+  "actionlint": "PASS",
+  "new_workflow_only": true
+}

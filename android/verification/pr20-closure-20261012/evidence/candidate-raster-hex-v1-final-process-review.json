@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-13T03:50:10.708271+00:00",
+  "native_runner_finished": true,
+  "checks": [
+    {
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "pidof",
+        "org.inkweft.app.a0"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "pidof",
+        "org.inkweft.app.a0.test"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "target_processes_absent": true,
+  "scope": "Process absence only; failed original dense frame did not reach strict normal-release assertions.",
+  "force_stop_requested": false
+}

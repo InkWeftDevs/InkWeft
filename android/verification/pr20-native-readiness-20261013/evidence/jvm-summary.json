@@ -1,0 +1,47 @@
+{
+  "execution": "HOST_JVM",
+  "native_performance": "NOT_RUN",
+  "suites": [
+    {
+      "suite": "org.inkweft.data.LibrarySearchObservationTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "org.inkweft.data.LibrarySearchTermsTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "org.inkweft.data.OriginalFileCacheTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "org.inkweft.data.OriginalStoreTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "org.inkweft.data.StorageValidationTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "totals": {
+    "tests": 31,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

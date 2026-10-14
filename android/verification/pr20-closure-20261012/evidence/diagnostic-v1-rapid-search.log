@@ -1,0 +1,30 @@
+
+org.inkweft.data.LibrarySearchRepositoryTest:LIBRARY_SEARCH_STAGE fixtureReady books=500 pages=20000
+LIBRARY_SEARCH_STAGE foregroundComplete elapsedMs=38943.880463 pending=20000
+LIBRARY_SEARCH_STAGE indexGateFailed requiredRows=128 completedRows=0 observeElapsedMs=10240 slowScanRows=1300 observerActive=true failure=TimeoutCancellationException
+
+Error in twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain(org.inkweft.data.LibrarySearchRepositoryTest):
+kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 10000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:189)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:157)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.lang.Thread.run(Thread.java:1012)
+
+
+Time: 219.865
+There was 1 failure:
+1) twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain(org.inkweft.data.LibrarySearchRepositoryTest)
+kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 10000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:189)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:157)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.lang.Thread.run(Thread.java:1012)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+

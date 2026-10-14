@@ -1,0 +1,12 @@
+{
+  "git": "ebb48481e7e995288c1844d43011398c513b4f4e",
+  "files": {
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionExposureTest.kt": "7e98a67eec4f9242fc4c18e6bf662ec1d86c346796ebc28ab0971be1a9f0224f",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt": "7dea89680c6dcf4723b95603796d634bd51088076b9d7ff2277e888b54e663e6",
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchDiagnostics.kt": "94dd88b51011949f1e06915b36ed35cb841fb26fddc46adf45f590e6aa2fc04c",
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchObservation.kt": "dc1f3749fa85d62104156a17ae55413762dc5de590a654da272af907c3e246cf",
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt": "bf3e0f7ca9c5875b47f5f0a6b8a6777a504e14a5f10e5c75f8d4b65f81052320",
+    "android/data-local/src/test/kotlin/org/inkweft/data/LibrarySearchObservationTest.kt": "df78a85cb0c59b8bb12ce72b80e30e6d164569b2b8fec8a358e70c1980c8a4c8"
+  }
+}

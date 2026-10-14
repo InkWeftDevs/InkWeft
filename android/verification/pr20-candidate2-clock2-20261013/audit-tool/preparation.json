@@ -1,0 +1,69 @@
+{
+  "status": "PREPARED_SYNTHETIC_CHECKS_PASS_REAL_ZIP_NOT_AVAILABLE",
+  "run_id": 38433834125,
+  "job_id": 115422592925,
+  "active_git": "9907a8f96fe0d20061f0a7deba6a69d4416ced50",
+  "preparation_git": "14b4f48ea3a683b3cff1b4201bd1e2b4cd740d4a",
+  "readiness_git": "6c72fd8b20228cc324fd835efa3f505f1f179997",
+  "source_spec_sha256": "6e9c422d8be60728967226de674b750cb7b3633485956d537dd0c2dac21a6dfb",
+  "method_plan_sha256": "808dd0cf1fece09185c59ae94ce41f51fdbc26dcde5ed196df7e803860f49765",
+  "C0": "ebb48481e7e995288c1844d43011398c513b4f4e",
+  "C1": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+  "clock_contract_sha256": "d5a49759faa66743a17a3f463abd5e3fbbf835a7a60957cb70abc0395bf11bdc",
+  "clock_server_receipt_sha256": "701649e0b71b4cb6b4d44ea19a5e9d70590ded24e962e16342372f4718b52a81",
+  "anchor_utc": "2026-10-13T16:49:10Z",
+  "anchor_epoch": 1791910150,
+  "parent_reported_actual_start_utc": "2026-10-13T16:50:55Z",
+  "parent_reported_lead_seconds": 105,
+  "actual_job_start_independently_verified_here": false,
+  "expected_methods": 57,
+  "phase_methods": [
+    30,
+    24,
+    3
+  ],
+  "install_groups": 14,
+  "limits": {
+    "uncompressed_bytes": 20971520,
+    "retention_days": 3,
+    "cutoff_minutes": [
+      32,
+      38,
+      52,
+      55
+    ],
+    "job_minutes": 60
+  },
+  "files_sha256": {
+    "verify_artifact.py": "aee9eb7734c688f6c80bb5a4b9a3c8e296eaf421a95b50cc65a891293a906c8a",
+    "check_verifier.py": "a1e5b49cbbaad84dbbc4ff21eb845f7b9ae5a905f786248edcc3f369a8fb1e17",
+    "synthetic-check.json": "d380cda33cfc60132ebe8aa4ebbe368323a6df38e1c6a6919e7f8703768725dd"
+  },
+  "checks": {
+    "status": "PASS",
+    "synthetic_cases": 27,
+    "actual_archive_checked": false,
+    "download_calls": 0,
+    "build_native_permission_calls": 0
+  },
+  "required_pending_inputs": [
+    "User-supplied original ZIP for this run",
+    "Official local artifact metadata containing matching name/run/head/size/digest",
+    "Local terminal job metadata for actual start/end/conclusion; omission is explicitly marked pending"
+  ],
+  "boundaries": [
+    "No extraction before archive/manifest/frozen-source/control binding checks",
+    "Refuse existing output or receipt; never alter original ZIP",
+    "No APK/AAR/DB/credentials/full logcat in whitelist",
+    "FAILED/INCOMPLETE/NOT_RUN and raw PASS versus host FAIL preserved",
+    "APK signature/native/source receipt consistency only; absent binary APKs are not independently reverified",
+    "Performance evaluation remains the unchanged frozen analyzer; this verifier produces no performance acceptance verdict"
+  ],
+  "review_fixes": [
+    "Completion claims require57PASS,9APK receipts and14PASS groups",
+    "Only original RUNNING->packagedINCOMPLETE can leave absent derived persistence pending; existing contradictions still reject",
+    "AUX/NATURAL outcomes must agree with helper receipt presence",
+    "Cleanup claim normalization unchanged; independent exact ACL state/byte verification recorded separately",
+    "57methodPASS alone does not imply final group/environment acceptance; claims_complete controls overall-completion requirements and uncompleted postchecks remain pending"
+  ]
+}

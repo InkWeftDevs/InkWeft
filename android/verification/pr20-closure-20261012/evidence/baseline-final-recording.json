@@ -1,0 +1,12 @@
+{
+  "utc": "2026-10-13T00:50:03.090972+00:00",
+  "phase": "baseline-final",
+  "android_root": "/workspace/scratch/inkweft-baseline-closure-a128bb07/android",
+  "status": "RECORDED",
+  "problems": [],
+  "apk_count": 3,
+  "missing_jvm_or_lint_is_not_a_zero_test_pass": true,
+  "build_started": false,
+  "adb_used": false,
+  "scope": "Artifact and signature recording only; not a build, native-test or performance pass."
+}

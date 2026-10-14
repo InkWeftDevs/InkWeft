@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh" tests="1" failures="0" errors="0" time="0.7608354091644287"><testcase classname="org.inkweft.data.LibrarySearchRepositoryTest" name="pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh" time="0.7608354091644287" /></testsuite>

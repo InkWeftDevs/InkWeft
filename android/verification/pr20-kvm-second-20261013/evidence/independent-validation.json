@@ -1,0 +1,205 @@
+{
+  "artifact_id": 11796344544,
+  "artifact_zip_sha256": "520e09565b4973fd90fb2a8e8c7e1bbd9faae9da2e996f7588c704deeca8994d",
+  "zip_bytes": 23742,
+  "archive_files": 31,
+  "archive_uncompressed_bytes": 103751,
+  "manifest_payloads": 30,
+  "payload_bytes": 95433,
+  "manifest_all_verified": true,
+  "truncated_payloads": 0,
+  "source_sha": "7949011ca2b84492f6438d275a09d28faef3b472",
+  "workflow_sha": "a65f8599300b42444ab516714645b4e6f28d0432",
+  "run_id": 38365926272,
+  "methods": [
+    {
+      "name": "search",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+      "tests": 1,
+      "passed": 1,
+      "raw_junit_seconds": 37.381,
+      "host_invocation_seconds": 37.80115556716919,
+      "start_end_identity_verified": true,
+      "terminal_code": -1,
+      "xml_is_derived_from_raw": true
+    },
+    {
+      "name": "backup",
+      "selection": "org.inkweft.data.LibraryBackupRepositoryTest#cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary",
+      "tests": 1,
+      "passed": 1,
+      "raw_junit_seconds": 10.038,
+      "host_invocation_seconds": 10.387870073318481,
+      "start_end_identity_verified": true,
+      "terminal_code": -1,
+      "xml_is_derived_from_raw": true
+    },
+    {
+      "name": "dense",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "tests": 1,
+      "passed": 1,
+      "raw_junit_seconds": 2.712,
+      "host_invocation_seconds": 3.472851276397705,
+      "start_end_identity_verified": true,
+      "terminal_code": -1,
+      "xml_is_derived_from_raw": true
+    },
+    {
+      "name": "pan",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+      "tests": 1,
+      "passed": 1,
+      "raw_junit_seconds": 0.879,
+      "host_invocation_seconds": 1.618161916732788,
+      "start_end_identity_verified": true,
+      "terminal_code": -1,
+      "xml_is_derived_from_raw": true
+    },
+    {
+      "name": "local-append",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "tests": 1,
+      "passed": 1,
+      "raw_junit_seconds": 3.799,
+      "host_invocation_seconds": 4.525162696838379,
+      "start_end_identity_verified": true,
+      "terminal_code": -1,
+      "xml_is_derived_from_raw": true
+    }
+  ],
+  "total_tests": 5,
+  "total_passed": 5,
+  "shared_device_fields_before_after_equal": true,
+  "acl_before_trap_always_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+  "acl_exact_equal": true,
+  "retained_original_payloads": 29,
+  "excluded_original_payloads": [
+    {
+      "name": "emulator.log",
+      "reason": "Full startup log includes ephemeral ADB public key and service paths; archive only selected version/boot lines. Original manifest/hash preserved, original zip retained privately."
+    }
+  ],
+  "workflow_routes_at_source": [
+    {
+      "path": ".github/workflows/android-a0.yml",
+      "blob_sha": "4428d39dd93f5e7e63fafab762b72e33115e2a5c",
+      "events": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "android/**",
+            "ci/**",
+            "backup-server/**",
+            "sync-lab/**",
+            "resource-packs/**",
+            ".github/workflows/android-a0.yml"
+          ]
+        },
+        "pull_request": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "android/**",
+            "ci/**",
+            "backup-server/**",
+            "sync-lab/**",
+            "resource-packs/**",
+            ".github/workflows/android-a0.yml"
+          ]
+        }
+      },
+      "matches_report_branch_or_pr_base": false
+    },
+    {
+      "path": ".github/workflows/android-runner-diagnostics.yml",
+      "blob_sha": "3ae6580b88dd3d141de9e5b720d98d4e0694cdcb",
+      "events": {
+        "push": {
+          "branches": [
+            "codex/cloud/six-batches-v11-20261004"
+          ],
+          "paths": [
+            ".github/workflows/android-runner-diagnostics.yml"
+          ]
+        }
+      },
+      "matches_report_branch_or_pr_base": false
+    },
+    {
+      "path": ".github/workflows/android-six-batches.yml",
+      "blob_sha": "0396d40b846b069b97646ca279989e3403239d24",
+      "events": {
+        "push": {
+          "branches": [
+            "codex/cloud/six-batches-v11-20261004"
+          ],
+          "paths": [
+            "android/**/src/**",
+            "android/**/build.gradle.kts",
+            "android/data-local/schemas/**",
+            "android/gradle/**",
+            "android/gradle.properties",
+            "android/settings.gradle.kts",
+            "ci/**",
+            "android/verification/six-batch-fixture-20261004/run-fixture.py",
+            "android/verification/six-batch-fixture-20261004/test_*.py",
+            ".github/workflows/android-six-batches.yml"
+          ]
+        }
+      },
+      "matches_report_branch_or_pr_base": false
+    },
+    {
+      "path": ".github/workflows/android-source-snapshot.yml",
+      "blob_sha": "6fce50777c01a706163b17d49931a07731067f44",
+      "events": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "android/**",
+            ".github/workflows/**",
+            "ci/**"
+          ]
+        },
+        "pull_request": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "android/**",
+            ".github/workflows/**",
+            "ci/**"
+          ]
+        }
+      },
+      "matches_report_branch_or_pr_base": false
+    }
+  ],
+  "report_branch": "codex/android-perf-integration-20261012",
+  "pr_base": "codex/storage-optimization-20261011",
+  "one_time_workflow": "Only present on codex/kvm-pr20-7949011-once; branch/path/before-SHA/run_attempt guard excludes this report push.",
+  "new_android_executions_during_analysis": 0,
+  "first_run_archive": {
+    "run_id": 38362557447,
+    "artifact_id": 11795244148,
+    "zip_bytes": 14645,
+    "zip_sha256": "81b4c910c72a430806fc2b814ce610f4afb762b718c4559c8146c9c2de6276de",
+    "manifest_payloads_verified": 15,
+    "retained_original_files": [
+      "manifest.json",
+      "summary.json",
+      "cleanup-trap.json",
+      "cleanup-always.json",
+      "kvm-before.acl",
+      "kvm-after-trap.acl",
+      "kvm-after-always.acl"
+    ],
+    "scope": "Failure summary and cleanup/ACL subset; manifest describes original archive, not all payloads retained here. Five methods NOT_RUN."
+  }
+}

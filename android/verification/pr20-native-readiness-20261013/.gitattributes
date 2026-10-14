@@ -1,0 +1,3 @@
+# Preserve original text evidence bytes and Gradle trailing spaces.
+evidence/** -text
+evidence/*.log -whitespace

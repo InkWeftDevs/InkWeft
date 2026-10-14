@@ -1,0 +1,45 @@
+{
+  "status": "AST_AND_SUITE_PRESERVATION_PASS_NOT_FULL_EXECUTION",
+  "default_final_worktree": "/workspace/InkWeft-native-candidate2",
+  "script_sha256": "ef12f25423e408a5320f266c2db33d76449b31c9d743f6e5df7224b725fc3931",
+  "reference_sha256": "147c5ce2eb917baa18d5ebbac1965f472eb9e8f2ebb4325c87206e3a9b029be2",
+  "unchanged_checks": [
+    "raw_parser",
+    "method_error_paths",
+    "cutoffs_and_authorization",
+    "workflow_validation"
+  ],
+  "package_checks": "Exact prior function AST except complete44 filename labels become complete57; all 12 original invocation cases retained",
+  "process_cases": [
+    "absent",
+    "natural-helper-exit",
+    "background-helper-exit",
+    "background-refused",
+    "raw-junit-fail",
+    "adb-fail",
+    "app-active",
+    "data-active",
+    "wrong-phase",
+    "wrong-identity",
+    "wrong-selection",
+    "wrong-runner",
+    "invalid-pid",
+    "stderr",
+    "bad-exit",
+    "kill-error",
+    "kill-stderr",
+    "phase-expiry",
+    "slow-probe"
+  ],
+  "official_pom_cases": [
+    "valid",
+    "redirect",
+    "forbidden",
+    "timeout",
+    "tls_failure",
+    "bad_hash",
+    "bad_size",
+    "outer_deadline"
+  ],
+  "final_execution": "NOT_RUN_PENDING_FINAL_SOURCE_AUTHORIZATION_WORKFLOW"
+}

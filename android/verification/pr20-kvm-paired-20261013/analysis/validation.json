@@ -1,0 +1,37 @@
+{
+  "status": "VERIFIED_WITH_REGRESSION_AND_COVERAGE_GAPS",
+  "manifest_files": 134,
+  "payload_bytes": 2153408,
+  "methods": 24,
+  "junit_tests": 24,
+  "fixture_records": 40,
+  "matched_fixture_pairs": 20,
+  "writer_settings": "1024/FULL/WAL/synchronous=2",
+  "committed_save_samples": 960,
+  "apk_receipts": 6,
+  "apk_binary_rehashed_locally": false,
+  "raw_and_derived_records_equal": true,
+  "original_and_recomputed_screening_equal": true,
+  "original_runner_metrics_recomputed": 26,
+  "supplementary_direct_joint_time": "Derived from existing intervals; descriptive only, excluded from original acceptance metrics",
+  "device_environment_snapshots_equal": 18,
+  "acl_trap_always_exact": true,
+  "cleanup_errors": [],
+  "regression_metrics": [
+    "library.observe.p50"
+  ],
+  "inconclusive_metrics": [
+    "library.direct.p95",
+    "raster.4.appendCompleteMs",
+    "raster.4.forcedFullCompleteMs",
+    "raster.8.forcedFullCompleteMs"
+  ],
+  "caveats": [
+    "APK binaries intentionally absent; verified runner-generated hash/ELF/signature receipts.",
+    "Per-run n=30; four pairs are not a population no-regression proof.",
+    "GC first concurrent pass deletes zero; all deletion happens in finish pass after saves. Sustained delete/write contention unverified.",
+    "Library cold means first unindexed query after fixture hashing, not OS/file-cache cold.",
+    "Native pipeline is real Android KVM, not a physical device.",
+    "Host load and free disk requested by PLAN were not recorded; stage success is not evidence of equal host load."
+  ]
+}

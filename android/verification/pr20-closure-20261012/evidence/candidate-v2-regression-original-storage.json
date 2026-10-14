@@ -1,0 +1,26 @@
+{
+  "phase": "candidate-v2-regression",
+  "selection": "org.inkweft.data.OriginalStorageRepositoryTest",
+  "command": [
+    "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "am",
+    "instrument",
+    "-w",
+    "-e",
+    "class",
+    "org.inkweft.data.OriginalStorageRepositoryTest",
+    "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+  ],
+  "started_utc": "2026-10-12T22:41:17.105152+00:00",
+  "seconds": 146.55017325600056,
+  "exit_code": 0,
+  "expected": 11,
+  "tests": null,
+  "executed": 11,
+  "failures": 1,
+  "passed": false,
+  "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+}

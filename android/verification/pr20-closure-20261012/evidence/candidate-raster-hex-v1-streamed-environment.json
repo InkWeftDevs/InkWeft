@@ -1,0 +1,493 @@
+{
+  "schema": 1,
+  "phase": "candidate-raster-hex-v1-streamed",
+  "started_utc": "2026-10-13T03:46:35.553709+00:00",
+  "serial": "emulator-5554",
+  "script_sha256": "e33900329dd307e6d9b38e5e1611b9bcc865fbdc4d01624f279bb37acec00630",
+  "status": "RECORDED",
+  "commands": [
+    {
+      "argv": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-H",
+        "127.0.0.1",
+        "-P",
+        "5037",
+        "-s",
+        "emulator-5554",
+        "get-state"
+      ],
+      "returncode": 0,
+      "stdout": "device",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-H",
+        "127.0.0.1",
+        "-P",
+        "5037",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "getprop",
+        "ro.build.version.sdk"
+      ],
+      "returncode": 0,
+      "stdout": "35",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-H",
+        "127.0.0.1",
+        "-P",
+        "5037",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "getprop",
+        "ro.product.cpu.abi"
+      ],
+      "returncode": 0,
+      "stdout": "x86_64",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-H",
+        "127.0.0.1",
+        "-P",
+        "5037",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "getprop",
+        "ro.product.cpu.abilist"
+      ],
+      "returncode": 0,
+      "stdout": "x86_64",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-H",
+        "127.0.0.1",
+        "-P",
+        "5037",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "getprop",
+        "ro.build.fingerprint"
+      ],
+      "returncode": 0,
+      "stdout": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-H",
+        "127.0.0.1",
+        "-P",
+        "5037",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "getprop",
+        "ro.hw_timeout_multiplier"
+      ],
+      "returncode": 0,
+      "stdout": "10",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-H",
+        "127.0.0.1",
+        "-P",
+        "5037",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "getprop",
+        "ro.kernel.qemu"
+      ],
+      "returncode": 0,
+      "stdout": "1",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-H",
+        "127.0.0.1",
+        "-P",
+        "5037",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "getprop",
+        "sys.boot_completed"
+      ],
+      "returncode": 0,
+      "stdout": "1",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-H",
+        "127.0.0.1",
+        "-P",
+        "5037",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "wm",
+        "size"
+      ],
+      "returncode": 0,
+      "stdout": "Physical size: 1080x1920\nOverride size: 1920x1200",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-H",
+        "127.0.0.1",
+        "-P",
+        "5037",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "wm",
+        "density"
+      ],
+      "returncode": 0,
+      "stdout": "Physical density: 420\nOverride density: 240",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-H",
+        "127.0.0.1",
+        "-P",
+        "5037",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "settings",
+        "get",
+        "system",
+        "font_scale"
+      ],
+      "returncode": 0,
+      "stdout": "1.0",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-H",
+        "127.0.0.1",
+        "-P",
+        "5037",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "settings",
+        "get",
+        "global",
+        "window_animation_scale"
+      ],
+      "returncode": 0,
+      "stdout": "1.0",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-H",
+        "127.0.0.1",
+        "-P",
+        "5037",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "settings",
+        "get",
+        "global",
+        "transition_animation_scale"
+      ],
+      "returncode": 0,
+      "stdout": "1.0",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-H",
+        "127.0.0.1",
+        "-P",
+        "5037",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "settings",
+        "get",
+        "global",
+        "animator_duration_scale"
+      ],
+      "returncode": 0,
+      "stdout": "null",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-H",
+        "127.0.0.1",
+        "-P",
+        "5037",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "id",
+        "-u"
+      ],
+      "returncode": 0,
+      "stdout": "2000",
+      "stderr": ""
+    }
+  ],
+  "errors": [],
+  "device": {
+    "properties": {
+      "ro.build.version.sdk": "35",
+      "ro.product.cpu.abi": "x86_64",
+      "ro.product.cpu.abilist": "x86_64",
+      "ro.build.fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+      "ro.hw_timeout_multiplier": "10",
+      "ro.kernel.qemu": "1",
+      "sys.boot_completed": "1"
+    },
+    "display": {
+      "size": {
+        "physical": "1080x1920",
+        "override": "1920x1200"
+      },
+      "density": {
+        "physical": "420",
+        "override": "240"
+      }
+    },
+    "font_scale": "1.0",
+    "animations": {
+      "window_animation_scale": "1.0",
+      "transition_animation_scale": "1.0",
+      "animator_duration_scale": "null"
+    },
+    "shell_uid": "2000"
+  },
+  "emulator_before": {
+    "pid": 2661,
+    "uid": 1000,
+    "avd": "inkweft-perf-api35",
+    "serial": "emulator-5554",
+    "argv0": "/workspace/.setup/tools/android-sdk/emulator/qemu/linux-x86_64/qemu-system-x86_64-headless",
+    "start_time_ticks": 51335,
+    "process_state": "S",
+    "launch_flags": {
+      "-avd": [
+        "inkweft-perf-api35"
+      ],
+      "-port": [
+        "5554"
+      ],
+      "-accel": [
+        "off"
+      ],
+      "-gpu": [
+        "swiftshader"
+      ],
+      "-cores": [
+        "2"
+      ],
+      "-memory": [
+        "2048"
+      ]
+    },
+    "exe_link": null,
+    "exe_link_status": "PermissionError"
+  },
+  "host_before": {
+    "kernel": "6.18.44",
+    "architecture": "x86_64",
+    "logical_cpu_count": 5,
+    "affinity_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "kvm": {
+      "path": "/dev/kvm",
+      "exists": false
+    },
+    "cgroup": {
+      "cpu.max": "400000 100000",
+      "cpuset.cpus.effective": "0-4",
+      "cpu.stat": "usage_usec 71250216221\nuser_usec 68713574653\nsystem_usec 2536641567\nnice_usec 0\nnr_periods 471782\nnr_throttled 75927\nthrottled_usec 6190667255\nnr_bursts 0\nburst_usec 0",
+      "memory.max": "17179869184",
+      "memory.high": "max",
+      "memory.current": "15985610752",
+      "memory.events": "low 0\nhigh 0\nmax 49790\noom 0\noom_kill 0\noom_group_kill 0"
+    },
+    "cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C"
+  },
+  "emulator_after": {
+    "pid": 2661,
+    "uid": 1000,
+    "avd": "inkweft-perf-api35",
+    "serial": "emulator-5554",
+    "argv0": "/workspace/.setup/tools/android-sdk/emulator/qemu/linux-x86_64/qemu-system-x86_64-headless",
+    "start_time_ticks": 51335,
+    "process_state": "S",
+    "launch_flags": {
+      "-avd": [
+        "inkweft-perf-api35"
+      ],
+      "-port": [
+        "5554"
+      ],
+      "-accel": [
+        "off"
+      ],
+      "-gpu": [
+        "swiftshader"
+      ],
+      "-cores": [
+        "2"
+      ],
+      "-memory": [
+        "2048"
+      ]
+    },
+    "exe_link": null,
+    "exe_link_status": "PermissionError"
+  },
+  "host_after": {
+    "kernel": "6.18.44",
+    "architecture": "x86_64",
+    "logical_cpu_count": 5,
+    "affinity_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "kvm": {
+      "path": "/dev/kvm",
+      "exists": false
+    },
+    "cgroup": {
+      "cpu.max": "400000 100000",
+      "cpuset.cpus.effective": "0-4",
+      "cpu.stat": "usage_usec 71258745085\nuser_usec 68721908991\nsystem_usec 2536836094\nnice_usec 0\nnr_periods 471862\nnr_throttled 75927\nthrottled_usec 6190667255\nnr_bursts 0\nburst_usec 0",
+      "memory.max": "17179869184",
+      "memory.high": "max",
+      "memory.current": "15985795072",
+      "memory.events": "low 0\nhigh 0\nmax 49790\noom 0\noom_kill 0\noom_group_kill 0"
+    },
+    "cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C"
+  },
+  "comparison_values": {
+    "serial": "emulator-5554",
+    "pid": 2661,
+    "start_time_ticks": 51335,
+    "avd": "inkweft-perf-api35",
+    "launch_flags": {
+      "-avd": [
+        "inkweft-perf-api35"
+      ],
+      "-port": [
+        "5554"
+      ],
+      "-accel": [
+        "off"
+      ],
+      "-gpu": [
+        "swiftshader"
+      ],
+      "-cores": [
+        "2"
+      ],
+      "-memory": [
+        "2048"
+      ]
+    },
+    "properties": {
+      "ro.build.version.sdk": "35",
+      "ro.product.cpu.abi": "x86_64",
+      "ro.product.cpu.abilist": "x86_64",
+      "ro.build.fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+      "ro.hw_timeout_multiplier": "10",
+      "ro.kernel.qemu": "1",
+      "sys.boot_completed": "1"
+    },
+    "display": {
+      "size": {
+        "physical": "1080x1920",
+        "override": "1920x1200"
+      },
+      "density": {
+        "physical": "420",
+        "override": "240"
+      }
+    },
+    "font_scale": "1.0",
+    "animations": {
+      "window_animation_scale": "1.0",
+      "transition_animation_scale": "1.0",
+      "animator_duration_scale": "null"
+    },
+    "shell_uid": "2000",
+    "kvm_exists": false,
+    "host_architecture": "x86_64",
+    "host_cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C",
+    "host_affinity_cpus": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "cgroup_limits": {
+      "cpu.max": "400000 100000",
+      "cpuset.cpus.effective": "0-4",
+      "memory.max": "17179869184",
+      "memory.high": "max"
+    }
+  },
+  "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+  "finished_utc": "2026-10-13T03:46:43.604640+00:00",
+  "limitations": [
+    "Run only before a phase with instrumentation/builds stopped. This script itself issues read-only ADB commands.",
+    "The comparison hash includes settings and emulator PID/start time; dynamic CPU/memory counters and timestamps are excluded.",
+    "Equal comparison hashes do not prove equal scheduler load, cache state, DB bytes, or settings throughout a later run.",
+    "Literal null animation/font settings are recorded as null strings; no default effective value is inferred.",
+    "Software TCG/SwiftShader emulator observations are not physical-device latency.",
+    "Only selected process flags, selected properties/settings and cgroup files are read; no environment dump, credentials or notes are collected.",
+    "A denied /proc/PID/exe link is recorded honestly; known SDK argv0, exact AVD/port, PID and start time provide the available process association."
+  ]
+}

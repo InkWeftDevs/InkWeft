@@ -1,0 +1,892 @@
+{
+  "schema": 1,
+  "scope": "Final baseline vs candidate-v4 HistoryCollectionBenchmarkTest only; not aggregate closure verdict",
+  "generatedUtc": "2026-10-13T01:02:02.351196+00:00",
+  "status": "PAIRED_GC_OBSERVATIONS_VERIFIED_SOURCE_ARTIFACT_ENVIRONMENT_COMPLETE",
+  "referenceFiles": {
+    "baseline-final-performance-history-probe.log": {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-history-probe.log",
+      "sha256": "450fe6f2a53133a1803f9b818a05a4202ac99faea7a197ce906de8ca0f1ab513"
+    },
+    "baseline-final-performance-history-probe.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-history-probe.json",
+      "sha256": "1ab18bb64841d39307595e317b96d9e9bc92b0e32449721af0778ea8fa62300e"
+    },
+    "baseline-final-performance-history-probe-setup.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-history-probe-setup.json",
+      "sha256": "6eb42b4efe5feacc33b98bf5aee8ff26a731c6cefd70a70e864a03cd199ef0e5"
+    },
+    "baseline-final-source-sha256.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-source-sha256.json",
+      "sha256": "386046c9c28eb27d33fd3977fb2baa06c94a855511f024f4a83188a4c304bbfd"
+    },
+    "baseline-final-build.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-build.json",
+      "sha256": "76567e6eccb98dac7a8a116dc5fe8ab21f5afc55429c05437311b4b7abce322b"
+    },
+    "baseline-final-artifacts.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-artifacts.json",
+      "sha256": "2595faf440b7978a61468401b6db147f954b4dbd77bf6c7759a444f1a9487648"
+    },
+    "baseline-final-apk-installation.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-apk-installation.json",
+      "sha256": "1dfe133d4f9d8144c120b45604affc4e0b512ff51dbb56f4fa92ff5771dfd632"
+    },
+    "baseline-final-signatures.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-signatures.json",
+      "sha256": "e2a34658a796999782a07f3520a6220569f9dd58ad5398cce1f39450d76cbd31"
+    },
+    "baseline-final-performance-environment.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-environment.json",
+      "sha256": "16533e270b8a3d1e31c1c8511e10e2e535cec4ff770c2e10d115046160dd63ef"
+    },
+    "baseline-final-performance-environment-after.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-environment-after.json",
+      "sha256": "5a9aba85e38a80868d9f70aa30bb394ddc5336e457ea95e7df93422e1dddc2cf"
+    },
+    "baseline-final-performance-artifact-continuity.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-artifact-continuity.json",
+      "sha256": "435914891621d0fde109369f4766d37da383e2d09696530fee6a55f86b58c4aa"
+    },
+    "candidate-v4-performance-history-probe.log": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe.log",
+      "sha256": "f3d471a977144c3d5402668036efead72617c5193104e96a42114bef26d3da49"
+    },
+    "candidate-v4-performance-history-probe.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe.json",
+      "sha256": "cf79086ca4eb1e12e8229c810710663e15c28d137ec16bfc42b0a97275081bc6"
+    },
+    "candidate-v4-performance-history-probe-setup.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe-setup.json",
+      "sha256": "dd6dea371c14ed1ceb39cb8f8f0c1d5faeef8c680c7c6a1a54fd3f363f6f2b7c"
+    },
+    "candidate-v4-source-sha256.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-source-sha256.json",
+      "sha256": "8285c54019d0a4409a6dbf6f5d36e87298b5be9b6d47f93801ea9123bb7d859f"
+    },
+    "candidate-v4-build.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-build.json",
+      "sha256": "d87398633fd15b53e83db3b55c9d6b13ff8e2bc8628319150fe1ec63ace4f29f"
+    },
+    "candidate-v4-artifacts.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-artifacts.json",
+      "sha256": "84ce38bb2acacb53e027e7f56a43253e717bd9e53ed47a547d3acfa7e5b79851"
+    },
+    "candidate-v4-apk-installation.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-apk-installation.json",
+      "sha256": "d6541c7a3e962adabfa42ceb7252d009e554dd16d6feb94df1c1fac6dae2a889"
+    },
+    "candidate-v4-signatures.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-signatures.json",
+      "sha256": "04884c77d341fbb596b1ba97d4fd552e5d2bb582e61c3f5b023c3e987dd71b0b"
+    },
+    "candidate-v4-performance-environment.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-environment.json",
+      "sha256": "841602a7ea1bf7444ce28a8faf6b695f483a4f94d9f75a09970432f945ac3d39"
+    },
+    "candidate-v4-performance-environment-after.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-environment-after.json",
+      "sha256": "9dbbe1b3b8194253ba44dfab30cd3b5fbb077a14b1e700c37a02dd25b252fd8e"
+    },
+    "candidate-v4-performance-artifact-continuity.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-artifact-continuity.json",
+      "sha256": "a917e236ce3e45472aa204e50a351bf8cb15ad6ff46b7cac82d42ac041f228a0"
+    },
+    "baseline-final-provenance.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-provenance.json",
+      "sha256": "4894d42bf5605880fd2ba5545d53df7a4de500cbe4870e4a8b120f94e1392fee"
+    },
+    "paired-performance-summary-new-format.json": {
+      "path": "/workspace/scratch/pr20-closure-evidence/paired-performance-summary-new-format.json",
+      "sha256": "e3da6da6cbcbc3a1f64764de788a72fd54edaff8239dc800e81b993a01ee608e"
+    }
+  },
+  "runs": {
+    "baseline": {
+      "side": "baseline",
+      "label": "baseline-final",
+      "status": "VERIFIED_NATIVE_RUN",
+      "issues": [],
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      },
+      "measurements": [
+        {
+          "baseline": true,
+          "historicalRoots": 2000,
+          "detachedSources": 4096,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "collectionRootScans": 17,
+          "collectionMs": 131305.840304,
+          "pausedConcurrentRootScans": 1,
+          "pausedScanSaves": 30,
+          "liveConcurrentRootScans": 18,
+          "liveCollectionAndSavesMs": 120266.00014,
+          "liveFirstPassDeferred": true,
+          "observerNotifications": 33,
+          "pausedScanSaveP50Ms": 76.064526,
+          "pausedScanSaveP95Ms": 92.799203,
+          "pausedScanSaveMaxMs": 154.892666,
+          "pausedScanSaveSamplesMs": [
+            154.892666,
+            72.337061,
+            76.541517,
+            78.212031,
+            92.799203,
+            77.778276,
+            75.976624,
+            75.182664,
+            85.888738,
+            76.064526,
+            72.496094,
+            71.935703,
+            73.583238,
+            88.254404,
+            71.037712,
+            79.561653,
+            69.557759,
+            73.152347,
+            76.742595,
+            70.896833,
+            70.142976,
+            76.701763,
+            80.052972,
+            73.065725,
+            86.719528,
+            86.653716,
+            80.96951,
+            72.179153,
+            74.824844,
+            76.828804
+          ],
+          "liveSaveP50Ms": 72.554328,
+          "liveSaveP95Ms": 146.327721,
+          "liveSaveMaxMs": 188.410436,
+          "liveSaveSamplesMs": [
+            124.959968,
+            133.875432,
+            139.097992,
+            130.126757,
+            146.327721,
+            131.766737,
+            112.158036,
+            188.410436,
+            122.238675,
+            69.556696,
+            79.458065,
+            81.49157,
+            63.738612,
+            72.036808,
+            66.017913,
+            61.553842,
+            62.066451,
+            91.662103,
+            76.220875,
+            72.554328,
+            66.759217,
+            76.773818,
+            70.72119,
+            66.012421,
+            65.278435,
+            75.648085,
+            60.749074,
+            65.573525,
+            63.980562,
+            63.998402
+          ]
+        }
+      ],
+      "aggregate": null,
+      "receipt": {
+        "phase": "baseline-final-performance",
+        "selection": "org.inkweft.data.HistoryCollectionBenchmarkTest",
+        "started_utc": "2026-10-13T00:51:39.428709+00:00",
+        "seconds": 374.7358721720011,
+        "exit_code": 0,
+        "expected": 1,
+        "executed": 1,
+        "failures": 0,
+        "passed": true,
+        "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+      },
+      "log": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-history-probe.log",
+      "receiptPath": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-history-probe.json",
+      "logSha256": "450fe6f2a53133a1803f9b818a05a4202ac99faea7a197ce906de8ca0f1ab513",
+      "receiptSha256": "1ab18bb64841d39307595e317b96d9e9bc92b0e32449721af0778ea8fa62300e",
+      "recordedDevice": {
+        "serial": "emulator-5554",
+        "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+      },
+      "recordCounts": {
+        "measurements": 1,
+        "sqliteSettings": 1
+      },
+      "junitSeconds": 359.965,
+      "quantileChecks": {
+        "pausedScanSave": {
+          "sampleCount": 30,
+          "originalOrderRetained": true,
+          "recomputedP50Ms": 76.064526,
+          "recomputedP95Ms": 92.799203,
+          "recomputedMaxMs": 154.892666,
+          "allReportedEqual": true
+        },
+        "liveSave": {
+          "sampleCount": 30,
+          "originalOrderRetained": true,
+          "recomputedP50Ms": 72.554328,
+          "recomputedP95Ms": 146.327721,
+          "recomputedMaxMs": 188.410436,
+          "allReportedEqual": true
+        }
+      }
+    },
+    "candidate": {
+      "side": "candidate",
+      "label": "candidate-v4",
+      "status": "VERIFIED_NATIVE_RUN",
+      "issues": [],
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      },
+      "measurements": [
+        {
+          "baseline": false,
+          "historicalRoots": 2000,
+          "detachedSources": 4096,
+          "writerSqlite": {
+            "page_size": 1024,
+            "auto_vacuum": 1,
+            "journal_mode": "wal",
+            "synchronous": 2
+          },
+          "collectionRootScans": 1,
+          "collectionMs": 11354.422681,
+          "pausedConcurrentRootScans": 1,
+          "pausedScanSaves": 30,
+          "liveConcurrentRootScans": 2,
+          "liveCollectionAndSavesMs": 15765.75648,
+          "liveFirstPassDeferred": true,
+          "observerNotifications": 33,
+          "pausedScanSaveP50Ms": 79.642262,
+          "pausedScanSaveP95Ms": 160.745357,
+          "pausedScanSaveMaxMs": 237.565828,
+          "pausedScanSaveSamplesMs": [
+            237.565828,
+            76.414528,
+            92.556004,
+            78.864312,
+            84.207336,
+            78.850653,
+            101.000294,
+            160.745357,
+            118.196129,
+            78.590262,
+            98.477461,
+            75.052151,
+            106.343747,
+            95.867796,
+            79.226222,
+            79.642262,
+            79.43978,
+            120.87128,
+            89.186664,
+            102.317498,
+            113.329903,
+            80.38807,
+            69.355842,
+            69.082128,
+            88.873975,
+            68.987126,
+            78.631365,
+            73.657048,
+            75.621127,
+            66.957093
+          ],
+          "liveSaveP50Ms": 76.398991,
+          "liveSaveP95Ms": 181.048899,
+          "liveSaveMaxMs": 197.854903,
+          "liveSaveSamplesMs": [
+            149.72452,
+            140.928608,
+            145.967063,
+            177.46058,
+            155.224816,
+            181.048899,
+            114.560577,
+            137.011002,
+            64.287713,
+            91.395866,
+            68.494571,
+            74.240334,
+            68.547272,
+            76.877633,
+            151.738389,
+            63.353383,
+            172.2608,
+            101.60368,
+            76.706733,
+            67.640912,
+            63.248207,
+            66.577771,
+            73.691463,
+            197.854903,
+            67.167889,
+            59.374918,
+            70.522777,
+            64.131944,
+            76.398991,
+            72.354538
+          ]
+        }
+      ],
+      "aggregate": null,
+      "receipt": {
+        "phase": "candidate-v4-performance",
+        "selection": "org.inkweft.data.HistoryCollectionBenchmarkTest",
+        "started_utc": "2026-10-13T00:09:14.290863+00:00",
+        "seconds": 128.96728325000004,
+        "exit_code": 0,
+        "expected": 1,
+        "executed": 1,
+        "failures": 0,
+        "passed": true,
+        "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+      },
+      "log": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe.log",
+      "receiptPath": "/workspace/scratch/pr20-closure-evidence/candidate-v4-performance-history-probe.json",
+      "logSha256": "f3d471a977144c3d5402668036efead72617c5193104e96a42114bef26d3da49",
+      "receiptSha256": "cf79086ca4eb1e12e8229c810710663e15c28d137ec16bfc42b0a97275081bc6",
+      "recordedDevice": {
+        "serial": "emulator-5554",
+        "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+      },
+      "recordCounts": {
+        "measurements": 1,
+        "sqliteSettings": 1
+      },
+      "junitSeconds": 116.218,
+      "quantileChecks": {
+        "pausedScanSave": {
+          "sampleCount": 30,
+          "originalOrderRetained": true,
+          "recomputedP50Ms": 79.642262,
+          "recomputedP95Ms": 160.745357,
+          "recomputedMaxMs": 237.565828,
+          "allReportedEqual": true
+        },
+        "liveSave": {
+          "sampleCount": 30,
+          "originalOrderRetained": true,
+          "recomputedP50Ms": 76.398991,
+          "recomputedP95Ms": 181.048899,
+          "recomputedMaxMs": 197.854903,
+          "allReportedEqual": true
+        }
+      }
+    }
+  },
+  "quantileDefinition": {
+    "sampleCount": 30,
+    "p50SortedZeroBasedIndex": 14,
+    "p50Definition": "Lower middle of 30 ordered samples; not average of middle two",
+    "p95SortedZeroBasedIndex": 28,
+    "maxSortedZeroBasedIndex": 29
+  },
+  "checks": {
+    "twoPassingNativeJUnitRuns": true,
+    "sameSyntheticScale": {
+      "historicalRoots": 2000,
+      "detachedSources": 4096,
+      "retainedLatestSource": 1,
+      "sourceRowsAfterCollection": 2001
+    },
+    "allFourThirtySampleArraysVerified": true,
+    "sameProbeAndCommonFactory": true,
+    "uncontendedDeletes4096AndNotDeferredBothAsserted": true,
+    "pausedDeletesZeroAndDeferredBothAsserted": true,
+    "liveFirstAndFinishingDeleteCountsSum4096BothAsserted": true,
+    "finishingCollectionNotDeferredBothAsserted": true,
+    "retainedSourceRows2001BothAsserted": true,
+    "candidateOneUncontendedScanAsserted": true,
+    "baselineOneScanAssertionSuppressedOnly": true
+  },
+  "limitations": [
+    "One run per implementation; each scenario has 30 serial saves, not 30 independent complete GC runs. No significance or causal estimate for small latency differences.",
+    "All six save quantiles/maxima regressed in this observed pair; lower total GC cost is not evidence of lower save blocking.",
+    "API35 x86_64 TCG/SwiftShader, no KVM: native Android execution, not physical-device latency.",
+    "Both phases now have matching before/after environment comparison values including emulator process identity and post-performance APK continuity records. Dynamic load, cache state, source UUIDs and in-run settings are not proven equal.",
+    "The paired baseline includes a common initialization fix; no old 4096/INCREMENTAL or intermediate-v3 measurements are pooled.",
+    "Sources, successful builds, artifact/install hashes and receipt serial/runner bind these observations; no independent installed-APK readback or DEX-to-source proof is performed.",
+    "GC probe passing does not substitute for other corruption/concurrency/cancellation regressions or close independent search/backup/raster deadlines."
+  ],
+  "comparison": {
+    "status": "PAIRED_RECORDED_ENVIRONMENT",
+    "issues": [],
+    "changesPercent": {
+      "collectionRootScans": -94.11764705882352,
+      "collectionMs": -91.35269028802361,
+      "pausedConcurrentRootScans": 0.0,
+      "liveConcurrentRootScans": -88.88888888888889,
+      "liveCollectionAndSavesMs": -86.89092805809847,
+      "pausedScanSaveP50Ms": 4.703553927358994,
+      "pausedScanSaveP95Ms": 73.21846718877532,
+      "pausedScanSaveMaxMs": 53.37448449625111,
+      "liveSaveP50Ms": 5.2990126240298085,
+      "liveSaveP95Ms": 23.72836654785324,
+      "liveSaveMaxMs": 5.012709062464027
+    },
+    "baselineOverCandidateElapsedRatio": {
+      "collectionMs": 11.5642903204336,
+      "liveCollectionAndSavesMs": 7.628305073249489
+    },
+    "saveLatencyRegressionAllSixReportedMetrics": true
+  },
+  "sourceAndArtifactBinding": {
+    "baseline": {
+      "manifest": {
+        "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-source-sha256.json",
+        "sha256": "386046c9c28eb27d33fd3977fb2baa06c94a855511f024f4a83188a4c304bbfd"
+      },
+      "filesMatchedNow": 734,
+      "differences": [],
+      "buildSourceUnchanged": true,
+      "probeSha256": "2b04bd2de3bc4cd6d030b14b8c12096c3a3604ddaa39324a65703cee1de30e34",
+      "factorySha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+      "historyStorageSha256": "0a1c4df6b8fbe6d8a3033a03a8314586bbd0ecf13ce5412ac9b1a2a133580230",
+      "buildElapsedSeconds": 440.5701020780034,
+      "dataTestApk": {
+        "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+        "sha256": "bbd78f8daa9139acdaeaac7c01fd0dc9fe762723c3750a0f26a55f5df2e2b505",
+        "artifactInstallAndCurrentLocalHashAgree": true,
+        "installedUtc": "2026-10-13T00:51:01.337634+00:00",
+        "instrumentationStartedUtc": "2026-10-13T00:51:39.428709+00:00",
+        "installedBeforeProbe": true
+      }
+    },
+    "candidate": {
+      "manifest": {
+        "path": "/workspace/scratch/pr20-closure-evidence/candidate-v4-source-sha256.json",
+        "sha256": "8285c54019d0a4409a6dbf6f5d36e87298b5be9b6d47f93801ea9123bb7d859f"
+      },
+      "filesMatchedNow": 744,
+      "differences": [],
+      "buildSourceUnchanged": true,
+      "probeSha256": "2b04bd2de3bc4cd6d030b14b8c12096c3a3604ddaa39324a65703cee1de30e34",
+      "factorySha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+      "historyStorageSha256": "07046d5d7653723153744cff81ca63430a778112b49c31d16bd6e7535f856677",
+      "buildElapsedSeconds": 934.4628226669993,
+      "dataTestApk": {
+        "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+        "sha256": "79a7280c9667ef4721b4606ffc17a4bd7c476ceeb661d4d015ec9c19769324a3",
+        "artifactInstallAndCurrentLocalHashAgree": true,
+        "installedUtc": "2026-10-12T23:58:48.481083+00:00",
+        "instrumentationStartedUtc": "2026-10-13T00:09:14.290863+00:00",
+        "installedBeforeProbe": true
+      }
+    },
+    "sameProbe": true,
+    "sameFactory": true,
+    "baselineHistoryStorageMatchesFixedGitSource": true,
+    "baselineDefinition": "Fixed a128bb07 with common PreservingOpenHelperFactory initialization fix and identical three probes; not unmodified remote baseline",
+    "baselineBaseCommit": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+    "probeBaselineFlagSemantics": "historyScanBaseline=true selects baseline label and suppresses only the new one-root-scan assertion; timing, fixture, save count and all deletion/retention assertions remain identical. Extra historyBaseline argument is not read by this probe.",
+    "baselinePostPerformanceContinuity": {
+      "status": "MATCH",
+      "utc": "2026-10-13T01:31:18.239164+00:00",
+      "allThreeRecordedInstalledAndCurrentLocalApksMatched": true,
+      "files": [
+        {
+          "path": "app/build/outputs/apk/debug/app-debug.apk",
+          "bytes": 229655127,
+          "sha256": "c820103a3dae3b52f7a6d30aa345112c5c71c47f00ad89900eb6fe8ec5dd70fe",
+          "expected_sha256": "c820103a3dae3b52f7a6d30aa345112c5c71c47f00ad89900eb6fe8ec5dd70fe",
+          "matches": true
+        },
+        {
+          "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+          "bytes": 10266683,
+          "sha256": "d706b3b015d6111e7721f6881405726fe97da66c6799a456531b7bccf50909cd",
+          "expected_sha256": "d706b3b015d6111e7721f6881405726fe97da66c6799a456531b7bccf50909cd",
+          "matches": true
+        },
+        {
+          "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+          "bytes": 22588360,
+          "sha256": "bbd78f8daa9139acdaeaac7c01fd0dc9fe762723c3750a0f26a55f5df2e2b505",
+          "expected_sha256": "bbd78f8daa9139acdaeaac7c01fd0dc9fe762723c3750a0f26a55f5df2e2b505",
+          "matches": true
+        }
+      ],
+      "evidence": {
+        "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-artifact-continuity.json",
+        "sha256": "435914891621d0fde109369f4766d37da383e2d09696530fee6a55f86b58c4aa"
+      }
+    }
+  },
+  "environment": {
+    "records": {
+      "candidate-v4-performance-environment.json": {
+        "comparisonSha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+        "startedUtc": "2026-10-13T00:08:39.472121+00:00",
+        "finishedUtc": "2026-10-13T00:08:52.835814+00:00",
+        "comparisonValues": {
+          "serial": "emulator-5554",
+          "pid": 2661,
+          "start_time_ticks": 51335,
+          "avd": "inkweft-perf-api35",
+          "launch_flags": {
+            "-avd": [
+              "inkweft-perf-api35"
+            ],
+            "-port": [
+              "5554"
+            ],
+            "-accel": [
+              "off"
+            ],
+            "-gpu": [
+              "swiftshader"
+            ],
+            "-cores": [
+              "2"
+            ],
+            "-memory": [
+              "2048"
+            ]
+          },
+          "properties": {
+            "ro.build.version.sdk": "35",
+            "ro.product.cpu.abi": "x86_64",
+            "ro.product.cpu.abilist": "x86_64",
+            "ro.build.fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+            "ro.hw_timeout_multiplier": "10",
+            "ro.kernel.qemu": "1",
+            "sys.boot_completed": "1"
+          },
+          "display": {
+            "size": {
+              "physical": "1080x1920",
+              "override": "1920x1200"
+            },
+            "density": {
+              "physical": "420",
+              "override": "240"
+            }
+          },
+          "font_scale": "1.0",
+          "animations": {
+            "window_animation_scale": "1.0",
+            "transition_animation_scale": "1.0",
+            "animator_duration_scale": "null"
+          },
+          "shell_uid": "2000",
+          "kvm_exists": false,
+          "host_architecture": "x86_64",
+          "host_cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C",
+          "host_affinity_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "cgroup_limits": {
+            "cpu.max": "400000 100000",
+            "cpuset.cpus.effective": "0-4",
+            "memory.max": "17179869184",
+            "memory.high": "max"
+          }
+        }
+      },
+      "candidate-v4-performance-environment-after.json": {
+        "comparisonSha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+        "startedUtc": "2026-10-13T00:42:02.770305+00:00",
+        "finishedUtc": "2026-10-13T00:42:11.815427+00:00",
+        "comparisonValues": {
+          "serial": "emulator-5554",
+          "pid": 2661,
+          "start_time_ticks": 51335,
+          "avd": "inkweft-perf-api35",
+          "launch_flags": {
+            "-avd": [
+              "inkweft-perf-api35"
+            ],
+            "-port": [
+              "5554"
+            ],
+            "-accel": [
+              "off"
+            ],
+            "-gpu": [
+              "swiftshader"
+            ],
+            "-cores": [
+              "2"
+            ],
+            "-memory": [
+              "2048"
+            ]
+          },
+          "properties": {
+            "ro.build.version.sdk": "35",
+            "ro.product.cpu.abi": "x86_64",
+            "ro.product.cpu.abilist": "x86_64",
+            "ro.build.fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+            "ro.hw_timeout_multiplier": "10",
+            "ro.kernel.qemu": "1",
+            "sys.boot_completed": "1"
+          },
+          "display": {
+            "size": {
+              "physical": "1080x1920",
+              "override": "1920x1200"
+            },
+            "density": {
+              "physical": "420",
+              "override": "240"
+            }
+          },
+          "font_scale": "1.0",
+          "animations": {
+            "window_animation_scale": "1.0",
+            "transition_animation_scale": "1.0",
+            "animator_duration_scale": "null"
+          },
+          "shell_uid": "2000",
+          "kvm_exists": false,
+          "host_architecture": "x86_64",
+          "host_cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C",
+          "host_affinity_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "cgroup_limits": {
+            "cpu.max": "400000 100000",
+            "cpuset.cpus.effective": "0-4",
+            "memory.max": "17179869184",
+            "memory.high": "max"
+          }
+        }
+      },
+      "baseline-final-performance-environment.json": {
+        "comparisonSha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+        "startedUtc": "2026-10-13T00:51:04.477908+00:00",
+        "finishedUtc": "2026-10-13T00:51:14.429344+00:00",
+        "comparisonValues": {
+          "serial": "emulator-5554",
+          "pid": 2661,
+          "start_time_ticks": 51335,
+          "avd": "inkweft-perf-api35",
+          "launch_flags": {
+            "-avd": [
+              "inkweft-perf-api35"
+            ],
+            "-port": [
+              "5554"
+            ],
+            "-accel": [
+              "off"
+            ],
+            "-gpu": [
+              "swiftshader"
+            ],
+            "-cores": [
+              "2"
+            ],
+            "-memory": [
+              "2048"
+            ]
+          },
+          "properties": {
+            "ro.build.version.sdk": "35",
+            "ro.product.cpu.abi": "x86_64",
+            "ro.product.cpu.abilist": "x86_64",
+            "ro.build.fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+            "ro.hw_timeout_multiplier": "10",
+            "ro.kernel.qemu": "1",
+            "sys.boot_completed": "1"
+          },
+          "display": {
+            "size": {
+              "physical": "1080x1920",
+              "override": "1920x1200"
+            },
+            "density": {
+              "physical": "420",
+              "override": "240"
+            }
+          },
+          "font_scale": "1.0",
+          "animations": {
+            "window_animation_scale": "1.0",
+            "transition_animation_scale": "1.0",
+            "animator_duration_scale": "null"
+          },
+          "shell_uid": "2000",
+          "kvm_exists": false,
+          "host_architecture": "x86_64",
+          "host_cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C",
+          "host_affinity_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "cgroup_limits": {
+            "cpu.max": "400000 100000",
+            "cpuset.cpus.effective": "0-4",
+            "memory.max": "17179869184",
+            "memory.high": "max"
+          }
+        }
+      },
+      "baseline-final-performance-environment-after.json": {
+        "comparisonSha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+        "startedUtc": "2026-10-13T01:31:00.142202+00:00",
+        "finishedUtc": "2026-10-13T01:31:08.539736+00:00",
+        "comparisonValues": {
+          "serial": "emulator-5554",
+          "pid": 2661,
+          "start_time_ticks": 51335,
+          "avd": "inkweft-perf-api35",
+          "launch_flags": {
+            "-avd": [
+              "inkweft-perf-api35"
+            ],
+            "-port": [
+              "5554"
+            ],
+            "-accel": [
+              "off"
+            ],
+            "-gpu": [
+              "swiftshader"
+            ],
+            "-cores": [
+              "2"
+            ],
+            "-memory": [
+              "2048"
+            ]
+          },
+          "properties": {
+            "ro.build.version.sdk": "35",
+            "ro.product.cpu.abi": "x86_64",
+            "ro.product.cpu.abilist": "x86_64",
+            "ro.build.fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+            "ro.hw_timeout_multiplier": "10",
+            "ro.kernel.qemu": "1",
+            "sys.boot_completed": "1"
+          },
+          "display": {
+            "size": {
+              "physical": "1080x1920",
+              "override": "1920x1200"
+            },
+            "density": {
+              "physical": "420",
+              "override": "240"
+            }
+          },
+          "font_scale": "1.0",
+          "animations": {
+            "window_animation_scale": "1.0",
+            "transition_animation_scale": "1.0",
+            "animator_duration_scale": "null"
+          },
+          "shell_uid": "2000",
+          "kvm_exists": false,
+          "host_architecture": "x86_64",
+          "host_cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C",
+          "host_affinity_cpus": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "cgroup_limits": {
+            "cpu.max": "400000 100000",
+            "cpuset.cpus.effective": "0-4",
+            "memory.max": "17179869184",
+            "memory.high": "max"
+          }
+        }
+      }
+    },
+    "availableRecordsExactlyMatch": true,
+    "baselineAfterStatus": "RECORDED_AND_MATCHED",
+    "sameActualWriterSqlite": true,
+    "measurementTiming": "writerSqlite is sampled after timing inside Room writer transaction; no PRAGMA is set by probe",
+    "continuousLoadOrSettingsProof": false,
+    "bothPhaseBeforeAfterRecordedAndExactlyMatch": true
+  },
+  "liveFirstPassDeferredSemantics": {
+    "emittedValues": {
+      "baseline": true,
+      "candidate": true
+    },
+    "sharedProbeField": "liveReport.collectionDeferred from the first unpaused collectDetached invocation, not the first delete batch",
+    "baselineReturnCondition": "One round detects independent reader PRAGMA data_version changed between before scan snapshot and after snapshot under Room writer; prior completed rounds may already have deleted rows.",
+    "candidateReturnCondition": "A short writer transaction detects writerVersion differs from expected: primary data_version plus total_changes() + invalidated Room log row count. Prior committed batches may already have deleted rows.",
+    "firstInvocationDeletedSources": {
+      "baseline": null,
+      "candidate": null
+    },
+    "scanCountsByInvocation": {
+      "baseline": null,
+      "candidate": null
+    },
+    "triggeringWriterOrVersionValues": null,
+    "cannotInfer": [
+      "same guard algorithm or identical deferral process",
+      "zero deletions in first live invocation",
+      "baseline live scans split as 1 deferred + 17 finishing",
+      "exact batch where deferral occurred or which write triggered it"
+    ],
+    "pausedScenarioSeparatelyAssertsZeroDeletions": true
+  },
+  "metricSemantics": {
+    "collectionMs": "One uncontended collectDetached call only; excludes fixture, observer setup and retention read/assertions after return.",
+    "collectionRootScans": "Number of after-roots phase callbacks, not number of SQL statements or occupied-space scans individually instrumented.",
+    "liveCollectionAndSavesMs": "Begins before launching unpaused cleanup; includes waiting for first after-roots, 30 sequential rename saves and reads between them, awaiting first cleanup and a subsequent finishing cleanup; excludes final retention read/assertions.",
+    "pausedScanSaveSamplesMs": "Each rename inside unchanged 5000 ms withTimeout; excludes preceding note read and reaching paused gate.",
+    "liveSaveSamplesMs": "Each sequential rename with no per-save withTimeout; excludes preceding note read and initial root gate wait; not isolated SQL lock wait.",
+    "p50": "sorted[14] lower middle of 30; library uses sorted[15], neither is mean of middle two.",
+    "p95": "sorted[28], zero-based",
+    "max": "sorted[29]",
+    "observerNotifications": "33 on each side over all scenarios and fixture reinsert; not deletions/batches/saves or exactly one notification per event.",
+    "fixtureIdentity": "Same deterministic scale and content shape, fresh UUID database and identities; not byte-identical databases.",
+    "saveResultBoundary": "The probe times real sequential NoteRepository.rename calls but does not individually emit or assert SaveResult.Committed; samples are directly rename-call completion latency, not per-save commit-result auditing.",
+    "retentionBoundary": "The 2001 remaining sources check is a row-count assertion, not a per-row content digest comparison in this probe."
+  },
+  "finalParserCrossCheck": {
+    "status": "MATCH_HISTORY_ONLY",
+    "pairId": "1024-full-final-v4-vs-a128-common-factory-probes",
+    "generatedUtc": "2026-10-13T01:31:21.417623+00:00",
+    "historyRawMeasurementsReceiptsHashesSqliteAndPercentChangesExactlyMatch": true,
+    "allFourRawThirtySampleArraysRechecked": true,
+    "scope": "History probe only; no attestation of other probes from this check",
+    "evidence": {
+      "path": "/workspace/scratch/pr20-closure-evidence/paired-performance-summary-new-format.json",
+      "sha256": "e3da6da6cbcbc3a1f64764de788a72fd54edaff8239dc800e81b993a01ee608e"
+    }
+  },
+  "updatedUtc": "2026-10-13T01:32:33.642067+00:00"
+}

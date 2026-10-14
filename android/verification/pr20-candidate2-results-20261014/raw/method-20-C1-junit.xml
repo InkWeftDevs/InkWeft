@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.data.RasterReadCacheTest#payloadMaskAndRevisionChangesCannotReuseStaleDecodedGeometry" tests="1" failures="0" errors="0" time="0.7118470668792725"><testcase classname="org.inkweft.data.RasterReadCacheTest" name="payloadMaskAndRevisionChangesCannotReuseStaleDecodedGeometry" time="0.7118470668792725" /></testsuite>

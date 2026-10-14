@@ -1,0 +1,26 @@
+{
+  "phase": "candidate-v2-regression",
+  "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+  "command": [
+    "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "am",
+    "instrument",
+    "-w",
+    "-e",
+    "class",
+    "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+    "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+  ],
+  "started_utc": "2026-10-12T22:49:10.125430+00:00",
+  "seconds": 133.08427972299978,
+  "exit_code": 0,
+  "expected": 1,
+  "tests": null,
+  "executed": 1,
+  "failures": 1,
+  "passed": false,
+  "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+}

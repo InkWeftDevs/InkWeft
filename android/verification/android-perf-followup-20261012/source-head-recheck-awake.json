@@ -1,0 +1,11 @@
+{
+  "checked_utc": "2026-10-12T19:09:17.778886+00:00",
+  "source_branch": "codex/storage-optimization-20261011",
+  "expected_source_head": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+  "remote_heads": [
+    "a128bb07e34cb82f00eeafc8e62a47bf7b95b128\trefs/heads/codex/storage-optimization-20261011"
+  ],
+  "source_still_fixed_base": true,
+  "draft_branch_present": false,
+  "no_push_performed": true
+}

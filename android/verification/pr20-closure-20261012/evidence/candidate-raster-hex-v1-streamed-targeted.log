@@ -1,0 +1,38 @@
+
+org.inkweft.app.StreamedInkRasterTest:.STREAMED_FRAME_STAGE {"case":"bounded-two-batch","stage":"fixture-start","elapsedMs":3142.258581,"fixtureStrokes":258,"fixturePoints":8226,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"case":"bounded-two-batch","stage":"fixture-complete","elapsedMs":9350.789871,"fixtureStrokes":258,"fixturePoints":8226,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"windowStrokes":256,"windowPoints":8192,"case":"bounded-two-batch","stage":"editor-window-complete","elapsedMs":20300.476402,"fixtureStrokes":258,"fixturePoints":8226,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"case":"bounded-two-batch","stage":"frame-start","elapsedMs":20321.337274,"fixtureStrokes":258,"fixturePoints":8226,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"frameElapsedMs":12755.215927,"snapshotReads":[{"frameElapsedMs":2019.87955,"rows":256,"points":8192,"freezeMs":492.637261,"decodeMs":758.290207},{"frameElapsedMs":12452.993892,"rows":2,"points":34,"freezeMs":111.041083,"decodeMs":12.663661}],"snapshotRows":258,"changeCallbacks":2,"publishedStats":"BuildStats(tiles=4, rebuilt=4, decoded=258, bitmapBytes=800000, metadataMs=357.888542, rasterMs=12263.870215, publicationMs=14.177361, reusedStrokes=0, geometryBytes=658560, nativeStrokeBuilds=258)","case":"bounded-two-batch","stage":"frame-complete","elapsedMs":33064.801558,"fixtureStrokes":258,"fixturePoints":8226,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"case":"bounded-two-batch","stage":"verified-and-released","elapsedMs":33105.371833,"fixtureStrokes":258,"fixturePoints":8226,"frameDeadlineMs":30000}
+.STREAMED_FRAME_STAGE {"case":"original-dense","stage":"fixture-start","elapsedMs":1071.355526,"fixtureStrokes":1201,"fixturePoints":76802,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"case":"original-dense","stage":"fixture-complete","elapsedMs":14872.716801,"fixtureStrokes":1201,"fixturePoints":76802,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"windowStrokes":128,"windowPoints":8192,"case":"original-dense","stage":"editor-window-complete","elapsedMs":40965.591664,"fixtureStrokes":1201,"fixturePoints":76802,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"case":"original-dense","stage":"frame-start","elapsedMs":40988.363162,"fixtureStrokes":1201,"fixturePoints":76802,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"frameElapsedMs":30222.207101,"snapshotReads":[{"frameElapsedMs":3518.271613,"rows":256,"points":16384,"freezeMs":430.119129,"decodeMs":586.745017},{"frameElapsedMs":16494.206556,"rows":256,"points":16384,"freezeMs":429.662808,"decodeMs":611.943919},{"frameElapsedMs":28875.752869,"rows":256,"points":16384,"freezeMs":552.536713,"decodeMs":613.867368}],"snapshotRows":768,"changeCallbacks":0,"threads":[{"name":"main","state":"RUNNABLE","stack":["android.os.MessageQueue.nativePollOnce(Native Method)","android.os.MessageQueue.next(MessageQueue.java:346)","android.os.Looper.loopOnce(Looper.java:189)","android.os.Looper.loop(Looper.java:317)","android.app.ActivityThread.main(ActivityThread.java:8705)","java.lang.reflect.Method.invoke(Native Method)","com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:580)","com.android.internal.os.ZygoteInit.main(ZygoteInit.java:886)"]},{"name":"InkWeft-streamed-raster","state":"RUNNABLE","stack":["kotlin.jvm.internal.Intrinsics.areEqual(Intrinsics.java:169)","androidx.ink.brush.ColorExtensionsKt.isSupportedInInk(ColorExtensions.kt:51)","androidx.ink.brush.ColorExtensionsKt.toColorInInkSupportedColorSpace-eZ_SJCw(ColorExtensions.kt:29)","androidx.ink.brush.Brush._init_$lambda$0(Brush.kt:123)","androidx.ink.brush.Brush$$ExternalSyntheticLambda1.invoke(D8$$SyntheticClass:0)","androidx.ink.nativeloader.NativePointer.<init>(NativePointer.jvmAndAndroid.kt:35)","androidx.ink.brush.Brush.<init>(Brush.kt:51)","androidx.ink.brush.Brush.<init>(Brush.kt:121)","androidx.ink.brush.Brush.<init>(Unknown Source:0)","androidx.ink.brush.Brush$Companion.createWithColorIntArgb(Brush.kt:444)","org.inkweft.app.InkBrushes.brush(InkBrushes.kt:67)","org.inkweft.app.InkBrushes.stroke(InkBrushes.kt:87)","org.inkweft.app.StreamedInkRaster$draw$4$1$2.invokeSuspend(StreamedInkRaster.kt:158)","org.inkweft.app.StreamedInkRaster$draw$4$1$2.invoke(Unknown Source:8)","org.inkweft.app.StreamedInkRaster$draw$4$1$2.invoke(Unknown Source:4)","org.inkweft.data.InkRepository.visitVisible(InkRepository.kt:356)","org.inkweft.data.InkRepository$visitVisible$1.invokeSuspend(Unknown Source:31)","kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)","kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)","java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)","java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)","java.lang.Thread.run(Thread.java:1012)"]}],"resources":{"totalBytes":1848576,"budgetBytes":134217728,"peakTrackedBytes":1848576,"inFlightJobs":1,"cancelledJobs":1,"cacheBytes":0,"in_flightBytes":1848576,"activeBytes":0,"live_inkBytes":0,"category.ink-frame":800000,"category.ink-geometry-reservation":1048576},"pending":true,"frameReady":false,"publishedStats":null,"case":"original-dense","stage":"frame-timeout","elapsedMs":71212.193437,"fixtureStrokes":1201,"fixturePoints":76802,"frameDeadlineMs":30000}
+
+Error in completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker(org.inkweft.app.StreamedInkRasterTest):
+kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 30000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:189)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:157)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.lang.Thread.run(Thread.java:1012)
+.
+
+Time: 119.484
+There was 1 failure:
+1) completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker(org.inkweft.app.StreamedInkRasterTest)
+kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 30000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:189)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:157)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.lang.Thread.run(Thread.java:1012)
+
+FAILURES!!!
+Tests run: 4,  Failures: 1
+
+

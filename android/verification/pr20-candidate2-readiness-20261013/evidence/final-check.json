@@ -1,0 +1,14 @@
+{
+  "exit_code": 0,
+  "duration": "3m44s",
+  "source_unchanged_during_build": true,
+  "tasks": [
+    ":app:compileDebugAndroidTestKotlin",
+    ":data-local:lintDebug"
+  ],
+  "lint_severity_counts": {
+    "Warning": 14
+  },
+  "native_execution": "NOT_RUN",
+  "independent_static_review": "PASS_AFTER_TEST_ONLY_CURRENT_LAYER_FIX"
+}

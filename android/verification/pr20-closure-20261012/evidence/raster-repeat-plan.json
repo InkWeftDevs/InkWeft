@@ -1,0 +1,8 @@
+[
+  {
+    "label": "tile-local",
+    "module": "app",
+    "selection": "org.inkweft.app.TileLocalRedrawTest",
+    "expected": 2
+  }
+]

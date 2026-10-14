@@ -238,10 +238,22 @@ class LibraryBackupRepositoryTest {
             return repo.snapshot().use{file->inspect(repo,file).use{it.canonical}}
         }
         try{
-            val repo=LibraryBackupRepository(isolated,s)
+            val operation=java.util.concurrent.atomic.AtomicReference("baseline")
+            val lastPhase=java.util.concurrent.atomic.AtomicReference("scheduled")
+            val started=java.util.concurrent.atomic.AtomicLong(System.nanoTime())
+            fun phase(value:String){
+                lastPhase.set(value)
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{
+                    putString("stream","SNAPSHOT_CANCELLATION_PHASE operation=${operation.get()} phase=$value elapsedMs=${(System.nanoTime()-started.get())/1_000_000.0}\n")
+                })
+            }
+            val repo=LibraryBackupRepository(isolated,s){phase(it.name)}
+            phase("snapshot-start")
             val baseline=repo.snapshot().use{file->
+                phase("snapshot-complete-inspect-start")
                 inspect(repo,file).use{file.file.length() to it.canonical}
             }
+            phase("inspect-complete")
             val written=CompletableDeferred<Pair<File,Long>>()
             val generation=async(start=CoroutineStart.LAZY){repo.snapshot()}
             val observer=object:FileObserver(scratch.absolutePath,FileObserver.MODIFY){
@@ -250,14 +262,21 @@ class LibraryBackupRepositoryTest {
                     val partial=File(scratch,path);val bytes=partial.length()
                     // Do not count an already-complete archive as a mid-write interruption.
                     if(bytes<=0||bytes>=baseline.first)return
-                    if(written.complete(partial to bytes))generation.cancel(CancellationException("synthetic snapshot cancellation after write"))
+                    if(written.complete(partial to bytes)){
+                        phase("partial-observed")
+                        generation.cancel(CancellationException("synthetic snapshot cancellation after write"))
+                    }
                 }
             }
             try{
+                operation.set("cancel");started.set(System.nanoTime());phase("snapshot-start")
                 observer.startWatching();generation.start()
                 val outcome=runCatching{withTimeout(15_000){generation.await()}}
                 outcome.getOrNull()?.close()
                 val failure=outcome.exceptionOrNull()
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{
+                    putString("stream","SNAPSHOT_CANCELLATION_OUTCOME failure=${failure?.javaClass?.name} partialObserved=${written.isCompleted} cancelled=${generation.isCancelled} lastPhase=${lastPhase.get()} elapsedMs=${(System.nanoTime()-started.get())/1_000_000.0}\n")
+                })
                 assertTrue("Snapshot must be cancelled, not finish normally or time out",failure is CancellationException&&failure !is TimeoutCancellationException)
                 assertTrue("A partial file must be observed before cancellation",written.isCompleted)
                 val partial=written.await()

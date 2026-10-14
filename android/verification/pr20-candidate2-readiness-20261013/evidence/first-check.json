@@ -1,0 +1,19 @@
+{
+  "exit_code": 0,
+  "duration": "9m20s",
+  "source_hashes_captured_after_launch": true,
+  "owners_frozen_before_launch": true,
+  "source_unchanged_during_build": true,
+  "tasks": [
+    ":data-local:testDebugUnitTest",
+    ":data-local:compileDebugAndroidTestKotlin",
+    ":app:compileDebugAndroidTestKotlin"
+  ],
+  "jvm": {
+    "tests": 31,
+    "failures": 0,
+    "errors": 0
+  },
+  "native_execution": "NOT_RUN",
+  "known_test_fixture_correction_pending": true
+}

@@ -1,0 +1,57 @@
+{
+  "completed_utc": "2026-10-13T02:21:25.371332+00:00",
+  "status": "V2_SOURCE_FIXED_STATIC_DIFF_CHECK_PASS_BUILD_NOT_RUN",
+  "candidate_sources": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt": "a3bdf761ad7d768db82f10a8a7f22ea5197dcdd07e0e72cda3e6c3018ecd080d",
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt": "31325f357e719d4fe61354645f499ce06ecf8079e64fddb471c069f44ad3f5ec"
+  },
+  "portable_patch": {
+    "path": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-v2-portable.patch",
+    "sha256": "3449bdb9dc5063e4386a9d5f9d0b3061a5bbb8834362dcb897777b05605352ac",
+    "candidate_base": "c60fba7455cfc0b919d6f9c2d3b06f17ec25713d"
+  },
+  "instrumentation_argument": {
+    "rasterMetadataDiagnostics": "true"
+  },
+  "default": "Disabled; observer captured once per rasterRegions call; no probe, clocks, records or per-row timing when null.",
+  "segments": {
+    "admissionAndPreparationNanos": "Repository call preparation through entry into ready SpatialIndex.read callback; includes preparation transactions, yields, Room dispatch and admission; NOT pure lock wait.",
+    "queryAndDigestNanos": "Ready callback entry through metadata query and digest updates, ending before original final map.",
+    "hexAndResultNanos": "Original final map, including SHA finalization, Formatter hex conversion and InkRasterRegion result allocation.",
+    "cpu": "Cumulative thread CPU, not coroutine-exclusive; emit null if endpoint Linux thread IDs differ, either sample is negative, or difference is negative."
+  },
+  "counts": {
+    "preparationBatches": "Actual existing SpatialIndex.read onBatch callbacks.",
+    "preparationRows": "Sum of BuildBatch.rows; may include spatial hint/cut work and repeated identities; NOT unique stroke count.",
+    "queryBatches": "Calls to SpatialIndex.ink, including terminating empty query.",
+    "metadataRows": "Returned metadata row counts before per-row allowed/omitted filtering.",
+    "nativeStrokeBuilds": "Optional reflected existing lastBuild counter captured outside frame timing; baseline missing getter means omitted JSON field, NOT zero."
+  },
+  "boundaries": [
+    "Same original SHA finalization/Formatter expression and execution order; no rendering, query, cache, epoch or SpatialIndex algorithm changes.",
+    "Observer invocation only after successful SpatialIndex.read return, outside Room transaction; callback exceptions are not swallowed; production failures and cancellation propagate without emitting a success record.",
+    "Tile observer is enabled only immediately before timed local ready(), disabled in finally before forced-full rendering; callback only appends to a thread-safe CopyOnWriteArrayList.",
+    "JSON construction/status output at original end-of-case evidence point outside measured append; original fixture, class order, deadlines, assertions and dense failure are unchanged.",
+    "Diagnostic-on timings include observation overhead and must not replace default-off performance samples.",
+    "Thread endpoint identity guards CPU differences; cumulative CPU can still include other work on that thread.",
+    "This segment can identify a hex/result hotspot but cannot isolate Formatter from SHA finalization or allocation."
+  ],
+  "static_validation": {
+    "git_diff_check": "PASS",
+    "v2_patch_dry_run": "PASS_ZERO_FUZZ",
+    "temporary_baseline_reconstruction": "MATCH_CURRENT_BASELINE",
+    "compilation": "NOT_RUN"
+  },
+  "build": "NOT_RUN_BY_RASTER_AGENT",
+  "native": "NOT_RUN_BY_RASTER_AGENT",
+  "commit": "NOT_RUN",
+  "push": "NOT_RUN",
+  "next_owner": "Root to freeze diagnostic-v2 sources and run a new build phase; no native results yet.",
+  "version": "diagnostic-v2",
+  "supersedes_source_only": "diagnostic-v1 (compiler failure retained)",
+  "baseline_sources": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt": "612db8dcf1e87ce76f194fae4962b5a2a626f2368703164da41690829ddaa4eb",
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt": "149ebd22a274268f1521f5153c44b9c461fdfae1211be71ae7d899848f485b2f"
+  },
+  "syntax_fix": "Only parenthesize both onBatch lambda branch expressions, making the ignored-argument null branch explicit. Both candidate and baseline InkRepository received the same two-line syntax correction; TileLocalRedrawTest unchanged from v1."
+}

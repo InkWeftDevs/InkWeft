@@ -1,0 +1,156 @@
+{
+  "utc": "2026-10-13T04:26:02.055594+00:00",
+  "source_commit": "f84ede69f064bdebbd2427d06737a309525de241",
+  "base_commit": "44835b42fcc23b447ee8c8ac524091b5c1720ecc",
+  "source_files": 744,
+  "git_blobs_match_build_manifest": true,
+  "manifest_sha256": "8ed5c252905615aba5a7c28c69b3861716d998f6c46db486af8e9c5d20477ab9",
+  "changed_source_files": [
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt"
+  ],
+  "artifacts": [
+    {
+      "role": "app",
+      "path": "/workspace/InkWeft/android/app/build/outputs/apk/debug/app-debug.apk",
+      "bytes": 241512357,
+      "sha256": "d4af16103b601e7d73af673eeb89d6511003a0f0ef4c86785862d5e202714b5e"
+    },
+    {
+      "role": "appTest",
+      "path": "/workspace/InkWeft/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "bytes": 18416084,
+      "sha256": "4c8a3952b049dd9ab5aeaf9815ec2c221e49d9df00b8bebad33166454aa13913"
+    }
+  ],
+  "preserved_test_apk": "/workspace/scratch/pr20-preserved-apks/candidate-pan-cleanup-v3/app-debug-androidTest.apk",
+  "production_app_identical_to_prior_hex_v1": true,
+  "docker_tree": "1ea18e39d51ca989f02c65cd8f8f250d32eb8ad2",
+  "native_results": [
+    {
+      "phase": "candidate-pan-cleanup-v3-interrupted",
+      "passed": true,
+      "executed": 1,
+      "seconds": 36.994666398000845,
+      "stages": [
+        {
+          "stage": "initial-cached",
+          "event": "start",
+          "deadlineMs": 30000
+        },
+        {
+          "stage": "initial-cached",
+          "event": "failed",
+          "error": "InterruptedPanWait",
+          "elapsedMs": 533.44952,
+          "pending": true,
+          "frameReady": false,
+          "lastCompletedBuild": null,
+          "resources": {
+            "totalBytes": 0,
+            "budgetBytes": 134217728,
+            "peakTrackedBytes": 0,
+            "inFlightJobs": 1,
+            "cancelledJobs": 0,
+            "cacheBytes": 0,
+            "in_flightBytes": 0,
+            "activeBytes": 0,
+            "live_inkBytes": 0
+          }
+        },
+        {
+          "event": "workers-joined",
+          "resources": {
+            "totalBytes": 0,
+            "budgetBytes": 134217728,
+            "peakTrackedBytes": 1048576,
+            "inFlightJobs": 0,
+            "cancelledJobs": 1,
+            "cacheBytes": 0,
+            "in_flightBytes": 0,
+            "activeBytes": 0,
+            "live_inkBytes": 0
+          }
+        }
+      ]
+    },
+    {
+      "phase": "candidate-pan-cleanup-v3-original",
+      "passed": true,
+      "executed": 1,
+      "seconds": 57.786469192004006,
+      "stages": [
+        {
+          "stage": "initial-cached",
+          "event": "start",
+          "deadlineMs": 30000
+        },
+        {
+          "stage": "initial-cached",
+          "event": "complete",
+          "elapsedMs": 14386.110685
+        },
+        {
+          "stage": "pan-cached",
+          "event": "start",
+          "deadlineMs": 30000
+        },
+        {
+          "stage": "pan-cached",
+          "event": "complete",
+          "elapsedMs": 1648.029175
+        },
+        {
+          "stage": "pan-cold",
+          "event": "start",
+          "deadlineMs": 30000
+        },
+        {
+          "stage": "pan-cold",
+          "event": "complete",
+          "elapsedMs": 4045.034568
+        },
+        {
+          "stage": "zoom-cached",
+          "event": "start",
+          "deadlineMs": 30000
+        },
+        {
+          "stage": "zoom-cached",
+          "event": "complete",
+          "elapsedMs": 3109.333908
+        },
+        {
+          "stage": "zoom-cold",
+          "event": "start",
+          "deadlineMs": 30000
+        },
+        {
+          "stage": "zoom-cold",
+          "event": "complete",
+          "elapsedMs": 3006.977449
+        },
+        {
+          "event": "workers-joined",
+          "resources": {
+            "totalBytes": 0,
+            "budgetBytes": 134217728,
+            "peakTrackedBytes": 27729920,
+            "inFlightJobs": 0,
+            "cancelledJobs": 0,
+            "cacheBytes": 0,
+            "in_flightBytes": 0,
+            "activeBytes": 0,
+            "live_inkBytes": 0
+          }
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Only two selected methods were run, each in its own instrumentation invocation.",
+    "Original C2 failure is not reproduced or retroactively localized.",
+    "Old failed comparison block and single-layer regression remain unclosed.",
+    "Software cloud Android, not physical-device performance.",
+    "No search, backup, dense-frame, local-append, full-suite, JVM or lint rerun."
+  ]
+}

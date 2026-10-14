@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-13T01:36:42.518512+00:00",
+  "reason": "Parent requested repeated same-fixture evidence and targeted closure of one-layer regression before delivery. Do not treat the v4 pair as final accepted raster performance.",
+  "production_changes": "NONE_YET",
+  "candidate_apks": "candidate-v4-artifacts.json",
+  "baseline_apks": "baseline-final-artifacts.json",
+  "sequence": [
+    "candidate-v4-raster-repeat1",
+    "baseline-final-raster-repeat1",
+    "baseline-final-raster-repeat2",
+    "candidate-v4-raster-repeat2"
+  ],
+  "tests": "Unchanged TileLocalRedrawTest full class, preserving pan/zoom warmup and 1/4/8-layer method, two tests per invocation. Original deadlines/assertions unchanged.",
+  "measurements": "Existing per-layer first/local/full completion and metadata/raster/publication, decode/rebuild, bitmap bytes and pixel assertions. Existing v4/a128 pair retained as prior observations, not overwritten.",
+  "limits": [
+    "One phase invokes the same class anew; UUIDs differ.",
+    "No statistical significance or unique hotspot attribution from stage wall time alone.",
+    "No search/index/GC/Docker rerun.",
+    "Any later code change needs new frozen source/APK identity and targeted raster validation."
+  ],
+  "delivery": "PAUSED_PENDING_RASTER_REGRESSION_REVIEW"
+}

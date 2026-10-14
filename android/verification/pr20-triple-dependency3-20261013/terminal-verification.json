@@ -1,0 +1,151 @@
+{
+  "run_id": 38411448143,
+  "workflow_git": "71b84885bd4ecb3fe8a4406788ffa14abc189497",
+  "job_id": 115344550391,
+  "run_attempt": 1,
+  "job_started_at": "2026-10-13T14:13:05Z",
+  "job_completed_at": "2026-10-13T14:38:55Z",
+  "terminal_status": "FAILURE_CORRECTNESS_HOST_PROCESS_CHECK",
+  "methods_reported_in_job_log": [
+    {
+      "ordinal": 1,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+      "status": "PASS"
+    },
+    {
+      "ordinal": 2,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibraryPagingTest#snapshotRetainsOldClassificationAndSourceWhileWriterCommits",
+      "status": "PASS"
+    },
+    {
+      "ordinal": 3,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibraryPagingTest#refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState",
+      "status": "PASS"
+    },
+    {
+      "ordinal": 4,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh",
+      "status": "PASS"
+    },
+    {
+      "ordinal": 5,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+      "status": "PASS"
+    },
+    {
+      "ordinal": 6,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges",
+      "status": "PASS"
+    },
+    {
+      "ordinal": 7,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+      "status": "PASS"
+    },
+    {
+      "ordinal": 8,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#oneScanSurvivesRoomObserverRefreshAcrossSevenBatches",
+      "status": "PASS"
+    },
+    {
+      "ordinal": 9,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "status": "PASS"
+    },
+    {
+      "ordinal": 10,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "status": "PASS"
+    },
+    {
+      "ordinal": 11,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "status": "PASS"
+    },
+    {
+      "ordinal": 12,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "status": "PASS"
+    },
+    {
+      "ordinal": 13,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion",
+      "status": "PASS"
+    },
+    {
+      "ordinal": 14,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+      "status": "PASS"
+    },
+    {
+      "ordinal": 15,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes",
+      "status": "PASS"
+    },
+    {
+      "ordinal": 16,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#missingRoomGuardLogAbortsWithoutDeletingCandidates",
+      "status": "PASS"
+    },
+    {
+      "ordinal": 17,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.app.NotebookShelfUiTest#pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges",
+      "status": "FAIL"
+    }
+  ],
+  "remaining_common_and_diagnostics": "24 + 3 skipped; exact method summary pending original artifact",
+  "method_17_original_junit": "UNVERIFIED_PENDING_RAW_INSTRUMENTATION",
+  "reported_error": "AssertionError: Owned package process cleanup unconfirmed",
+  "console_cleanup_receipts": [
+    {
+      "emulator": "STOPPED_CONFIRMED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "RESTORED_EXACT",
+      "errors": []
+    },
+    {
+      "emulator": "STOPPED_CONFIRMED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "RESTORED_EXACT",
+      "errors": []
+    }
+  ],
+  "artifact_original_bytes_and_receipts": "PENDING_USER_SUPPLIED_ORIGINAL_ZIP",
+  "job_decoded_log_sha256": "b91612725feccfcba3272ddef80680f0277cb6b1f65d7ed0ffcfbc3950b4165e",
+  "new_performance_results": false,
+  "control_environment": "One exec-server transport disconnection observed after terminal; next read-only retry succeeded. No replacement run triggered."
+}

@@ -1,0 +1,32 @@
+
+org.inkweft.app.StreamedInkRasterTest:STREAMED_FRAME_STAGE {"case":"original-dense","stage":"fixture-start","elapsedMs":6720.931961,"fixtureStrokes":1201,"fixturePoints":76802,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"case":"original-dense","stage":"fixture-complete","elapsedMs":38561.026554,"fixtureStrokes":1201,"fixturePoints":76802,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"windowStrokes":128,"windowPoints":8192,"case":"original-dense","stage":"editor-window-complete","elapsedMs":83879.036871,"fixtureStrokes":1201,"fixturePoints":76802,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"case":"original-dense","stage":"frame-start","elapsedMs":83960.268295,"fixtureStrokes":1201,"fixturePoints":76802,"frameDeadlineMs":30000}
+STREAMED_FRAME_STAGE {"frameElapsedMs":30446.222191,"snapshotReads":[{"frameElapsedMs":11564.580958,"rows":256,"points":16384,"freezeMs":1194.862009,"decodeMs":1497.878757}],"snapshotRows":256,"changeCallbacks":0,"threads":[{"name":"main","state":"RUNNABLE","stack":["android.os.MessageQueue.nativePollOnce(Native Method)","android.os.MessageQueue.next(MessageQueue.java:346)","android.os.Looper.loopOnce(Looper.java:189)","android.os.Looper.loop(Looper.java:317)","android.app.ActivityThread.main(ActivityThread.java:8705)","java.lang.reflect.Method.invoke(Native Method)","com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:580)","com.android.internal.os.ZygoteInit.main(ZygoteInit.java:886)"]},{"name":"InkWeft-streamed-raster","state":"RUNNABLE","stack":["androidx.ink.strokes.StrokeNative.createWithBrushAndInputs(Native Method)","androidx.ink.strokes.Stroke._init_$lambda$2(Stroke.kt:124)","androidx.ink.strokes.Stroke$$ExternalSyntheticLambda0.invoke(D8$$SyntheticClass:0)","androidx.ink.nativeloader.NativePointer.<init>(NativePointer.jvmAndAndroid.kt:35)","androidx.ink.strokes.Stroke.<init>(Stroke.kt:57)","androidx.ink.strokes.Stroke.<init>(Stroke.kt:40)","androidx.ink.strokes.Stroke.<init>(Stroke.kt:123)","org.inkweft.app.InkBrushes.stroke(InkBrushes.kt:87)","org.inkweft.app.StreamedInkRaster$draw$4$1$2.invokeSuspend(StreamedInkRaster.kt:153)","org.inkweft.app.StreamedInkRaster$draw$4$1$2.invoke(Unknown Source:8)","org.inkweft.app.StreamedInkRaster$draw$4$1$2.invoke(Unknown Source:4)","org.inkweft.data.InkRepository.visitVisible(InkRepository.kt:329)","org.inkweft.data.InkRepository$visitVisible$1.invokeSuspend(Unknown Source:31)","kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)","kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)","java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)","java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)","java.lang.Thread.run(Thread.java:1012)"]}],"resources":{"totalBytes":1848576,"budgetBytes":134217728,"peakTrackedBytes":1848576,"inFlightJobs":1,"cancelledJobs":0,"cacheBytes":0,"in_flightBytes":1848576,"activeBytes":0,"live_inkBytes":0,"category.ink-frame":800000,"category.ink-geometry-reservation":1048576},"pending":true,"frameReady":false,"publishedStats":null,"case":"original-dense","stage":"frame-timeout","elapsedMs":114402.239375,"fixtureStrokes":1201,"fixturePoints":76802,"frameDeadlineMs":30000}
+
+Error in completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker(org.inkweft.app.StreamedInkRasterTest):
+kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 30000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:189)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:157)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.lang.Thread.run(Thread.java:1012)
+
+
+Time: 115.802
+There was 1 failure:
+1) completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker(org.inkweft.app.StreamedInkRasterTest)
+kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 30000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:189)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:157)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.lang.Thread.run(Thread.java:1012)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+

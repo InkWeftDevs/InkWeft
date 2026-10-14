@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot" tests="1" failures="0" errors="0" time="1.2900240421295166"><testcase classname="org.inkweft.data.HistoryCollectionTest" name="separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot" time="1.2900240421295166" /></testsuite>

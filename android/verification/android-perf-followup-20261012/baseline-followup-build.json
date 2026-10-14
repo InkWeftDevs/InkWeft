@@ -1,0 +1,14 @@
+{
+  "command": [
+    "bash",
+    "/workspace/scratch/run-inkweft-gradle",
+    ":data-local:assembleDebugAndroidTest",
+    ":app:assembleDebugAndroidTest",
+    ":app:lintDebug"
+  ],
+  "cwd": "/workspace/scratch/inkweft-baseline-a128bb07/android",
+  "started_utc": "2026-10-12T19:42:18.684166+00:00",
+  "seconds": 549.8266830300017,
+  "exit_code": 0,
+  "scope": "Only follow-up test APKs and lint. Production source unchanged; prior JVM results are not re-executed by this command."
+}

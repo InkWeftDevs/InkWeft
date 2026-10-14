@@ -1,0 +1,146 @@
+{
+  "comparator": "a128bb07 + identical common database-initialization fix",
+  "environment": "Same API35 x86_64 TCG/SwiftShader Android emulator; no KVM; not physical-device performance",
+  "sampling": "Two fresh fixture invocations per revision; one cold query, five warm queries (median only), and 30 sequential save requests per invocation. Do not pool medians or reconstruct raw vectors.",
+  "execution_order": [
+    {
+      "phase": "baseline",
+      "label": "library-probe",
+      "started_utc": "2026-10-12T16:40:35.663895+00:00"
+    },
+    {
+      "phase": "candidate",
+      "label": "library-probe",
+      "started_utc": "2026-10-12T17:09:46.131207+00:00"
+    },
+    {
+      "phase": "candidate",
+      "label": "library-repeat",
+      "started_utc": "2026-10-12T17:40:36.495920+00:00"
+    },
+    {
+      "phase": "baseline",
+      "label": "library-repeat",
+      "started_utc": "2026-10-12T17:58:18.300404+00:00"
+    }
+  ],
+  "results": {
+    "baseline": [
+      {
+        "run": 1,
+        "label": "library-probe",
+        "books": 500,
+        "pages": 20000,
+        "noteBodyChars": 20020,
+        "headerReadMs": 3307.909867,
+        "headerReturnedBodyChars": 10010000,
+        "coldMs": 79226.251257,
+        "coldSourceChecks": 20000,
+        "warmMedianMs": 6892.346845,
+        "saveCount": 30,
+        "saveP50Ms": 67.079681,
+        "saveP95Ms": 82.535799,
+        "saveMaxMs": 74997.322974,
+        "writerCompletedDuringPausedSearch": false,
+        "shelfReturnedPreviewChars": 1181180,
+        "shelfDirectoryBodyChars": 10010000,
+        "projectionRows": null,
+        "projectionChars": null,
+        "fullBodyOnDemandMatches": true
+      },
+      {
+        "run": 2,
+        "label": "library-repeat",
+        "books": 500,
+        "pages": 20000,
+        "noteBodyChars": 20020,
+        "headerReadMs": 4263.191413,
+        "headerReturnedBodyChars": 10010000,
+        "coldMs": 95970.474794,
+        "coldSourceChecks": 20000,
+        "warmMedianMs": 10008.480773,
+        "saveCount": 30,
+        "saveP50Ms": 68.449826,
+        "saveP95Ms": 82.896367,
+        "saveMaxMs": 90507.568424,
+        "writerCompletedDuringPausedSearch": false,
+        "shelfReturnedPreviewChars": 1181180,
+        "shelfDirectoryBodyChars": 10010000,
+        "projectionRows": null,
+        "projectionChars": null,
+        "fullBodyOnDemandMatches": true
+      }
+    ],
+    "candidate": [
+      {
+        "run": 1,
+        "label": "library-probe",
+        "books": 500,
+        "pages": 20000,
+        "noteBodyChars": 20020,
+        "headerReadMs": 1021.971088,
+        "headerReturnedBodyChars": 0,
+        "coldMs": 54386.134094,
+        "coldSourceChecks": 20000,
+        "warmMedianMs": 9359.394901,
+        "saveCount": 30,
+        "saveP50Ms": 254.188351,
+        "saveP95Ms": 514.311955,
+        "saveMaxMs": 645.288083,
+        "writerCompletedDuringPausedSearch": true,
+        "shelfReturnedPreviewChars": 35418,
+        "shelfDirectoryBodyChars": 0,
+        "projectionRows": 61,
+        "projectionChars": 36018,
+        "fullBodyOnDemandMatches": true
+      },
+      {
+        "run": 2,
+        "label": "library-repeat",
+        "books": 500,
+        "pages": 20000,
+        "noteBodyChars": 20020,
+        "headerReadMs": 694.936259,
+        "headerReturnedBodyChars": 0,
+        "coldMs": 41107.791711,
+        "coldSourceChecks": 20000,
+        "warmMedianMs": 10180.026496,
+        "saveCount": 30,
+        "saveP50Ms": 130.988359,
+        "saveP95Ms": 241.552212,
+        "saveMaxMs": 252.961759,
+        "writerCompletedDuringPausedSearch": true,
+        "shelfReturnedPreviewChars": 35418,
+        "shelfDirectoryBodyChars": 0,
+        "projectionRows": 61,
+        "projectionChars": 36018,
+        "fullBodyOnDemandMatches": true
+      }
+    ]
+  },
+  "pair_changes": [
+    {
+      "run": 1,
+      "cold_change_percent": -31.353392049841887,
+      "warm_median_change_percent": 35.794020693977416,
+      "save_p50_change_percent": 278.9349430567507,
+      "save_p95_change_percent": 523.1380337155275,
+      "save_max_change_percent": -99.139585177962
+    },
+    {
+      "run": 2,
+      "cold_change_percent": -57.166209921084985,
+      "warm_median_change_percent": 1.7140036224357003,
+      "save_p50_change_percent": 91.36404963250015,
+      "save_p95_change_percent": 191.3905889265328,
+      "save_max_change_percent": -99.72050761786578
+    }
+  ],
+  "limits": [
+    "Two observations per revision do not establish statistical significance or a confidence interval.",
+    "Serial next-after-commit save arrivals create different actual overlap on blocked and unblocked implementations.",
+    "Warm queries run after all fixture writes and explicit index construction complete.",
+    "Fresh UUID identities differ between fixtures; row counts and deterministic body contents are the same.",
+    "See repeat-runtime-check.json for preflight metadata observations and candidate-repeat setup overlap."
+  ]
+}

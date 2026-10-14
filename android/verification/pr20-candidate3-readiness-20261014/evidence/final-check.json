@@ -1,0 +1,38 @@
+{
+  "status": "FINAL_INPUT_LOCAL_CHECKS_PASS_NATIVE_NOT_RUN",
+  "candidate_git": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+  "checked_utc": "2026-10-14T01:48:33.428799+00:00",
+  "command": [
+    "gradle",
+    "--offline",
+    "--no-daemon",
+    "--no-build-cache",
+    "--max-workers=1",
+    ":data-local:testDebugUnitTest",
+    ":data-local:compileDebugAndroidTestKotlin",
+    ":data-local:lintDebug"
+  ],
+  "build": "SUCCESSFUL in 3m 9s; 52 actionable tasks:17 executed,35 up-to-date",
+  "junit": {
+    "tests": 31,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "lint_severity": {
+    "Fatal": 0,
+    "Error": 0,
+    "Warning": 14,
+    "Information": 0
+  },
+  "source_sha256": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt": "33b4e9cc4fcf3fac593f0abc5dc6e2c070e10603a179979ec57be2d554198f48",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt": "4deefcf739ebbdd1ead6e4e2259b72e4b5af07a122d2ff766ccff311f3e188de"
+  },
+  "logs": {
+    "final-compile-jvm-lint.log": "ab0b7acc6e48d07802ebf630348919c9b739fb380ab77ca615513f309d597287",
+    "compile-jvm-lint.log": "5dd51118c5bc7ae604915333ad83fc86f08edb755312466673bee41374c4783b"
+  },
+  "native": "NOT_RUN; no device/Room execution or new performance result",
+  "superseded": "Initial invocation completed but source cleanup boundary was corrected after its compilation while lint was in progress. Initial log retained; it does not validate the final candidate."
+}

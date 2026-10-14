@@ -1,0 +1,215 @@
+{
+  "checked_utc": "2026-10-12T22:40:01.714275+00:00",
+  "version": "baseline-final",
+  "status": "PASS_SOURCE_HASH_AND_ALLOWLIST_CHECK_ONLY",
+  "source_repository": "/workspace/InkWeft",
+  "candidate_head_at_check": "a75d7457cfa3ec2e15c802c07ee93bfc07753a6c",
+  "base_commit": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+  "base_tree": "2eefbf879679d29f5ae4b1d6b9715a4cef14d5d9",
+  "root": "/workspace/scratch/inkweft-baseline-closure-a128bb07",
+  "task_action": "Read-only verification of the final pre-existing baseline tree; only these two new baseline-final evidence JSON files were written",
+  "baseline_tree_modified_by_this_task": false,
+  "source_manifest": {
+    "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-source-manifest.json",
+    "sha256": "485c50705454ab09d5ba15d618f9fc7fc2c7abe40eb105c8609533d25cc4af71"
+  },
+  "previous_v3_evidence": {
+    "provenance": {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-v3-provenance.json",
+      "sha256": "f49050613a8e7c659556ffcee08186221cca4bc7af972e32da0f99b571fa4ce0"
+    },
+    "source_manifest": {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-v3-source-manifest.json",
+      "sha256": "d06be09c0e147618e692ac062dba3f2921796dd3fbf82966e8cac5c1c59ce674"
+    },
+    "preserved": true
+  },
+  "original_archive_provenance": {
+    "sha256": "ca17369e27a433560907f57777f4bb104649c20b6c4845115fa688da7e1ca5fd",
+    "archive_recreated_by_this_task": false,
+    "verification_method": "Every existing a128bb07 tracked path compared to its fixed Git blob; complete source path inventory checked separately"
+  },
+  "strict_changed_path_allowlist": [
+    "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionBenchmarkTest.kt",
+    "android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt"
+  ],
+  "actual_changes": [
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt",
+      "change": "added",
+      "base_git_blob": null,
+      "sha256": "91ceacc2db7557509f923a2046ba0f8d8ccf9691265dbee12e10e674a9ba33c9",
+      "identical_to_candidate_working_tree": true,
+      "purpose": "identical paired instrumentation probe"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionBenchmarkTest.kt",
+      "change": "added",
+      "base_git_blob": null,
+      "sha256": "2b04bd2de3bc4cd6d030b14b8c12096c3a3604ddaa39324a65703cee1de30e34",
+      "identical_to_candidate_working_tree": true,
+      "purpose": "identical paired instrumentation probe"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt",
+      "change": "added",
+      "base_git_blob": null,
+      "sha256": "a47f892262d656dcc6ec65e984681265d593e19f88ecaa13d135d2a9f3e65bd2",
+      "identical_to_candidate_working_tree": true,
+      "purpose": "identical paired instrumentation probe"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+      "change": "modified",
+      "base_git_blob": "c9a49ea1fe6accce05c3fe5a124e3962f1d9ec36",
+      "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+      "identical_to_candidate_working_tree": true,
+      "purpose": "common initialization fix only"
+    }
+  ],
+  "base_tracked_file_count": 1891,
+  "base_tracked_files_identical_except_common_factory": 1890,
+  "all_other_tracked_files_identical_to_base": true,
+  "production_change_count": 1,
+  "test_probe_addition_count": 3,
+  "final_source_file_count": 1894,
+  "unexpected_files": [],
+  "missing_files": [],
+  "author_production_optimizations_copied": false,
+  "changes_from_previous_v3_baseline_manifest": [
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt",
+      "previous_v3_sha256": "ed03296a5897f321e3eaf59d3b45bfbb6fdd77fec3c5bc59128a1857e718a8df",
+      "final_sha256": "a47f892262d656dcc6ec65e984681265d593e19f88ecaa13d135d2a9f3e65bd2"
+    }
+  ],
+  "only_authorized_library_probe_changed_since_previous_v3": true,
+  "paired_shared_files": {
+    "checked_files": 4,
+    "matched_files": 4,
+    "files": [
+      {
+        "path": "android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt",
+        "baseline_sha256": "91ceacc2db7557509f923a2046ba0f8d8ccf9691265dbee12e10e674a9ba33c9",
+        "current_candidate_sha256": "91ceacc2db7557509f923a2046ba0f8d8ccf9691265dbee12e10e674a9ba33c9",
+        "expected_sha256": "91ceacc2db7557509f923a2046ba0f8d8ccf9691265dbee12e10e674a9ba33c9",
+        "match": true
+      },
+      {
+        "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionBenchmarkTest.kt",
+        "baseline_sha256": "2b04bd2de3bc4cd6d030b14b8c12096c3a3604ddaa39324a65703cee1de30e34",
+        "current_candidate_sha256": "2b04bd2de3bc4cd6d030b14b8c12096c3a3604ddaa39324a65703cee1de30e34",
+        "expected_sha256": "2b04bd2de3bc4cd6d030b14b8c12096c3a3604ddaa39324a65703cee1de30e34",
+        "match": true
+      },
+      {
+        "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt",
+        "baseline_sha256": "a47f892262d656dcc6ec65e984681265d593e19f88ecaa13d135d2a9f3e65bd2",
+        "current_candidate_sha256": "a47f892262d656dcc6ec65e984681265d593e19f88ecaa13d135d2a9f3e65bd2",
+        "expected_sha256": "a47f892262d656dcc6ec65e984681265d593e19f88ecaa13d135d2a9f3e65bd2",
+        "match": true
+      },
+      {
+        "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+        "baseline_sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+        "current_candidate_sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+        "expected_sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+        "match": true
+      }
+    ],
+    "scope": "Current candidate working-tree bytes; not a claim that this check froze every candidate source"
+  },
+  "library_final_evidence": {
+    "sha256": "a47f892262d656dcc6ec65e984681265d593e19f88ecaa13d135d2a9f3e65bd2",
+    "reported_update_from_parent": "Adds direct-save and index-save checkpoints and sparse indexing progress; no production change and existing timers retained.",
+    "verified_scope": "Final SHA matches the supplied expected SHA; both paired files are byte-identical; this is the sole changed source path since the previous baseline-v3 manifest.",
+    "checkpoint_labels_found": [
+      "LIBRARY_DIRECT_SAVE_CHECKPOINT",
+      "INDEX_SAVE_PROGRESS",
+      "LIBRARY_INDEX_SAVE_CHECKPOINT"
+    ],
+    "selection": "org.inkweft.data.LibraryReadPerformanceTest",
+    "evidence_json_member": "observeIndexConcurrentSaves",
+    "runtime_result": "NOT_RUN_BY_THIS_TASK",
+    "pairing_boundary": "Use this final matching baseline/candidate probe for subsequent builds and paired runs. Keep all earlier v2/v3 source and execution evidence unchanged."
+  },
+  "performance_plan": {
+    "path": "/workspace/scratch/pr20-closure-evidence/baseline-closure-performance-plan.json",
+    "sha256": "4f24f63f1259ae6b7797a07ef363a6b5dda28c398e9d78fe84628bf0d54bc854",
+    "selections_unchanged": true,
+    "history_collection_baseline_argument": {
+      "historyScanBaseline": "true"
+    },
+    "history_concurrency_distinct_argument_if_used": {
+      "historyBaseline": "true"
+    }
+  },
+  "sqlite_format": {
+    "common_factory_sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+    "expected_new_page_size": 1024,
+    "expected_new_auto_vacuum": 1,
+    "expected_new_auto_vacuum_name": "FULL",
+    "runtime_settings_verified_by_this_task": false,
+    "configuration_evidence": "writerSqlite PRAGMA read inside db.withTransaction after measured work; actual values require subsequent instrumentation",
+    "previous_4096_incremental_pair_must_not_be_pooled": true
+  },
+  "known_validation_boundary": "Original BundledSqliteFactoryTest remains at a128bb07 and contains an obsolete 4096-byte new-DB assertion. Do not run it as an updated-format acceptance test from this strictly scoped performance baseline. No factory regression tests or production optimization files copied.",
+  "baseline_unavailable_raster_metrics": {
+    "reusedStrokes": null,
+    "geometryBytes": null,
+    "nativeStrokeBuilds": null
+  },
+  "unchanged_during_readonly_check": {
+    "source_scope": {
+      "baseline_files": 1894,
+      "old_baseline_root": "/workspace/scratch/inkweft-baseline-a128bb07",
+      "old_baseline_files": 1894,
+      "candidate_shared_files": 4
+    },
+    "before": {
+      "baseline_source": "a4f8fe2269f164a2e6017cd3642ff708ec93dddf100ec1b109647b97a89817bb",
+      "old_baseline_source": "4322e271df5b3345e21bec46bea4bd430d2a13d5bcb1c6c5552d1ab4af73f8a7",
+      "candidate_shared_files": "19f7317c770320456cebe5df946316bcded4e2915742d42ececa90ed844c1055"
+    },
+    "after": {
+      "baseline_source": "a4f8fe2269f164a2e6017cd3642ff708ec93dddf100ec1b109647b97a89817bb",
+      "old_baseline_source": "4322e271df5b3345e21bec46bea4bd430d2a13d5bcb1c6c5552d1ab4af73f8a7",
+      "candidate_shared_files": "19f7317c770320456cebe5df946316bcded4e2915742d42ececa90ed844c1055"
+    },
+    "historical_evidence_before": {
+      "/workspace/scratch/pr20-closure-evidence/baseline-v3-source-manifest.json": "d06be09c0e147618e692ac062dba3f2921796dd3fbf82966e8cac5c1c59ce674",
+      "/workspace/scratch/pr20-closure-evidence/baseline-v3-provenance.json": "f49050613a8e7c659556ffcee08186221cca4bc7af972e32da0f99b571fa4ce0",
+      "/workspace/scratch/pr20-closure-evidence/baseline-closure-provenance.json": "e26c62ca8417b269fbe2e82bec7753dfc2a38f5cab8ac51532cc70ce5d18cd40",
+      "/workspace/scratch/pr20-closure-evidence/baseline-closure-source-manifest.json": "da1b62bde6a628e898e68f1a94621c295b06d88fb13a6cbd5a6139853e5fa195",
+      "/workspace/scratch/pr20-closure-evidence/baseline-closure-performance-plan.json": "4f24f63f1259ae6b7797a07ef363a6b5dda28c398e9d78fe84628bf0d54bc854",
+      "/workspace/scratch/pr20-closure-evidence/baseline-candidate-v2-frozen-source-check.json": "90dd63393ea96891df5aec7734379cb9300c76897405b59924078699c84b6a63",
+      "/workspace/scratch/pr20-closure-evidence/candidate-v2-source-sha256.json": "141f13c85e1fac7d71b5623f14650eaff4b2cd11c3e4bcdf5ccbc6e25b3cc0ae",
+      "/workspace/scratch/pr20-closure-evidence/candidate-v2-reconstruction.patch": "584bc7ad3405c05962b76a1693311ee284eef8aa0692c8a1dd086f861bb4e4d5",
+      "/workspace/scratch/pr20-closure-evidence/candidate-v2-reconstruction-matches.json": "97a5f2109e478269dd53556a0bcbc864d20fedc4d54787fbb06b21351ecc2e41",
+      "/workspace/scratch/pr20-closure-evidence/candidate-v2-reconstruction-provenance.json": "f3dae06f0100c7e9e0eab31fa6a7c7d954bad8612f84d34187d1f9b69c089636"
+    },
+    "historical_evidence_after": {
+      "/workspace/scratch/pr20-closure-evidence/baseline-v3-source-manifest.json": "d06be09c0e147618e692ac062dba3f2921796dd3fbf82966e8cac5c1c59ce674",
+      "/workspace/scratch/pr20-closure-evidence/baseline-v3-provenance.json": "f49050613a8e7c659556ffcee08186221cca4bc7af972e32da0f99b571fa4ce0",
+      "/workspace/scratch/pr20-closure-evidence/baseline-closure-provenance.json": "e26c62ca8417b269fbe2e82bec7753dfc2a38f5cab8ac51532cc70ce5d18cd40",
+      "/workspace/scratch/pr20-closure-evidence/baseline-closure-source-manifest.json": "da1b62bde6a628e898e68f1a94621c295b06d88fb13a6cbd5a6139853e5fa195",
+      "/workspace/scratch/pr20-closure-evidence/baseline-closure-performance-plan.json": "4f24f63f1259ae6b7797a07ef363a6b5dda28c398e9d78fe84628bf0d54bc854",
+      "/workspace/scratch/pr20-closure-evidence/baseline-candidate-v2-frozen-source-check.json": "90dd63393ea96891df5aec7734379cb9300c76897405b59924078699c84b6a63",
+      "/workspace/scratch/pr20-closure-evidence/candidate-v2-source-sha256.json": "141f13c85e1fac7d71b5623f14650eaff4b2cd11c3e4bcdf5ccbc6e25b3cc0ae",
+      "/workspace/scratch/pr20-closure-evidence/candidate-v2-reconstruction.patch": "584bc7ad3405c05962b76a1693311ee284eef8aa0692c8a1dd086f861bb4e4d5",
+      "/workspace/scratch/pr20-closure-evidence/candidate-v2-reconstruction-matches.json": "97a5f2109e478269dd53556a0bcbc864d20fedc4d54787fbb06b21351ecc2e41",
+      "/workspace/scratch/pr20-closure-evidence/candidate-v2-reconstruction-provenance.json": "f3dae06f0100c7e9e0eab31fa6a7c7d954bad8612f84d34187d1f9b69c089636"
+    },
+    "match": true
+  },
+  "validation": {
+    "source_hash_and_allowlist_checks": "PASS",
+    "build": "NOT_RUN",
+    "adb": "NOT_RUN",
+    "device_tests": "NOT_RUN",
+    "native_performance": "NOT_RUN"
+  },
+  "validation_boundary": "Source provenance and byte-identical shared probes are verified. This task did not build or install APKs and provides no new native correctness or performance results."
+}

@@ -1,0 +1,26 @@
+INSTRUMENTATION_STATUS: class=org.inkweft.data.HistoryCollectionTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=
+org.inkweft.data.HistoryCollectionTest:
+INSTRUMENTATION_STATUS: test=sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: stream=HISTORY_DELETE_WRITER_CORRECTNESS {"connection":"same-room","artificialGates":true,"performanceMeasurement":false,"firstDeleted":256,"firstDeferred":true,"finishDeleted":1023,"authorCommitted":true,"initialRevision":2,"finalRevision":3,"retainedRevisions":[300,1281],"contentVerified":true}
+
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=org.inkweft.data.HistoryCollectionTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=1
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_RESULT: stream=
+
+Time: 0.643
+
+OK (1 test)
+
+
+INSTRUMENTATION_CODE: -1

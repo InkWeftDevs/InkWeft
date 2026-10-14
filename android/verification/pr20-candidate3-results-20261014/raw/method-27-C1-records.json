@@ -1,0 +1,12 @@
+[
+  {
+    "marker": "TILE_PAN_EVIDENCE",
+    "data": {
+      "rebuilt": 12,
+      "tiles": 20,
+      "panPixelsEqual": true,
+      "zoomPixelsEqual": true,
+      "previewCaptureReady": false
+    }
+  }
+]

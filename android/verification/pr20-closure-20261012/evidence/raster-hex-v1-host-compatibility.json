@@ -1,0 +1,69 @@
+{
+  "utc": "2026-10-13T02:59:14.798631+00:00",
+  "status": "PASS",
+  "scope": "One-off host representation compatibility, not Android execution or native performance. No timing benchmark.",
+  "stdlib": {
+    "version": "2.3.10",
+    "path": "/workspace/.setup/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.10/8b80e2f80a3b7daa99c16017f91d4c72cd8b31a6/kotlin-stdlib-2.3.10.jar",
+    "sha256": "f61662c6d3a2f8ef5bd34362a02d877772c39f393cd394feb259dfaf7f4d8437",
+    "version_catalog": "android/gradle/libs.versions.toml kotlin=2.3.10",
+    "called_method": "kotlin.text.HexExtensionsKt.toHexString(byte[], HexFormat.Companion.getDefault())"
+  },
+  "program": {
+    "path": "RasterHexCompatibility.java",
+    "sha256": "c981acdd3552352695add64f62d8d45f4fe37fed45e979c440ee5df60477bebb"
+  },
+  "old_expression_equivalence": "ByteArray.joinToString uses original per-byte String.format(\"%02x\", boxed Byte); host check uses the same Formatter conversion then concatenates.",
+  "jvm_version": "openjdk version \"17.0.16\" 2025-07-15\nOpenJDK Runtime Environment Temurin-17.0.16+8 (build 17.0.16+8)\nOpenJDK 64-Bit Server VM Temurin-17.0.16+8 (build 17.0.16+8, mixed mode, sharing)",
+  "compile": {
+    "command": [
+      "/workspace/.setup/tools/jdk-17.0.16+8/bin/javac",
+      "-encoding",
+      "UTF-8",
+      "-cp",
+      "/workspace/.setup/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.10/8b80e2f80a3b7daa99c16017f91d4c72cd8b31a6/kotlin-stdlib-2.3.10.jar",
+      "-d",
+      "/workspace/scratch/raster-hex-compatibility-classes",
+      "/workspace/scratch/pr20-closure-evidence/RasterHexCompatibility.java"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "run": {
+    "command": [
+      "/workspace/.setup/tools/jdk-17.0.16+8/bin/java",
+      "-cp",
+      "/workspace/scratch/raster-hex-compatibility-classes:/workspace/.setup/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.10/8b80e2f80a3b7daa99c16017f91d4c72cd8b31a6/kotlin-stdlib-2.3.10.jar",
+      "RasterHexCompatibility"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"status\":\"PASS\",\"checks\":1869,\"casesPerLocale\":267,\"locales\":[\"und\",\"en-US\",\"zh-CN\",\"tr-TR\",\"ar-EG\",\"fa-IR\",\"hi-IN\"],\"all256ByteValuesIndividually\":true,\"ascendingAndDescending256ByteArrays\":true,\"emptyArray\":true,\"zeroAndFF32ByteArrays\":true,\"sha256Arrays\":6,\"defaultLowercaseTwoCharactersPerByte\":true,\"scope\":\"HOST_REPRESENTATION_COMPATIBILITY_ONLY_NOT_NATIVE_PERFORMANCE\"}\n",
+    "stderr": ""
+  },
+  "result": {
+    "status": "PASS",
+    "checks": 1869,
+    "casesPerLocale": 267,
+    "locales": [
+      "und",
+      "en-US",
+      "zh-CN",
+      "tr-TR",
+      "ar-EG",
+      "fa-IR",
+      "hi-IN"
+    ],
+    "all256ByteValuesIndividually": true,
+    "ascendingAndDescending256ByteArrays": true,
+    "emptyArray": true,
+    "zeroAndFF32ByteArrays": true,
+    "sha256Arrays": 6,
+    "defaultLowercaseTwoCharactersPerByte": true,
+    "scope": "HOST_REPRESENTATION_COMPATIBILITY_ONLY_NOT_NATIVE_PERFORMANCE"
+  },
+  "android_build": "NOT_RUN_BY_RASTER_AGENT",
+  "adb": "NOT_RUN",
+  "native_performance": "NOT_MEASURED",
+  "production_wrapper_added": false
+}

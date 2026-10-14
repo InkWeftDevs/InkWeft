@@ -1,0 +1,55 @@
+{
+  "Id": "31c48566aaf44c6b159aafc9a7320be8878833e9d23eb2fcc068bf891c5640f1",
+  "Name": "/inkweft-go-check-7e88492eddee-restored",
+  "Image": "sha256:cc9dc5a0540041cffbae5b738367bc1dc2cb742591fdb3467e9678fe087b9cd4",
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 12654,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-10-12T14:31:32.024956366Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "User": "10001:10001",
+  "HostConfig": {
+    "ReadonlyRootfs": true,
+    "CapDrop": [
+      "ALL"
+    ],
+    "SecurityOpt": [
+      "no-new-privileges"
+    ],
+    "PortBindings": {
+      "18751/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": ""
+        }
+      ]
+    },
+    "Tmpfs": {
+      "/tmp": "size=16m"
+    }
+  },
+  "Ports": {
+    "18751/tcp": [
+      {
+        "HostIp": "127.0.0.1",
+        "HostPort": "32773"
+      }
+    ]
+  },
+  "Mounts": [
+    {
+      "Type": "volume",
+      "Name": "inkweft-go-check-7e88492eddee-recovery",
+      "Destination": "/state",
+      "RW": true
+    }
+  ]
+}

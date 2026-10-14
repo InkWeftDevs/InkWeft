@@ -1,0 +1,17 @@
+{
+  "command": [
+    "env",
+    "PATH=/workspace/inkweft-cloud-verification-20261012/bin:/workspace/inkweft-cloud-verification-20261012/venv/bin:/usr/local/bin:/usr/bin:/bin",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "/workspace/inkweft-cloud-verification-20261012/venv/bin/python",
+    "/workspace/inkweft-cloud-verification-20261012/run_container_candidate.py",
+    "--output",
+    "/workspace/inkweft-cloud-verification-20261012/evidence/container-check-candidate-results.json"
+  ],
+  "shell_display": "env PATH=/workspace/inkweft-cloud-verification-20261012/bin:/workspace/inkweft-cloud-verification-20261012/venv/bin:/usr/local/bin:/usr/bin:/bin PYTHONDONTWRITEBYTECODE=1 /workspace/inkweft-cloud-verification-20261012/venv/bin/python /workspace/inkweft-cloud-verification-20261012/run_container_candidate.py --output /workspace/inkweft-cloud-verification-20261012/evidence/container-check-candidate-results.json",
+  "cwd": "/workspace/inkweft-cloud-verification-20261012/InkWeft/backup-server",
+  "started_utc": "2026-10-12T14:31:27.213261+00:00",
+  "sanitization": "URL userinfo and query strings removed",
+  "exit_code": 0,
+  "finished_utc": "2026-10-12T14:31:35.474701+00:00"
+}

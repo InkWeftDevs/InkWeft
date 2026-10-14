@@ -1,0 +1,3 @@
+# Preserve raw evidence; Gradle's daemon banner ends in a space.
+evidence/** -text
+evidence/*.log -whitespace

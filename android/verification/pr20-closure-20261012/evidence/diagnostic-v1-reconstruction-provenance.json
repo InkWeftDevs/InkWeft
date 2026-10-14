@@ -1,0 +1,169 @@
+{
+  "created_utc": "2026-10-12T22:04:35.466994+00:00",
+  "base_commit": "a75d7457cfa3ec2e15c802c07ee93bfc07753a6c",
+  "base_tree": "1810964cb650370b82ce570a18be015c6d261692",
+  "base_archive_sha256": "9bfd81f19f6ca79861c4bb11ff5e49ced876cc4a10866974e2929b38054647fe",
+  "base_archive_files_verified": 2230,
+  "root": "/workspace/scratch/v1-reconstruction",
+  "full_tree_files": 2233,
+  "expected_files": 734,
+  "matched_files": 734,
+  "unmatched_files": [],
+  "source_counts": {
+    "fixed_base": 722,
+    "current_exact": 8,
+    "reconstructed_exact": 4
+  },
+  "changes_from_base": [
+    {
+      "path": "android/data-local/src/androidTest/AndroidManifest.xml",
+      "kind": "added",
+      "base_git_blob": null,
+      "reconstructed_git_blob": "ed109c7e71612e7c4fbbf531b842f53165952320",
+      "sha256": "bb22cc2040f7e6a96f5dc637453179f0cf8ff07d6b15f68d4de3bea0dfb91e9c",
+      "bytes": 317,
+      "method": "current_exact"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/DatabaseCreationPeerService.kt",
+      "kind": "added",
+      "base_git_blob": null,
+      "reconstructed_git_blob": "cf1bbb1b13d9104a82abb69f014a49288d109b2a",
+      "sha256": "8a59bdff8c7fdf229a4e59073056fb6ace088808d3cd4672e424c8f9f204bdd7",
+      "bytes": 5833,
+      "method": "current_exact"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/DatabaseCreationProcessTest.kt",
+      "kind": "added",
+      "base_git_blob": null,
+      "reconstructed_git_blob": "df26a0e8d51e491acdc67054b622ea191f7e3724",
+      "sha256": "41ea55b30cb12e299cde5ea222e9aa11390c56c7b024961e5073d7dc4d983406",
+      "bytes": 11692,
+      "method": "current_exact"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/NotebookShelfUiTest.kt",
+      "kind": "modified",
+      "base_git_blob": "b04952b83699875d2105f6ebb894a0622e2bf796",
+      "reconstructed_git_blob": "c329ce9afb98e79059a7892b06b1e796c1e7fe19",
+      "sha256": "a9b83d70e77ebd1f79f6e0d801f781e5bf0750ae5a19bdb4d8bd1769b282e747",
+      "bytes": 11625,
+      "method": "reconstructed_exact"
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt",
+      "kind": "modified",
+      "base_git_blob": "4565caf13aabe133d240c4340edd3f53e434eaa4",
+      "reconstructed_git_blob": "974ca3fe51785ac055faeec2599223fa4f147277",
+      "sha256": "c5700b11df7e4535aaf248ba074f9952f356a571fe238770887c813fe84dcca2",
+      "bytes": 12700,
+      "method": "current_exact"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/BundledSqliteFactoryTest.kt",
+      "kind": "modified",
+      "base_git_blob": "08b6c8143917c3a65678230891e6cc45a1b63e95",
+      "reconstructed_git_blob": "66b0542672ea2152806be63159cfa4cf65d5b6d0",
+      "sha256": "929252f09802a3159d9a0c1770c06e228ca7b94d80c50d487a1c7bbe1ab68d21",
+      "bytes": 12937,
+      "method": "reconstructed_exact"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryConcurrencyTest.kt",
+      "kind": "modified",
+      "base_git_blob": "ca36f7a5ff908aa806fe0da672e8e03523b431cb",
+      "reconstructed_git_blob": "5b2545102b51365672e060a63cb9b1fb0bbc0591",
+      "sha256": "90adba8a49256004d070c0622a4a207e453a9a4cfba2f873bc7598ed8644bcb1",
+      "bytes": 5628,
+      "method": "current_exact"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt",
+      "kind": "modified",
+      "base_git_blob": "e9fbd685ad912ab2240d2bd5550c93f6c9d30bd5",
+      "reconstructed_git_blob": "ee05d4b5386b91797564c747bcb18160509495f2",
+      "sha256": "bfeea13319f995adbe6567036f295459664919b6e062e75d1fa0897250fa41f1",
+      "bytes": 22646,
+      "method": "current_exact"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt",
+      "kind": "modified",
+      "base_git_blob": "19fca189d7f91b2a85767b3666150d3feb598528",
+      "reconstructed_git_blob": "94270703f0afd1f2beac0b2bd0b42468856fda8a",
+      "sha256": "768994331cca8152c1713996759c227507efa2688270e0d39343e18b5d28aebc",
+      "bytes": 16519,
+      "method": "reconstructed_exact"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt",
+      "kind": "modified",
+      "base_git_blob": "b0b101e6db840cd618998ef4adcf44ce46d2c369",
+      "reconstructed_git_blob": "e585a0c55d66d95703e524e1083b3eac8dd52fe6",
+      "sha256": "7645cf9bf542385d8468b4bdb3299cafb87137ef59113183699034bca490bd58",
+      "bytes": 24641,
+      "method": "current_exact"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt",
+      "kind": "modified",
+      "base_git_blob": "46a995730e379d07894ef43cdcf08736337429fd",
+      "reconstructed_git_blob": "95e4c59726de87d854813f1222935e0e11f8e9df",
+      "sha256": "d55d6bf18d616dbcbfafd61a5d9a48647da618276e3bab64e5e55e3ed8d37aa9",
+      "bytes": 39931,
+      "method": "reconstructed_exact"
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+      "kind": "modified",
+      "base_git_blob": "70cc35bc149a58f6d4676f8ea4eb0e9d94a1f09e",
+      "reconstructed_git_blob": "57f8c4f67e59f6e76cfeed899ca25feb8dbd72ee",
+      "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+      "bytes": 4426,
+      "method": "current_exact"
+    }
+  ],
+  "all_files_outside_proven_changes_equal_base": true,
+  "freeze_manifest": {
+    "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-source-sha256.json",
+    "sha256": "e3190c306307cf220c8f7e193f93446c4c52f9c87b1552ceec822935f7f1c75b",
+    "recorded_utc": "2026-10-12T21:24:15.425024+00:00",
+    "scope": "Source freeze for initial closure build/native diagnostic round; final build confirmation still required."
+  },
+  "match_results": {
+    "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-reconstruction-matches.json",
+    "sha256": "14e2e0e5eef071ff16704a5c54d13ad82b17dad4b24b90fdb6e79f1f12c4ff85"
+  },
+  "patch": {
+    "path": "/workspace/scratch/pr20-closure-evidence/diagnostic-v1-reconstruction.patch",
+    "sha256": "fa8aa24faeb7d12a9ae9dca1f2dcd982551eaa4090056b8a9bca9e57b7a2a0cd",
+    "includes_new_files": true,
+    "check_and_replay": "PASS: git apply --check and git apply on untouched isolated base content; all twelve output hashes matched",
+    "replay_changed_files": 12
+  },
+  "guarded_sources_unchanged": {
+    "scope": "All 734 frozen paths (including absence markers) in the main repository and both baselines; build outputs excluded",
+    "before": {
+      "/workspace/InkWeft": "3844c929d047b914c97d693e213a52ee860384b640d91b8f72bd83509d3be685",
+      "/workspace/scratch/inkweft-baseline-a128bb07": "838264c4dade971bfcdd4a76838abc152950f806f32e31fb2caded92e06d93d3",
+      "/workspace/scratch/inkweft-baseline-closure-a128bb07": "d6e21d02c65d3190fb990385e82c4a82c073a9b45303b66e7609644c07b2af96"
+    },
+    "after": {
+      "/workspace/InkWeft": "3844c929d047b914c97d693e213a52ee860384b640d91b8f72bd83509d3be685",
+      "/workspace/scratch/inkweft-baseline-a128bb07": "838264c4dade971bfcdd4a76838abc152950f806f32e31fb2caded92e06d93d3",
+      "/workspace/scratch/inkweft-baseline-closure-a128bb07": "d6e21d02c65d3190fb990385e82c4a82c073a9b45303b66e7609644c07b2af96"
+    },
+    "match": true
+  },
+  "rebuild_instructions": [
+    "Extract git archive of a75d7457cfa3ec2e15c802c07ee93bfc07753a6c into a separate empty source directory.",
+    "From that directory apply diagnostic-v1-reconstruction.patch with git apply.",
+    "Verify all 734 paths against diagnostic-source-sha256.json before any build.",
+    "Reuse the existing authorized cloud Android toolchain and recorded v1 build parameters; no credentials or local configurations are included in this patch."
+  ],
+  "validation_boundary": "This exactly reconstructs the 734 frozen source inputs and leaves all other source-tree files at a75d745. It does not itself rebuild an APK, prove binary reproducibility or rerun native tests. Existing diagnostic-v1 native evidence remains the record of execution.",
+  "build": "NOT_RUN",
+  "adb": "NOT_RUN",
+  "native_tests": "NOT_RUN"
+}

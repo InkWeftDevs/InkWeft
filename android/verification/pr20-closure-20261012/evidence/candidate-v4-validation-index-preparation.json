@@ -1,0 +1,26 @@
+{
+  "phase": "candidate-v4-validation",
+  "selection": "org.inkweft.data.LibraryTextIndexPreparationTest",
+  "command": [
+    "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "am",
+    "instrument",
+    "-w",
+    "-e",
+    "class",
+    "org.inkweft.data.LibraryTextIndexPreparationTest",
+    "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+  ],
+  "started_utc": "2026-10-12T23:58:55.882596+00:00",
+  "seconds": 63.51631581199763,
+  "exit_code": 0,
+  "expected": 11,
+  "tests": 11,
+  "executed": 11,
+  "failures": 0,
+  "passed": true,
+  "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+}

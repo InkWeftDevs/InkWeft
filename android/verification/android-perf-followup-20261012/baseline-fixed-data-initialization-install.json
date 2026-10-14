@@ -1,0 +1,19 @@
+{
+  "path": "/workspace/scratch/inkweft-baseline-a128bb07/android/data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+  "size_bytes": 26554901,
+  "sha256": "4c78fd11314bb396f94f5539ba16e058855c9764651a2cdd42378b44cb3fbd1f",
+  "started_utc": "2026-10-12T16:16:17.174783+00:00",
+  "command": [
+    "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "install",
+    "-r",
+    "-t",
+    "/workspace/scratch/inkweft-baseline-a128bb07/android/data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk"
+  ],
+  "exit_code": 0,
+  "stdout": "Performing Streamed Install\nSuccess\n",
+  "stderr": "",
+  "completed_utc": "2026-10-12T16:16:57.780554+00:00"
+}

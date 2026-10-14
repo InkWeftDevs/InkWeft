@@ -18,7 +18,8 @@ import java.util.UUID
  * Only trusted, locally compiled DDL is used. The archive contains values only. */
 class LibraryBackupRepository(private val context:Context,private val db:NoteDatabase,
     private val fault:(BackupFault)->Unit={}) {
-    enum class BackupFault { BEFORE_RESTORE_COMMIT, AFTER_RESTORE_COMMIT, BEFORE_ISOLATED_COPY, AFTER_ISOLATED_COPY, BEFORE_SNAPSHOT_SYNC }
+    enum class BackupFault { BEFORE_RESTORE_COMMIT, AFTER_RESTORE_COMMIT, BEFORE_ISOLATED_COPY, AFTER_ISOLATED_COPY,
+        BEFORE_SNAPSHOT_VALIDATE, AFTER_SNAPSHOT_VALIDATE, BEFORE_SNAPSHOT_WRITE, BEFORE_SNAPSHOT_SYNC }
     enum class RestoreResult { RESTORED, ALREADY_PRESENT, IDENTITY_CONFLICT, SNAPSHOT_CAPACITY_EXCEEDED }
     class Preview internal constructor(internal val stage:NoteDatabase,internal val root:File,
         val summary:LibraryArchive.Summary,val notes:Int,val pages:Int,val trashed:Int,val recycledPages:Int,
@@ -82,7 +83,14 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
             val isolated=checkNotNull(stage)
             // Recheck the captured generation in case edits grew the library after preflight.
             preflight(isolated.openHelper.readableDatabase,0)
-            validate(isolated)
+            // This writer belongs only to the private copy. Reuse its transaction context
+            // for validation's DAO reads without acquiring the author's writer connection.
+            isolated.withTransaction{
+                fault(BackupFault.BEFORE_SNAPSHOT_VALIDATE)
+                validate(isolated)
+            }
+            fault(BackupFault.AFTER_SNAPSHOT_VALIDATE)
+            fault(BackupFault.BEFORE_SNAPSHOT_WRITE)
             val summary=FileOutputStream(path).use{file->
                 val buffer=BufferedOutputStream(file)
                 val result=LibraryArchive.write(buffer,SCHEMA,SqlRows(isolated),System.currentTimeMillis()){ctx.ensureActive()}
@@ -145,7 +153,9 @@ class LibraryBackupRepository(private val context:Context,private val db:NoteDat
                 if(parsed.rows.size<SCHEMA.size)PageLayerStore.promote(sql)
                 parsed
             }
-            validate(stage)
+            // Import validation has the same private-stage ownership as snapshot validation.
+            // Keep validate() itself usable by callers that manage their own live scope.
+            stage.withTransaction{validate(stage)}
             val sql=stage.openHelper.writableDatabase
             val notes=count(sql,"notes").toInt();val pages=count(sql,"notebook_pages").toInt()
             val trash=sql.query("SELECT COUNT(*) FROM notebook_workspace WHERE trashedAt IS NOT NULL").use{it.moveToFirst();it.getInt(0)}

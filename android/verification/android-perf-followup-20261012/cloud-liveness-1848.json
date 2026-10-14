@@ -1,0 +1,64 @@
+{
+  "utc": "2026-10-12T18:48:16.480200+00:00",
+  "reason": "Parent reported stale/disconnected cloud view; commands still succeed",
+  "checks": [
+    {
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "getprop",
+        "sys.boot_completed"
+      ],
+      "exit_code": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "pidof",
+        "org.inkweft.app.a0"
+      ],
+      "exit_code": 0,
+      "stdout": "6518\n",
+      "stderr": ""
+    }
+  ],
+  "latest_logs": [
+    {
+      "name": "candidate-ui-NotebookShelfUiTest-editorRenameKeepsUnsavedBodyUntilExplicitTextSave.log",
+      "bytes": 37,
+      "modified_utc": "2026-10-12T18:47:53.444215+00:00"
+    },
+    {
+      "name": "candidate-ui-NotebookShelfUiTest-coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview.log",
+      "bytes": 1553,
+      "modified_utc": "2026-10-12T18:47:23.809667+00:00"
+    },
+    {
+      "name": "candidate-ui-NotebookShelfUiTest-shelfRenameCancelBlankAndPersistedIdentity.log",
+      "bytes": 1461,
+      "modified_utc": "2026-10-12T18:46:05.469502+00:00"
+    },
+    {
+      "name": "candidate-app-core.log",
+      "bytes": 2337,
+      "modified_utc": "2026-10-12T18:44:44.793446+00:00"
+    },
+    {
+      "name": "candidate-backup-regressions.log",
+      "bytes": 3222,
+      "modified_utc": "2026-10-12T18:39:16.297475+00:00"
+    },
+    {
+      "name": "candidate-search-regressions.log",
+      "bytes": 1379,
+      "modified_utc": "2026-10-12T18:35:42.011839+00:00"
+    }
+  ]
+}

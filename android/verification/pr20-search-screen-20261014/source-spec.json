@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "status": "FROZEN_SOURCE_ONLY_SCREENING_NOT_RUN",
+  "materialized_scope": [
+    "android",
+    "ci"
+  ],
+  "excluded_from_build_inputs": [
+    "android/verification"
+  ],
+  "identities": {
+    "C0": {
+      "git": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+      "tree": "e773d660abbc15fd727000eb60631d3b72a19a92",
+      "production_overrides": [],
+      "canonical_manifest_sha256": "b5fa8f491f26db3dd4a5ab6870991b0e56c2c10b0f5c944bb3b8afae90ded66e",
+      "file_count": 963
+    },
+    "C1": {
+      "git": "a9ccf2cc727a7957e8fb00115f0060d80b287de1",
+      "tree": "acb62d93940c14f2e66122bee37d318c63b604f6",
+      "production_overrides": [],
+      "canonical_manifest_sha256": "d04176437afb992804f3925162248bae43b30d397df64bcf36ac93114c6f4100",
+      "file_count": 967
+    }
+  },
+  "common_probes": [
+    {
+      "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+      "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLibraryPairProbe.kt",
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "bytes": 18281,
+      "sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    }
+  ],
+  "native_execution": "NOT_RUN",
+  "version_aliases": {
+    "C0": "previous_candidate_d66",
+    "C1": "empty_draft_cte_candidate"
+  }
+}

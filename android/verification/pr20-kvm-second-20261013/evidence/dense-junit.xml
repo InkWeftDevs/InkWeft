@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker" tests="1" failures="0" time="3.472851276397705"><testcase classname="org.inkweft.app.StreamedInkRasterTest" name="completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker" time="3.472851276397705" /></testsuite>

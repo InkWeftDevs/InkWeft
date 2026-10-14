@@ -1,0 +1,61 @@
+
+org.inkweft.data.LibraryBackupRepositoryTest:SNAPSHOT_CANCELLATION_PHASE operation=baseline phase=snapshot-start elapsedMs=395.536091
+SNAPSHOT_CANCELLATION_PHASE operation=baseline phase=BEFORE_ISOLATED_COPY elapsedMs=2565.022939
+SNAPSHOT_CANCELLATION_PHASE operation=baseline phase=AFTER_ISOLATED_COPY elapsedMs=6529.003381
+SNAPSHOT_CANCELLATION_PHASE operation=baseline phase=BEFORE_SNAPSHOT_VALIDATE elapsedMs=9007.834201
+SNAPSHOT_CANCELLATION_PHASE operation=baseline phase=AFTER_SNAPSHOT_VALIDATE elapsedMs=50317.222566
+SNAPSHOT_CANCELLATION_PHASE operation=baseline phase=BEFORE_SNAPSHOT_WRITE elapsedMs=50325.425763
+SNAPSHOT_CANCELLATION_PHASE operation=baseline phase=BEFORE_SNAPSHOT_SYNC elapsedMs=58717.281414
+SNAPSHOT_CANCELLATION_PHASE operation=baseline phase=snapshot-complete-inspect-start elapsedMs=59070.191206
+SNAPSHOT_CANCELLATION_PHASE operation=baseline phase=inspect-complete elapsedMs=141843.618136
+SNAPSHOT_CANCELLATION_PHASE operation=cancel phase=snapshot-start elapsedMs=0.07235
+SNAPSHOT_CANCELLATION_PHASE operation=cancel phase=BEFORE_ISOLATED_COPY elapsedMs=1727.907551
+SNAPSHOT_CANCELLATION_PHASE operation=cancel phase=AFTER_ISOLATED_COPY elapsedMs=6747.329939
+SNAPSHOT_CANCELLATION_PHASE operation=cancel phase=BEFORE_SNAPSHOT_VALIDATE elapsedMs=8919.708765
+SNAPSHOT_CANCELLATION_OUTCOME failure=kotlinx.coroutines.TimeoutCancellationException partialObserved=false cancelled=false lastPhase=BEFORE_SNAPSHOT_VALIDATE elapsedMs=15144.626695
+
+Error in cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary(org.inkweft.data.LibraryBackupRepositoryTest):
+java.lang.AssertionError: Snapshot must be cancelled, not finish normally or time out
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.inkweft.data.LibraryBackupRepositoryTest$cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary$1$1.invokeSuspend(LibraryBackupRepositoryTest.kt:280)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at kotlinx.coroutines.internal.ScopeCoroutine.afterResume(Scopes.kt:35)
+	at kotlinx.coroutines.AbstractCoroutine.resumeWith(AbstractCoroutine.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:47)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:98)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at org.inkweft.data.LibraryBackupRepositoryTest.fixture(LibraryBackupRepositoryTest.kt:20)
+	at org.inkweft.data.LibraryBackupRepositoryTest.cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary(LibraryBackupRepositoryTest.kt:228)
+
+
+Time: 189.234
+There was 1 failure:
+1) cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary(org.inkweft.data.LibraryBackupRepositoryTest)
+java.lang.AssertionError: Snapshot must be cancelled, not finish normally or time out
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.inkweft.data.LibraryBackupRepositoryTest$cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary$1$1.invokeSuspend(LibraryBackupRepositoryTest.kt:280)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at kotlinx.coroutines.internal.ScopeCoroutine.afterResume(Scopes.kt:35)
+	at kotlinx.coroutines.AbstractCoroutine.resumeWith(AbstractCoroutine.kt:101)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:47)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:98)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+	at org.inkweft.data.LibraryBackupRepositoryTest.fixture(LibraryBackupRepositoryTest.kt:20)
+	at org.inkweft.data.LibraryBackupRepositoryTest.cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary(LibraryBackupRepositoryTest.kt:228)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+

@@ -1,0 +1,493 @@
+﻿2026-10-13T14:13:06.6988408Z Current runner version: '2.337.0'
+2026-10-13T14:13:06.7018926Z ##[group]Runner Image Provisioner
+2026-10-13T14:13:06.7020107Z Hosted Compute Agent
+2026-10-13T14:13:06.7020881Z Version: 20261002.596
+2026-10-13T14:13:06.7021660Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-13T14:13:06.7022500Z Build Date: 2026-10-02T22:28:27Z
+2026-10-13T14:13:06.7023396Z Worker ID: {f3a0437c-8123-4d89-beef-6f32c13afcbc}
+2026-10-13T14:13:06.7024234Z Region: westus3
+2026-10-13T14:13:06.7025083Z Cloud: Azure
+2026-10-13T14:13:06.7025768Z ##[endgroup]
+2026-10-13T14:13:06.7027505Z ##[group]Operating System
+2026-10-13T14:13:06.7028359Z Ubuntu
+2026-10-13T14:13:06.7028973Z 24.04.5
+2026-10-13T14:13:06.7029644Z LTS
+2026-10-13T14:13:06.7030322Z ##[endgroup]
+2026-10-13T14:13:06.7030977Z ##[group]Runner Image
+2026-10-13T14:13:06.7031807Z Image: ubuntu-24.04
+2026-10-13T14:13:06.7032492Z Version: 20261004.327.1
+2026-10-13T14:13:06.7034172Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-13T14:13:06.7036168Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-13T14:13:06.7037106Z ##[endgroup]
+2026-10-13T14:13:06.7038048Z ##[group]GITHUB_TOKEN Permissions
+2026-10-13T14:13:06.7040023Z Contents: read
+2026-10-13T14:13:06.7040524Z Metadata: read
+2026-10-13T14:13:06.7041071Z ##[endgroup]
+2026-10-13T14:13:06.7042950Z Secret source: Actions
+2026-10-13T14:13:06.7043724Z Cache mode: write
+2026-10-13T14:13:06.7044581Z Prepare workflow directory
+2026-10-13T14:13:06.7521425Z Prepare all required actions
+2026-10-13T14:13:06.7573590Z Getting action download info
+2026-10-13T14:13:07.0566576Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-13T14:13:07.6008944Z Download action repository 'actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3' (SHA:cf277c60eb25467037889841efdb72551f06f6c3)
+2026-10-13T14:13:09.3429455Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-13T14:13:09.8561708Z Complete job name: PR20 fixed three-source native validation
+2026-10-13T14:13:09.9205844Z ##[group]Run set -euo pipefail
+2026-10-13T14:13:09.9206248Z [36;1mset -euo pipefail[0m
+2026-10-13T14:13:09.9206543Z [36;1mexport KVM_ONCE="$RUNNER_TEMP/pr20-kvm-triple"[0m
+2026-10-13T14:13:09.9206857Z [36;1mexport ANDROID_AVD_HOME="$KVM_ONCE/avd"[0m
+2026-10-13T14:13:09.9207156Z [36;1mexport ANDROID_USER_HOME="$KVM_ONCE/android-user"[0m
+2026-10-13T14:13:09.9207498Z [36;1mexport ANDROID_EMULATOR_HOME="$KVM_ONCE/android-user"[0m
+2026-10-13T14:13:09.9207789Z [36;1mpython3 - <<'PYENV'[0m
+2026-10-13T14:13:09.9207994Z [36;1mimport os[0m
+2026-10-13T14:13:09.9208245Z [36;1mwith open(os.environ['GITHUB_ENV'],'a') as output:[0m
+2026-10-13T14:13:09.9208651Z [36;1m    for key in ['KVM_ONCE','ANDROID_AVD_HOME','ANDROID_USER_HOME','ANDROID_EMULATOR_HOME']:[0m
+2026-10-13T14:13:09.9209079Z [36;1m        output.write(key+'='+os.environ[key]+'\n')[0m
+2026-10-13T14:13:09.9209346Z [36;1mPYENV[0m
+2026-10-13T14:13:09.9209549Z [36;1mmkdir -p "$KVM_ONCE/evidence"[0m
+2026-10-13T14:13:09.9209841Z [36;1mpython3 - <<'PYCODE'[0m
+2026-10-13T14:13:09.9210109Z [36;1mimport datetime,json,os,pathlib,urllib.request[0m
+2026-10-13T14:13:09.9210638Z [36;1murl=f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}/jobs"[0m
+2026-10-13T14:13:09.9211366Z [36;1mrequest=urllib.request.Request(url,headers={'Accept':'application/vnd.github+json','User-Agent':'InkWeft-approved-triple-runner'})[0m
+2026-10-13T14:13:09.9211986Z [36;1mwith urllib.request.urlopen(request,timeout=20) as response:data=json.load(response)[0m
+2026-10-13T14:13:09.9212553Z [36;1mjobs=[j for j in data['jobs'] if j['name']=='PR20 fixed three-source native validation' and j['status']=='in_progress'][0m
+2026-10-13T14:13:09.9213078Z [36;1massert len(jobs)==1,'Cannot resolve actual job start; stop without widening budget'[0m
+2026-10-13T14:13:09.9213816Z [36;1mstart=int(datetime.datetime.fromisoformat(jobs[0]['started_at'].replace('Z','+00:00')).timestamp())[0m
+2026-10-13T14:13:09.9214643Z [36;1mvalues={'KVM_JOB_STARTED':start,'KVM_SETUP_CUTOFF':start+32*60,'KVM_CORRECTNESS_CUTOFF':start+38*60,'KVM_COMMON_CUTOFF':start+52*60,'KVM_WORK_DEADLINE':start+55*60}[0m
+2026-10-13T14:13:09.9215219Z [36;1mwith open(os.environ['GITHUB_ENV'],'a') as output:[0m
+2026-10-13T14:13:09.9215573Z [36;1m    for key,value in values.items():output.write(f'{key}={value}\n')[0m
+2026-10-13T14:13:09.9216275Z [36;1mpathlib.Path(os.environ['KVM_ONCE'],'evidence','clock.json').write_text(json.dumps({'job_id':jobs[0]['id'],'started_epoch':start,'deadlines_minutes':[32,38,52,55,60],'deadline_epochs':values},indent=2))[0m
+2026-10-13T14:13:09.9216887Z [36;1mPYCODE[0m
+2026-10-13T14:13:10.0278326Z shell: /usr/bin/bash -e {0}
+2026-10-13T14:13:10.0278917Z ##[endgroup]
+2026-10-13T14:13:10.6451970Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-10-13T14:13:10.6452361Z with:
+2026-10-13T14:13:10.6452573Z   persist-credentials: false
+2026-10-13T14:13:10.6452810Z   path: control
+2026-10-13T14:13:10.6453017Z   repository: InkWeftDevs/InkWeft
+2026-10-13T14:13:10.6455654Z   token: ***
+2026-10-13T14:13:10.6455862Z   ssh-strict: true
+2026-10-13T14:13:10.6456054Z   ssh-user: git
+2026-10-13T14:13:10.6456237Z   clean: true
+2026-10-13T14:13:10.6456445Z   sparse-checkout-cone-mode: true
+2026-10-13T14:13:10.6456689Z   fetch-depth: 1
+2026-10-13T14:13:10.6456878Z   fetch-tags: false
+2026-10-13T14:13:10.6457079Z   show-progress: true
+2026-10-13T14:13:10.6457298Z   lfs: false
+2026-10-13T14:13:10.6457478Z   submodules: false
+2026-10-13T14:13:10.6457674Z   set-safe-directory: true
+2026-10-13T14:13:10.6457903Z   allow-unsafe-pr-checkout: false
+2026-10-13T14:13:10.6458139Z env:
+2026-10-13T14:13:10.6458371Z   KVM_ONCE: /home/runner/work/_temp/pr20-kvm-triple
+2026-10-13T14:13:10.6458785Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-kvm-triple/avd
+2026-10-13T14:13:10.6459208Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:13:10.6459636Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:13:10.6459981Z   KVM_JOB_STARTED: 1791900785
+2026-10-13T14:13:10.6460212Z   KVM_SETUP_CUTOFF: 1791902705
+2026-10-13T14:13:10.6460435Z   KVM_CORRECTNESS_CUTOFF: 1791903065
+2026-10-13T14:13:10.6460679Z   KVM_COMMON_CUTOFF: 1791903905
+2026-10-13T14:13:10.6460897Z   KVM_WORK_DEADLINE: 1791904085
+2026-10-13T14:13:10.6461106Z ##[endgroup]
+2026-10-13T14:13:10.7431626Z Syncing repository: InkWeftDevs/InkWeft
+2026-10-13T14:13:10.7433452Z ##[group]Getting Git version info
+2026-10-13T14:13:10.7433973Z Working directory is '/home/runner/work/InkWeft/InkWeft/control'
+2026-10-13T14:13:10.7434881Z [command]/usr/bin/git version
+2026-10-13T14:13:10.7500902Z git version 2.55.0
+2026-10-13T14:13:10.7542904Z ##[endgroup]
+2026-10-13T14:13:10.7586878Z Temporarily overriding HOME='/home/runner/work/_temp/ac19ee46-87d6-4c0e-b5b3-a84b7a9c12fb' before making global git config changes
+2026-10-13T14:13:10.7588951Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-13T14:13:10.7597569Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/InkWeft/InkWeft/control
+2026-10-13T14:13:10.8167860Z ##[group]Initializing the repository
+2026-10-13T14:13:10.8172454Z [command]/usr/bin/git init /home/runner/work/InkWeft/InkWeft/control
+2026-10-13T14:13:10.9318750Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-13T14:13:10.9319940Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-13T14:13:10.9320874Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-13T14:13:10.9321434Z hint: call:
+2026-10-13T14:13:10.9321710Z hint:
+2026-10-13T14:13:10.9322144Z hint: 	git config --global init.defaultBranch <name>
+2026-10-13T14:13:10.9322727Z hint:
+2026-10-13T14:13:10.9323020Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-13T14:13:10.9323478Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-13T14:13:10.9323832Z hint:
+2026-10-13T14:13:10.9324145Z hint: 	git branch -m <name>
+2026-10-13T14:13:10.9324652Z hint:
+2026-10-13T14:13:10.9325077Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-13T14:13:10.9325699Z Initialized empty Git repository in /home/runner/work/InkWeft/InkWeft/control/.git/
+2026-10-13T14:13:10.9330657Z [command]/usr/bin/git remote add origin https://github.com/InkWeftDevs/InkWeft
+2026-10-13T14:13:10.9994648Z ##[endgroup]
+2026-10-13T14:13:10.9995279Z ##[group]Disabling automatic garbage collection
+2026-10-13T14:13:11.0000095Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-13T14:13:11.0499182Z ##[endgroup]
+2026-10-13T14:13:11.0499593Z ##[group]Setting up auth
+2026-10-13T14:13:11.0508847Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-13T14:13:11.0550264Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-13T14:13:11.0952314Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-13T14:13:11.0988595Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-13T14:13:11.1226987Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-13T14:13:11.1244092Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-13T14:13:11.1468481Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-13T14:13:11.2283939Z ##[endgroup]
+2026-10-13T14:13:11.2285356Z ##[group]Fetching the repository
+2026-10-13T14:13:11.2296810Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +71b84885bd4ecb3fe8a4406788ffa14abc189497:refs/remotes/origin/codex/kvm-pr20-triple-20261013-dependency3
+2026-10-13T14:13:16.6961957Z From https://github.com/InkWeftDevs/InkWeft
+2026-10-13T14:13:16.6962956Z  * [new ref]         71b84885bd4ecb3fe8a4406788ffa14abc189497 -> origin/codex/kvm-pr20-triple-20261013-dependency3
+2026-10-13T14:13:16.6966359Z ##[endgroup]
+2026-10-13T14:13:16.6969451Z ##[group]Determining the checkout info
+2026-10-13T14:13:16.6970100Z ##[endgroup]
+2026-10-13T14:13:16.6976832Z [command]/usr/bin/git sparse-checkout disable
+2026-10-13T14:13:16.7136874Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-13T14:13:16.7176177Z ##[group]Checking out the ref
+2026-10-13T14:13:16.7180608Z [command]/usr/bin/git checkout --progress --force -B codex/kvm-pr20-triple-20261013-dependency3 refs/remotes/origin/codex/kvm-pr20-triple-20261013-dependency3
+2026-10-13T14:13:17.5686627Z Switched to a new branch 'codex/kvm-pr20-triple-20261013-dependency3'
+2026-10-13T14:13:17.5805529Z branch 'codex/kvm-pr20-triple-20261013-dependency3' set up to track 'origin/codex/kvm-pr20-triple-20261013-dependency3'.
+2026-10-13T14:13:17.5827666Z ##[endgroup]
+2026-10-13T14:13:17.5870811Z [command]/usr/bin/git log -1 --format=%H
+2026-10-13T14:13:17.5898270Z 71b84885bd4ecb3fe8a4406788ffa14abc189497
+2026-10-13T14:13:17.5906532Z ##[group]Removing auth
+2026-10-13T14:13:17.5909816Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-13T14:13:17.5941897Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-13T14:13:17.6155487Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-13T14:13:17.6178624Z http.https://github.com/.extraheader
+2026-10-13T14:13:17.6185664Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-13T14:13:17.6222536Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-13T14:13:17.6439238Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-13T14:13:17.6485804Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-13T14:13:17.6677215Z ##[endgroup]
+2026-10-13T14:13:17.6861621Z ##[group]Run actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+2026-10-13T14:13:17.6861960Z with:
+2026-10-13T14:13:17.6862127Z   distribution: temurin
+2026-10-13T14:13:17.6862330Z   java-version: 17
+2026-10-13T14:13:17.6862501Z   java-package: jdk
+2026-10-13T14:13:17.6862719Z   check-latest: false
+2026-10-13T14:13:17.6862941Z   server-id: github
+2026-10-13T14:13:17.6863119Z   server-username: GITHUB_ACTOR
+2026-10-13T14:13:17.6863331Z   server-password: GITHUB_TOKEN
+2026-10-13T14:13:17.6863539Z   overwrite-settings: true
+2026-10-13T14:13:17.6863731Z   job-status: success
+2026-10-13T14:13:17.6866001Z   token: ***
+2026-10-13T14:13:17.6866163Z env:
+2026-10-13T14:13:17.6866356Z   KVM_ONCE: /home/runner/work/_temp/pr20-kvm-triple
+2026-10-13T14:13:17.6866659Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-kvm-triple/avd
+2026-10-13T14:13:17.6867007Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:13:17.6867412Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:13:17.6867751Z   KVM_JOB_STARTED: 1791900785
+2026-10-13T14:13:17.6868046Z   KVM_SETUP_CUTOFF: 1791902705
+2026-10-13T14:13:17.6868275Z   KVM_CORRECTNESS_CUTOFF: 1791903065
+2026-10-13T14:13:17.6868494Z   KVM_COMMON_CUTOFF: 1791903905
+2026-10-13T14:13:17.6868685Z   KVM_WORK_DEADLINE: 1791904085
+2026-10-13T14:13:17.6868869Z ##[endgroup]
+2026-10-13T14:13:17.8254148Z ##[warning]setup-java v4 is deprecated and will no longer receive updates. Please migrate to actions/setup-java@v5.
+2026-10-13T14:13:17.8263943Z ##[group]Installed distributions
+2026-10-13T14:13:17.8284584Z Resolved Java 17.0.20+1 from tool-cache
+2026-10-13T14:13:17.8284890Z Setting Java 17.0.20+1 as the default
+2026-10-13T14:13:17.8293320Z (node:2173) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-13T14:13:17.8294066Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-13T14:13:17.8296481Z Creating toolchains.xml for JDK version 17 from temurin
+2026-10-13T14:13:17.8352602Z Writing to /home/runner/.m2/toolchains.xml
+2026-10-13T14:13:17.8352908Z 
+2026-10-13T14:13:17.8353038Z Java configuration:
+2026-10-13T14:13:17.8353357Z   Distribution: temurin
+2026-10-13T14:13:17.8353645Z   Version: 17.0.20+1
+2026-10-13T14:13:17.8354059Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:13:17.8354594Z 
+2026-10-13T14:13:17.8354962Z ##[endgroup]
+2026-10-13T14:13:17.8370722Z Creating settings.xml with server-id: github
+2026-10-13T14:13:17.8392194Z Writing to /home/runner/.m2/settings.xml
+2026-10-13T14:13:17.8514690Z ##[group]Run set -euo pipefail
+2026-10-13T14:13:17.8515010Z [36;1mset -euo pipefail[0m
+2026-10-13T14:13:17.8515224Z [36;1mcleanup_on_failure() {[0m
+2026-10-13T14:13:17.8515440Z [36;1m  code=$?[0m
+2026-10-13T14:13:17.8515618Z [36;1m  trap - EXIT INT TERM[0m
+2026-10-13T14:13:17.8515847Z [36;1m  if test "$code" -ne 0; then[0m
+2026-10-13T14:13:17.8516255Z [36;1m    timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py trap || code=1[0m
+2026-10-13T14:13:17.8516635Z [36;1m  fi[0m
+2026-10-13T14:13:17.8516806Z [36;1m  exit "$code"[0m
+2026-10-13T14:13:17.8517140Z [36;1m}[0m
+2026-10-13T14:13:17.8517308Z [36;1mtrap cleanup_on_failure EXIT[0m
+2026-10-13T14:13:17.8517524Z [36;1mtrap 'exit 130' INT[0m
+2026-10-13T14:13:17.8517717Z [36;1mtrap 'exit 143' TERM[0m
+2026-10-13T14:13:17.8517953Z [36;1mremaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))[0m
+2026-10-13T14:13:17.8518212Z [36;1mtest "$remaining" -gt 0[0m
+2026-10-13T14:13:17.8518623Z [36;1mtimeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-kvm-triple/run.py setup[0m
+2026-10-13T14:13:17.8590461Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-13T14:13:17.8590956Z env:
+2026-10-13T14:13:17.8591282Z   KVM_ONCE: /home/runner/work/_temp/pr20-kvm-triple
+2026-10-13T14:13:17.8591794Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-kvm-triple/avd
+2026-10-13T14:13:17.8592379Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:13:17.8593027Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:13:17.8593550Z   KVM_JOB_STARTED: 1791900785
+2026-10-13T14:13:17.8593844Z   KVM_SETUP_CUTOFF: 1791902705
+2026-10-13T14:13:17.8594150Z   KVM_CORRECTNESS_CUTOFF: 1791903065
+2026-10-13T14:13:17.8594602Z   KVM_COMMON_CUTOFF: 1791903905
+2026-10-13T14:13:17.8594923Z   KVM_WORK_DEADLINE: 1791904085
+2026-10-13T14:13:17.8595402Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:13:17.8596031Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:13:17.8596452Z ##[endgroup]
+2026-10-13T14:14:02.6659003Z ##[group]Run set -euo pipefail
+2026-10-13T14:14:02.6659284Z [36;1mset -euo pipefail[0m
+2026-10-13T14:14:02.6659491Z [36;1mcleanup_on_failure() {[0m
+2026-10-13T14:14:02.6659705Z [36;1m  code=$?[0m
+2026-10-13T14:14:02.6659881Z [36;1m  trap - EXIT INT TERM[0m
+2026-10-13T14:14:02.6660091Z [36;1m  if test "$code" -ne 0; then[0m
+2026-10-13T14:14:02.6660494Z [36;1m    timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py trap || code=1[0m
+2026-10-13T14:14:02.6660904Z [36;1m  fi[0m
+2026-10-13T14:14:02.6661072Z [36;1m  exit "$code"[0m
+2026-10-13T14:14:02.6661245Z [36;1m}[0m
+2026-10-13T14:14:02.6661413Z [36;1mtrap cleanup_on_failure EXIT[0m
+2026-10-13T14:14:02.6661631Z [36;1mtrap 'exit 130' INT[0m
+2026-10-13T14:14:02.6661825Z [36;1mtrap 'exit 143' TERM[0m
+2026-10-13T14:14:02.6662070Z [36;1mremaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))[0m
+2026-10-13T14:14:02.6662333Z [36;1mtest "$remaining" -gt 0[0m
+2026-10-13T14:14:02.6662749Z [36;1mtimeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-kvm-triple/run.py build B[0m
+2026-10-13T14:14:02.6719219Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-13T14:14:02.6719504Z env:
+2026-10-13T14:14:02.6719715Z   KVM_ONCE: /home/runner/work/_temp/pr20-kvm-triple
+2026-10-13T14:14:02.6720035Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-kvm-triple/avd
+2026-10-13T14:14:02.6720381Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:14:02.6720767Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:14:02.6721072Z   KVM_JOB_STARTED: 1791900785
+2026-10-13T14:14:02.6721279Z   KVM_SETUP_CUTOFF: 1791902705
+2026-10-13T14:14:02.6721479Z   KVM_CORRECTNESS_CUTOFF: 1791903065
+2026-10-13T14:14:02.6721689Z   KVM_COMMON_CUTOFF: 1791903905
+2026-10-13T14:14:02.6721881Z   KVM_WORK_DEADLINE: 1791904085
+2026-10-13T14:14:02.6722160Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:14:02.6722532Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:14:02.6722823Z ##[endgroup]
+2026-10-13T14:23:52.1088318Z ##[group]Run set -euo pipefail
+2026-10-13T14:23:52.1088649Z [36;1mset -euo pipefail[0m
+2026-10-13T14:23:52.1088887Z [36;1mcleanup_on_failure() {[0m
+2026-10-13T14:23:52.1089127Z [36;1m  code=$?[0m
+2026-10-13T14:23:52.1089329Z [36;1m  trap - EXIT INT TERM[0m
+2026-10-13T14:23:52.1089754Z [36;1m  if test "$code" -ne 0; then[0m
+2026-10-13T14:23:52.1090255Z [36;1m    timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py trap || code=1[0m
+2026-10-13T14:23:52.1090720Z [36;1m  fi[0m
+2026-10-13T14:23:52.1090910Z [36;1m  exit "$code"[0m
+2026-10-13T14:23:52.1091114Z [36;1m}[0m
+2026-10-13T14:23:52.1091320Z [36;1mtrap cleanup_on_failure EXIT[0m
+2026-10-13T14:23:52.1091577Z [36;1mtrap 'exit 130' INT[0m
+2026-10-13T14:23:52.1091802Z [36;1mtrap 'exit 143' TERM[0m
+2026-10-13T14:23:52.1092082Z [36;1mremaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))[0m
+2026-10-13T14:23:52.1092396Z [36;1mtest "$remaining" -gt 0[0m
+2026-10-13T14:23:52.1092885Z [36;1mtimeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-kvm-triple/run.py build C0[0m
+2026-10-13T14:23:52.1159976Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-13T14:23:52.1160312Z env:
+2026-10-13T14:23:52.1160555Z   KVM_ONCE: /home/runner/work/_temp/pr20-kvm-triple
+2026-10-13T14:23:52.1160953Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-kvm-triple/avd
+2026-10-13T14:23:52.1161374Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:23:52.1161811Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:23:52.1162163Z   KVM_JOB_STARTED: 1791900785
+2026-10-13T14:23:52.1162389Z   KVM_SETUP_CUTOFF: 1791902705
+2026-10-13T14:23:52.1162617Z   KVM_CORRECTNESS_CUTOFF: 1791903065
+2026-10-13T14:23:52.1162855Z   KVM_COMMON_CUTOFF: 1791903905
+2026-10-13T14:23:52.1163074Z   KVM_WORK_DEADLINE: 1791904085
+2026-10-13T14:23:52.1163392Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:23:52.1163823Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:23:52.1164159Z ##[endgroup]
+2026-10-13T14:30:13.2082786Z ##[group]Run set -euo pipefail
+2026-10-13T14:30:13.2083098Z [36;1mset -euo pipefail[0m
+2026-10-13T14:30:13.2083356Z [36;1mcleanup_on_failure() {[0m
+2026-10-13T14:30:13.2083599Z [36;1m  code=$?[0m
+2026-10-13T14:30:13.2083802Z [36;1m  trap - EXIT INT TERM[0m
+2026-10-13T14:30:13.2084038Z [36;1m  if test "$code" -ne 0; then[0m
+2026-10-13T14:30:13.2084751Z [36;1m    timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py trap || code=1[0m
+2026-10-13T14:30:13.2085206Z [36;1m  fi[0m
+2026-10-13T14:30:13.2085397Z [36;1m  exit "$code"[0m
+2026-10-13T14:30:13.2085599Z [36;1m}[0m
+2026-10-13T14:30:13.2085791Z [36;1mtrap cleanup_on_failure EXIT[0m
+2026-10-13T14:30:13.2086042Z [36;1mtrap 'exit 130' INT[0m
+2026-10-13T14:30:13.2086259Z [36;1mtrap 'exit 143' TERM[0m
+2026-10-13T14:30:13.2086535Z [36;1mremaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))[0m
+2026-10-13T14:30:13.2086842Z [36;1mtest "$remaining" -gt 0[0m
+2026-10-13T14:30:13.2087325Z [36;1mtimeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-kvm-triple/run.py build C1[0m
+2026-10-13T14:30:13.2154908Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-13T14:30:13.2155229Z env:
+2026-10-13T14:30:13.2155459Z   KVM_ONCE: /home/runner/work/_temp/pr20-kvm-triple
+2026-10-13T14:30:13.2155815Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-kvm-triple/avd
+2026-10-13T14:30:13.2156229Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:30:13.2156690Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:30:13.2157049Z   KVM_JOB_STARTED: 1791900785
+2026-10-13T14:30:13.2157272Z   KVM_SETUP_CUTOFF: 1791902705
+2026-10-13T14:30:13.2157500Z   KVM_CORRECTNESS_CUTOFF: 1791903065
+2026-10-13T14:30:13.2157744Z   KVM_COMMON_CUTOFF: 1791903905
+2026-10-13T14:30:13.2157962Z   KVM_WORK_DEADLINE: 1791904085
+2026-10-13T14:30:13.2158274Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:30:13.2158736Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:30:13.2159285Z ##[endgroup]
+2026-10-13T14:37:46.6721676Z ##[group]Run set -euo pipefail
+2026-10-13T14:37:46.6721964Z [36;1mset -euo pipefail[0m
+2026-10-13T14:37:46.6722170Z [36;1mcleanup_on_failure() {[0m
+2026-10-13T14:37:46.6722371Z [36;1m  code=$?[0m
+2026-10-13T14:37:46.6722551Z [36;1m  trap - EXIT INT TERM[0m
+2026-10-13T14:37:46.6722751Z [36;1m  if test "$code" -ne 0; then[0m
+2026-10-13T14:37:46.6723153Z [36;1m    timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py trap || code=1[0m
+2026-10-13T14:37:46.6723533Z [36;1m  fi[0m
+2026-10-13T14:37:46.6723697Z [36;1m  exit "$code"[0m
+2026-10-13T14:37:46.6723868Z [36;1m}[0m
+2026-10-13T14:37:46.6724034Z [36;1mtrap cleanup_on_failure EXIT[0m
+2026-10-13T14:37:46.6724454Z [36;1mtrap 'exit 130' INT[0m
+2026-10-13T14:37:46.6724677Z [36;1mtrap 'exit 143' TERM[0m
+2026-10-13T14:37:46.6724920Z [36;1mremaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))[0m
+2026-10-13T14:37:46.6725181Z [36;1mtest "$remaining" -gt 0[0m
+2026-10-13T14:37:46.6725603Z [36;1mtimeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-kvm-triple/run.py emulator[0m
+2026-10-13T14:37:46.6931333Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-13T14:37:46.6931626Z env:
+2026-10-13T14:37:46.6931829Z   KVM_ONCE: /home/runner/work/_temp/pr20-kvm-triple
+2026-10-13T14:37:46.6932152Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-kvm-triple/avd
+2026-10-13T14:37:46.6932499Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:37:46.6932870Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:37:46.6933169Z   KVM_JOB_STARTED: 1791900785
+2026-10-13T14:37:46.6933369Z   KVM_SETUP_CUTOFF: 1791902705
+2026-10-13T14:37:46.6933576Z   KVM_CORRECTNESS_CUTOFF: 1791903065
+2026-10-13T14:37:46.6933785Z   KVM_COMMON_CUTOFF: 1791903905
+2026-10-13T14:37:46.6933973Z   KVM_WORK_DEADLINE: 1791904085
+2026-10-13T14:37:46.6934244Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:37:46.6934867Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:37:46.6935162Z ##[endgroup]
+2026-10-13T14:38:17.1031704Z ##[group]Run set -euo pipefail
+2026-10-13T14:38:17.1032049Z [36;1mset -euo pipefail[0m
+2026-10-13T14:38:17.1032318Z [36;1mcleanup_on_failure() {[0m
+2026-10-13T14:38:17.1032588Z [36;1m  code=$?[0m
+2026-10-13T14:38:17.1032818Z [36;1m  trap - EXIT INT TERM[0m
+2026-10-13T14:38:17.1033084Z [36;1m  if test "$code" -ne 0; then[0m
+2026-10-13T14:38:17.1033642Z [36;1m    timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py trap || code=1[0m
+2026-10-13T14:38:17.1034235Z [36;1m  fi[0m
+2026-10-13T14:38:17.1034625Z [36;1m  exit "$code"[0m
+2026-10-13T14:38:17.1034876Z [36;1m}[0m
+2026-10-13T14:38:17.1035092Z [36;1mtrap cleanup_on_failure EXIT[0m
+2026-10-13T14:38:17.1035376Z [36;1mtrap 'exit 130' INT[0m
+2026-10-13T14:38:17.1035626Z [36;1mtrap 'exit 143' TERM[0m
+2026-10-13T14:38:17.1036072Z [36;1mremaining=$((KVM_CORRECTNESS_CUTOFF - $(date +%s) - 2))[0m
+2026-10-13T14:38:17.1036478Z [36;1mtest "$remaining" -gt 0[0m
+2026-10-13T14:38:17.1037193Z [36;1mtimeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-kvm-triple/run.py methods correctness[0m
+2026-10-13T14:38:17.1111113Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-13T14:38:17.1111400Z env:
+2026-10-13T14:38:17.1111622Z   KVM_ONCE: /home/runner/work/_temp/pr20-kvm-triple
+2026-10-13T14:38:17.1111939Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-kvm-triple/avd
+2026-10-13T14:38:17.1112283Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:38:17.1112652Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:38:17.1112952Z   KVM_JOB_STARTED: 1791900785
+2026-10-13T14:38:17.1113145Z   KVM_SETUP_CUTOFF: 1791902705
+2026-10-13T14:38:17.1113341Z   KVM_CORRECTNESS_CUTOFF: 1791903065
+2026-10-13T14:38:17.1113765Z   KVM_COMMON_CUTOFF: 1791903905
+2026-10-13T14:38:17.1113950Z   KVM_WORK_DEADLINE: 1791904085
+2026-10-13T14:38:17.1114222Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:38:17.1115113Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:38:17.1115573Z ##[endgroup]
+2026-10-13T14:38:21.3478021Z {"ordinal": 1, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews", "status": "PASS"}
+2026-10-13T14:38:21.9052718Z {"ordinal": 2, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.data.LibraryPagingTest#snapshotRetainsOldClassificationAndSourceWhileWriterCommits", "status": "PASS"}
+2026-10-13T14:38:22.4107446Z {"ordinal": 3, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.data.LibraryPagingTest#refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState", "status": "PASS"}
+2026-10-13T14:38:23.1679643Z {"ordinal": 4, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh", "status": "PASS"}
+2026-10-13T14:38:24.2524411Z {"ordinal": 5, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits", "status": "PASS"}
+2026-10-13T14:38:25.2444650Z {"ordinal": 6, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges", "status": "PASS"}
+2026-10-13T14:38:26.1866029Z {"ordinal": 7, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates", "status": "PASS"}
+2026-10-13T14:38:27.6245924Z {"ordinal": 8, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.data.HistoryCollectionTest#oneScanSurvivesRoomObserverRefreshAcrossSevenBatches", "status": "PASS"}
+2026-10-13T14:38:28.6662237Z {"ordinal": 9, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates", "status": "PASS"}
+2026-10-13T14:38:29.5252277Z {"ordinal": 10, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates", "status": "PASS"}
+2026-10-13T14:38:30.3817160Z {"ordinal": 11, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot", "status": "PASS"}
+2026-10-13T14:38:31.1875971Z {"ordinal": 12, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot", "status": "PASS"}
+2026-10-13T14:38:31.9425972Z {"ordinal": 13, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.data.HistoryCollectionTest#overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion", "status": "PASS"}
+2026-10-13T14:38:32.7549358Z {"ordinal": 14, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.data.HistoryCollectionTest#malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion", "status": "PASS"}
+2026-10-13T14:38:33.8135218Z {"ordinal": 15, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes", "status": "PASS"}
+2026-10-13T14:38:34.5680906Z {"ordinal": 16, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.data.HistoryCollectionTest#missingRoomGuardLogAbortsWithoutDeletingCandidates", "status": "PASS"}
+2026-10-13T14:38:41.8471756Z {"ordinal": 17, "phase": "correctness", "identity": "C1", "selection": "org.inkweft.app.NotebookShelfUiTest#pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges", "status": "FAIL"}
+2026-10-13T14:38:41.8809364Z {"status": "BLOCKED_OR_FAILED", "error": "AssertionError: Owned package process cleanup unconfirmed"}
+2026-10-13T14:38:44.8392397Z {"emulator": "STOPPED_CONFIRMED", "command_groups": "STOPPED_CONFIRMED", "acl": "RESTORED_EXACT", "errors": []}
+2026-10-13T14:38:44.8453829Z ##[error]Process completed with exit code 1.
+2026-10-13T14:38:44.8496005Z ##[group]Run if test -f control/ci/pr20-kvm-triple/cleanup.py; then
+2026-10-13T14:38:44.8496449Z [36;1mif test -f control/ci/pr20-kvm-triple/cleanup.py; then[0m
+2026-10-13T14:38:44.8496928Z [36;1m  timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/cleanup.py always[0m
+2026-10-13T14:38:44.8497332Z [36;1melse[0m
+2026-10-13T14:38:44.8497539Z [36;1m  mkdir -p "$KVM_ONCE/evidence"[0m
+2026-10-13T14:38:44.8498054Z [36;1m  echo '{"emulator":"NOT_STARTED","command_groups":"NOT_STARTED","acl":"NOT_TOUCHED","errors":[]}' > "$KVM_ONCE/evidence/cleanup-always.json"[0m
+2026-10-13T14:38:44.8498547Z [36;1mfi[0m
+2026-10-13T14:38:44.8562129Z shell: /usr/bin/bash -e {0}
+2026-10-13T14:38:44.8562368Z env:
+2026-10-13T14:38:44.8562587Z   KVM_ONCE: /home/runner/work/_temp/pr20-kvm-triple
+2026-10-13T14:38:44.8562929Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-kvm-triple/avd
+2026-10-13T14:38:44.8563359Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:38:44.8563778Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:38:44.8564114Z   KVM_JOB_STARTED: 1791900785
+2026-10-13T14:38:44.8564493Z   KVM_SETUP_CUTOFF: 1791902705
+2026-10-13T14:38:44.8564716Z   KVM_CORRECTNESS_CUTOFF: 1791903065
+2026-10-13T14:38:44.8564949Z   KVM_COMMON_CUTOFF: 1791903905
+2026-10-13T14:38:44.8565159Z   KVM_WORK_DEADLINE: 1791904085
+2026-10-13T14:38:44.8565459Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:38:44.8565871Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:38:44.8566197Z ##[endgroup]
+2026-10-13T14:38:46.1631609Z {"emulator": "STOPPED_CONFIRMED", "command_groups": "STOPPED_CONFIRMED", "acl": "RESTORED_EXACT", "errors": []}
+2026-10-13T14:38:46.1704433Z ##[group]Run if test -f control/ci/pr20-kvm-triple/package.py; then
+2026-10-13T14:38:46.1704896Z [36;1mif test -f control/ci/pr20-kvm-triple/package.py; then[0m
+2026-10-13T14:38:46.1705311Z [36;1m  timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-kvm-triple/package.py[0m
+2026-10-13T14:38:46.1705662Z [36;1melse[0m
+2026-10-13T14:38:46.1705838Z [36;1m  mkdir -p "$KVM_ONCE/upload"[0m
+2026-10-13T14:38:46.1706279Z [36;1m  echo '{"status":"SETUP_BLOCKED_BEFORE_SOURCE_CHECKOUT","tests":"NOT_RUN","kvm":"NOT_TOUCHED"}' > "$KVM_ONCE/upload/setup-failure.json"[0m
+2026-10-13T14:38:46.1706699Z [36;1mfi[0m
+2026-10-13T14:38:46.1762949Z shell: /usr/bin/bash -e {0}
+2026-10-13T14:38:46.1763176Z env:
+2026-10-13T14:38:46.1763389Z   KVM_ONCE: /home/runner/work/_temp/pr20-kvm-triple
+2026-10-13T14:38:46.1763720Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-kvm-triple/avd
+2026-10-13T14:38:46.1764083Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:38:46.1764590Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:38:46.1764893Z   KVM_JOB_STARTED: 1791900785
+2026-10-13T14:38:46.1765089Z   KVM_SETUP_CUTOFF: 1791902705
+2026-10-13T14:38:46.1765286Z   KVM_CORRECTNESS_CUTOFF: 1791903065
+2026-10-13T14:38:46.1765493Z   KVM_COMMON_CUTOFF: 1791903905
+2026-10-13T14:38:46.1765681Z   KVM_WORK_DEADLINE: 1791904085
+2026-10-13T14:38:46.1765951Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:38:46.1766340Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:38:46.1766638Z ##[endgroup]
+2026-10-13T14:38:46.2315103Z {"files": 99, "bytes": 1525946, "omitted": 0, "truncated": 0}
+2026-10-13T14:38:46.2421789Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-13T14:38:46.2422115Z with:
+2026-10-13T14:38:46.2422463Z   name: pr20-kvm-triple-38411448143
+2026-10-13T14:38:46.2422670Z   retention-days: 3
+2026-10-13T14:38:46.2422848Z   if-no-files-found: error
+2026-10-13T14:38:46.2423081Z   path: /home/runner/work/_temp/pr20-kvm-triple/upload/*
+2026-10-13T14:38:46.2423335Z   compression-level: 6
+2026-10-13T14:38:46.2423509Z   overwrite: false
+2026-10-13T14:38:46.2423679Z   include-hidden-files: false
+2026-10-13T14:38:46.2423865Z env:
+2026-10-13T14:38:46.2424045Z   KVM_ONCE: /home/runner/work/_temp/pr20-kvm-triple
+2026-10-13T14:38:46.2424551Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-kvm-triple/avd
+2026-10-13T14:38:46.2424913Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:38:46.2425288Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-kvm-triple/android-user
+2026-10-13T14:38:46.2425613Z   KVM_JOB_STARTED: 1791900785
+2026-10-13T14:38:46.2425808Z   KVM_SETUP_CUTOFF: 1791902705
+2026-10-13T14:38:46.2426003Z   KVM_CORRECTNESS_CUTOFF: 1791903065
+2026-10-13T14:38:46.2426213Z   KVM_COMMON_CUTOFF: 1791903905
+2026-10-13T14:38:46.2426401Z   KVM_WORK_DEADLINE: 1791904085
+2026-10-13T14:38:46.2426662Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:38:46.2427029Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-13T14:38:46.2427325Z ##[endgroup]
+2026-10-13T14:38:46.7498550Z (node:4484) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-13T14:38:46.7499437Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-13T14:38:46.7671427Z With the provided path, there will be 101 files uploaded
+2026-10-13T14:38:46.7677015Z Artifact name is valid!
+2026-10-13T14:38:46.7677749Z Root directory input is valid!
+2026-10-13T14:38:47.2774694Z Beginning upload of artifact content to blob storage
+2026-10-13T14:38:47.3884824Z (node:4484) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-13T14:38:47.7936346Z Uploaded bytes 439244
+2026-10-13T14:38:47.9387717Z Finished uploading artifact content to blob storage!
+2026-10-13T14:38:47.9388490Z SHA256 digest of uploaded artifact zip is d3d3d31af26afd83eb8182cd0562b0f14277e8de03ea5cf5c566b9d8843ff2c5
+2026-10-13T14:38:47.9389470Z Finalizing artifact upload
+2026-10-13T14:38:48.3057926Z Artifact pr20-kvm-triple-38411448143.zip successfully finalized. Artifact ID 11824680369
+2026-10-13T14:38:48.3059005Z Artifact pr20-kvm-triple-38411448143 has been successfully uploaded! Final size is 439244 bytes. Artifact ID is 11824680369
+2026-10-13T14:38:48.3064456Z Artifact download URL: https://github.com/InkWeftDevs/InkWeft/actions/runs/38411448143/artifacts/11824680369
+2026-10-13T14:38:48.4018870Z Post job cleanup.
+2026-10-13T14:38:48.7222254Z (node:4497) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-13T14:38:48.7223179Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-13T14:38:48.7418193Z Post job cleanup.
+2026-10-13T14:38:48.9206188Z [command]/usr/bin/git version
+2026-10-13T14:38:48.9245395Z git version 2.55.0
+2026-10-13T14:38:48.9290709Z Temporarily overriding HOME='/home/runner/work/_temp/19f75e56-0a67-4801-8e70-870808e8db19' before making global git config changes
+2026-10-13T14:38:48.9291839Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-13T14:38:48.9303035Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/InkWeft/InkWeft/control
+2026-10-13T14:38:48.9336944Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-13T14:38:48.9368997Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-13T14:38:49.1072350Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-13T14:38:49.1105444Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-13T14:38:49.1302571Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-13T14:38:49.1332855Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-13T14:38:49.3190492Z Cleaning up orphan processes
+2026-10-13T14:38:49.3410698Z Terminate orphan process: pid (4047) (adb)
+2026-10-13T14:38:49.3425598Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

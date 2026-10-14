@@ -1,0 +1,47 @@
+{
+  "started_utc": "2026-10-12T19:57:25.729371+00:00",
+  "phase": "baseline-followup",
+  "retained_main_apk_sha256": "825566a0ee27ca76489bcc825deda18cb0b2bd9644483acfad05e5715dee9d89",
+  "main_installation_receipt": "baseline-original-ui-control-apk-installation.json",
+  "main_installation_chain": "No main APK installation or production source change since referenced receipt; only test APKs updated here.",
+  "artifacts": [
+    {
+      "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "bytes": 18104848,
+      "sha256": "7b508c2f4618c9203180075b11f43a45dc8499d66ecdf6586e29ce57eef1881a",
+      "mupdf_native": [],
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "install",
+        "-r",
+        "-t",
+        "/workspace/scratch/inkweft-baseline-a128bb07/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+      ],
+      "exit_code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": ""
+    },
+    {
+      "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "bytes": 26555713,
+      "sha256": "5a43c2f0abea9795d8f0a1b400f81d18cd4bfcbec0ce9a645a0a72603e0744c3",
+      "mupdf_native": [],
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "install",
+        "-r",
+        "-t",
+        "/workspace/scratch/inkweft-baseline-a128bb07/android/data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk"
+      ],
+      "exit_code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": ""
+    }
+  ],
+  "status": "success",
+  "completed_utc": "2026-10-12T19:57:40.766694+00:00"
+}

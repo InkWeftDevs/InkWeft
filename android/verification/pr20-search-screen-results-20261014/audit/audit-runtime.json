@@ -1,0 +1,1130 @@
+{
+  "status": "PASS_SCOPED_COMPACT_RECEIPT_AUDIT",
+  "scope": "Independent read-only audit of supplied official job log, terminal API metadata and committed control identities; not original ZIP/APK/raw-JUnit audit",
+  "run_id": "38508580078",
+  "job_id": "115671626209",
+  "workflow_sha": "02aaa0e3df3d77c6a726931cee060e2daff4bbf2",
+  "prep_parent": "5cd3eb9b95a1cf5816ed345c3e71b2d5b408a01e",
+  "checks_passed": 185,
+  "checks_total": 185,
+  "issues": [],
+  "input_files": {
+    "job-decoded.log": {
+      "bytes": 393153,
+      "sha256": "1539266f4bbbc4e8034f9af8f2d21029036d9f4277e78a6c5368b2cfba73fcae"
+    },
+    "run-terminal.json": {
+      "bytes": 14024,
+      "sha256": "863adbf0014f353f15e80fc12be7348857365c28aeca7f14c9474da2e4cbfbb0"
+    },
+    "jobs-terminal.json": {
+      "bytes": 5974,
+      "sha256": "cd97af7211bb5014ddd7ad151610369c9725fded4f900d64a49ccad7c16277ed"
+    },
+    "binding.json": {
+      "bytes": 1357,
+      "sha256": "1f4d3e14a9f8c7d1186de247c4cb33129d36b8d99a5a942c79dc8ed019fd4e59"
+    },
+    "analysis/analysis.json": {
+      "bytes": 1843223,
+      "sha256": "016989f646ca6455c2899c67904f71b1fc92ac57f569af9bcbdfad332057a1d8"
+    }
+  },
+  "prior_timing_input": {
+    "path": "/workspace/scratch/pr20-candidate3-execution/jobs-terminal.json",
+    "sha256": "0a88db905476d2715ab23579a4981e64d312f1b6848bfab6f047036d23e1d4a5"
+  },
+  "checks": [
+    {
+      "name": "one official terminal job",
+      "pass": true
+    },
+    {
+      "name": "official run identity and success",
+      "pass": true
+    },
+    {
+      "name": "official job identity and success",
+      "pass": true
+    },
+    {
+      "name": "local binding agrees with metadata",
+      "pass": true
+    },
+    {
+      "name": "active committed control ci/pr20-search-screen/run.py",
+      "pass": true
+    },
+    {
+      "name": "active committed control ci/pr20-search-screen/package.py",
+      "pass": true
+    },
+    {
+      "name": "active committed control ci/pr20-search-screen/cleanup.py",
+      "pass": true
+    },
+    {
+      "name": "active committed control .github/workflows/pr20-search-screen.yml",
+      "pass": true
+    },
+    {
+      "name": "single standard runner and job limit",
+      "pass": true
+    },
+    {
+      "name": "exact one-shot prep-parent/attempt guard",
+      "pass": true
+    },
+    {
+      "name": "approved scoped no task cache",
+      "pass": true
+    },
+    {
+      "name": "frozen input PLAN.md",
+      "pass": true
+    },
+    {
+      "name": "frozen input source-spec.json",
+      "pass": true
+    },
+    {
+      "name": "frozen input method-plan.json",
+      "pass": true
+    },
+    {
+      "name": "frozen input original-protocol.json",
+      "pass": true
+    },
+    {
+      "name": "frozen input marker-contract.json",
+      "pass": true
+    },
+    {
+      "name": "frozen input prepare_sources.py",
+      "pass": true
+    },
+    {
+      "name": "two exact source identities",
+      "pass": true
+    },
+    {
+      "name": "manifest identity C0",
+      "pass": true
+    },
+    {
+      "name": "manifest identity C1",
+      "pass": true
+    },
+    {
+      "name": "original common probe retained",
+      "pass": true
+    },
+    {
+      "name": "data-only build remains uncached",
+      "pass": true
+    },
+    {
+      "name": "exact compact event counts",
+      "pass": true
+    },
+    {
+      "name": "ordered log timestamps",
+      "pass": true
+    },
+    {
+      "name": "clock contract exactly fixed",
+      "pass": true
+    },
+    {
+      "name": "clock anchor and phase equations",
+      "pass": true
+    },
+    {
+      "name": "FINAL exact identity and execution claim",
+      "pass": true
+    },
+    {
+      "name": "FINAL evidence completeness",
+      "pass": true
+    },
+    {
+      "name": "methods in exact ordinal order",
+      "pass": true
+    },
+    {
+      "name": "method identity 1",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 1",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 1",
+      "pass": true
+    },
+    {
+      "name": "method identity 2",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 2",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 2",
+      "pass": true
+    },
+    {
+      "name": "method identity 3",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 3",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 3",
+      "pass": true
+    },
+    {
+      "name": "method identity 4",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 4",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 4",
+      "pass": true
+    },
+    {
+      "name": "method identity 5",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 5",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 5",
+      "pass": true
+    },
+    {
+      "name": "method identity 6",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 6",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 6",
+      "pass": true
+    },
+    {
+      "name": "method identity 7",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 7",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 7",
+      "pass": true
+    },
+    {
+      "name": "method identity 8",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 8",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 8",
+      "pass": true
+    },
+    {
+      "name": "method identity 9",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 9",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 9",
+      "pass": true
+    },
+    {
+      "name": "method identity 10",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 10",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 10",
+      "pass": true
+    },
+    {
+      "name": "method identity 11",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 11",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 11",
+      "pass": true
+    },
+    {
+      "name": "method identity 12",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 12",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 12",
+      "pass": true
+    },
+    {
+      "name": "method identity 13",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 13",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 13",
+      "pass": true
+    },
+    {
+      "name": "method identity 14",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 14",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 14",
+      "pass": true
+    },
+    {
+      "name": "method identity 15",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 15",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 15",
+      "pass": true
+    },
+    {
+      "name": "method identity 16",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 16",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 16",
+      "pass": true
+    },
+    {
+      "name": "method identity 17",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 17",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 17",
+      "pass": true
+    },
+    {
+      "name": "method identity 18",
+      "pass": true
+    },
+    {
+      "name": "method host and compact JUnit PASS 18",
+      "pass": true
+    },
+    {
+      "name": "raw hash shape 18",
+      "pass": true
+    },
+    {
+      "name": "10 correctness before all8 common",
+      "pass": true
+    },
+    {
+      "name": "nine exact completed install groups",
+      "pass": true
+    },
+    {
+      "name": "eight closed noninterleaved record blocks",
+      "pass": true
+    },
+    {
+      "name": "block source/selection binding 11",
+      "pass": true
+    },
+    {
+      "name": "block selected/installed APK and compact signature 11",
+      "pass": true
+    },
+    {
+      "name": "block host/raw hash binding 11",
+      "pass": true
+    },
+    {
+      "name": "closed safe shapes/hash/count footer 11",
+      "pass": true
+    },
+    {
+      "name": "complete records exact serialization hash 11",
+      "pass": true
+    },
+    {
+      "name": "marker footer before own final method receipt 11",
+      "pass": true
+    },
+    {
+      "name": "fixture logical settings 11",
+      "pass": true
+    },
+    {
+      "name": "environment hash receipt 11",
+      "pass": true
+    },
+    {
+      "name": "recorded analysis agrees with independently parsed block 11",
+      "pass": true
+    },
+    {
+      "name": "block source/selection binding 12",
+      "pass": true
+    },
+    {
+      "name": "block selected/installed APK and compact signature 12",
+      "pass": true
+    },
+    {
+      "name": "block host/raw hash binding 12",
+      "pass": true
+    },
+    {
+      "name": "closed safe shapes/hash/count footer 12",
+      "pass": true
+    },
+    {
+      "name": "complete records exact serialization hash 12",
+      "pass": true
+    },
+    {
+      "name": "marker footer before own final method receipt 12",
+      "pass": true
+    },
+    {
+      "name": "fixture logical settings 12",
+      "pass": true
+    },
+    {
+      "name": "paired actual logical fixture 4101",
+      "pass": true
+    },
+    {
+      "name": "environment hash receipt 12",
+      "pass": true
+    },
+    {
+      "name": "recorded analysis agrees with independently parsed block 12",
+      "pass": true
+    },
+    {
+      "name": "block source/selection binding 13",
+      "pass": true
+    },
+    {
+      "name": "block selected/installed APK and compact signature 13",
+      "pass": true
+    },
+    {
+      "name": "same per-identity APK across visits 13",
+      "pass": true
+    },
+    {
+      "name": "block host/raw hash binding 13",
+      "pass": true
+    },
+    {
+      "name": "closed safe shapes/hash/count footer 13",
+      "pass": true
+    },
+    {
+      "name": "complete records exact serialization hash 13",
+      "pass": true
+    },
+    {
+      "name": "marker footer before own final method receipt 13",
+      "pass": true
+    },
+    {
+      "name": "fixture logical settings 13",
+      "pass": true
+    },
+    {
+      "name": "environment hash receipt 13",
+      "pass": true
+    },
+    {
+      "name": "recorded analysis agrees with independently parsed block 13",
+      "pass": true
+    },
+    {
+      "name": "block source/selection binding 14",
+      "pass": true
+    },
+    {
+      "name": "block selected/installed APK and compact signature 14",
+      "pass": true
+    },
+    {
+      "name": "same per-identity APK across visits 14",
+      "pass": true
+    },
+    {
+      "name": "block host/raw hash binding 14",
+      "pass": true
+    },
+    {
+      "name": "closed safe shapes/hash/count footer 14",
+      "pass": true
+    },
+    {
+      "name": "complete records exact serialization hash 14",
+      "pass": true
+    },
+    {
+      "name": "marker footer before own final method receipt 14",
+      "pass": true
+    },
+    {
+      "name": "fixture logical settings 14",
+      "pass": true
+    },
+    {
+      "name": "paired actual logical fixture 4102",
+      "pass": true
+    },
+    {
+      "name": "environment hash receipt 14",
+      "pass": true
+    },
+    {
+      "name": "recorded analysis agrees with independently parsed block 14",
+      "pass": true
+    },
+    {
+      "name": "block source/selection binding 15",
+      "pass": true
+    },
+    {
+      "name": "block selected/installed APK and compact signature 15",
+      "pass": true
+    },
+    {
+      "name": "same per-identity APK across visits 15",
+      "pass": true
+    },
+    {
+      "name": "block host/raw hash binding 15",
+      "pass": true
+    },
+    {
+      "name": "closed safe shapes/hash/count footer 15",
+      "pass": true
+    },
+    {
+      "name": "complete records exact serialization hash 15",
+      "pass": true
+    },
+    {
+      "name": "marker footer before own final method receipt 15",
+      "pass": true
+    },
+    {
+      "name": "fixture logical settings 15",
+      "pass": true
+    },
+    {
+      "name": "environment hash receipt 15",
+      "pass": true
+    },
+    {
+      "name": "recorded analysis agrees with independently parsed block 15",
+      "pass": true
+    },
+    {
+      "name": "block source/selection binding 16",
+      "pass": true
+    },
+    {
+      "name": "block selected/installed APK and compact signature 16",
+      "pass": true
+    },
+    {
+      "name": "same per-identity APK across visits 16",
+      "pass": true
+    },
+    {
+      "name": "block host/raw hash binding 16",
+      "pass": true
+    },
+    {
+      "name": "closed safe shapes/hash/count footer 16",
+      "pass": true
+    },
+    {
+      "name": "complete records exact serialization hash 16",
+      "pass": true
+    },
+    {
+      "name": "marker footer before own final method receipt 16",
+      "pass": true
+    },
+    {
+      "name": "fixture logical settings 16",
+      "pass": true
+    },
+    {
+      "name": "paired actual logical fixture 4103",
+      "pass": true
+    },
+    {
+      "name": "environment hash receipt 16",
+      "pass": true
+    },
+    {
+      "name": "recorded analysis agrees with independently parsed block 16",
+      "pass": true
+    },
+    {
+      "name": "block source/selection binding 17",
+      "pass": true
+    },
+    {
+      "name": "block selected/installed APK and compact signature 17",
+      "pass": true
+    },
+    {
+      "name": "same per-identity APK across visits 17",
+      "pass": true
+    },
+    {
+      "name": "block host/raw hash binding 17",
+      "pass": true
+    },
+    {
+      "name": "closed safe shapes/hash/count footer 17",
+      "pass": true
+    },
+    {
+      "name": "complete records exact serialization hash 17",
+      "pass": true
+    },
+    {
+      "name": "marker footer before own final method receipt 17",
+      "pass": true
+    },
+    {
+      "name": "fixture logical settings 17",
+      "pass": true
+    },
+    {
+      "name": "environment hash receipt 17",
+      "pass": true
+    },
+    {
+      "name": "recorded analysis agrees with independently parsed block 17",
+      "pass": true
+    },
+    {
+      "name": "block source/selection binding 18",
+      "pass": true
+    },
+    {
+      "name": "block selected/installed APK and compact signature 18",
+      "pass": true
+    },
+    {
+      "name": "same per-identity APK across visits 18",
+      "pass": true
+    },
+    {
+      "name": "block host/raw hash binding 18",
+      "pass": true
+    },
+    {
+      "name": "closed safe shapes/hash/count footer 18",
+      "pass": true
+    },
+    {
+      "name": "complete records exact serialization hash 18",
+      "pass": true
+    },
+    {
+      "name": "marker footer before own final method receipt 18",
+      "pass": true
+    },
+    {
+      "name": "fixture logical settings 18",
+      "pass": true
+    },
+    {
+      "name": "paired actual logical fixture 4104",
+      "pass": true
+    },
+    {
+      "name": "environment hash receipt 18",
+      "pass": true
+    },
+    {
+      "name": "recorded analysis agrees with independently parsed block 18",
+      "pass": true
+    },
+    {
+      "name": "two distinct selected APK hashes and same signer",
+      "pass": true
+    },
+    {
+      "name": "cleanup receipt trap",
+      "pass": true
+    },
+    {
+      "name": "cleanup receipt always",
+      "pass": true
+    },
+    {
+      "name": "both cleanup identities agree",
+      "pass": true
+    },
+    {
+      "name": "direct cleanup stdout agrees with FINAL",
+      "pass": true
+    },
+    {
+      "name": "safe bounded packaging claim",
+      "pass": true
+    },
+    {
+      "name": "analysis consumes exact official-log file",
+      "pass": true
+    },
+    {
+      "name": "all job steps successful",
+      "pass": true
+    },
+    {
+      "name": "phase completion within setup",
+      "pass": true
+    },
+    {
+      "name": "phase completion within correctness",
+      "pass": true
+    },
+    {
+      "name": "phase completion within common",
+      "pass": true
+    },
+    {
+      "name": "native marker completion within common/work limits",
+      "pass": true
+    },
+    {
+      "name": "job envelope within hard 60 minutes",
+      "pass": true
+    },
+    {
+      "name": "same API timing basis for prior job",
+      "pass": true
+    },
+    {
+      "name": "step breakdown sums to job envelope",
+      "pass": true
+    },
+    {
+      "name": "forwarded compact events narrow secret-pattern scan",
+      "pass": true
+    },
+    {
+      "name": "inputs unchanged during audit",
+      "pass": true
+    }
+  ],
+  "identities": {
+    "C0": {
+      "git": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+      "tree": "e773d660abbc15fd727000eb60631d3b72a19a92",
+      "production_overrides": [],
+      "canonical_manifest_sha256": "b5fa8f491f26db3dd4a5ab6870991b0e56c2c10b0f5c944bb3b8afae90ded66e",
+      "file_count": 963
+    },
+    "C1": {
+      "git": "a9ccf2cc727a7957e8fb00115f0060d80b287de1",
+      "tree": "acb62d93940c14f2e66122bee37d318c63b604f6",
+      "production_overrides": [],
+      "canonical_manifest_sha256": "d04176437afb992804f3925162248bae43b30d397df64bcf36ac93114c6f4100",
+      "file_count": 967
+    }
+  },
+  "compact_counts": {
+    "CLOCK": 1,
+    "METHOD": 18,
+    "CONTEXT": 8,
+    "RECORD": 96,
+    "END": 8,
+    "FINAL": 1
+  },
+  "apk_binding_receipts": {
+    "C0": {
+      "apk_sha256": "f4ee266375fc5ce69f1ae43aa357dc5b80136fcea408d843fdb7f7f20b5d27e7",
+      "installed_apk_sha256": "f4ee266375fc5ce69f1ae43aa357dc5b80136fcea408d843fdb7f7f20b5d27e7",
+      "signer_sha256": [
+        "63885ea1bf0cc2e9f8b10cd4beb0a57662aa1981bc01800de60e5e31f1bc3409"
+      ],
+      "apk_receipt_sha256": "985ba832e82692eb5b28cd8a240e15cad67a9cfb1256ac706fcd45c5cb3d7d72",
+      "source_commit": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+      "source_manifest_sha256": "b5fa8f491f26db3dd4a5ab6870991b0e56c2c10b0f5c944bb3b8afae90ded66e"
+    },
+    "C1": {
+      "apk_sha256": "fa96eec07cd97d70a26265762153c3dbb3f42042d8a0f98e5d02613a87b3bca2",
+      "installed_apk_sha256": "fa96eec07cd97d70a26265762153c3dbb3f42042d8a0f98e5d02613a87b3bca2",
+      "signer_sha256": [
+        "63885ea1bf0cc2e9f8b10cd4beb0a57662aa1981bc01800de60e5e31f1bc3409"
+      ],
+      "apk_receipt_sha256": "413ebdcaacc55c5e047df9c74d74845ee6f9fefd515ce80c42e0ef6b95d5d62a",
+      "source_commit": "a9ccf2cc727a7957e8fb00115f0060d80b287de1",
+      "source_manifest_sha256": "d04176437afb992804f3925162248bae43b30d397df64bcf36ac93114c6f4100"
+    }
+  },
+  "final_groups": {
+    "C1-correctness": {
+      "identity": "C1",
+      "status": "PASS"
+    },
+    "visit-01-C0": {
+      "identity": "C0",
+      "status": "PASS"
+    },
+    "visit-02-C1": {
+      "identity": "C1",
+      "status": "PASS"
+    },
+    "visit-03-C1": {
+      "identity": "C1",
+      "status": "PASS"
+    },
+    "visit-04-C0": {
+      "identity": "C0",
+      "status": "PASS"
+    },
+    "visit-05-C0": {
+      "identity": "C0",
+      "status": "PASS"
+    },
+    "visit-06-C1": {
+      "identity": "C1",
+      "status": "PASS"
+    },
+    "visit-07-C1": {
+      "identity": "C1",
+      "status": "PASS"
+    },
+    "visit-08-C0": {
+      "identity": "C0",
+      "status": "PASS"
+    }
+  },
+  "environment_hash": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+  "cleanup_receipts": {
+    "trap": {
+      "emulator": "STOPPED_CONFIRMED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "RESTORED_EXACT",
+      "error_count": 0,
+      "before_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "after_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "exact_match": true
+    },
+    "always": {
+      "emulator": "STOPPED_CONFIRMED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "RESTORED_EXACT",
+      "error_count": 0,
+      "before_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "after_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "exact_match": true
+    }
+  },
+  "timing": {
+    "job_started_at": "2026-10-14T03:53:35Z",
+    "job_completed_at": "2026-10-14T04:04:27Z",
+    "job_seconds": 652.0,
+    "last_step_completed_at": "2026-10-14T04:04:24Z",
+    "last_step_envelope_seconds": 649.0,
+    "anchor_epoch": 1791950017,
+    "first_step_observed_epoch": 1791950017.619409,
+    "first_step_after_job_start_seconds": 2.6194090843200684,
+    "phase_budgets": [
+      {
+        "phase": "setup",
+        "completion_step": 8,
+        "completion_utc": "2026-10-14T04:00:40Z",
+        "phase_deadline_utc": "2026-10-14T04:23:37Z",
+        "elapsed_from_anchor_seconds": 423.0,
+        "remaining_seconds_at_reported_step_end": 1377.0,
+        "metadata_precision": "one second; log method receipt may be within that final second"
+      },
+      {
+        "phase": "correctness",
+        "completion_step": 9,
+        "completion_utc": "2026-10-14T04:00:48Z",
+        "phase_deadline_utc": "2026-10-14T04:28:37Z",
+        "elapsed_from_anchor_seconds": 431.0,
+        "remaining_seconds_at_reported_step_end": 1669.0,
+        "metadata_precision": "one second; log method receipt may be within that final second"
+      },
+      {
+        "phase": "common",
+        "completion_step": 10,
+        "completion_utc": "2026-10-14T04:04:07Z",
+        "phase_deadline_utc": "2026-10-14T04:43:37Z",
+        "elapsed_from_anchor_seconds": 630.0,
+        "remaining_seconds_at_reported_step_end": 2370.0,
+        "metadata_precision": "one second; log method receipt may be within that final second"
+      }
+    ],
+    "step_breakdown_seconds": {
+      "startup_checkout_java": 7.0,
+      "source_sdk": 39.0,
+      "C0_data_APK_build_and_validation": 209.0,
+      "C1_data_APK_build_and_validation": 147.0,
+      "KVM_emulator": 23.0,
+      "correctness10_including_install": 8.0,
+      "library8_including_installs": 199.0,
+      "first_cleanup": 13.0,
+      "second_cleanup": 2.0,
+      "package": 1.0,
+      "upload": 1.0,
+      "post_step_to_job_terminal": 3.0
+    },
+    "steps": [
+      {
+        "number": 1,
+        "name": "Set up job",
+        "started_at": "2026-10-14T03:53:36Z",
+        "completed_at": "2026-10-14T03:53:37Z",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "number": 2,
+        "name": "Fix one local first-step screening clock; no network clock API",
+        "started_at": "2026-10-14T03:53:37Z",
+        "completed_at": "2026-10-14T03:53:37Z",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "number": 3,
+        "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+        "started_at": "2026-10-14T03:53:37Z",
+        "completed_at": "2026-10-14T03:53:42Z",
+        "seconds": 5.0,
+        "conclusion": "success"
+      },
+      {
+        "number": 4,
+        "name": "Run actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3",
+        "started_at": "2026-10-14T03:53:42Z",
+        "completed_at": "2026-10-14T03:53:42Z",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "number": 5,
+        "name": "Freeze/reconstruct two sources and SDK (SCREENING_ONLY)",
+        "started_at": "2026-10-14T03:53:42Z",
+        "completed_at": "2026-10-14T03:54:21Z",
+        "seconds": 39.0,
+        "conclusion": "success"
+      },
+      {
+        "number": 6,
+        "name": "Build C0 data AndroidTest APK only",
+        "started_at": "2026-10-14T03:54:21Z",
+        "completed_at": "2026-10-14T03:57:50Z",
+        "seconds": 209.0,
+        "conclusion": "success"
+      },
+      {
+        "number": 7,
+        "name": "Build C1 data AndroidTest APK only",
+        "started_at": "2026-10-14T03:57:50Z",
+        "completed_at": "2026-10-14T04:00:17Z",
+        "seconds": 147.0,
+        "conclusion": "success"
+      },
+      {
+        "number": 8,
+        "name": "最小临时ACL与同一KVM模拟器",
+        "started_at": "2026-10-14T04:00:17Z",
+        "completed_at": "2026-10-14T04:00:40Z",
+        "seconds": 23.0,
+        "conclusion": "success"
+      },
+      {
+        "number": 9,
+        "name": "C1 ten related Room correctness methods; stop on failure",
+        "started_at": "2026-10-14T04:00:40Z",
+        "completed_at": "2026-10-14T04:00:48Z",
+        "seconds": 8.0,
+        "conclusion": "success"
+      },
+      {
+        "number": 10,
+        "name": "Four fixed library seeds / two versions / eight calls",
+        "started_at": "2026-10-14T04:00:48Z",
+        "completed_at": "2026-10-14T04:04:07Z",
+        "seconds": 199.0,
+        "conclusion": "success"
+      },
+      {
+        "number": 11,
+        "name": "成功路径停止拥有进程并精确恢复ACL",
+        "started_at": "2026-10-14T04:04:07Z",
+        "completed_at": "2026-10-14T04:04:20Z",
+        "seconds": 13.0,
+        "conclusion": "success"
+      },
+      {
+        "number": 12,
+        "name": "always再次核验进程与ACL恢复",
+        "started_at": "2026-10-14T04:04:20Z",
+        "completed_at": "2026-10-14T04:04:22Z",
+        "seconds": 2.0,
+        "conclusion": "success"
+      },
+      {
+        "number": 13,
+        "name": "只打包白名单原始文本，最大20MiB",
+        "started_at": "2026-10-14T04:04:22Z",
+        "completed_at": "2026-10-14T04:04:23Z",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "number": 14,
+        "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+        "started_at": "2026-10-14T04:04:23Z",
+        "completed_at": "2026-10-14T04:04:24Z",
+        "seconds": 1.0,
+        "conclusion": "success"
+      },
+      {
+        "number": 27,
+        "name": "Post Run actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3",
+        "started_at": "2026-10-14T04:04:24Z",
+        "completed_at": "2026-10-14T04:04:24Z",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "number": 28,
+        "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+        "started_at": "2026-10-14T04:04:24Z",
+        "completed_at": "2026-10-14T04:04:24Z",
+        "seconds": 0.0,
+        "conclusion": "success"
+      },
+      {
+        "number": 29,
+        "name": "Complete job",
+        "started_at": "2026-10-14T04:04:24Z",
+        "completed_at": "2026-10-14T04:04:24Z",
+        "seconds": 0.0,
+        "conclusion": "success"
+      }
+    ]
+  },
+  "turnaround_comparison": {
+    "prior_run_id": "38498392929",
+    "prior_job_seconds": 2342.0,
+    "screen_job_seconds": 652.0,
+    "reduction_seconds": 1690.0,
+    "reduction_percent": 72.16054654141759,
+    "measurement_basis": "GitHub jobs started_at to completed_at in both runs",
+    "scope_before": {
+      "identities": 3,
+      "apks": 9,
+      "correctness_methods": 31,
+      "common_methods": 24,
+      "diagnostics_methods": 3,
+      "total_methods": 58
+    },
+    "scope_after": {
+      "identities": 2,
+      "apks": 2,
+      "correctness_methods": 10,
+      "common_library_methods": 8,
+      "diagnostics_methods": 0,
+      "total_methods": 18
+    },
+    "interpretation": "Smaller-scope turnaround comparison, not causal task-cache, equal-workload build or product-performance speedup. Both drivers explicitly disable task build cache."
+  },
+  "payload_schema_audit": {
+    "records": 96,
+    "blocks": 8,
+    "exact_shapes_from_frozen_contract": true,
+    "largest_original_json_payload_bytes": 13017,
+    "duplicate_keys_and_nonfinite_rejected": true,
+    "restricted_strings": "only fixed fixture label/journal mode and hex logical digest in probe payloads",
+    "whole_actions_log_caveat": "Actions setup banners include public job/tool paths and artifact URL; only fixed screen payloads are closed-schema forwarded data. No claim that every GitHub log line is a probe marker."
+  },
+  "packaging_compact_receipt": {
+    "files": 145,
+    "bytes": 1673716,
+    "omitted": 0,
+    "truncated": 0
+  },
+  "artifact_upload_log_receipt": {
+    "id": "11869267275",
+    "files": 147,
+    "bytes": 406469,
+    "sha256": "fcfb81862a8d2d3c45912ba6b8cde42abc281995c2e3a853890fe4049398be91",
+    "downloaded_or_independently_verified": false
+  },
+  "limitations": [
+    "18 JUnit PASS/adb0/natural-exit are compact controller assertions. Full instrumentation text, XML, per-process observations and raw receipts were not obtained; this is not a second independent raw-JUnit audit.",
+    "Two selected/installed APK hashes and signer digests are consistent across eight common blocks. Actual APK/AAR/ELF bytes, signature output and resolved dependency manifests were not supplied here or independently reverified. The correctness install group is bound by identity/controller FINAL, without a separate forwarded APK context.",
+    "Device settings are bound by frozen controller assertions and equal compact hashes; underlying per-group environment JSON was not independently read. No actual host load measurements are inferred from the compact log.",
+    "Double cleanup asserts RESTORED_EXACT with identical before/after ACL hashes and zero errors. Original ACL file bytes and ownership/process observations were not re-read in this audit.",
+    "No artifact storage request, network access, build, emulator, CI trigger, source edit or push was performed. Missing original ZIP is not an obstacle to these bounded screening metrics, but remains an explicit stronger-audit boundary.",
+    "Smaller test/build scope explains a different turnaround workload; neither cache benefit nor equal-workload/product speedup is established. Original B regressions, raster/GC and full formal acceptance remain outside this screen."
+  ]
+}

@@ -2,15 +2,11 @@
 package org.inkweft.data
 
 import android.database.sqlite.SQLiteDatabaseCorruptException
-import android.content.Context
-import android.database.sqlite.SQLiteDatabase
-import android.system.ErrnoException
-import android.system.Os
-import android.system.OsConstants
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 import java.io.File
+import java.io.RandomAccessFile
 
 /** Never let the framework's default corruption handler delete an author DB. */
 internal class PreservingOpenHelperFactory : SupportSQLiteOpenHelper.Factory {
@@ -39,43 +35,40 @@ internal class PreservingOpenHelperFactory : SupportSQLiteOpenHelper.Factory {
             .build()
         val helper = RequerySQLiteOpenHelperFactory().create(config)
         return object : SupportSQLiteOpenHelper by helper {
+            @Volatile private var opened = false
             override val databaseName: String? get() = configuration.name
-            override val writableDatabase: SupportSQLiteDatabase get() {
-                prepareNewDatabase(configuration.context, name)
-                return helper.writableDatabase
+            override val writableDatabase: SupportSQLiteDatabase get() = open(true)
+            override val readableDatabase: SupportSQLiteDatabase get() = open(false)
+            private fun open(writable: Boolean): SupportSQLiteDatabase {
+                fun read() = if (writable) helper.writableDatabase else helper.readableDatabase
+                if (opened) return read()
+                return synchronized(openLock) {
+                    if (opened || name == null) read().also { opened = true }
+                    else {
+                        val target = configuration.context.getDatabasePath(name).canonicalFile
+                        val directory = requireNotNull(target.parentFile)
+                        check(directory.mkdirs() || directory.isDirectory)
+                        // Every helper takes this stable lock, including when the target
+                        // already exists. Never unlink it: another process may be waiting
+                        // on its inode. The JVM lock prevents overlapping local file locks.
+                        RandomAccessFile(File(directory, target.name + ".inkweft-open-lock"), "rw").use { lock ->
+                            lock.channel.lock().use {
+                                read().also { opened = true }
+                            }
+                        }
+                    }
+                }
             }
-            override val readableDatabase: SupportSQLiteDatabase get() {
-                prepareNewDatabase(configuration.context, name)
-                return helper.readableDatabase
-            }
+            override fun close() = synchronized(openLock) { helper.close(); opened = false }
         }
     }
 
-    private fun prepareNewDatabase(context: Context, name: String?) {
-        if (name == null) return
-        val target = context.getDatabasePath(name)
-        if (target.exists()) return
-        val directory = requireNotNull(target.parentFile)
-        check(directory.mkdirs() || directory.isDirectory)
-        val seed = File.createTempFile(".inkweft-empty-", ".db", directory)
-        try {
-            // Requery 3.49 defaults to 1024-byte pages. Persist an empty 4096-byte
-            // header before it opens WAL; existing databases never enter this path.
-            val options = SQLiteDatabase.OpenParams.Builder()
-                .addOpenFlags(SQLiteDatabase.CREATE_IF_NECESSARY or SQLiteDatabase.NO_LOCALIZED_COLLATORS)
-                .setJournalMode("DELETE").setSynchronousMode("FULL").build()
-            SQLiteDatabase.openDatabase(seed, options).use { db ->
-                db.pageSize = 4096
-                db.execSQL("PRAGMA auto_vacuum=INCREMENTAL")
-                db.version = 0
-                check(db.pageSize == 4096L)
-            }
-            // link() publishes the completed file atomically and cannot overwrite a
-            // database another helper or process created while this one was prepared.
-            try { Os.link(seed.absolutePath, target.absolutePath) }
-            catch (failure: ErrnoException) { if (failure.errno != OsConstants.EEXIST) throw failure }
-        } finally {
-            seed.delete()
-        }
-    }
+    // Do not pre-initialize the shared target through another SQLite connection.
+    // File existence/size checks and O_EXCL do not exclude older processes which
+    // bypass our sidecar lock. A preflight PRAGMA could modify their committed DB
+    // before schema checks reject it. Let Requery perform ordinary SQLite creation
+    // and recovery; new DBs use its native page-size/auto-vacuum defaults. Existing
+    // DBs are never reformatted or switched to INCREMENTAL by this factory.
+
+    private companion object { val openLock = Any() }
 }

@@ -1,0 +1,84 @@
+{
+  "utc": "2026-10-13T02:14:17.667887+00:00",
+  "purpose": "Diagnose the unresolved local-append slowdown without changing rendering behavior.",
+  "candidate_parent": "c60fba7455cfc0b919d6f9c2d3b06f17ec25713d",
+  "baseline_parent": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128 plus same safety factory and shared probes; diagnostic changes recorded separately",
+  "scope": [
+    "InkRepository.rasterRegions default-off per-instance in-memory callback",
+    "TileLocalRedrawTest opt-in rasterMetadataDiagnostics argument; buffered output outside timed append"
+  ],
+  "algorithm_changes": "NONE in this diagnostic stage",
+  "build_tasks": [
+    ":app:assembleDebug",
+    ":app:assembleDebugAndroidTest"
+  ],
+  "test_selection": "org.inkweft.app.TileLocalRedrawTest",
+  "expected_tests": 2,
+  "fixture": "Original full class including pan/zoom and 1/4/8 layer loop; unchanged deadlines and pixel assertions.",
+  "required_evidence": [
+    "Frozen source hashes, exact diagnostic patch, build receipts and app/appTest APK hashes/signatures/native libs",
+    "Environment receipt immediately before and after each native phase",
+    "Raw JUnit output with metadata wall time, same-thread CPU timing validity, preparation rows/batches and query/region counts",
+    "All earlier original and four repeat samples retained; diagnostic overhead is not treated as production-off performance"
+  ],
+  "non_goals": [
+    "No search/index/GC/Docker reruns",
+    "No blind native-stroke reuse rollback",
+    "No epoch guard removal",
+    "No attribution of combined admission/preparation interval solely to SQL lock wait",
+    "No physical-device or hardware screenshot claim"
+  ],
+  "status": "SOURCE_COMPLETE_STATIC_REVIEW_PASS_PENDING_PAIRED_NATIVE_MEASUREMENTS",
+  "implementation": {
+    "completed_utc": "2026-10-13T02:17:52.713191+00:00",
+    "status": "SOURCE_COMPLETE_STATIC_REVIEW_PASS_NATIVE_NOT_RUN",
+    "candidate_sources": {
+      "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt": "aebfc90c0a9354a15995b47ed0f9d62037adb9009ecfb5fbf21c7749d7e0c7ea",
+      "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt": "31325f357e719d4fe61354645f499ce06ecf8079e64fddb471c069f44ad3f5ec"
+    },
+    "portable_patch": {
+      "path": "/workspace/scratch/pr20-closure-evidence/raster-metadata-diagnostics-portable.patch",
+      "sha256": "1fc0348e2b4aae0ecf38cace3959fad5c4798871acee6ec1aac7d46452883d08",
+      "baseline_dry_run_exit_code": 0,
+      "fuzz": 0,
+      "applied_to_baseline": false
+    },
+    "instrumentation_argument": {
+      "rasterMetadataDiagnostics": "true"
+    },
+    "default": "Disabled; observer captured once per rasterRegions call; no probe, clocks, records or per-row timing when null.",
+    "segments": {
+      "admissionAndPreparationNanos": "Repository call preparation through entry into ready SpatialIndex.read callback; includes preparation transactions, yields, Room dispatch and admission; NOT pure lock wait.",
+      "queryAndDigestNanos": "Ready callback entry through metadata query and digest updates, ending before original final map.",
+      "hexAndResultNanos": "Original final map, including SHA finalization, Formatter hex conversion and InkRasterRegion result allocation.",
+      "cpu": "Cumulative thread CPU, not coroutine-exclusive; emit null if endpoint Linux thread IDs differ, either sample is negative, or difference is negative."
+    },
+    "counts": {
+      "preparationBatches": "Actual existing SpatialIndex.read onBatch callbacks.",
+      "preparationRows": "Sum of BuildBatch.rows; may include spatial hint/cut work and repeated identities; NOT unique stroke count.",
+      "queryBatches": "Calls to SpatialIndex.ink, including terminating empty query.",
+      "metadataRows": "Returned metadata row counts before per-row allowed/omitted filtering.",
+      "nativeStrokeBuilds": "Optional reflected existing lastBuild counter captured outside frame timing; baseline missing getter means omitted JSON field, NOT zero."
+    },
+    "boundaries": [
+      "Same original SHA finalization/Formatter expression and execution order; no rendering, query, cache, epoch or SpatialIndex algorithm changes.",
+      "Observer invocation only after successful SpatialIndex.read return, outside Room transaction; callback exceptions are not swallowed; production failures and cancellation propagate without emitting a success record.",
+      "Tile observer is enabled only immediately before timed local ready(), disabled in finally before forced-full rendering; callback only appends to a thread-safe CopyOnWriteArrayList.",
+      "JSON construction/status output at original end-of-case evidence point outside measured append; original fixture, class order, deadlines, assertions and dense failure are unchanged.",
+      "Diagnostic-on timings include observation overhead and must not replace default-off performance samples.",
+      "Thread endpoint identity guards CPU differences; cumulative CPU can still include other work on that thread.",
+      "This segment can identify a hex/result hotspot but cannot isolate Formatter from SHA finalization or allocation."
+    ],
+    "static_validation": {
+      "git_diff_check": "PASS",
+      "integration_review": "PASS_NO_BLOCKING_FINDINGS",
+      "baseline_dry_run": "PASS_ZERO_FUZZ",
+      "baseline_unchanged": true
+    },
+    "build": "NOT_RUN_BY_RASTER_AGENT",
+    "native": "NOT_RUN_BY_RASTER_AGENT",
+    "commit": "NOT_RUN",
+    "push": "NOT_RUN",
+    "next_owner": "Root to freeze both source trees, apply reviewed scoped patch to baseline, build and serialize opt-in native runs."
+  }
+}

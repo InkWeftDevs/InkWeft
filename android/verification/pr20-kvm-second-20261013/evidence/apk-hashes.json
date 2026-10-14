@@ -1,0 +1,53 @@
+[
+  {
+    "path": "android/app/build/outputs/apk/debug/app-debug.apk",
+    "bytes": 229736415,
+    "sha256": "e7e48e124e6c7e94522b5a08beb8dd81fb52fd878dde2122d8767a0f0fbe42d5",
+    "build_identity": {
+      "schema": 1,
+      "build_commit": "a65f8599300b42444ab516714645b4e6f28d0432",
+      "source_commit": "7949011ca2b84492f6438d275a09d28faef3b472",
+      "formal": false,
+      "target_abis": [
+        "arm64-v8a",
+        "armeabi-v7a",
+        "x86",
+        "x86_64"
+      ],
+      "application_id": "org.inkweft.app.a0",
+      "version_name": "0.0.91-cloud-performance"
+    },
+    "mupdf_native": [
+      {
+        "path": "lib/arm64-v8a/libmupdf_java.so",
+        "bytes": 10840392,
+        "sha256": "5c7872c5e12ae3c00f68e14e371d3467cbfb2fd3dfefc7bb2a03d2cd491f6a4f"
+      },
+      {
+        "path": "lib/armeabi-v7a/libmupdf_java.so",
+        "bytes": 7582088,
+        "sha256": "2b24af301ba54d70c4cac09a1ae22af2c20f62b5f1046a2e8b352ca702e2ffd6"
+      },
+      {
+        "path": "lib/x86/libmupdf_java.so",
+        "bytes": 11187796,
+        "sha256": "46f512805c693c07f6e7fac50cdf3d2e028c5078f92e7d230f4c1e6e1b165ed9"
+      },
+      {
+        "path": "lib/x86_64/libmupdf_java.so",
+        "bytes": 11264136,
+        "sha256": "e9907d1e11f886662915376a1f059608e539c75cb1bc5ef57ccdf887a0367349"
+      }
+    ]
+  },
+  {
+    "path": "android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+    "bytes": 10470675,
+    "sha256": "3c9b8072bbd5fd280dcde7e618e2ee5e8b42589adf366d35add3d513c5957dc6"
+  },
+  {
+    "path": "android/data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+    "bytes": 22948888,
+    "sha256": "86d8b2a9b02bcda6319bf1ffa22d7fcfa6e9f3c6d3c6d687aeeb3c2c60a09e3b"
+  }
+]

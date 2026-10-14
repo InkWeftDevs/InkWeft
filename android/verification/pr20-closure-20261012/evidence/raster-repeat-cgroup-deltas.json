@@ -1,0 +1,113 @@
+{
+  "utc": "2026-10-13T02:13:15.549392+00:00",
+  "runs": [
+    {
+      "phase": "candidate-v4-raster-repeat1",
+      "start": "2026-10-13T01:36:50.571092+00:00",
+      "after": "2026-10-13T01:44:17.155916+00:00",
+      "cgroup_delta": {
+        "usage_usec": 407932763,
+        "user_usec": 393137382,
+        "system_usec": 14795380,
+        "nice_usec": 0,
+        "nr_periods": 4466,
+        "nr_throttled": 3,
+        "throttled_usec": 119333,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "sources": [
+        {
+          "file": "candidate-v4-raster-repeat1-environment.json",
+          "sha256": "c13e61d0ad7b67fbdc2a07101d1be367a9411cbf5e9000b55a9049d8eb03c5ef"
+        },
+        {
+          "file": "candidate-v4-raster-repeat1-environment-after.json",
+          "sha256": "b906da7ef7dfccb97791236295e87766e4d94ee3b82747c2d0a7511dc967cd63"
+        }
+      ]
+    },
+    {
+      "phase": "baseline-final-raster-repeat1",
+      "start": "2026-10-13T01:45:36.383872+00:00",
+      "after": "2026-10-13T01:51:22.077622+00:00",
+      "cgroup_delta": {
+        "usage_usec": 324100069,
+        "user_usec": 314852397,
+        "system_usec": 9247671,
+        "nice_usec": 0,
+        "nr_periods": 3457,
+        "nr_throttled": 0,
+        "throttled_usec": 0,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "sources": [
+        {
+          "file": "baseline-final-raster-repeat1-environment.json",
+          "sha256": "328abd145b09d7c2a9f9c6a9b45c48a6f09c9d3c3adbe7d77bd182edd8bb06aa"
+        },
+        {
+          "file": "baseline-final-raster-repeat1-environment-after.json",
+          "sha256": "7ec20a6a08a8b0df124010bff09d5ae2eb351f99bdaf253fa73dd371c36f178b"
+        }
+      ]
+    },
+    {
+      "phase": "baseline-final-raster-repeat2",
+      "start": "2026-10-13T01:52:08.755086+00:00",
+      "after": "2026-10-13T01:57:13.279765+00:00",
+      "cgroup_delta": {
+        "usage_usec": 261821389,
+        "user_usec": 253063946,
+        "system_usec": 8757444,
+        "nice_usec": 0,
+        "nr_periods": 3045,
+        "nr_throttled": 0,
+        "throttled_usec": 0,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "sources": [
+        {
+          "file": "baseline-final-raster-repeat2-environment.json",
+          "sha256": "c845cffd0e408ab3bb1ea31426bf9a213f9f750f23e0ab0e7c2963b8a2819261"
+        },
+        {
+          "file": "baseline-final-raster-repeat2-environment-after.json",
+          "sha256": "f94572044767130ea9832c286d52b1cd3438418ac40236dc0976e4742d24fd6c"
+        }
+      ]
+    },
+    {
+      "phase": "candidate-v4-raster-repeat2",
+      "start": "2026-10-13T01:58:51.738425+00:00",
+      "after": "2026-10-13T02:02:50.052987+00:00",
+      "cgroup_delta": {
+        "usage_usec": 233936718,
+        "user_usec": 232118966,
+        "system_usec": 1817751,
+        "nice_usec": 0,
+        "nr_periods": 2384,
+        "nr_throttled": 0,
+        "throttled_usec": 0,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "sources": [
+        {
+          "file": "candidate-v4-raster-repeat2-environment.json",
+          "sha256": "ff63cd42f150e3c80c6b47a079b7572d2e1b533ebbc1555f22b88702fa257ed1"
+        },
+        {
+          "file": "candidate-v4-raster-repeat2-environment-after.json",
+          "sha256": "03e9418fd3e4457dfb3c9e67fc9f2046ee661dc2dbf2ade20b6da77a4903245f"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Cgroup v2 cumulative counter deltas span the environment receipts, including setup and time around tests; not per-frame samples.",
+    "Little or no container quota throttling does not measure whole-host scheduler load or Android thread CPU and does not establish the cause of the regression."
+  ]
+}

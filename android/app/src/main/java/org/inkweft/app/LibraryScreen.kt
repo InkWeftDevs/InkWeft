@@ -45,7 +45,7 @@ import java.util.Locale
 
 @Composable
 @OptIn(ExperimentalLayoutApi::class)
-fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,create:()->Unit,importPage:()->Unit,diagnostics:()->Unit,rename:(Note)->Unit,duplicate:(Note)->Unit,export:(Note)->Unit){
+fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:suspend(Note)->Boolean,create:()->Unit,importPage:()->Unit,diagnostics:()->Unit,rename:(Note)->Unit,duplicate:(Note)->Unit,export:(Note)->Unit){
     val app=LocalContext.current.applicationContext as InkWeftApplication
     var destination by rememberSaveable{mutableStateOf("")};var learningNoteId by rememberSaveable{mutableStateOf<String?>(null)}
     var sourceNavigation by remember{mutableStateOf<Job?>(null)}
@@ -60,7 +60,14 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
     var filter by rememberSaveable{mutableStateOf("all")};var type by rememberSaveable{mutableStateOf("all")}
     var query by rememberSaveable{mutableStateOf("")};var grid by rememberSaveable{mutableStateOf(true)};var byTitle by rememberSaveable{mutableStateOf(false)}
     var searchGeneration by remember{mutableLongStateOf(0)}
-    var pageStarts by remember(ui.notes,ui.drafts,query,filter,type,byTitle){mutableStateOf(listOf(0))}
+    var pageStarts by remember(ui.notes,ui.drafts,entries,query,filter,type,byTitle){mutableStateOf(listOf(0))}
+    // Source edits can change matching rows ahead of an offset. Restart the page chain
+    // when the observed author snapshot changes; background FTS completion is separate.
+    var sourceVersion by remember{mutableLongStateOf(0)}
+    LaunchedEffect(shelf.sourceVersion){
+        if(sourceVersion!=0L&&shelf.sourceVersion!=sourceVersion)pageStarts=listOf(0)
+        sourceVersion=shelf.sourceVersion
+    }
     val searchOffset=pageStarts.last()
     LaunchedEffect(ui.notes,ui.drafts,query,filter,type,byTitle,searchOffset){
         searchGeneration=workspace.searchLibrary(ui.notes,ui.drafts,query,filter,type,byTitle,searchOffset)
@@ -160,7 +167,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                     if(filter=="trash")Text("笔记内容与封面仍保留，可从菜单恢复。",fontSize=12.sp,color=Quiet,modifier=Modifier.padding(vertical=12.dp))
                     val itemContent:@Composable (LibraryShelfItem)->Unit={item->val n=item.note;val meta=item.workspace;val hitPage=item.pageId
                         NoteTile(n,meta,counts[n.id]?.modifiedRevision?:0,counts[n.id]?.visibleCount?:0,grid,
-                            {if(searchReady&&meta.trashedAt==null){if(hitPage!=null)workspace.openSearchPage(n.id,hitPage){open(n)}else if(item.cardMatch){learningTarget=null;learningQuery=query;learningNoteId=n.id}else open(n)}},{rename(n)},{coverError=null;coverExpected=meta.revision;coverTargetId=n.id},
+                            {if(searchReady&&meta.trashedAt==null){if(hitPage!=null)workspace.openSearchPage(n.id,hitPage){open(n)}else if(item.cardMatch){learningTarget=null;learningQuery=query;learningNoteId=n.id}else scope.launch{open(n)}}},{rename(n)},{coverError=null;coverExpected=meta.revision;coverTargetId=n.id},
                             {workspace.organize(meta,favorite=!meta.favorite)},{editing=meta},{if(meta.trashedAt!=null)workspace.organize(meta,trash=false)else removing=meta},
                             {duplicate(n)},{export(n)},{workspace.pin(meta,!meta.pinned)})
                     }
@@ -184,8 +191,8 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
     if(destination=="learn"&&learningNote==null)learningState.SaveableStateProvider("learning"){LearningWorkbench(learningDirectory,app.learningStore,{destination=""}){target->
         val n=active.find{it.id==target.notebookId}
         if(n!=null)when(target.kind){
-            LearningTargetKind.NOTE->{open(n);destination=""}
-            LearningTargetKind.PAGE->workspace.openSearchPage(n.id,checkNotNull(target.id)){open(n);destination=""}
+            LearningTargetKind.NOTE->{scope.launch{if(open(n))destination=""}}
+            LearningTargetKind.PAGE->workspace.openSearchPage(n.id,checkNotNull(target.id)){open(n).also{if(it)destination=""}}
             else->{learningTarget=target;learningQuery="";learningNoteId=n.id}
         }
     }}
@@ -202,7 +209,7 @@ fun LibraryScreen(ui:NotebookUi,workspace:WorkspaceViewModel,open:(Note)->Unit,c
                     val request=currentCoroutineContext().job;sourceNavigation=request
                     try{
                         val anchor=KnowledgeData.Anchor(source.pageId,source.inkRevision,CanvasBounds(source.left,source.top,source.right,source.bottom),source.strokeIds.split(',').filter{it.isNotBlank()})
-                        workspace.openPageAwait(n.id,source.pageId,anchor){open(n);learningNoteId=null;destination=""}
+                        workspace.openPageAwait(n.id,source.pageId,anchor){open(n).also{if(it){learningNoteId=null;destination=""}}}
                     }finally{if(sourceNavigation===request)sourceNavigation=null}
                 }
             }

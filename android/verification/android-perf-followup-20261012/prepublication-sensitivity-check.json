@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-12T21:03:33.095334+00:00",
+  "scope": "Changed and untracked repository files; patterns do not constitute a universal secret detector. Actual credentials/environment values were not printed. All fixtures and UI artifacts are synthetic cloud data.",
+  "files_checked": 355,
+  "patterns": [
+    "private_key",
+    "github_token",
+    "aws_access_key",
+    "signed_url_credential",
+    "url_userinfo",
+    "authorization_value"
+  ],
+  "hits": [],
+  "new_apk_aar_or_keystore_files": []
+}

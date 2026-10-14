@@ -1,0 +1,39 @@
+
+org.inkweft.data.LibrarySearchRepositoryTest:LIBRARY_SEARCH_STAGE fixtureReady books=500 pages=20000
+LIBRARY_SEARCH_STAGE foregroundComplete elapsedMs=41649.823683 pending=20000
+LIBRARY_SEARCH_STAGE indexFirstBatch step=preparing-batch observeElapsedMs=1060
+LIBRARY_SEARCH_STAGE indexFirstBatch step=first-source-read observeElapsedMs=1207
+LIBRARY_SEARCH_STAGE indexFirstBatch step=first-tokenizing observeElapsedMs=1217
+LIBRARY_SEARCH_STAGE indexFirstBatch step=first-tokenized observeElapsedMs=1875
+LIBRARY_SEARCH_STAGE indexFirstBatch step=batch-precomputed observeElapsedMs=9373
+LIBRARY_SEARCH_STAGE indexFirstBatch step=waiting-writer observeElapsedMs=9392
+LIBRARY_SEARCH_STAGE indexFirstBatch step=writer-acquired observeElapsedMs=9448
+LIBRARY_SEARCH_STAGE indexFirstBatch step=first-source-checked observeElapsedMs=9482
+LIBRARY_SEARCH_STAGE indexFirstBatch step=first-fts-written observeElapsedMs=9534
+LIBRARY_SEARCH_STAGE indexGateFailed requiredRows=128 completedRows=0 lastIndexStep=first-fts-written observeElapsedMs=10560 slowScanRows=1441 observerActive=true failure=TimeoutCancellationException
+
+Error in twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain(org.inkweft.data.LibrarySearchRepositoryTest):
+kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 10000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:189)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:157)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.lang.Thread.run(Thread.java:1012)
+
+
+Time: 251.065
+There was 1 failure:
+1) twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain(org.inkweft.data.LibrarySearchRepositoryTest)
+kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 10000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:189)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:157)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.lang.Thread.run(Thread.java:1012)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+

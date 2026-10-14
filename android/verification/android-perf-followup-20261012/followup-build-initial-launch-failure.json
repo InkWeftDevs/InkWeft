@@ -1,0 +1,7 @@
+{
+  "utc": "2026-10-12T19:42:18.355001+00:00",
+  "phase": "before Gradle started",
+  "error": "PermissionError errno13: run-inkweft-gradle is a non-executable shell script",
+  "resolution": "Invoke existing wrapper explicitly with bash; no permissions or sandbox changes.",
+  "gradle_or_instrumentation_active_from_failed_launch": false
+}

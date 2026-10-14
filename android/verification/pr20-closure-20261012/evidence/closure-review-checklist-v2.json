@@ -1,0 +1,595 @@
+{
+  "created_utc": "2026-10-12T22:15:14.396832+00:00",
+  "status": "计划及静态复核完成；本次未构建、未调用 ADB、未执行任何测试。",
+  "reviewed_head": "a75d7457cfa3ec2e15c802c07ee93bfc07753a6c",
+  "production_review": {
+    "confirmed_blockers": [],
+    "conclusion": "当前 6 个生产 diff 与已审查版本及 v2 构建源清单一致，未发现新的确定性安全/一致性阻断项；静态复核不替代原生回归或性能证据。",
+    "files": [
+      {
+        "path": "android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt",
+        "sha256": "d7d5e65d134ee9ae5ede9fa9c96fc8e324418fbeca4e432ec124842970d17613",
+        "matches_v2_build_source_manifest": true
+      },
+      {
+        "path": "android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt",
+        "sha256": "07046d5d7653723153744cff81ca63430a778112b49c31d16bd6e7535f856677",
+        "matches_v2_build_source_manifest": true
+      },
+      {
+        "path": "android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt",
+        "sha256": "0824c6502e5187484310437c6a8be71739bf86db55a509d91e51a57a284aa4dd",
+        "matches_v2_build_source_manifest": true
+      },
+      {
+        "path": "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt",
+        "sha256": "1ae798f1a481bf452a3edde852cb3b9042faf9d93b960813dbcedc4d189bbdd1",
+        "matches_v2_build_source_manifest": true
+      },
+      {
+        "path": "android/data-local/src/main/kotlin/org/inkweft/data/LibraryTextIndex.kt",
+        "sha256": "7f9067f21faf38130a01e35814d3d5013540bc9682f15f01ab8a075ba21a7e05",
+        "matches_v2_build_source_manifest": true
+      },
+      {
+        "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+        "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+        "matches_v2_build_source_manifest": true
+      }
+    ],
+    "git_diff_check": "PASS"
+  },
+  "plan": {
+    "path": "/workspace/scratch/pr20-closure-evidence/regression-v2-plan.json",
+    "runner": "/workspace/scratch/pr20-closure-awake-checks.py",
+    "entries": 22,
+    "expected_tests": 43,
+    "groups": {
+      "HistoryStorageTest": 7,
+      "OriginalStorageRepositoryTest": 11,
+      "LibraryPagingTest": 3,
+      "LibrarySearchRepositoryTest_excluding_original_20k": 5,
+      "NotebookHeaderLoadingTest": 4,
+      "StreamedInkRasterTest": 4,
+      "LayerRasterBudgetTest": 1,
+      "LibraryBackupRepositoryTest_representative": 8
+    },
+    "overlap_with_priority_v2": [],
+    "overlap_with_performance_plan": [],
+    "priority_v2_expected": 27,
+    "performance_plan_expected": 5,
+    "coverage": [
+      {
+        "label": "history-storage",
+        "selection": "org.inkweft.data.HistoryStorageTest",
+        "expected": 7,
+        "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryStorageTest.kt",
+        "sha256": "488676c044a894661350b6d2d0450b5d331c9ac438e95822e7271ab09ef409c2",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "newReferenceBetweenAuditAndCommitDefersDeletion",
+            "line": 31
+          },
+          {
+            "name": "detachedOldSourcesCollectedLatestSequenceAndAllReceiptsSurviveBackup",
+            "line": 48
+          },
+          {
+            "name": "historicalCardSetsRetainEvenTrashedCardsAndOldSources",
+            "line": 59
+          },
+          {
+            "name": "transformAndRecallPayloadsRetainIndependentSourceRoots",
+            "line": 69
+          },
+          {
+            "name": "invalidReferenceAbortsWholeCollectionIncludingOrphanPreview",
+            "line": 86
+          },
+          {
+            "name": "shadowPayloadProtectsSourcesAndPreviewsUntilItsClosureIsKnown",
+            "line": 96
+          },
+          {
+            "name": "repeatedCollectionUsesMetadataForThousandsOfVersions",
+            "line": 104
+          }
+        ]
+      },
+      {
+        "label": "original-storage",
+        "selection": "org.inkweft.data.OriginalStorageRepositoryTest",
+        "expected": 11,
+        "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt",
+        "sha256": "7645cf9bf542385d8468b4bdb3299cafb87137ef59113183699034bca490bd58",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "importCopyAndBackupUseOneFilePerDigestAndNoLiveSqliteBlobs",
+            "line": 58
+          },
+          {
+            "name": "restoreRollbackLeavesNoReferencesAndOrphanCollectionReleasesItsBytes",
+            "line": 96
+          },
+          {
+            "name": "oldChunksRetryAfterPublicationThenVacuumReturnsPhysicalDatabaseSpace",
+            "line": 110
+          },
+          {
+            "name": "referencedTrashedAndLeasedOriginalsSurviveUntilTheirLastRetainerIsReleased",
+            "line": 141
+          },
+          {
+            "name": "corruptionIsReportedAndBothReferenceAndDamagedFileRemain",
+            "line": 155
+          },
+          {
+            "name": "corruptOldChunksAreNeverRemovedByMigration",
+            "line": 162
+          },
+          {
+            "name": "lowSpaceDefersCompactionAndRetryReclaimsWithoutChangingOriginals",
+            "line": 177
+          },
+          {
+            "name": "laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes",
+            "line": 195
+          },
+          {
+            "name": "cleanupFailureKeepsOriginalErrorAndRetryCompactsBeforeRevisitingBadSource",
+            "line": 212
+          },
+          {
+            "name": "missingOwnedFileCannotBeMaskedByARebuildableRenderCache",
+            "line": 230
+          },
+          {
+            "name": "schema18MigrationAddsIndexedDigestLookupAndRetainsItsChunkOriginal",
+            "line": 238
+          }
+        ]
+      },
+      {
+        "label": "library-paging",
+        "selection": "org.inkweft.data.LibraryPagingTest",
+        "expected": 3,
+        "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt",
+        "sha256": "e7c4934312a03e9e35d604a65391d04fbb1f70a9d46731c697346e48e865d474",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+            "line": 23
+          },
+          {
+            "name": "snapshotRetainsOldClassificationAndSourceWhileWriterCommits",
+            "line": 57
+          },
+          {
+            "name": "refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState",
+            "line": 78
+          }
+        ]
+      },
+      {
+        "label": "search-snapshot",
+        "selection": "org.inkweft.data.LibrarySearchRepositoryTest#classificationUsesTheReadSnapshotAfterCancellableInitialIndexing",
+        "expected": 1,
+        "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt",
+        "sha256": "6c8de5807f85f739f65eb0d99a9e6ceb0328841a2d9a03c2b583eab9d551700d",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "classificationUsesTheReadSnapshotAfterCancellableInitialIndexing",
+            "line": 23
+          }
+        ]
+      },
+      {
+        "label": "search-unicode",
+        "selection": "org.inkweft.data.LibrarySearchRepositoryTest#unicodeShortQueriesAndBoundedPagesKeepOrderAndNavigation",
+        "expected": 1,
+        "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt",
+        "sha256": "6c8de5807f85f739f65eb0d99a9e6ceb0328841a2d9a03c2b583eab9d551700d",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "unicodeShortQueriesAndBoundedPagesKeepOrderAndNavigation",
+            "line": 34
+          }
+        ]
+      },
+      {
+        "label": "search-drafts",
+        "selection": "org.inkweft.data.LibrarySearchRepositoryTest#draftUnicodeFiltersPinsAndPageBeforeCardNavigationStayIntact",
+        "expected": 1,
+        "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt",
+        "sha256": "6c8de5807f85f739f65eb0d99a9e6ceb0328841a2d9a03c2b583eab9d551700d",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "draftUnicodeFiltersPinsAndPageBeforeCardNavigationStayIntact",
+            "line": 64
+          }
+        ]
+      },
+      {
+        "label": "search-cancellation-small",
+        "selection": "org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh",
+        "expected": 1,
+        "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt",
+        "sha256": "6c8de5807f85f739f65eb0d99a9e6ceb0328841a2d9a03c2b583eab9d551700d",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh",
+            "line": 97
+          }
+        ]
+      },
+      {
+        "label": "search-stale",
+        "selection": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+        "expected": 1,
+        "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt",
+        "sha256": "6c8de5807f85f739f65eb0d99a9e6ceb0328841a2d9a03c2b583eab9d551700d",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+            "line": 207
+          }
+        ]
+      },
+      {
+        "label": "header-loading",
+        "selection": "org.inkweft.app.NotebookHeaderLoadingTest",
+        "expected": 4,
+        "source": "android/app/src/androidTest/java/org/inkweft/app/NotebookHeaderLoadingTest.kt",
+        "sha256": "32ae2f35bb54bc1e005581258e5e50ea3b730a5015339e7c83764cddce69d155",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "delayedOpenCannotReplaceNewSelectionOrEditsAndAlwaysLoadsFullBody",
+            "line": 24
+          },
+          {
+            "name": "restoreAndRenameLoadAuthorBodyAndBackCancelsPendingOpen",
+            "line": 49
+          },
+          {
+            "name": "failedAwaitedNavigationKeepsSourceAndRetryLoadsTheFailedTarget",
+            "line": 73
+          },
+          {
+            "name": "cancelledNavigationCallerCannotPublishAfterNonCancellableRead",
+            "line": 92
+          }
+        ]
+      },
+      {
+        "label": "streamed-cancel",
+        "selection": "org.inkweft.app.StreamedInkRasterTest#clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+        "expected": 1,
+        "source": "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt",
+        "sha256": "c5700b11df7e4535aaf248ba074f9952f356a571fe238770887c813fe84dcca2",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+            "line": 26
+          }
+        ]
+      },
+      {
+        "label": "streamed-omitted",
+        "selection": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+        "expected": 1,
+        "source": "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt",
+        "sha256": "c5700b11df7e4535aaf248ba074f9952f356a571fe238770887c813fe84dcca2",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+            "line": 53
+          }
+        ]
+      },
+      {
+        "label": "streamed-dense-original",
+        "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+        "expected": 1,
+        "source": "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt",
+        "sha256": "c5700b11df7e4535aaf248ba074f9952f356a571fe238770887c813fe84dcca2",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+            "line": 83
+          }
+        ]
+      },
+      {
+        "label": "streamed-small-additional",
+        "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameCrossesBothTheEditorPointWindowAndDatabaseBatchBoundary",
+        "expected": 1,
+        "source": "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt",
+        "sha256": "c5700b11df7e4535aaf248ba074f9952f356a571fe238770887c813fe84dcca2",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "completeFrameCrossesBothTheEditorPointWindowAndDatabaseBatchBoundary",
+            "line": 85
+          }
+        ]
+      },
+      {
+        "label": "layer-budget",
+        "selection": "org.inkweft.app.LayerRasterBudgetTest",
+        "expected": 1,
+        "source": "android/app/src/androidTest/java/org/inkweft/app/LayerRasterBudgetTest.kt",
+        "sha256": "d01d9f0db1179e57ec874004b350b4f85ca7eb55dae92b9f033941fe37b270c4",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "oneFourAndEightLayersDecodeEachVisibleStrokeOnceWithinOnePixelBudget",
+            "line": 23
+          }
+        ]
+      },
+      {
+        "label": "backup-roundtrip",
+        "selection": "org.inkweft.data.LibraryBackupRepositoryTest#roundTripPreservesOriginalIdsHiddenInkMasksHistoryAndMetadata",
+        "expected": 1,
+        "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt",
+        "sha256": "bfeea13319f995adbe6567036f295459664919b6e062e75d1fa0897250fa41f1",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "roundTripPreservesOriginalIdsHiddenInkMasksHistoryAndMetadata",
+            "line": 93
+          }
+        ]
+      },
+      {
+        "label": "backup-reopen",
+        "selection": "org.inkweft.data.LibraryBackupRepositoryTest#restoredRecordsRemainAfterRealCloseAndReopen",
+        "expected": 1,
+        "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt",
+        "sha256": "bfeea13319f995adbe6567036f295459664919b6e062e75d1fa0897250fa41f1",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "restoredRecordsRemainAfterRealCloseAndReopen",
+            "line": 107
+          }
+        ]
+      },
+      {
+        "label": "backup-rollback",
+        "selection": "org.inkweft.data.LibraryBackupRepositoryTest#preCommitFailureRollsBackAllLiveTables",
+        "expected": 1,
+        "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt",
+        "sha256": "bfeea13319f995adbe6567036f295459664919b6e062e75d1fa0897250fa41f1",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "preCommitFailureRollsBackAllLiveTables",
+            "line": 133
+          }
+        ]
+      },
+      {
+        "label": "backup-corrupt",
+        "selection": "org.inkweft.data.LibraryBackupRepositoryTest#damagedFooterNeverTouchesLiveLibrary",
+        "expected": 1,
+        "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt",
+        "sha256": "bfeea13319f995adbe6567036f295459664919b6e062e75d1fa0897250fa41f1",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "damagedFooterNeverTouchesLiveLibrary",
+            "line": 149
+          }
+        ]
+      },
+      {
+        "label": "backup-unknown-schema",
+        "selection": "org.inkweft.data.LibraryBackupRepositoryTest#unknownTablesCannotBeSilentlyOmitted",
+        "expected": 1,
+        "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt",
+        "sha256": "bfeea13319f995adbe6567036f295459664919b6e062e75d1fa0897250fa41f1",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "unknownTablesCannotBeSilentlyOmitted",
+            "line": 155
+          }
+        ]
+      },
+      {
+        "label": "backup-schema-affinity",
+        "selection": "org.inkweft.data.LibraryBackupRepositoryTest#sameNamedColumnsWithDifferentAffinityCannotBeCoercedIntoBackup",
+        "expected": 1,
+        "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt",
+        "sha256": "bfeea13319f995adbe6567036f295459664919b6e062e75d1fa0897250fa41f1",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "sameNamedColumnsWithDifferentAffinityCannotBeCoercedIntoBackup",
+            "line": 168
+          }
+        ]
+      },
+      {
+        "label": "backup-supported-schemas",
+        "selection": "org.inkweft.data.LibraryBackupRepositoryTest#allSupportedArchiveSchemasStillStageIntoTheCurrentRoomContract",
+        "expected": 1,
+        "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt",
+        "sha256": "bfeea13319f995adbe6567036f295459664919b6e062e75d1fa0897250fa41f1",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "allSupportedArchiveSchemasStillStageIntoTheCurrentRoomContract",
+            "line": 188
+          }
+        ]
+      },
+      {
+        "label": "backup-missing-references",
+        "selection": "org.inkweft.data.LibraryBackupRepositoryTest#orphanHistoricalReferencesPreventExport",
+        "expected": 1,
+        "source": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt",
+        "sha256": "bfeea13319f995adbe6567036f295459664919b6e062e75d1fa0897250fa41f1",
+        "matches_v2_build_source_manifest": true,
+        "methods": [
+          {
+            "name": "orphanHistoricalReferencesPreventExport",
+            "line": 203
+          }
+        ]
+      }
+    ]
+  },
+  "backup_selection_rationale": [
+    {
+      "label": "backup-roundtrip",
+      "method": "roundTripPreservesOriginalIdsHiddenInkMasksHistoryAndMetadata",
+      "reason": "完整备份往返：原始标识、隐藏笔迹、蒙版、历史与元数据。"
+    },
+    {
+      "label": "backup-reopen",
+      "method": "restoredRecordsRemainAfterRealCloseAndReopen",
+      "reason": "真正关闭/重开后的恢复持久性。"
+    },
+    {
+      "label": "backup-rollback",
+      "method": "preCommitFailureRollsBackAllLiveTables",
+      "reason": "restore 提交前故障回滚与重新恢复。"
+    },
+    {
+      "label": "backup-corrupt",
+      "method": "damagedFooterNeverTouchesLiveLibrary",
+      "reason": "损坏归档拒绝且作者库保持空状态。"
+    },
+    {
+      "label": "backup-unknown-schema",
+      "method": "unknownTablesCannotBeSilentlyOmitted",
+      "reason": "未知作者表不能被静默遗漏。"
+    },
+    {
+      "label": "backup-schema-affinity",
+      "method": "sameNamedColumnsWithDifferentAffinityCannotBeCoercedIntoBackup",
+      "reason": "同名异类型列拒绝，保留原断言。"
+    },
+    {
+      "label": "backup-supported-schemas",
+      "method": "allSupportedArchiveSchemasStillStageIntoTheCurrentRoomContract",
+      "reason": "受支持旧归档 schema 经私有 stage 导入当前 Room 合约。"
+    },
+    {
+      "label": "backup-missing-references",
+      "method": "orphanHistoricalReferencesPreventExport",
+      "reason": "缺失历史引用必须拒绝导出。"
+    }
+  ],
+  "deliberate_exclusions": [
+    {
+      "selection": "org.inkweft.data.HistoryCollectionTest",
+      "reason": "7 项已在 priority-v2；HistoryStorageTest 是另一套 7 项，必须保留。"
+    },
+    {
+      "selection": "org.inkweft.data.LibraryBackupIsolationTest",
+      "reason": "5 项私有快照/作者并发隔离已在 priority-v2。"
+    },
+    {
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain",
+      "reason": "原 20k gate 已在 priority-v2；小数据取消回归不能替代它。"
+    },
+    {
+      "selection": "org.inkweft.data.LibraryBackupRepositoryTest#cancellingWrittenSnapshotRemovesPartialAndPreservesAuthorLibrary",
+      "reason": "原 15 s 中途取消 gate 已在 priority-v2，避免重复大夹具。"
+    },
+    {
+      "selection": "org.inkweft.data.LibraryBackupRepositoryTest#legalSnapshotArchivesRejectMergedOverflowAndReplayAtExactCapacity",
+      "reason": "容量上限并非本次生产 diff；按风险选择代表回归，未选择全套备份测试。"
+    },
+    {
+      "selection": "org.inkweft.app.NativeStrokeTileReuseTest",
+      "reason": "新跨瓦片 nativeStroke 像素一致性已在 priority-v2。"
+    },
+    {
+      "selection": "org.inkweft.app.TileLocalRedrawTest",
+      "reason": "2 项在独立 performance-plan，不重复。"
+    }
+  ],
+  "closure_checks": [
+    {
+      "id": "apk-identity",
+      "status": "pending_parent",
+      "check": "v2 构建成功后记录 APK sha256、源清单、实际安装版本和选定 runner；当前源哈希一致不能自行证明安装 APK 一致。"
+    },
+    {
+      "id": "serial-execution",
+      "status": "pending_parent",
+      "check": "三套计划在同一已唤醒模拟器串行执行。runner 的 outer timeout 不是放宽内部 gate；出现外部超时先检查残余 instrumentation。"
+    },
+    {
+      "id": "owned-app-clear",
+      "status": "planned",
+      "check": "本计划仅 header-loading 使用 runner 已有 clear_owned_app_first；作用范围仅云端合成 org.inkweft.app.a0。其他用例使用自身 UUID 库，不新增目录清理。"
+    },
+    {
+      "id": "original-gates",
+      "status": "pending_parent",
+      "check": "原 20k、history 原超时、backup 原 15 s gate、raster dense 原 30 s gate 各自报告。small raster 也是 30 s，但新增 small 通过不能代替 dense 通过。"
+    },
+    {
+      "id": "storage-defaults",
+      "status": "pending_parent",
+      "check": "新建默认 1024/FULL、既有 4096/INCREMENTAL、FULL/NONE × DELETE/WAL、跨进程创建/中断保全以 v2 实测报告；无平台预初始化。旧 4096/INCREMENTAL 性能不能充当当前默认参数性能。"
+    },
+    {
+      "id": "history-safety",
+      "status": "pending_parent",
+      "check": "priority 的 7 项 collection 加本计划 7 项 HistoryStorage 共同确认同库/异库写入守卫、观察者刷新、128 根批次与尾批、取消/损坏失败保全、活引用和未知表保护。"
+    },
+    {
+      "id": "backup-private-transaction",
+      "status": "pending_parent",
+      "check": "priority 的暂停私有事务期间作者提交回归与代表性 snapshot/inspect/restore 回归同时报告；仅优先测试通过不等于所有备份路径已验证。"
+    },
+    {
+      "id": "body-lifecycle",
+      "status": "pending_parent",
+      "check": "分页读取规模、Unicode/草稿/陈旧索引、延迟正文选择、失败重试与 NonCancellable 返回后的取消屏障按真实结果记录。"
+    },
+    {
+      "id": "raster-counters",
+      "status": "pending_parent",
+      "check": "区分 decoded、geometry reuse、nativeStrokeBuilds、rebuilt tiles；像素 oracle、层预算、取消资源释放与 dense 完整帧各自提供结果。nativeStroke 复用不自动消除单瓦片 dense 构建成本。"
+    },
+    {
+      "id": "performance-comparison",
+      "status": "pending_parent",
+      "check": "按同机同数据新测结果记录配置、原序 saveSamples、并发保存 p50/p95/max、冷/暖搜索、实际返回正文规模、GC 扫描与总时长。搜索 p50 取 sorted[15]，GC p50 取 sorted[14]，均保留既有定义；配置读取处于计时外 writer transaction。"
+    },
+    {
+      "id": "warm-search-tradeoff",
+      "status": "pending_parent",
+      "check": "暖查询在保存和索引完成后测；候选查询仍可能读取全部候选正文且元数据全量。保留暖查询回退及闭环串行保存重叠不同的说明，不用平均提升掩盖回退。"
+    },
+    {
+      "id": "evidence-status",
+      "status": "pending_parent",
+      "check": "计划数与实跑数分开，v2/initial-v1/diagnostic-v1/旧配对结果分开；保留所有失败和原始 gate，未解决失败不归因于模拟器或写作全绿。"
+    },
+    {
+      "id": "delivery",
+      "status": "pending_parent",
+      "check": "收尾时核对构建源哈希与提交生产树、去除证据中的敏感路径/内容、核对 Docker 完成；按已有授权统一推隔离草稿分支/PR，不强推源分支、不合并不部署。"
+    }
+  ]
+}

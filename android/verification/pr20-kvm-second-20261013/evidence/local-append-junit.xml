@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.app.TileLocalRedrawTest#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions" tests="1" failures="0" time="4.525162696838379"><testcase classname="org.inkweft.app.TileLocalRedrawTest" name="oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions" time="4.525162696838379" /></testsuite>

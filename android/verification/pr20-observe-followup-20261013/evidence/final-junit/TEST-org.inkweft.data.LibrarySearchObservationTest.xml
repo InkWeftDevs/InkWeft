@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.data.LibrarySearchObservationTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-13T11:04:46.279Z" hostname="de1aed537721" time="0.198">
+  <properties/>
+  <testcase name="rapidTypingCancelsOldReadAndRestartsDelayForOnlyTheLatestQuery" classname="org.inkweft.data.LibrarySearchObservationTest" time="0.147"/>
+  <testcase name="invalidationCancelsAnObsoleteReadAndCollectorCancellationNeverPublishesFailure" classname="org.inkweft.data.LibrarySearchObservationTest" time="0.008"/>
+  <testcase name="initialRoomEventStartsOneFullDebounceWithoutASyntheticRead" classname="org.inkweft.data.LibrarySearchObservationTest" time="0.007"/>
+  <testcase name="realInvalidationRefreshesSameRequestWhileIndexCompletionKeepsTheSourceVersion" classname="org.inkweft.data.LibrarySearchObservationTest" time="0.008"/>
+  <testcase name="clearingTextAndChangingCategoryTypeOrSortRemainImmediate" classname="org.inkweft.data.LibrarySearchObservationTest" time="0.009"/>
+  <testcase name="noReadOrVersionExistsUntilRoomEmitsItsFirstSnapshot" classname="org.inkweft.data.LibrarySearchObservationTest" time="0.005"/>
+  <testcase name="aRealEditDuringDebounceIsNotDroppedOrDelayed" classname="org.inkweft.data.LibrarySearchObservationTest" time="0.005"/>
+  <testcase name="failedReadRetainsRequestIdentityAndANewInvalidationCanRecover" classname="org.inkweft.data.LibrarySearchObservationTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

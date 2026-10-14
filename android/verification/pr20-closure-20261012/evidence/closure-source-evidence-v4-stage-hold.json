@@ -1,0 +1,1931 @@
+{
+  "utc": "2026-10-13T02:10:44.011290+00:00",
+  "status": "DELIVERY_ON_HOLD_RASTER_REVIEW",
+  "delivery_closed": false,
+  "reason": "Parent paused final delivery after the v4 single-layer local append observation regressed about 4.5x. Four existing-APK repeat runs are complete; independent hotspot/minimal-change review remains pending. No final manifest freeze or acceptance closure is performed.",
+  "source_commit": "c60fba7455cfc0b919d6f9c2d3b06f17ec25713d",
+  "observed_head": "c60fba7455cfc0b919d6f9c2d3b06f17ec25713d",
+  "source_checks": [
+    {
+      "label": "candidate-v4",
+      "manifest": {
+        "source": "/workspace/scratch/pr20-closure-evidence/candidate-v4-source-sha256.json",
+        "sha256": "8285c54019d0a4409a6dbf6f5d36e87298b5be9b6d47f93801ea9123bb7d859f",
+        "bytes": 106879
+      },
+      "checked_files": 744,
+      "working_tree_mismatches": [],
+      "committed_git_blob_mismatches": []
+    },
+    {
+      "label": "baseline-final",
+      "manifest": {
+        "source": "/workspace/scratch/pr20-closure-evidence/baseline-final-source-sha256.json",
+        "sha256": "386046c9c28eb27d33fd3977fb2baa06c94a855511f024f4a83188a4c304bbfd",
+        "bytes": 105362
+      },
+      "checked_files": 734,
+      "working_tree_mismatches": [],
+      "committed_git_blob_mismatches": null
+    }
+  ],
+  "baseline_full_manifest_files_checked": 1894,
+  "baseline_full_manifest_mismatches": [],
+  "four_shared_files": [
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+      "candidate_sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+      "baseline_sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+      "match": true
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt",
+      "candidate_sha256": "a47f892262d656dcc6ec65e984681265d593e19f88ecaa13d135d2a9f3e65bd2",
+      "baseline_sha256": "a47f892262d656dcc6ec65e984681265d593e19f88ecaa13d135d2a9f3e65bd2",
+      "match": true
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionBenchmarkTest.kt",
+      "candidate_sha256": "2b04bd2de3bc4cd6d030b14b8c12096c3a3604ddaa39324a65703cee1de30e34",
+      "baseline_sha256": "2b04bd2de3bc4cd6d030b14b8c12096c3a3604ddaa39324a65703cee1de30e34",
+      "match": true
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt",
+      "candidate_sha256": "91ceacc2db7557509f923a2046ba0f8d8ccf9691265dbee12e10e674a9ba33c9",
+      "baseline_sha256": "91ceacc2db7557509f923a2046ba0f8d8ccf9691265dbee12e10e674a9ba33c9",
+      "match": true
+    }
+  ],
+  "source_commits_match": true,
+  "binding_manifest_hash_match": true,
+  "debug_metadata": {
+    "generated_file_sha256_match": true,
+    "selected_fields_present": true,
+    "meaning": "These are debug validation APKs, not formal release builds. Their external source/APK manifests bind the tested bytes; embedded commit fields are local-unknown, not the later final Git SHA."
+  },
+  "docker_read_only_git_tree_check": {
+    "source_commit_tree": "1ea18e39d51ca989f02c65cd8f8f250d32eb8ad2",
+    "previous_head_tree": "1ea18e39d51ca989f02c65cd8f8f250d32eb8ad2",
+    "matches_binding_and_previous": true
+  },
+  "previous_184_payload_hash_mismatches": [],
+  "paired_summary_input_sha_match": true,
+  "probe_status": {
+    "library": {
+      "baseline": {
+        "status": "VERIFIED_NATIVE_RUN",
+        "issues": [],
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "candidate": {
+        "status": "VERIFIED_NATIVE_RUN",
+        "issues": [],
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "comparison": {
+        "status": "PAIRED_RECORDED_ENVIRONMENT",
+        "issues": []
+      }
+    },
+    "history": {
+      "baseline": {
+        "status": "VERIFIED_NATIVE_RUN",
+        "issues": [],
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "candidate": {
+        "status": "VERIFIED_NATIVE_RUN",
+        "issues": [],
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "comparison": {
+        "status": "PAIRED_RECORDED_ENVIRONMENT",
+        "issues": []
+      }
+    },
+    "raster": {
+      "baseline": {
+        "status": "VERIFIED_NATIVE_RUN",
+        "issues": [],
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "candidate": {
+        "status": "VERIFIED_NATIVE_RUN",
+        "issues": [],
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "comparison": {
+        "status": "PAIRED_RECORDED_ENVIRONMENT",
+        "issues": []
+      }
+    }
+  },
+  "environments": [
+    {
+      "file": "candidate-v4-performance-environment.json",
+      "status": "RECORDED",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "errors": [],
+      "comparison_hash_recomputed_match": true
+    },
+    {
+      "file": "candidate-v4-performance-environment-after.json",
+      "status": "RECORDED",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "errors": [],
+      "comparison_hash_recomputed_match": true
+    },
+    {
+      "file": "baseline-final-performance-environment.json",
+      "status": "RECORDED",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "errors": [],
+      "comparison_hash_recomputed_match": true
+    },
+    {
+      "file": "baseline-final-performance-environment-after.json",
+      "status": "RECORDED",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "errors": [],
+      "comparison_hash_recomputed_match": true
+    }
+  ],
+  "four_recorded_environment_hashes_equal": true,
+  "original_append_observations_preserved": {
+    "baseline-final": [
+      {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 7435.167819,
+        "appendCompleteMs": 1435.515577,
+        "forcedFullCompleteMs": 6352.816301,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 728.762351,
+        "rasterMs": 518.699167,
+        "publicationMs": 9.981122,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200
+      },
+      {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 8467.589725,
+        "appendCompleteMs": 4689.2982,
+        "forcedFullCompleteMs": 8042.411655,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 2063.775714,
+        "rasterMs": 2742.7797389999996,
+        "publicationMs": 2324.596823,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408
+      },
+      {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 11653.570095,
+        "appendCompleteMs": 8440.890924,
+        "forcedFullCompleteMs": 11622.601683,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 3066.4478099999997,
+        "rasterMs": 1823.3692129999997,
+        "publicationMs": 18057.491651,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816
+      }
+    ],
+    "candidate-v4": [
+      {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 7815.863334,
+        "appendCompleteMs": 6427.580419,
+        "forcedFullCompleteMs": 9800.771093,
+        "localDecoded": 13,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 3020.312778,
+        "rasterMs": 2381.226841,
+        "publicationMs": 274.362927,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200
+      },
+      {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 13239.766597,
+        "appendCompleteMs": 6600.950884,
+        "forcedFullCompleteMs": 13071.940823,
+        "localDecoded": 21,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 2332.17613,
+        "rasterMs": 3409.4472410000003,
+        "publicationMs": 3608.2606209999994,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408
+      },
+      {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 14978.748316,
+        "appendCompleteMs": 8622.743043,
+        "forcedFullCompleteMs": 15021.319114,
+        "localDecoded": 11,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 2813.998293,
+        "rasterMs": 1904.5556119999999,
+        "publicationMs": 17981.108738,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816
+      }
+    ]
+  },
+  "repeat_checks": [
+    {
+      "phase": "candidate-v4-raster-repeat1",
+      "results_receipt": "candidate-v4-raster-repeat1-results.json",
+      "passed": true,
+      "executed": 2,
+      "failures": 0,
+      "summary_matches_leaf": true,
+      "raw_ok_two_tests": true,
+      "pan_rows": [
+        {
+          "rebuilt": 12,
+          "tiles": 20,
+          "panPixelsEqual": true,
+          "zoomPixelsEqual": true,
+          "previewCaptureReady": false
+        }
+      ],
+      "local_rows": [
+        {
+          "layers": 1,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 15691.209709,
+          "appendCompleteMs": 4176.864908,
+          "forcedFullCompleteMs": 14148.253849,
+          "localDecoded": 13,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 2676.287779,
+          "rasterMs": 774.951939,
+          "publicationMs": 16.403976,
+          "pixelsEqual": true,
+          "bitmapBytes": 14371200
+        },
+        {
+          "layers": 4,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 16129.460387,
+          "appendCompleteMs": 8065.451158,
+          "forcedFullCompleteMs": 16201.226372,
+          "localDecoded": 21,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 3401.5915649999997,
+          "rasterMs": 5365.918544,
+          "publicationMs": 2183.839224,
+          "pixelsEqual": true,
+          "bitmapBytes": 12147408
+        },
+        {
+          "layers": 8,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 21060.606936,
+          "appendCompleteMs": 15461.608652,
+          "forcedFullCompleteMs": 20307.528398,
+          "localDecoded": 11,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 48,
+          "metadataMs": 5699.438134,
+          "rasterMs": 3242.0634,
+          "publicationMs": 44317.416444999995,
+          "pixelsEqual": true,
+          "bitmapBytes": 24294816
+        }
+      ],
+      "local_layers": [
+        1,
+        4,
+        8
+      ],
+      "all_local_pixels_equal": true,
+      "pre_run_installation_receipt": "candidate-v4-finalrestore-apk-installation.json",
+      "frozen_artifacts": "candidate-v4-artifacts.json",
+      "installation_hashes_match_frozen_artifacts": true
+    },
+    {
+      "phase": "baseline-final-raster-repeat1",
+      "results_receipt": "baseline-final-raster-repeat1-results.json",
+      "passed": true,
+      "executed": 2,
+      "failures": 0,
+      "summary_matches_leaf": true,
+      "raw_ok_two_tests": true,
+      "pan_rows": [
+        {
+          "rebuilt": 12,
+          "tiles": 20,
+          "panPixelsEqual": true,
+          "zoomPixelsEqual": true,
+          "previewCaptureReady": false
+        }
+      ],
+      "local_rows": [
+        {
+          "layers": 1,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 7924.342136,
+          "appendCompleteMs": 1817.981931,
+          "forcedFullCompleteMs": 7349.085667,
+          "localDecoded": 13,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 890.599347,
+          "rasterMs": 651.219217,
+          "publicationMs": 22.450801,
+          "pixelsEqual": true,
+          "bitmapBytes": 14371200
+        },
+        {
+          "layers": 4,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 11223.716703,
+          "appendCompleteMs": 7575.869409,
+          "forcedFullCompleteMs": 13314.674013,
+          "localDecoded": 21,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 3536.045942,
+          "rasterMs": 3961.958641,
+          "publicationMs": 4802.978276,
+          "pixelsEqual": true,
+          "bitmapBytes": 12147408
+        },
+        {
+          "layers": 8,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 16602.505436,
+          "appendCompleteMs": 19706.450753,
+          "forcedFullCompleteMs": 15804.858427,
+          "localDecoded": 11,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 48,
+          "metadataMs": 7116.563566999999,
+          "rasterMs": 4334.315506,
+          "publicationMs": 46831.96797,
+          "pixelsEqual": true,
+          "bitmapBytes": 24294816
+        }
+      ],
+      "local_layers": [
+        1,
+        4,
+        8
+      ],
+      "all_local_pixels_equal": true,
+      "pre_run_installation_receipt": "baseline-final-raster-repeat-apk-installation.json",
+      "frozen_artifacts": "baseline-final-artifacts.json",
+      "installation_hashes_match_frozen_artifacts": true
+    },
+    {
+      "phase": "baseline-final-raster-repeat2",
+      "results_receipt": "baseline-final-raster-repeat2-results.json",
+      "passed": true,
+      "executed": 2,
+      "failures": 0,
+      "summary_matches_leaf": true,
+      "raw_ok_two_tests": true,
+      "pan_rows": [
+        {
+          "rebuilt": 12,
+          "tiles": 20,
+          "panPixelsEqual": true,
+          "zoomPixelsEqual": true,
+          "previewCaptureReady": false
+        }
+      ],
+      "local_rows": [
+        {
+          "layers": 1,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 7655.261726,
+          "appendCompleteMs": 2358.943598,
+          "forcedFullCompleteMs": 6557.54163,
+          "localDecoded": 13,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 736.938101,
+          "rasterMs": 1349.826899,
+          "publicationMs": 20.045705,
+          "pixelsEqual": true,
+          "bitmapBytes": 14371200
+        },
+        {
+          "layers": 4,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 9901.137626,
+          "appendCompleteMs": 7532.983667,
+          "forcedFullCompleteMs": 11324.414611,
+          "localDecoded": 21,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 2042.3099149999998,
+          "rasterMs": 3145.853314,
+          "publicationMs": 4425.845102,
+          "pixelsEqual": true,
+          "bitmapBytes": 12147408
+        },
+        {
+          "layers": 8,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 11175.824367,
+          "appendCompleteMs": 8642.036328,
+          "forcedFullCompleteMs": 11267.902499,
+          "localDecoded": 11,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 48,
+          "metadataMs": 2839.26092,
+          "rasterMs": 1667.955288,
+          "publicationMs": 19319.752702,
+          "pixelsEqual": true,
+          "bitmapBytes": 24294816
+        }
+      ],
+      "local_layers": [
+        1,
+        4,
+        8
+      ],
+      "all_local_pixels_equal": true,
+      "pre_run_installation_receipt": "baseline-final-raster-repeat-apk-installation.json",
+      "frozen_artifacts": "baseline-final-artifacts.json",
+      "installation_hashes_match_frozen_artifacts": true
+    },
+    {
+      "phase": "candidate-v4-raster-repeat2",
+      "results_receipt": "candidate-v4-raster-repeat2-results.json",
+      "passed": true,
+      "executed": 2,
+      "failures": 0,
+      "summary_matches_leaf": true,
+      "raw_ok_two_tests": true,
+      "pan_rows": [
+        {
+          "rebuilt": 12,
+          "tiles": 20,
+          "panPixelsEqual": true,
+          "zoomPixelsEqual": true,
+          "previewCaptureReady": false
+        }
+      ],
+      "local_rows": [
+        {
+          "layers": 1,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 7442.99679,
+          "appendCompleteMs": 1611.903138,
+          "forcedFullCompleteMs": 6770.079643,
+          "localDecoded": 13,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 710.59131,
+          "rasterMs": 594.302965,
+          "publicationMs": 15.828966,
+          "pixelsEqual": true,
+          "bitmapBytes": 14371200
+        },
+        {
+          "layers": 4,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 8400.08873,
+          "appendCompleteMs": 4836.37855,
+          "forcedFullCompleteMs": 9169.957184,
+          "localDecoded": 21,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 24,
+          "metadataMs": 2035.6167219999998,
+          "rasterMs": 1704.7680129999999,
+          "publicationMs": 3870.49657,
+          "pixelsEqual": true,
+          "bitmapBytes": 12147408
+        },
+        {
+          "layers": 8,
+          "initialStrokes": 320,
+          "finalStrokes": 321,
+          "firstCompleteMs": 12291.151702,
+          "appendCompleteMs": 9130.194707,
+          "forcedFullCompleteMs": 12718.576155,
+          "localDecoded": 11,
+          "fullDecoded": 321,
+          "localRebuiltTiles": 1,
+          "fullRebuiltTiles": 48,
+          "metadataMs": 3109.342089,
+          "rasterMs": 1960.5294419999998,
+          "publicationMs": 19291.330764,
+          "pixelsEqual": true,
+          "bitmapBytes": 24294816
+        }
+      ],
+      "local_layers": [
+        1,
+        4,
+        8
+      ],
+      "all_local_pixels_equal": true,
+      "pre_run_installation_receipt": "candidate-v4-raster-repeat2-apk-installation.json",
+      "frozen_artifacts": "candidate-v4-artifacts.json",
+      "installation_hashes_match_frozen_artifacts": true
+    }
+  ],
+  "repeat_environments": [
+    {
+      "file": "candidate-v4-raster-repeat1-environment.json",
+      "status": "RECORDED",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "errors": [],
+      "comparison_hash_recomputed_match": true
+    },
+    {
+      "file": "candidate-v4-raster-repeat1-environment-after.json",
+      "status": "RECORDED",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "errors": [],
+      "comparison_hash_recomputed_match": true
+    },
+    {
+      "file": "baseline-final-raster-repeat1-environment.json",
+      "status": "RECORDED",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "errors": [],
+      "comparison_hash_recomputed_match": true
+    },
+    {
+      "file": "baseline-final-raster-repeat1-environment-after.json",
+      "status": "RECORDED",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "errors": [],
+      "comparison_hash_recomputed_match": true
+    },
+    {
+      "file": "baseline-final-raster-repeat2-environment.json",
+      "status": "RECORDED",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "errors": [],
+      "comparison_hash_recomputed_match": true
+    },
+    {
+      "file": "baseline-final-raster-repeat2-environment-after.json",
+      "status": "RECORDED",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "errors": [],
+      "comparison_hash_recomputed_match": true
+    },
+    {
+      "file": "candidate-v4-raster-repeat2-environment.json",
+      "status": "RECORDED",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "errors": [],
+      "comparison_hash_recomputed_match": true
+    },
+    {
+      "file": "candidate-v4-raster-repeat2-environment-after.json",
+      "status": "RECORDED",
+      "comparison_sha256": "425d701e4a8711a84ca963b1c4769b76c47d1644970d72e2941666412be56378",
+      "errors": [],
+      "comparison_hash_recomputed_match": true
+    }
+  ],
+  "eight_repeat_environment_hashes_equal_original_pair": true,
+  "repeat_interpretation": "Original single-layer ~4.5x observation is retained. Same candidate v4 APK repeat1 was ~4.177 s and repeat2 ~1.612 s. Neither faster samples nor eight matching configuration hashes establish a resolved regression, a unique hotspot, or stable statistical behavior.",
+  "source_artifact_run_receipt_checks": {
+    "baseline-final": {
+      "build": {
+        "started_utc": "2026-10-13T00:42:33.179872+00:00",
+        "seconds": 440.5701020780034,
+        "exit_code": 0,
+        "command": [
+          "bash",
+          "/workspace/scratch/run-inkweft-gradle",
+          ":app:assembleDebug",
+          ":data-local:assembleDebugAndroidTest",
+          ":app:assembleDebugAndroidTest"
+        ],
+        "cwd": "/workspace/scratch/inkweft-baseline-closure-a128bb07/android",
+        "source_files": 734,
+        "source_unchanged_during_build": true
+      },
+      "recorded_apks": 3,
+      "signatures_all_pass": true,
+      "continuity_status": "MATCH",
+      "continuity_all_match": true,
+      "initial_install_all_match": true,
+      "native_mupdf_abi_records": [
+        {
+          "path": "lib/arm64-v8a/libmupdf_java.so",
+          "bytes": 10840392,
+          "sha256": "5c7872c5e12ae3c00f68e14e371d3467cbfb2fd3dfefc7bb2a03d2cd491f6a4f",
+          "elf": true
+        },
+        {
+          "path": "lib/armeabi-v7a/libmupdf_java.so",
+          "bytes": 7582088,
+          "sha256": "2b24af301ba54d70c4cac09a1ae22af2c20f62b5f1046a2e8b352ca702e2ffd6",
+          "elf": true
+        },
+        {
+          "path": "lib/x86/libmupdf_java.so",
+          "bytes": 11187796,
+          "sha256": "46f512805c693c07f6e7fac50cdf3d2e028c5078f92e7d230f4c1e6e1b165ed9",
+          "elf": true
+        },
+        {
+          "path": "lib/x86_64/libmupdf_java.so",
+          "bytes": 11264136,
+          "sha256": "e9907d1e11f886662915376a1f059608e539c75cb1bc5ef57ccdf887a0367349",
+          "elf": true
+        }
+      ],
+      "performance_raw_log_checks": [
+        {
+          "label": "history-probe",
+          "summary_matches_leaf": true,
+          "raw_ok_marker": true,
+          "tests": 1,
+          "passed": true
+        },
+        {
+          "label": "library-probe",
+          "summary_matches_leaf": true,
+          "raw_ok_marker": true,
+          "tests": 1,
+          "passed": true
+        },
+        {
+          "label": "raster-probe",
+          "summary_matches_leaf": true,
+          "raw_ok_marker": true,
+          "tests": 1,
+          "passed": true
+        },
+        {
+          "label": "tile-local",
+          "summary_matches_leaf": true,
+          "raw_ok_marker": true,
+          "tests": 2,
+          "passed": true
+        }
+      ],
+      "performance_passed_tests": 5,
+      "performance_failed_selections": []
+    },
+    "candidate-v4": {
+      "build": {
+        "started_utc": "2026-10-12T23:42:12.823888+00:00",
+        "seconds": 934.4628226669993,
+        "exit_code": 0,
+        "command": [
+          "bash",
+          "/workspace/scratch/run-inkweft-gradle",
+          ":core-domain:test",
+          ":data-local:testDebugUnitTest",
+          ":app:lintDebug",
+          ":app:assembleDebug",
+          ":data-local:assembleDebugAndroidTest",
+          ":app:assembleDebugAndroidTest"
+        ],
+        "cwd": "/workspace/InkWeft/android",
+        "source_files": 744,
+        "source_unchanged_during_build": true
+      },
+      "recorded_apks": 3,
+      "signatures_all_pass": true,
+      "continuity_status": "MATCH",
+      "continuity_all_match": true,
+      "initial_install_all_match": true,
+      "native_mupdf_abi_records": [
+        {
+          "path": "lib/arm64-v8a/libmupdf_java.so",
+          "size": 10840392,
+          "sha256": "5c7872c5e12ae3c00f68e14e371d3467cbfb2fd3dfefc7bb2a03d2cd491f6a4f"
+        },
+        {
+          "path": "lib/armeabi-v7a/libmupdf_java.so",
+          "size": 7582088,
+          "sha256": "2b24af301ba54d70c4cac09a1ae22af2c20f62b5f1046a2e8b352ca702e2ffd6"
+        },
+        {
+          "path": "lib/x86/libmupdf_java.so",
+          "size": 11187796,
+          "sha256": "46f512805c693c07f6e7fac50cdf3d2e028c5078f92e7d230f4c1e6e1b165ed9"
+        },
+        {
+          "path": "lib/x86_64/libmupdf_java.so",
+          "size": 11264136,
+          "sha256": "e9907d1e11f886662915376a1f059608e539c75cb1bc5ef57ccdf887a0367349"
+        }
+      ],
+      "performance_raw_log_checks": [
+        {
+          "label": "history-probe",
+          "summary_matches_leaf": true,
+          "raw_ok_marker": true,
+          "tests": 1,
+          "passed": true
+        },
+        {
+          "label": "library-probe",
+          "summary_matches_leaf": true,
+          "raw_ok_marker": true,
+          "tests": 1,
+          "passed": true
+        },
+        {
+          "label": "raster-probe",
+          "summary_matches_leaf": true,
+          "raw_ok_marker": true,
+          "tests": 1,
+          "passed": true
+        },
+        {
+          "label": "tile-local",
+          "summary_matches_leaf": true,
+          "raw_ok_marker": true,
+          "tests": 2,
+          "passed": true
+        }
+      ],
+      "performance_passed_tests": 5,
+      "performance_failed_selections": []
+    }
+  },
+  "candidate_v4_final_restore_receipt": {
+    "recorded_installs": 3,
+    "all_match_original_v4": true
+  },
+  "readme_markdown_references": [
+    {
+      "target": "../android-perf-followup-20261012/README.md",
+      "exists_in_repository": true,
+      "curated_target": false,
+      "source_exists": true
+    },
+    {
+      "target": "evidence/final-committed-source-binding.json",
+      "exists_in_repository": false,
+      "curated_target": true,
+      "source_exists": true
+    },
+    {
+      "target": "evidence/remaining-acceptance-gates.md",
+      "exists_in_repository": false,
+      "curated_target": true,
+      "source_exists": true
+    },
+    {
+      "target": "evidence/final-paired-library-review.md",
+      "exists_in_repository": false,
+      "curated_target": true,
+      "source_exists": true
+    },
+    {
+      "target": "evidence/final-paired-history-review.md",
+      "exists_in_repository": false,
+      "curated_target": true,
+      "source_exists": true
+    },
+    {
+      "target": "evidence/final-paired-raster-review.md",
+      "exists_in_repository": false,
+      "curated_target": true,
+      "source_exists": true
+    },
+    {
+      "target": "evidence/paired-performance-summary-new-format.json",
+      "exists_in_repository": false,
+      "curated_target": true,
+      "source_exists": true
+    },
+    {
+      "target": "../../../backup-server/protocol-v2/verification/cloud-docker-20261012/REPORT.txt",
+      "exists_in_repository": true,
+      "curated_target": false,
+      "source_exists": true
+    }
+  ],
+  "readme_bare_filename_references": [
+    {
+      "reference": "baseline-final-provenance.json",
+      "curated": true
+    },
+    {
+      "reference": "baseline-final-source-manifest.json",
+      "curated": true
+    },
+    {
+      "reference": "candidate-v4-artifacts.json",
+      "curated": true
+    },
+    {
+      "reference": "candidate-v4-reconstruction-provenance.json",
+      "curated": true
+    },
+    {
+      "reference": "ci-environment-review.md",
+      "curated": true
+    },
+    {
+      "reference": "final-committed-source-binding.json",
+      "curated": true
+    },
+    {
+      "reference": "paired-performance-summary-new-format.json",
+      "curated": true
+    }
+  ],
+  "repository_copy_state": [
+    {
+      "archive_path": "evidence/baseline-closure-performance-plan.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-apk-installation.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-artifacts.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-build.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-build.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-jvm-and-lint-status.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-artifact-continuity.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-environment-after.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-environment.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-history-probe-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-history-probe.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-history-probe.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-library-probe-setup.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-library-probe.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-library-probe.log",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-raster-probe-setup.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-raster-probe.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-raster-probe.log",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-results.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-tile-local-setup.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-tile-local.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-performance-tile-local.log",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-provenance.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat-apk-installation.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat1-environment-after.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat1-environment.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat1-results.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat1-tile-local-setup.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat1-tile-local.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat1-tile-local.log",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat2-environment-after.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat2-environment.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat2-results.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat2-tile-local-setup.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat2-tile-local.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-raster-repeat2-tile-local.log",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/baseline-final-recording.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-signatures.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-source-manifest.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/baseline-final-source-sha256.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-artifacts.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-backup-cancel-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-backup-cancel.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-backup-cancel.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-backup-isolation-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-backup-isolation.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-backup-isolation.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-build.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-factory-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-factory.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-history-collection-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-history-collection.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-history-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-history.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-jvm-and-lint-status.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-native-stroke-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-native-stroke.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-process-initialization-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-process-initialization.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-rapid-search-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-rapid-search.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-rapid-search.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-reconstruction-provenance.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-reconstruction.patch",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-backup-regressions-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-backup-regressions.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-header-loading-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-header-loading.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-history-storage-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-history-storage.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-layer-budget-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-layer-budget.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-library-paging-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-library-paging.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-original-storage-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-original-storage.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-original-storage.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-results.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-search-regressions-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-search-regressions.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-streamed-dense-original-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-streamed-dense-original.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-streamed-dense-original.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-streamed-regressions-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-regression-streamed-regressions.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-results.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-shelf-rename-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-shelf-rename.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-signatures.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v2-source-sha256.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-artifacts.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-build.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-followup-backup-isolation-paused-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-followup-backup-isolation-paused.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-followup-backup-isolation-paused.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-followup-original-later-corruption-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-followup-original-later-corruption.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-followup-original-later-corruption.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-followup-results.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-jvm-and-lint-status.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-artifact-continuity.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-environment-after.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-environment.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-history-probe-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-history-probe.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-history-probe.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-library-probe-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-library-probe.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-library-probe.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-raster-probe-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-raster-probe.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-raster-probe.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-results.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-tile-local-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-tile-local.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-performance-tile-local.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-signatures.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-source-continuity.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-source-continuity.md",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v3-source-sha256.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-apk-installation.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-artifacts.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-build.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-build.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-evidence-closure-check.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-evidence-closure-check.md",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-finalrestore-apk-installation.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-jvm-and-lint-status.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-library-review.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-library-review.md",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-original-storage-review.md",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-artifact-continuity.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-environment-after.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-environment.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-history-probe-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-history-probe.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-history-probe.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-library-probe-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-library-probe.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-library-probe.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-raster-probe-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-raster-probe.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-raster-probe.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-results.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-tile-local-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-tile-local.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-performance-tile-local.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat1-environment-after.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat1-environment.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat1-results.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat1-tile-local-setup.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat1-tile-local.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat1-tile-local.log",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat2-apk-installation.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat2-environment-after.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat2-environment.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat2-results.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat2-tile-local-setup.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat2-tile-local.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-repeat2-tile-local.log",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-review.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-raster-review.md",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-reconstruction-matches.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-reconstruction-provenance.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-reconstruction.patch",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-signatures.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-source-continuity.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-source-continuity.md",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-source-sha256.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-index-preparation-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-index-preparation.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-index-preparation.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-original-storage-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-original-storage.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-original-storage.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-plan.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-rapid-search-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-rapid-search.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-rapid-search.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-results.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-search-regressions-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-search-regressions.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/candidate-v4-validation-search-regressions.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/ci-environment-review.md",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/closure-curated-manifest-v4-completed.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/closure-curation-extension-baseline-build-history.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/closure-curation-extension-baseline-build-history.md",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/closure-evidence-curation-v4-completed.md",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/closure-evidence-privacy-review-v4-completed.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/closure-privacy-extension-baseline-build-history.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/closure-review-checklist-v2.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-source-sha256.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-artifacts.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-assessment.md",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-backup-cancel-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-backup-cancel.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-backup-cancel.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-history-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-history.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-history.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-large-frame-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-large-frame.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-large-frame.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-rapid-search-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-rapid-search.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-rapid-search.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-reconstruction-provenance.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-reconstruction.patch",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-results.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-shelf-rename-setup.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-shelf-rename.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-shelf-rename.log",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/diagnostic-v1-signatures.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/final-committed-source-binding.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/final-paired-history-review.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/final-paired-history-review.md",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/final-paired-library-review.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/final-paired-library-review.md",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/final-paired-raster-review.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/final-paired-raster-review.md",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/final-publication-doc-review.md",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/final-readonly-delivery-checks.md",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/final-source-commits.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/final-v4-index-source-review.md",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/paired-performance-summary-new-format.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/performance-environment-recorder-review.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/performance-fixture-comparability.md",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/performance-plan.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/performance-summary-input.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/performance-summary-usage.md",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "evidence/raster-regression-followup-plan.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/raster-repeat-plan.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/raster-repeat-review.json",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/raster-repeat-review.md",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/raster-single-tile-regression-investigation.md",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/remaining-acceptance-gates.md",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "evidence/v4-original-fixture-source-check.json",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "scripts/pr20-closure-apks.py",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "scripts/pr20-closure-awake-checks.py",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "scripts/pr20-closure-build.py",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "scripts/pr20-closure-instrumentation.py",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "scripts/pr20-closure-record-baseline-build.py",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "scripts/pr20-closure-record-build.py",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "scripts/record-inkweft-performance-environment.py",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "scripts/record-v4-stage-handoff-review.py",
+      "state": "ABSENT_COPY_NOT_AUTHORIZED_IN_THIS_TASK"
+    },
+    {
+      "archive_path": "scripts/run-inkweft-gradle",
+      "state": "MATCH"
+    },
+    {
+      "archive_path": "scripts/summarize-pr20-closure-performance.py",
+      "state": "MATCH"
+    }
+  ],
+  "limitations": [
+    "Saved receipts and recorded environment settings only; no new device query or native/build execution.",
+    "APK binaries not recopied or rehashed here; this audit checks joins among saved artifact/signature/install/after-run continuity receipts.",
+    "Synthetic fixtures use generated IDs/timestamps: same fixture code and scale, not byte-identical databases.",
+    "Debug APK commit fields remain local-unknown; external manifests bind tested bytes to source. This is not binary reproducibility or embedded final Git SHA.",
+    "Recorded environment equality does not prove identical transient CPU scheduling, load, caches or performance.",
+    "Original 20k search 10s, backup cancellation 15s and dense frame 30s acceptance gaps remain; v4 local append regression now additionally pending investigation.",
+    "CI, physical-device performance and hardware-window screenshots remain unverified."
+  ],
+  "actions_not_performed": [
+    "final delivery freeze",
+    "build",
+    "ADB",
+    "native execution",
+    "Docker operation",
+    "repository write",
+    "commit",
+    "push",
+    "remote PR mutation"
+  ],
+  "literal_payloads_changed_during_audit": []
+}

@@ -1,0 +1,135 @@
+{
+  "phase": "candidate-pan-cleanup-v2",
+  "status": "VERIFIED_AND_INSTALLED",
+  "started_utc": "2026-10-13T04:17:58.660774+00:00",
+  "adb_serial": "emulator-5554",
+  "install_requested": true,
+  "artifacts": [
+    {
+      "role": "app",
+      "path": "/workspace/InkWeft/android/app/build/outputs/apk/debug/app-debug.apk",
+      "bytes": 241512357,
+      "sha256": "d4af16103b601e7d73af673eeb89d6511003a0f0ef4c86785862d5e202714b5e",
+      "mupdf_native": [
+        {
+          "path": "lib/arm64-v8a/libmupdf_java.so",
+          "bytes": 10840392,
+          "sha256": "5c7872c5e12ae3c00f68e14e371d3467cbfb2fd3dfefc7bb2a03d2cd491f6a4f",
+          "elf": true
+        },
+        {
+          "path": "lib/armeabi-v7a/libmupdf_java.so",
+          "bytes": 7582088,
+          "sha256": "2b24af301ba54d70c4cac09a1ae22af2c20f62b5f1046a2e8b352ca702e2ffd6",
+          "elf": true
+        },
+        {
+          "path": "lib/x86/libmupdf_java.so",
+          "bytes": 11187796,
+          "sha256": "46f512805c693c07f6e7fac50cdf3d2e028c5078f92e7d230f4c1e6e1b165ed9",
+          "elf": true
+        },
+        {
+          "path": "lib/x86_64/libmupdf_java.so",
+          "bytes": 11264136,
+          "sha256": "e9907d1e11f886662915376a1f059608e539c75cb1bc5ef57ccdf887a0367349",
+          "elf": true
+        }
+      ],
+      "signature": {
+        "command": [
+          "/workspace/.setup/tools/jdk-17.0.16+8/bin/java",
+          "-jar",
+          "/workspace/.setup/tools/android-sdk/build-tools/36.0.0/lib/apksigner.jar",
+          "verify",
+          "--verbose",
+          "/workspace/InkWeft/android/app/build/outputs/apk/debug/app-debug.apk"
+        ],
+        "exit_code": 0,
+        "stdout": "Verifies\nVerified using v1 scheme (JAR signing): false\nVerified using v2 scheme (APK Signature Scheme v2): true\nVerified using v3 scheme (APK Signature Scheme v3): false\nVerified using v3.1 scheme (APK Signature Scheme v3.1): false\nVerified using v4 scheme (APK Signature Scheme v4): false\nVerified for SourceStamp: false\nNumber of signers: 1\n",
+        "stderr": ""
+      },
+      "unchanged_after_verification": true
+    },
+    {
+      "role": "appTest",
+      "path": "/workspace/InkWeft/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "bytes": 18414064,
+      "sha256": "e9121b79cec4ede5ffc83a94a1f19f65b6c303103dc47a1f314af975afa6f9a2",
+      "mupdf_native": [],
+      "signature": {
+        "command": [
+          "/workspace/.setup/tools/jdk-17.0.16+8/bin/java",
+          "-jar",
+          "/workspace/.setup/tools/android-sdk/build-tools/36.0.0/lib/apksigner.jar",
+          "verify",
+          "--verbose",
+          "/workspace/InkWeft/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+        ],
+        "exit_code": 0,
+        "stdout": "Verifies\nVerified using v1 scheme (JAR signing): false\nVerified using v2 scheme (APK Signature Scheme v2): true\nVerified using v3 scheme (APK Signature Scheme v3): false\nVerified using v3.1 scheme (APK Signature Scheme v3.1): false\nVerified using v4 scheme (APK Signature Scheme v4): false\nVerified for SourceStamp: false\nNumber of signers: 1\n",
+        "stderr": ""
+      },
+      "unchanged_after_verification": true
+    }
+  ],
+  "installation": [
+    {
+      "role": "app",
+      "sha256": "d4af16103b601e7d73af673eeb89d6511003a0f0ef4c86785862d5e202714b5e",
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "install",
+        "-r",
+        "-t",
+        "/workspace/InkWeft/android/app/build/outputs/apk/debug/app-debug.apk"
+      ],
+      "started_utc": "2026-10-13T04:18:01.150251+00:00",
+      "exit_code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": "",
+      "completed_utc": "2026-10-13T04:18:34.457264+00:00",
+      "unchanged_after_install": true
+    },
+    {
+      "role": "appTest",
+      "sha256": "e9121b79cec4ede5ffc83a94a1f19f65b6c303103dc47a1f314af975afa6f9a2",
+      "command": [
+        "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+        "-s",
+        "emulator-5554",
+        "install",
+        "-r",
+        "-t",
+        "/workspace/InkWeft/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+      ],
+      "started_utc": "2026-10-13T04:18:34.874744+00:00",
+      "exit_code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": "",
+      "completed_utc": "2026-10-13T04:18:39.564885+00:00",
+      "unchanged_after_install": true
+    }
+  ],
+  "script_sha256": "346971c46fd58ccdf1fcf12bf4025da4489126753ad997c726a28015beb7a854",
+  "source_binding": "This receipt binds APK bytes only. Use a separate frozen source/build manifest for source identity.",
+  "jvm": {
+    "status": "NOT_RUN",
+    "reason": "No JVM task or prior XML report is read."
+  },
+  "lint": {
+    "status": "NOT_RUN",
+    "reason": "No lint task or prior XML report is read."
+  },
+  "dataTest": {
+    "status": "NOT_RUN",
+    "reason": "data-local test APK is not recorded, installed or executed by this tool."
+  },
+  "instrumentation": {
+    "status": "NOT_RUN",
+    "reason": "Use the separate targeted instrumentation tool."
+  },
+  "completed_utc": "2026-10-13T04:18:39.583546+00:00"
+}

@@ -1,0 +1,2084 @@
+{
+  "run_id": "38411448143",
+  "run_attempt": "1",
+  "workflow_sha": "71b84885bd4ecb3fe8a4406788ffa14abc189497",
+  "source_spec": {
+    "schema": 1,
+    "status": "PROPOSED_NOT_AUTHORIZED_NOT_RUN",
+    "materialized_scope": [
+      "android",
+      "ci"
+    ],
+    "excluded_from_build_inputs": [
+      "android/verification"
+    ],
+    "identities": {
+      "B": {
+        "git": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+        "tree": "2eefbf879679d29f5ae4b1d6b9715a4cef14d5d9",
+        "production_overrides": [
+          {
+            "from_git": "7949011ca2b84492f6438d275a09d28faef3b472",
+            "from_path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+            "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+            "bytes": 4426,
+            "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d"
+          }
+        ],
+        "canonical_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+        "file_count": 947
+      },
+      "C0": {
+        "git": "7949011ca2b84492f6438d275a09d28faef3b472",
+        "tree": "78deba5d8fe47cc4f6d3e4eeecafba9013768635",
+        "production_overrides": [],
+        "canonical_manifest_sha256": "8b072c5833e807b5fdc722cade96f0265ba1d9badbf4ac577cb3ffe0b1b96a64",
+        "file_count": 960
+      },
+      "C1": {
+        "git": "ebb48481e7e995288c1844d43011398c513b4f4e",
+        "tree": "3d88de9681dae25f24b8e7cc6ae695cc2600a140",
+        "production_overrides": [],
+        "canonical_manifest_sha256": "c0e3b9a4cfa9b5a602e47422f080add43353d64acacea505cc8f3ebee4c91e63",
+        "file_count": 964
+      }
+    },
+    "common_probes": [
+      {
+        "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+        "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLibraryPairProbe.kt",
+        "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+        "bytes": 18281,
+        "sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+      },
+      {
+        "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+        "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLocalAppendPairProbe.kt",
+        "path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+        "bytes": 12932,
+        "sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+      }
+    ],
+    "native_execution": "NOT_RUN",
+    "notes": [
+      "B retains old search/paging/raster/GC and receives only the established C0 writer factory override.",
+      "C1 is the final code commit; later report-only commits do not alter measured sources.",
+      "All source inputs are local fixed git blobs; this document authorizes no build, runner or security action."
+    ]
+  },
+  "input_hashes": {
+    "approved_plan_sha256": "d5efd83c08b6bb6e107c397db8ca3999337693dc2af45f0615c5e198bac93077",
+    "source_spec_sha256": "0a38b7e6348c0e1be7bf2d0ce7bbb115665fbfa56d49875ac6ccab8e6851dbcd",
+    "method_plan_sha256": "797b64fcdfe9576e2c678e37a541161c0b795276ad99574dc92f81aa789d2913",
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+  },
+  "job_started_epoch": 1791900785,
+  "phase_cutoff_epochs": {
+    "setup": 1791902705,
+    "correctness": 1791903065,
+    "common": 1791903905,
+    "diagnostics": 1791904085
+  },
+  "work_deadline_epoch": 1791904085,
+  "status": "BLOCKED_OR_FAILED",
+  "actions": {
+    "setup": {
+      "status": "PASS",
+      "budget_phase": "setup",
+      "started_epoch": 1791900797.9073305,
+      "seconds": 44.747984886169434
+    },
+    "build-B": {
+      "status": "PASS",
+      "budget_phase": "setup",
+      "started_epoch": 1791900842.717972,
+      "seconds": 589.3760151863098
+    },
+    "build-C0": {
+      "status": "PASS",
+      "budget_phase": "setup",
+      "started_epoch": 1791901432.172626,
+      "seconds": 381.02182269096375
+    },
+    "build-C1": {
+      "status": "PASS",
+      "budget_phase": "setup",
+      "started_epoch": 1791901813.2679262,
+      "seconds": 453.3919608592987
+    },
+    "emulator": {
+      "status": "PASS",
+      "budget_phase": "setup",
+      "started_epoch": 1791902266.7380784,
+      "seconds": 30.350001573562622
+    },
+    "methods-correctness": {
+      "status": "FAIL",
+      "budget_phase": "correctness",
+      "started_epoch": 1791902297.1645286,
+      "seconds": 24.682382583618164
+    }
+  },
+  "phases": [
+    {
+      "name": "source-fetch",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1791900798.7583919,
+      "exit_code": 0,
+      "seconds": 0.5165109634399414
+    },
+    {
+      "name": "source-reconstruction",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1791900799.2760153,
+      "exit_code": 0,
+      "seconds": 3.323306083679199
+    },
+    {
+      "name": "sdk",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1791900804.035196,
+      "exit_code": 0,
+      "seconds": 38.6189980506897
+    },
+    {
+      "name": "build-B",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1791900842.8187902,
+      "exit_code": 0,
+      "seconds": 587.0999648571014
+    },
+    {
+      "name": "build-C0",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1791901432.2838042,
+      "exit_code": 0,
+      "seconds": 378.9547755718231
+    },
+    {
+      "name": "build-C1",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1791901813.3832684,
+      "exit_code": 0,
+      "seconds": 451.5856499671936
+    },
+    {
+      "name": "acceleration",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1791902266.7598996,
+      "exit_code": 0,
+      "seconds": 0.03305649757385254
+    },
+    {
+      "name": "avd",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1791902266.7939036,
+      "exit_code": 0,
+      "seconds": 1.7726423740386963
+    }
+  ],
+  "install_groups": {
+    "C1-correctness": {
+      "identity": "C1",
+      "status": "INCOMPLETE",
+      "started_epoch": 1791902297.1656604,
+      "seconds": 24.713290691375732
+    }
+  },
+  "methods": [
+    {
+      "ordinal": 1,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791902299.435338,
+      "log_sha256": "0999061ee1158a0e2fcecebcfefab26b9233b9add3cf1bc370abe624b7ef31cb",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.LibraryPagingTest",
+        "org.inkweft.data.LibraryPagingTest"
+      ],
+      "reported_methods": [
+        "sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+        "sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "seconds": 1.9110727310180664
+    },
+    {
+      "ordinal": 2,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibraryPagingTest#snapshotRetainsOldClassificationAndSourceWhileWriterCommits",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.LibraryPagingTest#snapshotRetainsOldClassificationAndSourceWhileWriterCommits",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791902301.3475974,
+      "log_sha256": "4c8fe3cfb2a88bdf1bb1c18879cadc2b42d3cb6c921a5c7ad81eb27e70a61579",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.LibraryPagingTest",
+        "org.inkweft.data.LibraryPagingTest"
+      ],
+      "reported_methods": [
+        "snapshotRetainsOldClassificationAndSourceWhileWriterCommits",
+        "snapshotRetainsOldClassificationAndSourceWhileWriterCommits"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "seconds": 0.5561299324035645
+    },
+    {
+      "ordinal": 3,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibraryPagingTest#refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.LibraryPagingTest#refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791902301.9048827,
+      "log_sha256": "dd55ae028dc135107d9c6af5e990a14418532eb4e511a3da322b17a9ca455369",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.LibraryPagingTest",
+        "org.inkweft.data.LibraryPagingTest"
+      ],
+      "reported_methods": [
+        "refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState",
+        "refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "seconds": 0.5044739246368408
+    },
+    {
+      "ordinal": 4,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791902302.410551,
+      "log_sha256": "a794e4a20983f8e6a9b7eabfc3f2a2bcc575888c60b8175180848785ff3e4427",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.LibrarySearchRepositoryTest",
+        "org.inkweft.data.LibrarySearchRepositoryTest"
+      ],
+      "reported_methods": [
+        "pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh",
+        "pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "seconds": 0.7559061050415039
+    },
+    {
+      "ordinal": 5,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791902303.1677322,
+      "log_sha256": "20603fc7cc3eb31a33217ddc175d15c00a04f830c8e92273e410f162a6f692b9",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.LibrarySearchRepositoryTest",
+        "org.inkweft.data.LibrarySearchRepositoryTest"
+      ],
+      "reported_methods": [
+        "deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+        "deletedOrStalePageAndTrashedCardCannotReviveSearchHits"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "seconds": 0.9622890949249268
+    },
+    {
+      "ordinal": 6,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791902304.2521977,
+      "log_sha256": "d89f6a11474d1b26e7452e1bfd862c79059e162dc4128d4a461e55c9c736f0fe",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.SearchIndexFreshnessTest",
+        "org.inkweft.data.SearchIndexFreshnessTest"
+      ],
+      "reported_methods": [
+        "freshnessFollowsInkObjectLayerAndPageChanges",
+        "freshnessFollowsInkObjectLayerAndPageChanges"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "seconds": 0.8778958320617676
+    },
+    {
+      "ordinal": 7,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791902305.244294,
+      "log_sha256": "24e3460667536e445c6ef235405c7f6624e86264bc27685f5197046d1b61da60",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.SearchIndexFreshnessTest",
+        "org.inkweft.data.SearchIndexFreshnessTest"
+      ],
+      "reported_methods": [
+        "checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+        "checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "seconds": 0.822066068649292
+    },
+    {
+      "ordinal": 8,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#oneScanSurvivesRoomObserverRefreshAcrossSevenBatches",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#oneScanSurvivesRoomObserverRefreshAcrossSevenBatches",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791902306.1863413,
+      "log_sha256": "f8c54a4923b687173b0a49d3f0f221e724c57138af11066dd1b6cd04b465c86d",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "oneScanSurvivesRoomObserverRefreshAcrossSevenBatches",
+        "oneScanSurvivesRoomObserverRefreshAcrossSevenBatches"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "seconds": 1.3263111114501953
+    },
+    {
+      "ordinal": 9,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791902307.6243942,
+      "log_sha256": "bb6bf6977dc7313e561758d3101fa9a52d92eac2676a06aa947ee57aef7034c3",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+        "sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "seconds": 1.0402541160583496
+    },
+    {
+      "ordinal": 10,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791902308.6659882,
+      "log_sha256": "04411eb21b94401b1dbf5bfae126d1ab1b8a6cd5792f0100dd7baa3eab680430",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+        "separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "seconds": 0.8575823307037354
+    },
+    {
+      "ordinal": 11,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791902309.524983,
+      "log_sha256": "4e709d8caac50d5f374d9d0082ecba11f1fc6e4c4d361be61aedee25d3670f94",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+        "sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "seconds": 0.8550043106079102
+    },
+    {
+      "ordinal": 12,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791902310.3813338,
+      "log_sha256": "c7096fa826d1ebd961bd119a365cea135ec5dc61a41159d5975ffe250c0992ab",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+        "separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "seconds": 0.804675817489624
+    },
+    {
+      "ordinal": 13,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791902311.1873708,
+      "log_sha256": "5b3a956bc1d74ae8f03b02deb59eb79fa4bd355a06065263b309230220d40c0f",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion",
+        "overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "seconds": 0.7536206245422363
+    },
+    {
+      "ordinal": 14,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791902311.9423885,
+      "log_sha256": "6db69174961fc4db5eb8c8f6a8c49b8ba539e9046de65d269761ada6ce2595e2",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+        "malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "seconds": 0.8106508255004883
+    },
+    {
+      "ordinal": 15,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791902312.7547336,
+      "log_sha256": "ae901afae120475ccbf438e0f47f5c067181333f019f15e64d0a431e5be3a6b8",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "interruptedBatchRollsBackAndReopenedCollectionResumes",
+        "interruptedBatchRollsBackAndReopenedCollectionResumes"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "seconds": 1.057041883468628
+    },
+    {
+      "ordinal": 16,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#missingRoomGuardLogAbortsWithoutDeletingCandidates",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryCollectionTest#missingRoomGuardLogAbortsWithoutDeletingCandidates",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "PASS",
+      "started_epoch": 1791902313.8132854,
+      "log_sha256": "f6c8649c5053619c21f99e40d5dd4f213525613934c38a57fedbb9d65790afca",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.data.HistoryCollectionTest",
+        "org.inkweft.data.HistoryCollectionTest"
+      ],
+      "reported_methods": [
+        "missingRoomGuardLogAbortsWithoutDeletingCandidates",
+        "missingRoomGuardLogAbortsWithoutDeletingCandidates"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "seconds": 0.7532012462615967
+    },
+    {
+      "ordinal": 17,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.app.NotebookShelfUiTest#pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.app.NotebookShelfUiTest#pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "FAIL",
+      "started_epoch": 1791902314.5678978,
+      "log_sha256": "a5a3646cef8a3f1684454311906c87427d063ca06d78a9c4477be370deb294a1",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "junit_ok_counts": [
+        "1"
+      ],
+      "status_codes": [
+        1,
+        0
+      ],
+      "reported_classes": [
+        "org.inkweft.app.NotebookShelfUiTest",
+        "org.inkweft.app.NotebookShelfUiTest"
+      ],
+      "reported_methods": [
+        "pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges",
+        "pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 0,
+          "stdout": "2707",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "error_type": "AssertionError",
+      "error": "Owned package process cleanup unconfirmed",
+      "seconds": 7.277287244796753
+    },
+    {
+      "ordinal": 18,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-01-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4101,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 19,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-01-B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4101,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 20,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-02-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4101,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 21,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-02-C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4101,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 22,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-03-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4101,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 23,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-03-C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4101,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 24,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-04-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4102,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 25,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-04-C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4102,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 26,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-05-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4102,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 27,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-05-B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4102,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 28,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-06-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4102,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 29,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-06-C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4102,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 30,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-07-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4103,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4103",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 31,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-07-C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4103,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4103",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 32,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-08-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4103,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4103",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 33,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-08-C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4103,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4103",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 34,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-09-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4103,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4103",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 35,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-09-B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4103,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4103",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 36,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-10-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4104,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4104",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 37,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-10-B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4104,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4104",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 38,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-11-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4104,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4104",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 39,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-11-C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4104,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4104",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 40,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-12-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "expected_junit_tests": 1,
+      "seed": 4104,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4104",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 41,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-12-C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": 4104,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4104",
+        "-e",
+        "class",
+        "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 42,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "install_group": "C1-diagnostics",
+      "selection": "org.inkweft.data.HistoryDeletionExposureTest#sameRoomWriterNaturalDeletionExposure",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryDeletionExposureTest#sameRoomWriterNaturalDeletionExposure",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 43,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "install_group": "C1-diagnostics",
+      "selection": "org.inkweft.data.HistoryDeletionExposureTest#separateRoomWriterNaturalDeletionExposure",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": false,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.HistoryDeletionExposureTest#separateRoomWriterNaturalDeletionExposure",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 44,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "install_group": "C1-diagnostics",
+      "selection": "org.inkweft.data.LibraryReadPerformanceTest#coldSearchConcurrentSavesAndShelfReadScale",
+      "expected_junit_tests": 1,
+      "seed": null,
+      "stage_diagnostics": true,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "libraryStageDiagnostics",
+        "true",
+        "-e",
+        "class",
+        "org.inkweft.data.LibraryReadPerformanceTest#coldSearchConcurrentSavesAndShelfReadScale",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "status": "NOT_RUN"
+    }
+  ],
+  "scope": "One KVM emulator, three frozen source identities, synthetic debug workloads. Completion is not a claim that all performance regressions are absent.",
+  "fetched_fixed_refs": [
+    "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+    "7949011ca2b84492f6438d275a09d28faef3b472",
+    "ebb48481e7e995288c1844d43011398c513b4f4e",
+    "e1a813aa24be20df0901f6aff9554632e1f531b7"
+  ],
+  "setup_seconds": 1512.088045835495,
+  "error": "AssertionError: Owned package process cleanup unconfirmed",
+  "cleanup_verified": true
+}

@@ -1,0 +1,23 @@
+{
+  "approved": true,
+  "plan_git": "6c72fd8b20228cc324fd835efa3f505f1f179997",
+  "approved_plan_sha256": "ff2459abb0b8582d20e570c5afb0c4e9a0df5216bed8bc5191e4d008b5c4dacd",
+  "source_spec_sha256": "6e9c422d8be60728967226de674b750cb7b3633485956d537dd0c2dac21a6dfb",
+  "method_plan_sha256": "808dd0cf1fece09185c59ae94ce41f51fdbc26dcde5ed196df7e803860f49765",
+  "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+  "approval_utc": "2026-10-13T11:54:51Z",
+  "followup_utc": "2026-10-13T11:55:28Z",
+  "user_approval": "允许",
+  "user_followup": "不必向我申请直接往后进行即可",
+  "source_thread": "01a0f1a6-931e-713a-845e-7e62ceb3300a",
+  "scope": "One standard ubuntu-24.04 runner, <=60 minutes, nine APKs, 57 exact calls (30 correctness, 24 unchanged common, 3 unchanged diagnostics); cumulative 32/38/52/55/60 minute deadlines; minimal temporary UID-only KVM ACL if needed, exact restore and double cleanup; <=20 MiB whitelisted text, retention3days. No paid runner, credentials/security expansion, main merge or deployment. No automatic retries within this attempt.",
+  "prior_execution_git": "30acef2e082eb1cd2d70471737824da32fbe9c24",
+  "phase_cutoff_minutes": {
+    "setup": 32,
+    "correctness": 38,
+    "common": 52,
+    "diagnostics": 55
+  },
+  "budget_revision_sha256": "27e09d771034e4bf8d47527d668bf5a08263f746b815fddf6eedb00b4bcc6fce",
+  "continuation": "Existing user follow-up and parent continuation instructions authorize ordinary performance fixes, necessary correctness coverage and bounded validation. Fourth run38419007471 complete original archive,44 original calls and both cleanup receipts were verified locally. New source identities and13 additional correctness calls are explicitly bound by this source/method/plan amendment; original44calls retained, common samples/thresholds/probes unchanged. New isolated once-only attempt, not a rerun or overlap. Existing method17-only background-safe auxiliary helper cleanup unchanged. No force-stop, runtime source changes or permission expansion."
+}

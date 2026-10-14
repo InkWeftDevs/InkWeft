@@ -1,0 +1,17 @@
+{
+  "utc": "2026-10-13T03:53:14.458580+00:00",
+  "status": "COMMENT_ONLY",
+  "source_files": 744,
+  "changed_paths": [
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+  ],
+  "before_sha256": "3cb60b773e4f358cc871e59f0837bb9304d8ae114bf12997bf3b897527801d34",
+  "after_sha256": "dbf89afa0993a501f686150f20fdd8b4355577d0ce7c16848b1a42e20bd3f18c",
+  "before_comment": "Hex/result includes SHA finalization, the existing Formatter calls and result allocation.",
+  "after_comment": "Hex/result includes SHA finalization, hex conversion and result allocation.",
+  "line_count_unchanged": true,
+  "runtime_logic_changed": false,
+  "prior_native_phase": "candidate-raster-hex-v1",
+  "new_build_phase": "candidate-raster-final-doc",
+  "apk_equality": "PENDING"
+}

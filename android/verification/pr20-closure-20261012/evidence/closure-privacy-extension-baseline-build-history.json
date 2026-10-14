@@ -1,0 +1,98 @@
+{
+  "checked_utc": "2026-10-13T01:13:56.165252+00:00",
+  "status": "NO_CONFIGURED_SENSITIVE_PATTERNS_FOUND_IN_COMPLETED_EXTENSION",
+  "reviewed_files": 13,
+  "reviewed_bytes": 166152,
+  "patterns_checked": [
+    "private_key_pem",
+    "github_token",
+    "aws_access_key",
+    "credential_url",
+    "bearer_value",
+    "sensitive_assignment",
+    "jwt",
+    "personal_home_path",
+    "environment_dump_hint"
+  ],
+  "findings_without_values": [],
+  "inventory": [
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-apk-installation.json",
+      "sha256": "1dfe133d4f9d8144c120b45604affc4e0b512ff51dbb56f4fa92ff5771dfd632",
+      "bytes": 2578
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-artifacts.json",
+      "sha256": "2595faf440b7978a61468401b6db147f954b4dbd77bf6c7759a444f1a9487648",
+      "bytes": 1522
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-build.json",
+      "sha256": "76567e6eccb98dac7a8a116dc5fe8ab21f5afc55429c05437311b4b7abce322b",
+      "bytes": 426
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-build.log",
+      "sha256": "1664c121dbc65d5f847c8891d14085d776afac9863ffee7ad9057a8d9941eb40",
+      "bytes": 36726
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-jvm-and-lint-status.json",
+      "sha256": "d6d74d87f292cf546f16233c46c2d56b89273c6393b19e41cbbb20c7467ef3ce",
+      "bytes": 957
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-environment.json",
+      "sha256": "16533e270b8a3d1e31c1c8511e10e2e535cec4ff770c2e10d115046160dd63ef",
+      "bytes": 11786
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-history-probe-setup.json",
+      "sha256": "6eb42b4efe5feacc33b98bf5aee8ff26a731c6cefd70a70e864a03cd199ef0e5",
+      "bytes": 987
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-history-probe.json",
+      "sha256": "1ab18bb64841d39307595e317b96d9e9bc92b0e32449721af0778ea8fa62300e",
+      "bytes": 800
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-performance-history-probe.log",
+      "sha256": "450fe6f2a53133a1803f9b818a05a4202ac99faea7a197ce906de8ca0f1ab513",
+      "bytes": 1324
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-recording.json",
+      "sha256": "d8f8d482c5d13f60d0c4f63fb525a6daac770f8ff5f27e3ebb554db34f0a1b1b",
+      "bytes": 420
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-signatures.json",
+      "sha256": "e2a34658a796999782a07f3520a6220569f9dd58ad5398cce1f39450d76cbd31",
+      "bytes": 2341
+    },
+    {
+      "path": "/workspace/scratch/pr20-closure-evidence/baseline-final-source-sha256.json",
+      "sha256": "386046c9c28eb27d33fd3977fb2baa06c94a855511f024f4a83188a4c304bbfd",
+      "bytes": 105362
+    },
+    {
+      "path": "/workspace/scratch/run-inkweft-gradle",
+      "sha256": "d38003b3ac698ade56d447ebd37ae7f5ccea37388ef247ba16634980a1dd191c",
+      "bytes": 923
+    }
+  ],
+  "gradle_runner_literal_review": {
+    "path": "/workspace/scratch/run-inkweft-gradle",
+    "sha256": "d38003b3ac698ade56d447ebd37ae7f5ccea37388ef247ba16634980a1dd191c",
+    "identical_to_previous_curated_script": true,
+    "literal_contents_suitable_for_publication_under_reviewed_scope": true,
+    "reasons": [
+      "Literal content contains only cloud SDK/JDK/cache paths, TLS trust-store path, Gradle arguments and environment-variable names.",
+      "HTTPS_PROXY is parsed at runtime; only hostname and port are passed through the helper. No URL username/password is referenced or embedded.",
+      "No private key, credential literal, token pattern, environment dump or xtrace was found."
+    ],
+    "not_claimed": "This task did not run the script, read HTTPS_PROXY or any other runtime environment value, or certify future modified script bytes."
+  },
+  "boundary": "Exact listed literal snapshots only; no broad proof of absence of arbitrary personal content. Active Library/other performance logs and aggregate/input/summary files were not read or included."
+}

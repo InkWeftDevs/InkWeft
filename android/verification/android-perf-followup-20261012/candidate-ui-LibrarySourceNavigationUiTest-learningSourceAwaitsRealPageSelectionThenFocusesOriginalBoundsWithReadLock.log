@@ -1,0 +1,25 @@
+
+org.inkweft.app.LibrarySourceNavigationUiTest:
+Error in learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock(org.inkweft.app.LibrarySourceNavigationUiTest):
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 15000 ms
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:809)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:378)
+	at org.inkweft.app.LibrarySourceNavigationUiTest.waitFor(LibrarySourceNavigationUiTest.kt:90)
+	at org.inkweft.app.LibrarySourceNavigationUiTest.seed(LibrarySourceNavigationUiTest.kt:156)
+	at org.inkweft.app.LibrarySourceNavigationUiTest.learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock(LibrarySourceNavigationUiTest.kt:353)
+
+
+Time: 121.006
+There was 1 failure:
+1) learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock(org.inkweft.app.LibrarySourceNavigationUiTest)
+androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 15000 ms
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment$AndroidComposeUiTestImpl.waitUntil(ComposeUiTest.android.kt:809)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule.waitUntil(AndroidComposeTestRule.android.kt:378)
+	at org.inkweft.app.LibrarySourceNavigationUiTest.waitFor(LibrarySourceNavigationUiTest.kt:90)
+	at org.inkweft.app.LibrarySourceNavigationUiTest.seed(LibrarySourceNavigationUiTest.kt:156)
+	at org.inkweft.app.LibrarySourceNavigationUiTest.learningSourceAwaitsRealPageSelectionThenFocusesOriginalBoundsWithReadLock(LibrarySourceNavigationUiTest.kt:353)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+

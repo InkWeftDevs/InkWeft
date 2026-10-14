@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.app.StreamedInkRasterTest#clearingPendingTransformReleasesPinnedGeometryWithoutPublishing" tests="1" failures="0" errors="0" time="1.0102546215057373"><testcase classname="org.inkweft.app.StreamedInkRasterTest" name="clearingPendingTransformReleasesPinnedGeometryWithoutPublishing" time="1.0102546215057373" /></testsuite>

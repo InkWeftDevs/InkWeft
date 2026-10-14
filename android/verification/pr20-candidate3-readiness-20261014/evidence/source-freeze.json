@@ -1,0 +1,27 @@
+{
+  "status": "SOURCE_FROZEN_NOT_BUILT_NOT_RUN",
+  "out": "/workspace/scratch/pr20-candidate3-prep/frozen-readiness",
+  "source_spec_sha256": "d8ba1042334d8a6386ed6d1d54fbaad4a00fc6d76acc7fbb39005e6bcf897ba3",
+  "method_plan_sha256": "e1d02f73ed8b417949282a729de8133f16deb2fda47a6ae5ec9f2f3671da9346",
+  "PLAN_sha256": "3ace8338e59fe9be3fe78c01f25795dfea07c894c3e9f774de97180e12f8b4fa",
+  "identities": {
+    "B": {
+      "git": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+      "tree": "2eefbf879679d29f5ae4b1d6b9715a4cef14d5d9",
+      "canonical_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+      "file_count": 947
+    },
+    "C0": {
+      "git": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+      "tree": "9df9003679881668bf90db98d3f5efce750afe1d",
+      "canonical_manifest_sha256": "7592c7990537bde681d0179539f58e1cd79822695bfcfd4b19882d9e1f738e90",
+      "file_count": 964
+    },
+    "C1": {
+      "git": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+      "tree": "e773d660abbc15fd727000eb60631d3b72a19a92",
+      "canonical_manifest_sha256": "06e7cea253c061891e10f658400143a7da34ba23f6ec95224bee31f5c0d13eb6",
+      "file_count": 964
+    }
+  }
+}

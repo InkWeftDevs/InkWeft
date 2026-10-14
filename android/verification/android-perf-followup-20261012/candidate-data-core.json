@@ -1,0 +1,26 @@
+{
+  "phase": "candidate",
+  "selection": "org.inkweft.data.NoteRepositoryTest,org.inkweft.data.InkRepositoryTest,org.inkweft.data.HistoryStorageTest,org.inkweft.data.HistoryConcurrencyTest,org.inkweft.data.HistoryCollectionTest,org.inkweft.data.RasterReadCacheTest,org.inkweft.data.LibraryPagingTest,org.inkweft.data.SpatialInkRepositoryTest#viewportCandidatesRespectBoundaryVisibilityPayloadChangesAndDeletion,org.inkweft.data.SpatialInkRepositoryTest#boundedWindowNeverPretendsDenseCandidatesAreCompleteAndStreamingHasNoMissingRows,org.inkweft.data.SpatialInkRepositoryTest#pageChangeAndCancellationAbortStreamingRatherThanReturningACompletePrefix,org.inkweft.data.InkEditingSnapshotTest#resumeRetainsNoHiddenGeometryAndPreservesReplacementMaskUndoRedo",
+  "command": [
+    "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "am",
+    "instrument",
+    "-w",
+    "-e",
+    "class",
+    "org.inkweft.data.NoteRepositoryTest,org.inkweft.data.InkRepositoryTest,org.inkweft.data.HistoryStorageTest,org.inkweft.data.HistoryConcurrencyTest,org.inkweft.data.HistoryCollectionTest,org.inkweft.data.RasterReadCacheTest,org.inkweft.data.LibraryPagingTest,org.inkweft.data.SpatialInkRepositoryTest#viewportCandidatesRespectBoundaryVisibilityPayloadChangesAndDeletion,org.inkweft.data.SpatialInkRepositoryTest#boundedWindowNeverPretendsDenseCandidatesAreCompleteAndStreamingHasNoMissingRows,org.inkweft.data.SpatialInkRepositoryTest#pageChangeAndCancellationAbortStreamingRatherThanReturningACompletePrefix,org.inkweft.data.InkEditingSnapshotTest#resumeRetainsNoHiddenGeometryAndPreservesReplacementMaskUndoRedo",
+    "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+  ],
+  "started_utc": "2026-10-12T18:21:52.595294+00:00",
+  "seconds": 577.9333478539993,
+  "exit_code": 0,
+  "expected": 39,
+  "tests": null,
+  "executed": 39,
+  "failures": 1,
+  "passed": false,
+  "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+}

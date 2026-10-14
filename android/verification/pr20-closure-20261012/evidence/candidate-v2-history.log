@@ -1,0 +1,26 @@
+
+org.inkweft.data.HistoryConcurrencyTest:HISTORY_CONCURRENCY_PHASE phase=fixture:start elapsedMs=109.265856
+HISTORY_CONCURRENCY_PHASE phase=fixture:complete elapsedMs=202186.269991
+HISTORY_CONCURRENCY_PHASE phase=paused-audit:roots:start elapsedMs=202330.447042
+HISTORY_CONCURRENCY_PHASE phase=paused-audit:after-roots elapsedMs=226004.996976
+HISTORY_CONCURRENCY_PHASE phase=paused-audit:roots:complete elapsedMs=226028.783312
+HISTORY_CONCURRENCY_PHASE phase=paused-audit:edit:start elapsedMs=226545.842116
+HISTORY_CONCURRENCY_PHASE phase=paused-audit:edit:complete elapsedMs=226569.660769
+HISTORY_CONCURRENCY_PHASE phase=paused-audit:complete:start elapsedMs=226592.125132
+HISTORY_CONCURRENCY_PHASE phase=paused-audit:after-stats elapsedMs=228212.23747
+HISTORY_CONCURRENCY_PHASE phase=paused-audit:complete:complete elapsedMs=228313.059041
+HISTORY_CONCURRENCY_PHASE phase=unpaused-audit:after-roots elapsedMs=253028.725844
+HISTORY_CONCURRENCY_PHASE phase=unpaused-audit:after-stats elapsedMs=254506.362828
+HISTORY_CONCURRENCY_PHASE phase=cancel-audit:roots:start elapsedMs=254609.313476
+HISTORY_CONCURRENCY_PHASE phase=cancel-audit:after-roots elapsedMs=279793.774959
+HISTORY_CONCURRENCY_PHASE phase=cancel-audit:roots:complete elapsedMs=279810.256454
+HISTORY_CONCURRENCY_PHASE phase=cancel-audit:join:start elapsedMs=279825.486403
+HISTORY_CONCURRENCY_PHASE phase=cancel-audit:join:complete elapsedMs=279889.621104
+HISTORY_CONCURRENCY_EVIDENCE {"baseline":false,"sourceVersions":20000,"historicalCardRoots":20000,"committedWhileAuditPaused":true,"pausedProbeWindowMs":500,"editCompletionIncludingProbeWaitMs":546.037615,"unpausedAuditAndThirtyEditsMs":26269.833502,"editMedianMs":168.363108,"editP95Ms":271.458263,"cancellationMs":9170.981202,"historyRetained":true}
+.
+
+Time: 291.792
+
+OK (1 test)
+
+

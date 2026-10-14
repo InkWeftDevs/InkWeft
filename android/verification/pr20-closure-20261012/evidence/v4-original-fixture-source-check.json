@@ -1,0 +1,14 @@
+{
+  "source": "/workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt",
+  "v3_snapshot": "/workspace/scratch/pr20-closure-evidence/OriginalStorageRepositoryTest-v3-before-single-connection.kt",
+  "v3_sha256": "6f71c49df4ef7ead6d501aaa55a5d193876ec94a8550035ae00c338390255c1f",
+  "v4_sha256": "2eb17404947b241d35868fe93194ea6f3b63b42ac0f5551bf03710b58f290e78",
+  "change": "INCREMENTAL pre-existing synthetic source.db built and asserted on one owned pre-Room connection; existing post-Room mode=2 assertion unchanged",
+  "legacy_none_path": "legacyVacuum=true still chooses mode=0, DELETE journal, VACUUM, version=0 and native pre-Room assertion",
+  "other_test_bodies_and_reader_unchanged": true,
+  "all_later_migration_corruption_reclamation_assertions_unchanged": true,
+  "production_and_performance_probes_changed": false,
+  "diff_check": "PASS",
+  "build": "NOT_RUN",
+  "native_rerun": "NOT_RUN"
+}

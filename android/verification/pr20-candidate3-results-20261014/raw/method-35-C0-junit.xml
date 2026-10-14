@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale" tests="1" failures="0" errors="0" time="43.03919863700867"><testcase classname="org.inkweft.data.KvmLibraryPairProbe" name="coldSearchConcurrentSavesAndShelfReadScale" time="43.03919863700867" /></testsuite>

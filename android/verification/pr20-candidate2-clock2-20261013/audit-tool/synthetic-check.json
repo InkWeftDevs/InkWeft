@@ -1,0 +1,152 @@
+{
+  "status": "PASS",
+  "scope": "Synthetic/offline preparation only; no actual run38433834125 ZIP is present or verified.",
+  "checks": [
+    {
+      "case": "valid-synthetic",
+      "status": "PASS",
+      "expected_rejection": false,
+      "error": null
+    },
+    {
+      "case": "NOT_RUN_not_promoted",
+      "status": "PASS"
+    },
+    {
+      "case": "source-tamper",
+      "status": "PASS",
+      "expected_rejection": true,
+      "error": "ValueError: Frozen source/control/probe mismatch or missing: frozen-source-spec.json"
+    },
+    {
+      "case": "wrong-run",
+      "status": "PASS",
+      "expected_rejection": true,
+      "error": "ValueError: Artifact run identity mismatch"
+    },
+    {
+      "case": "wrong-digest",
+      "status": "PASS",
+      "expected_rejection": true,
+      "error": "ValueError: Original ZIP SHA256 mismatch"
+    },
+    {
+      "case": "non-whitelisted-apk",
+      "status": "PASS",
+      "expected_rejection": true,
+      "error": "ValueError: Not whitelisted flat file: payload.apk"
+    },
+    {
+      "case": "path-traversal",
+      "status": "PASS",
+      "expected_rejection": true,
+      "error": "ValueError: Not whitelisted flat file: ../outside.txt"
+    },
+    {
+      "case": "credential-pattern",
+      "status": "PASS",
+      "expected_rejection": true,
+      "error": "ValueError: Credential pattern rejected in host.json"
+    },
+    {
+      "case": "oversize",
+      "status": "PASS",
+      "expected_rejection": true,
+      "error": "ValueError: Uncompressed payload exceeds20MiB"
+    },
+    {
+      "case": "duplicate",
+      "status": "PASS",
+      "expected_rejection": true,
+      "error": "ValueError: Duplicate/excess ZIP entries"
+    },
+    {
+      "case": "clock-budget_anchor_epoch",
+      "status": "PASS",
+      "issues": [
+        "clock anchor/status mismatch"
+      ]
+    },
+    {
+      "case": "clock-actual_job_started_epoch",
+      "status": "PASS",
+      "issues": [
+        "clock anchor/status mismatch"
+      ]
+    },
+    {
+      "case": "clock-deadline_epochs",
+      "status": "PASS",
+      "issues": [
+        "clock deadlines mismatch"
+      ]
+    },
+    {
+      "case": "raw_PASS_and_host_FAIL_preserved",
+      "status": "PASS"
+    },
+    {
+      "case": "cleanup_failure_not_promoted",
+      "status": "PASS"
+    },
+    {
+      "case": "synthetic_terminal_metadata_105s_lead",
+      "status": "PASS"
+    },
+    {
+      "case": "actual_CLI_and_no_overwrite",
+      "status": "PASS"
+    },
+    {
+      "case": "false_completion_with57_NOT_RUN_rejected",
+      "status": "PASS",
+      "issues": [
+        "Completion claimed without57 PASS methods",
+        "Completion claimed without all9 APK receipts",
+        "Completion claimed without14 PASS installation groups",
+        "Final device settings missing/changed"
+      ]
+    },
+    {
+      "case": "outer_kill_partial_raw_is_pending_not_contradiction",
+      "status": "PASS"
+    },
+    {
+      "case": "outer_kill_existing_digest_mismatch_rejected",
+      "status": "PASS"
+    },
+    {
+      "case": "AUX_outcome_without_receipt_rejected",
+      "status": "PASS"
+    },
+    {
+      "case": "NATURAL_outcome_with_aux_receipt_rejected",
+      "status": "PASS"
+    },
+    {
+      "case": "ACL_before_but_NOT_TOUCHED_rejected",
+      "status": "PASS"
+    },
+    {
+      "case": "ACL_grant_changed_but_UNCHANGED_rejected",
+      "status": "PASS"
+    },
+    {
+      "case": "ACL_restored_claim_but_after_mismatch_rejected",
+      "status": "PASS"
+    },
+    {
+      "case": "ACL_restored_exact_both_receipts_positive",
+      "status": "PASS"
+    },
+    {
+      "case": "57PASS_final_group_interrupted_is_not_false_completion",
+      "status": "PASS",
+      "scope": "actual completion-audit AST branch, not full raw execution"
+    }
+  ],
+  "verifier_sha256": "aee9eb7734c688f6c80bb5a4b9a3c8e296eaf421a95b50cc65a891293a906c8a",
+  "work": "/workspace/scratch/pr20-candidate2-clock2-artifact-audit/synthetic-ye_pk37x",
+  "network_requests": 0,
+  "native_or_build_commands": 0
+}

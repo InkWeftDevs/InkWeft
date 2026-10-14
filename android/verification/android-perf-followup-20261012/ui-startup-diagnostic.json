@@ -1,0 +1,14 @@
+{
+  "utc": "2026-10-12T18:49:06.505792+00:00",
+  "command": [
+    "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "exec-out",
+    "screencap",
+    "-p"
+  ],
+  "exit_code": 0,
+  "bytes": 11778,
+  "scope": "Owned synthetic cloud test application; screen capture during UI readiness failure investigation"
+}

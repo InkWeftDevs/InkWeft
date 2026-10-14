@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.view.ViewConfiguration
 import android.view.inspector.WindowInspector
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.ViewModelProvider
@@ -91,6 +93,48 @@ class LibrarySourceNavigationUiTest {
         compose.waitForIdle()
     }
 
+    /** Failure-only snapshots: do not create a missing VM or print author text. */
+    private fun diagnoseSeedFailure(f: Fixture) {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        fun emit(value: String) = instrumentation.sendStatus(0, android.os.Bundle().apply {
+            putString("stream", "LIBRARY_SOURCE_SEED_DIAGNOSTIC $value\n")
+        })
+        fun fixtureId(value: String?): String = when (value) {
+            null -> "null"
+            f.note.id -> "seed-book/first-page"
+            f.unrelated.id -> "unrelated-book"
+            f.sourcePage -> "source-page"
+            f.secondPage -> "second-page"
+            else -> "other"
+        }
+        runCatching {
+            var snapshot = ""
+            instrumentation.runOnMainSync {
+                val store = compose.activity.viewModelStore
+                val notebook = store.keys().mapNotNull { store.get(it) as? NotebookViewModel }.firstOrNull()?.ui?.value
+                val pages = (store.get("book-${f.note.id}") as? BookPagesViewModel)?.ui?.value
+                snapshot = "notebookPresent=${notebook != null} selectedId=${fixtureId(notebook?.selectedId)} " +
+                    "currentId=${fixtureId(notebook?.current?.base?.id)} currentRevision=${notebook?.current?.base?.revision} " +
+                    "loading=${notebook?.loading} readFailed=${notebook?.readFailed} " +
+                    "bookPagesPresent=${pages != null} pageCount=${pages?.pages?.size} pageSelectedId=${fixtureId(pages?.selectedId)} " +
+                    "pageLoading=${pages?.loading} pageBusy=${pages?.busy} pageErrorPresent=${pages?.error != null} " +
+                    "selectedWorld=${pages?.let { state -> state.pages.firstOrNull { it.id == state.selectedId }?.world }} " +
+                    "navigationReady=${app.navigationReady.value} lifecycle=${compose.activity.lifecycle.currentState}"
+            }
+            emit(snapshot)
+        }.onFailure { emit("stateUnavailable=${it.javaClass.simpleName}") }
+        runCatching {
+            val knownTags = setOf("new-note", "continuous-pages", "document-toolbar", "mode-ink", "mode-text",
+                "note-body", "back-library", "study-map", "study-pane-source", "open-diagnostics-error")
+            val nodes = compose.onAllNodes(SemanticsMatcher("all nodes") { true }, useUnmergedTree = true).fetchSemanticsNodes()
+            val tree = nodes.take(160).joinToString("\n") { node ->
+                val tag = node.config.getOrNull(SemanticsProperties.TestTag)
+                "node=${node.id} parent=${node.parent?.id} tag=${if (tag == null) "null" else tag.takeIf { it in knownTags } ?: "other"} bounds=${node.boundsInRoot}"
+            }
+            emit("semanticsNodes=${nodes.size}; first 160 nodes, unknown tags redacted\n$tree")
+        }.onFailure { emit("semanticsUnavailable=${it.javaClass.simpleName}") }
+    }
+
     private fun tap(tag: String) {
         compose.revealAction(tag)
         waitFor(tag)
@@ -153,7 +197,10 @@ class LibrarySourceNavigationUiTest {
         // learning must override that earlier selection and exit continuous mode.
         app.getSharedPreferences("inkweft-reading", 0).edit().putBoolean("continuous-v20-${note.id}", true).commit()
         compose.runOnIdle { notebook().select(note) }
-        waitFor("continuous-pages")
+        try { waitFor("continuous-pages") } catch (failure: Throwable) {
+            runCatching { diagnoseSeedFailure(f) }
+            throw failure
+        }
         compose.waitUntil(15_000) { app.navigationReady.value }
         compose.runOnIdle { assertEquals(note.id, pages(note.id).ui.value.selectedId) }
         tap("back-library")

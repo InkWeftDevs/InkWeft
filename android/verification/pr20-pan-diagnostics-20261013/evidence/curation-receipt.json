@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-13T04:30:09.194252+00:00",
+  "payload_files_before_receipt": 31,
+  "copied_receipts": 26,
+  "copied_scripts": 4,
+  "privacy_patterns": 9,
+  "privacy_hits": [],
+  "copied_bytes_match": true,
+  "excluded": [
+    "APKs/AARs",
+    "DB/WAL",
+    "keystores/credentials",
+    "AVD data",
+    "screenshots/videos",
+    "raw device logcat"
+  ],
+  "native_scope": "2 selected methods, separate instrumentation invocations; no repeated suites",
+  "ci_scope": "Read only; no dispatch or permission actions"
+}

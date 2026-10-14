@@ -1,0 +1,21 @@
+{
+  "utc": "2026-10-13T01:13:24.800624+00:00",
+  "source_commit": "c60fba7455cfc0b919d6f9c2d3b06f17ec25713d",
+  "frozen_source_manifest": "candidate-v4-source-sha256.json",
+  "frozen_source_manifest_sha256": "8285c54019d0a4409a6dbf6f5d36e87298b5be9b6d47f93801ea9123bb7d859f",
+  "matched_files": 744,
+  "mismatches": [],
+  "docker_tree": "1ea18e39d51ca989f02c65cd8f8f250d32eb8ad2",
+  "source_whitespace_check_exit_code": 0,
+  "note": "Local source commits package the already-built and tested candidate-v4 bytes. No source changes or rebuild were performed by this commit operation. Documentation/evidence may be committed later.",
+  "debug_build_identity": {
+    "generated_file": "android/app/build/generated/source/buildConfig/debug/org/inkweft/app/BuildConfig.java",
+    "file_sha256": "8b6caa35c577c59b5cdb5cb2aa2c701aa0d4faee543f8d1f3e32a7de2e4a5645",
+    "selected_fields": [
+      "public static final String BUILD_COMMIT = \"local-unknown\";",
+      "public static final boolean FORMAL_BUILD = false;",
+      "public static final String SOURCE_COMMIT = \"local-unknown\";"
+    ],
+    "meaning": "These are debug validation APKs, not formal release builds. Their external source/APK manifests bind the tested bytes; embedded commit fields are local-unknown, not the later final Git SHA."
+  }
+}

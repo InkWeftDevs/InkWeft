@@ -1,0 +1,14 @@
+{
+  "status": "DOWNLOAD_BLOCKED",
+  "requested_artifact_id": 11812943755,
+  "official_api": "https://api.github.com/repos/InkWeftDevs/InkWeft/actions/artifacts/11812943755/zip",
+  "redirect_host": "productionresultssa4.blob.core.windows.net",
+  "result": "Forbidden",
+  "gh_exit_code": 1,
+  "downloaded_bytes": 0,
+  "attempts": 1,
+  "raw_signed_url_published": false,
+  "alternate_endpoint_or_identity_attempted": false,
+  "artifact_contents_verified": false,
+  "new_run_started_after_failure": false
+}

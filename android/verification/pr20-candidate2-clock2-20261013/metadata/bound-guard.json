@@ -1,0 +1,11 @@
+{
+  "before": "14b4f48ea3a683b3cff1b4201bd1e2b4cd740d4a",
+  "proposed_sha256": "cdca1485b0943f59ac3171097f1b27921e64503274e17c3f45bda591e541e198",
+  "active_sha256": "493b2c5538b9b6696f4841af6f2b3beb2fd352e4e05c299215fba6e695966d7d",
+  "only_change_from_proposed": "one event.before zero sentinel replaced by exact preparation commit",
+  "no_dispatch_schedule_pr_trigger": true,
+  "single_job_max_minutes": 60,
+  "attempt": 1,
+  "budget_anchor_epoch": 1791910150,
+  "setup_seconds_remaining_at_local_activation_check": 1821.1194868087769
+}

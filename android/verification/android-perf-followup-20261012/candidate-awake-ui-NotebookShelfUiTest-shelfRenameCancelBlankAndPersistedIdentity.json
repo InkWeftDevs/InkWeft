@@ -1,0 +1,26 @@
+{
+  "phase": "candidate-awake",
+  "selection": "org.inkweft.app.NotebookShelfUiTest#shelfRenameCancelBlankAndPersistedIdentity",
+  "command": [
+    "/workspace/.setup/tools/android-sdk/platform-tools/adb",
+    "-s",
+    "emulator-5554",
+    "shell",
+    "am",
+    "instrument",
+    "-w",
+    "-e",
+    "class",
+    "org.inkweft.app.NotebookShelfUiTest#shelfRenameCancelBlankAndPersistedIdentity",
+    "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+  ],
+  "started_utc": "2026-10-12T19:04:43.000103+00:00",
+  "seconds": 187.00915234000058,
+  "exit_code": 0,
+  "expected": 1,
+  "tests": null,
+  "executed": 1,
+  "failures": 1,
+  "passed": false,
+  "environment": "API35 x86_64 software Android emulator; no KVM; not physical-device performance"
+}

@@ -1,0 +1,6448 @@
+{
+  "status": "INDEPENDENT_RUNTIME_RECORD_AUDIT_PASS",
+  "scope": "Independent read-only raw text/ZIP/Git/metadata audit. No build, native, adb, network, mutation or binary APK/AAR/ELF reverification. Performance acceptance remains separate.",
+  "run_id": 38498392929,
+  "job_id": 115639302352,
+  "active_git": "d20b37a00d084ddea8a59698b926d94ce2f1a633",
+  "readiness_git": "445654c90a4c78893f158fdc4eca4313f3320a7f",
+  "preparation_git": "b3bcbcc9ca4e4134f0d2e4806bcd7bcf55ab0897",
+  "identities": {
+    "B": {
+      "git": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+      "canonical_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8"
+    },
+    "C0": {
+      "git": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+      "canonical_manifest_sha256": "7592c7990537bde681d0179539f58e1cd79822695bfcfd4b19882d9e1f738e90"
+    },
+    "C1": {
+      "git": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+      "canonical_manifest_sha256": "06e7cea253c061891e10f658400143a7da34ba23f6ec95224bee31f5c0d13eb6"
+    }
+  },
+  "archive": {
+    "artifact_id": 11866466104,
+    "archive_sha256": "79c53a73e262a22205519f5a994e10e6f2c75ca396a39bbd251d5bbd6b17993c",
+    "archive_bytes": 772054,
+    "payload_files": 292,
+    "uncompressed_bytes": 3663735
+  },
+  "manifest_sha256": "9d1d174f8258873e7a58da9a8e1ed9d80b994fadc9dc3f5f114bd9bf0d8c51ec",
+  "controller_hashes": {
+    "ci/pr20-kvm-triple/run.py": "173bc638d75a12d78d4aeb594cc44f44f2b8670fd8d2d04cb099b1fe74ce97e3",
+    "ci/pr20-kvm-triple/package.py": "8170777c281c69983c2c4f416972ebe287b077803ca242df70c8587ccfe4acda",
+    "ci/pr20-kvm-triple/cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "ci/pr20-kvm-triple/authorization.json": "3507772418bdcd4a5ec5e91b83baebbffc02e4e39d23b6e76e12714d9e30165d",
+    "ci/pr20-kvm-triple/budget-revision.json": "48a834da006ae0061f94c131b25de1526c9281bce07f31ef9063e7fdf9eaa038",
+    "ci/pr20-kvm-triple/clock-contract.json": "8347651ad2991dbe062e7b1b612284b3e4968809ffafbcb4d7f3172f317cff36",
+    "ci/pr20-kvm-triple/clock-server-receipt.json": "25a5fa4eb2d5297390503eb25296c6cffefd40d3917fb57f66b3e8081cec1de8",
+    "ci/pr20-kvm-triple/workflow.proposed.yml": "2dba1946e55e1990ab23ec60d34865e826ac7b3606d31076ec06b6174efe68d9",
+    "ci/pr20-kvm-triple/preflight.json": "8c0e6d4298be59426b7f4fa542f119db96ae74b74e850cda536eee3435413792",
+    ".github/workflows/pr20-kvm-triple.yml": "2dba1946e55e1990ab23ec60d34865e826ac7b3606d31076ec06b6174efe68d9"
+  },
+  "checks": {
+    "total": 1175,
+    "passed": 1175,
+    "issues": []
+  },
+  "check_details": [
+    {
+      "check": "292 payload files plus manifest/packaging",
+      "pass": true
+    },
+    {
+      "check": "All original manifest hashes and sizes rechecked",
+      "pass": true
+    },
+    {
+      "check": "Library original ZIP digest/size matches fixed verifier receipt",
+      "pass": true
+    },
+    {
+      "check": "Fixed verifier receipt has no runtime issues/pending",
+      "pass": true
+    },
+    {
+      "check": "Original and packaged execution completion retained",
+      "pass": true
+    },
+    {
+      "check": "Packaging added only cleanup_verified on completed run",
+      "pass": true
+    },
+    {
+      "check": "Exact run/attempt/active binding",
+      "pass": true
+    },
+    {
+      "check": "58 exact frozen plan entries/source spec",
+      "pass": true
+    },
+    {
+      "check": "Frozen PLAN.md equals readiness and active objects",
+      "pass": true
+    },
+    {
+      "check": "Frozen original-protocol.json equals readiness and active objects",
+      "pass": true
+    },
+    {
+      "check": "Frozen source-spec.json equals readiness and active objects",
+      "pass": true
+    },
+    {
+      "check": "Frozen method-plan.json equals readiness and active objects",
+      "pass": true
+    },
+    {
+      "check": "Frozen B-source-manifest.json equals readiness and active objects",
+      "pass": true
+    },
+    {
+      "check": "Frozen C0-source-manifest.json equals readiness and active objects",
+      "pass": true
+    },
+    {
+      "check": "Frozen C1-source-manifest.json equals readiness and active objects",
+      "pass": true
+    },
+    {
+      "check": "Frozen prepare_sources.py equals readiness and active objects",
+      "pass": true
+    },
+    {
+      "check": "Committed controller hash ci/pr20-kvm-triple/run.py",
+      "pass": true
+    },
+    {
+      "check": "Committed controller hash ci/pr20-kvm-triple/package.py",
+      "pass": true
+    },
+    {
+      "check": "Committed controller hash ci/pr20-kvm-triple/cleanup.py",
+      "pass": true
+    },
+    {
+      "check": "Committed controller hash ci/pr20-kvm-triple/authorization.json",
+      "pass": true
+    },
+    {
+      "check": "Archived controller bytes ci/pr20-kvm-triple/authorization.json",
+      "pass": true
+    },
+    {
+      "check": "Committed controller hash ci/pr20-kvm-triple/budget-revision.json",
+      "pass": true
+    },
+    {
+      "check": "Archived controller bytes ci/pr20-kvm-triple/budget-revision.json",
+      "pass": true
+    },
+    {
+      "check": "Committed controller hash ci/pr20-kvm-triple/clock-contract.json",
+      "pass": true
+    },
+    {
+      "check": "Archived controller bytes ci/pr20-kvm-triple/clock-contract.json",
+      "pass": true
+    },
+    {
+      "check": "Committed controller hash ci/pr20-kvm-triple/clock-server-receipt.json",
+      "pass": true
+    },
+    {
+      "check": "Archived controller bytes ci/pr20-kvm-triple/clock-server-receipt.json",
+      "pass": true
+    },
+    {
+      "check": "Committed controller hash ci/pr20-kvm-triple/workflow.proposed.yml",
+      "pass": true
+    },
+    {
+      "check": "Committed controller hash ci/pr20-kvm-triple/preflight.json",
+      "pass": true
+    },
+    {
+      "check": "Committed controller hash .github/workflows/pr20-kvm-triple.yml",
+      "pass": true
+    },
+    {
+      "check": "Reviewed exact controller",
+      "pass": true
+    },
+    {
+      "check": "Frozen common probe probe-KvmLibraryPairProbe.kt",
+      "pass": true
+    },
+    {
+      "check": "Frozen common probe probe-KvmLocalAppendPairProbe.kt",
+      "pass": true
+    },
+    {
+      "check": "Budget3 exact phase offsets",
+      "pass": true
+    },
+    {
+      "check": "Conservative anchor distinct from actual start",
+      "pass": true
+    },
+    {
+      "check": "Exact cumulative cutoffs",
+      "pass": true
+    },
+    {
+      "check": "Completed before cutoff actions:setup",
+      "pass": true
+    },
+    {
+      "check": "Completed before cutoff actions:setup",
+      "pass": true
+    },
+    {
+      "check": "Completed before cutoff actions:setup",
+      "pass": true
+    },
+    {
+      "check": "Completed before cutoff actions:setup",
+      "pass": true
+    },
+    {
+      "check": "Completed before cutoff actions:setup",
+      "pass": true
+    },
+    {
+      "check": "Completed before cutoff actions:correctness",
+      "pass": true
+    },
+    {
+      "check": "Completed before cutoff actions:common",
+      "pass": true
+    },
+    {
+      "check": "Completed before cutoff actions:diagnostics",
+      "pass": true
+    },
+    {
+      "check": "Completed before cutoff phases:source-fetch",
+      "pass": true
+    },
+    {
+      "check": "Completed before cutoff phases:source-reconstruction",
+      "pass": true
+    },
+    {
+      "check": "Completed before cutoff phases:sdk",
+      "pass": true
+    },
+    {
+      "check": "Completed before cutoff phases:build-B",
+      "pass": true
+    },
+    {
+      "check": "Completed before cutoff phases:build-C0",
+      "pass": true
+    },
+    {
+      "check": "Completed before cutoff phases:build-C1",
+      "pass": true
+    },
+    {
+      "check": "Completed before cutoff phases:acceleration",
+      "pass": true
+    },
+    {
+      "check": "Completed before cutoff phases:avd",
+      "pass": true
+    },
+    {
+      "check": "method01 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method01 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method01 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method01 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method01 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method01 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method01 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method01 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method01 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method01 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method01 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method01 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method01 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method01 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method01 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method02 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method02 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method02 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method02 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method02 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method02 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method02 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method02 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method02 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method02 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method02 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method02 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method02 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method02 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method02 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method03 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method03 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method03 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method03 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method03 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method03 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method03 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method03 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method03 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method03 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method03 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method03 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method03 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method03 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method03 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method04 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method04 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method04 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method04 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method04 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method04 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method04 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method04 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method04 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method04 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method04 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method04 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method04 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method04 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method04 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method05 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method05 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method05 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method05 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method05 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method05 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method05 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method05 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method05 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method05 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method05 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method05 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method05 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method05 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method05 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method06 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method06 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method06 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method06 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method06 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method06 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method06 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method06 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method06 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method06 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method06 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method06 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method06 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method06 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method06 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method07 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method07 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method07 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method07 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method07 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method07 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method07 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method07 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method07 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method07 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method07 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method07 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method07 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method07 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method07 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method08 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method08 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method08 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method08 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method08 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method08 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method08 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method08 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method08 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method08 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method08 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method08 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method08 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method08 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method08 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method09 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method09 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method09 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method09 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method09 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method09 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method09 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method09 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method09 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method09 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method09 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method09 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method09 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method09 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method09 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method10 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method10 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method10 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method10 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method10 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method10 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method10 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method10 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method10 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method10 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method10 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method10 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method10 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method10 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method10 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method11 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method11 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method11 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method11 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method11 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method11 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method11 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method11 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method11 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method11 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method11 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method11 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method11 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method11 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method11 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method12 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method12 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method12 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method12 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method12 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method12 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method12 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method12 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method12 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method12 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method12 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method12 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method12 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method12 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method12 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method13 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method13 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method13 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method13 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method13 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method13 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method13 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method13 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method13 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method13 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method13 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method13 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method13 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method13 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method13 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method14 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method14 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method14 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method14 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method14 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method14 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method14 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method14 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method14 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method14 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method14 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method14 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method14 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method14 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method14 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method15 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method15 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method15 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method15 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method15 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method15 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method15 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method15 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method15 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method15 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method15 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method15 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method15 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method15 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method15 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method16 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method16 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method16 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method16 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method16 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method16 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method16 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method16 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method16 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method16 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method16 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method16 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method16 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method16 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method16 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method17 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method17 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method17 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method17 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method17 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method17 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method17 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method17 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method17 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method17 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method17 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method17 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method17 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method17 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method18 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method18 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method18 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method18 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method18 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method18 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method18 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method18 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method18 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method18 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method18 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method18 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method18 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method18 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method18 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method19 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method19 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method19 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method19 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method19 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method19 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method19 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method19 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method19 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method19 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method19 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method19 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method19 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method19 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method19 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method20 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method20 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method20 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method20 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method20 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method20 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method20 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method20 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method20 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method20 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method20 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method20 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method20 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method20 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method20 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method21 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method21 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method21 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method21 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method21 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method21 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method21 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method21 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method21 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method21 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method21 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method21 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method21 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method21 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method21 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method22 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method22 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method22 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method22 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method22 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method22 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method22 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method22 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method22 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method22 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method22 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method22 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method22 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method22 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method22 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method23 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method23 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method23 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method23 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method23 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method23 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method23 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method23 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method23 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method23 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method23 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method23 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method23 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method23 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method23 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method24 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method24 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method24 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method24 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method24 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method24 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method24 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method24 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method24 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method24 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method24 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method24 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method24 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method24 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method24 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method25 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method25 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method25 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method25 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method25 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method25 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method25 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method25 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method25 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method25 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method25 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method25 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method25 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method25 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method25 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method26 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method26 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method26 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method26 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method26 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method26 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method26 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method26 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method26 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method26 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method26 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method26 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method26 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method26 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method26 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method27 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method27 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method27 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method27 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method27 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method27 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method27 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method27 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method27 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method27 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method27 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method27 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method27 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method27 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method27 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method28 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method28 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method28 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method28 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method28 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method28 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method28 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method28 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method28 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method28 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method28 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method28 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method28 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method28 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method28 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method29 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method29 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method29 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method29 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method29 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method29 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method29 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method29 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method29 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method29 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method29 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method29 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method29 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method29 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method29 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method30 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method30 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method30 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method30 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method30 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method30 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method30 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method30 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method30 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method30 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method30 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method30 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method30 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method30 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method30 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method31 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method31 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method31 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method31 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method31 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method31 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method31 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method31 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method31 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method31 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method31 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method31 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method31 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method31 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method31 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method32 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method32 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method32 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method32 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method32 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method32 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method32 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method32 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method32 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method32 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method32 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method32 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method32 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method32 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method32 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method32 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method33 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method33 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method33 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method33 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method33 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method33 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method33 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method33 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method33 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method33 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method33 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method33 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method33 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method33 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method33 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method33 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method34 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method34 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method34 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method34 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method34 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method34 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method34 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method34 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method34 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method34 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method34 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method34 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method34 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method34 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method34 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method34 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method35 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method35 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method35 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method35 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method35 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method35 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method35 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method35 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method35 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method35 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method35 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method35 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method35 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method35 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method35 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method35 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method36 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method36 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method36 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method36 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method36 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method36 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method36 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method36 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method36 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method36 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method36 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method36 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method36 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method36 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method36 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method36 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method37 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method37 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method37 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method37 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method37 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method37 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method37 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method37 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method37 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method37 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method37 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method37 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method37 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method37 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method37 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method37 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method38 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method38 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method38 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method38 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method38 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method38 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method38 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method38 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method38 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method38 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method38 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method38 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method38 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method38 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method38 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method38 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method39 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method39 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method39 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method39 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method39 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method39 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method39 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method39 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method39 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method39 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method39 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method39 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method39 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method39 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method39 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method39 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method40 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method40 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method40 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method40 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method40 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method40 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method40 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method40 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method40 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method40 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method40 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method40 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method40 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method40 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method40 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method40 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method41 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method41 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method41 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method41 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method41 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method41 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method41 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method41 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method41 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method41 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method41 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method41 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method41 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method41 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method41 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method41 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method42 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method42 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method42 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method42 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method42 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method42 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method42 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method42 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method42 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method42 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method42 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method42 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method42 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method42 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method42 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method42 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method43 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method43 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method43 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method43 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method43 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method43 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method43 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method43 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method43 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method43 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method43 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method43 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method43 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method43 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method43 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method43 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method44 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method44 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method44 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method44 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method44 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method44 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method44 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method44 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method44 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method44 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method44 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method44 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method44 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method44 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method44 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method44 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method45 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method45 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method45 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method45 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method45 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method45 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method45 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method45 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method45 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method45 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method45 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method45 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method45 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method45 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method45 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method45 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method46 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method46 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method46 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method46 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method46 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method46 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method46 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method46 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method46 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method46 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method46 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method46 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method46 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method46 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method46 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method46 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method47 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method47 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method47 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method47 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method47 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method47 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method47 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method47 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method47 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method47 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method47 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method47 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method47 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method47 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method47 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method47 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method48 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method48 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method48 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method48 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method48 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method48 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method48 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method48 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method48 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method48 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method48 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method48 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method48 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method48 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method48 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method48 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method49 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method49 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method49 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method49 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method49 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method49 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method49 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method49 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method49 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method49 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method49 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method49 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method49 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method49 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method49 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method49 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method50 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method50 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method50 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method50 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method50 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method50 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method50 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method50 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method50 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method50 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method50 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method50 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method50 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method50 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method50 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method50 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method51 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method51 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method51 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method51 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method51 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method51 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method51 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method51 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method51 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method51 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method51 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method51 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method51 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method51 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method51 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method51 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method52 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method52 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method52 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method52 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method52 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method52 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method52 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method52 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method52 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method52 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method52 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method52 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method52 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method52 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method52 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method52 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method53 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method53 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method53 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method53 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method53 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method53 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method53 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method53 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method53 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method53 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method53 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method53 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method53 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method53 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method53 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method53 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method54 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method54 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method54 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method54 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method54 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method54 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method54 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method54 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method54 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method54 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method54 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method54 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method54 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method54 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method54 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method54 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method55 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method55 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method55 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method55 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method55 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method55 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method55 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method55 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method55 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method55 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method55 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method55 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method55 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method55 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method55 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method55 complete fixture evidence",
+      "pass": true
+    },
+    {
+      "check": "method56 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method56 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method56 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method56 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method56 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method56 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method56 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method56 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method56 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method56 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method56 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method56 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method56 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method56 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method56 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method57 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method57 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method57 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method57 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method57 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method57 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method57 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method57 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method57 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method57 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method57 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method57 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method57 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method57 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method57 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "method58 exact plan identity/args/seed/phase/group",
+      "pass": true
+    },
+    {
+      "check": "method58 host PASS/raw PASS/adb0",
+      "pass": true
+    },
+    {
+      "check": "method58 independently parsed exact single raw JUnit",
+      "pass": true
+    },
+    {
+      "check": "method58 original raw fields match ledger",
+      "pass": true
+    },
+    {
+      "check": "method58 every raw JSON marker equals recorded payload",
+      "pass": true
+    },
+    {
+      "check": "method58 derived XML exactly one matching passing testcase",
+      "pass": true
+    },
+    {
+      "check": "method58 XML duration matches host ledger",
+      "pass": true
+    },
+    {
+      "check": "method58 ordered complete three-package observations",
+      "pass": true
+    },
+    {
+      "check": "method58 valid pidof results throughout",
+      "pass": true
+    },
+    {
+      "check": "method58 all three packages absent at method completion",
+      "pass": true
+    },
+    {
+      "check": "method58 process observations fit host method duration",
+      "pass": true
+    },
+    {
+      "check": "method58 natural exit without cleanup request",
+      "pass": true
+    },
+    {
+      "check": "method58 sequential nonoverlapping host method",
+      "pass": true
+    },
+    {
+      "check": "method58 ends before phase cutoff",
+      "pass": true
+    },
+    {
+      "check": "method58 enclosed by correct install group",
+      "pass": true
+    },
+    {
+      "check": "58 calls correspond to36 distinct selections",
+      "pass": true
+    },
+    {
+      "check": "31correctness/24common/3diagnostics retained",
+      "pass": true
+    },
+    {
+      "check": "Four seeds/two common selections exact three-way fixture equality",
+      "pass": true
+    },
+    {
+      "check": "Only authorized helper17 identity",
+      "pass": true
+    },
+    {
+      "check": "Helper17 app/data absent throughout21 natural observations; only helper2717 remains",
+      "pass": true
+    },
+    {
+      "check": "Helper17 single exact background-safe am kill receipt",
+      "pass": true
+    },
+    {
+      "check": "Helper17 request after natural window guard and absence confirmed within2s/5s bounds",
+      "pass": true
+    },
+    {
+      "check": "Helper post-request all absent plus57 natural methods",
+      "pass": true
+    },
+    {
+      "check": "Frozen controller establishes raw completion eligibility and0.25s observation guard",
+      "pass": true
+    },
+    {
+      "check": "APK source/base/overlay scope B",
+      "pass": true
+    },
+    {
+      "check": "Exact3 APK paths B",
+      "pass": true
+    },
+    {
+      "check": "APK signer/size/hash receipt B:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "APK signer/size/hash receipt B:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "APK signer/size/hash receipt B:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Embedded source/active/fourABI binding B",
+      "pass": true
+    },
+    {
+      "check": "Four MuPDF ABI receipts B",
+      "pass": true
+    },
+    {
+      "check": "879 unique valid dependency records B",
+      "pass": true
+    },
+    {
+      "check": "Build raw success B",
+      "pass": true
+    },
+    {
+      "check": "APK source/base/overlay scope C0",
+      "pass": true
+    },
+    {
+      "check": "Exact3 APK paths C0",
+      "pass": true
+    },
+    {
+      "check": "APK signer/size/hash receipt C0:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "APK signer/size/hash receipt C0:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "APK signer/size/hash receipt C0:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Embedded source/active/fourABI binding C0",
+      "pass": true
+    },
+    {
+      "check": "Four MuPDF ABI receipts C0",
+      "pass": true
+    },
+    {
+      "check": "879 unique valid dependency records C0",
+      "pass": true
+    },
+    {
+      "check": "Build raw success C0",
+      "pass": true
+    },
+    {
+      "check": "APK source/base/overlay scope C1",
+      "pass": true
+    },
+    {
+      "check": "Exact3 APK paths C1",
+      "pass": true
+    },
+    {
+      "check": "APK signer/size/hash receipt C1:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "APK signer/size/hash receipt C1:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "APK signer/size/hash receipt C1:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Embedded source/active/fourABI binding C1",
+      "pass": true
+    },
+    {
+      "check": "Four MuPDF ABI receipts C1",
+      "pass": true
+    },
+    {
+      "check": "879 unique valid dependency records C1",
+      "pass": true
+    },
+    {
+      "check": "Build raw success C1",
+      "pass": true
+    },
+    {
+      "check": "Nine APKs same recorded signer",
+      "pass": true
+    },
+    {
+      "check": "All12 MuPDF records exact4 common ABI bytes/hash",
+      "pass": true
+    },
+    {
+      "check": "All879 dependency path/size/SHA records identical three-way",
+      "pass": true
+    },
+    {
+      "check": "Official sameversion MuPDF fullAAR andPOM provenance",
+      "pass": true
+    },
+    {
+      "check": "Runner exactcode signature/ELF checks and digest recheck before every install",
+      "pass": true
+    },
+    {
+      "check": "14 installation groups exact plan order with no retries",
+      "pass": true
+    },
+    {
+      "check": "Group identity/PASS C1-correctness",
+      "pass": true
+    },
+    {
+      "check": "Three package-presence checks C1-correctness",
+      "pass": true
+    },
+    {
+      "check": "Clean absent-first/uninstall-prior package state C1-correctness",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success C1-correctness:org.inkweft.app.a0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success C1-correctness:org.inkweft.app.a0.test",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success C1-correctness:org.inkweft.data.test",
+      "pass": true
+    },
+    {
+      "check": "Exact install success C1-correctness:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success C1-correctness:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success C1-correctness:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Both environment bytes identical C1-correctness",
+      "pass": true
+    },
+    {
+      "check": "Host resource before/after recorded C1-correctness",
+      "pass": true
+    },
+    {
+      "check": "Group identity/PASS visit-01-B",
+      "pass": true
+    },
+    {
+      "check": "Three package-presence checks visit-01-B",
+      "pass": true
+    },
+    {
+      "check": "Clean absent-first/uninstall-prior package state visit-01-B",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-01-B:org.inkweft.app.a0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-01-B:org.inkweft.app.a0.test",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-01-B:org.inkweft.data.test",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-01-B:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-01-B:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-01-B:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Both environment bytes identical visit-01-B",
+      "pass": true
+    },
+    {
+      "check": "Host resource before/after recorded visit-01-B",
+      "pass": true
+    },
+    {
+      "check": "Group identity/PASS visit-02-C0",
+      "pass": true
+    },
+    {
+      "check": "Three package-presence checks visit-02-C0",
+      "pass": true
+    },
+    {
+      "check": "Clean absent-first/uninstall-prior package state visit-02-C0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-02-C0:org.inkweft.app.a0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-02-C0:org.inkweft.app.a0.test",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-02-C0:org.inkweft.data.test",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-02-C0:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-02-C0:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-02-C0:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Both environment bytes identical visit-02-C0",
+      "pass": true
+    },
+    {
+      "check": "Host resource before/after recorded visit-02-C0",
+      "pass": true
+    },
+    {
+      "check": "Group identity/PASS visit-03-C1",
+      "pass": true
+    },
+    {
+      "check": "Three package-presence checks visit-03-C1",
+      "pass": true
+    },
+    {
+      "check": "Clean absent-first/uninstall-prior package state visit-03-C1",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-03-C1:org.inkweft.app.a0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-03-C1:org.inkweft.app.a0.test",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-03-C1:org.inkweft.data.test",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-03-C1:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-03-C1:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-03-C1:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Both environment bytes identical visit-03-C1",
+      "pass": true
+    },
+    {
+      "check": "Host resource before/after recorded visit-03-C1",
+      "pass": true
+    },
+    {
+      "check": "Group identity/PASS visit-04-C1",
+      "pass": true
+    },
+    {
+      "check": "Three package-presence checks visit-04-C1",
+      "pass": true
+    },
+    {
+      "check": "Clean absent-first/uninstall-prior package state visit-04-C1",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-04-C1:org.inkweft.app.a0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-04-C1:org.inkweft.app.a0.test",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-04-C1:org.inkweft.data.test",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-04-C1:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-04-C1:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-04-C1:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Both environment bytes identical visit-04-C1",
+      "pass": true
+    },
+    {
+      "check": "Host resource before/after recorded visit-04-C1",
+      "pass": true
+    },
+    {
+      "check": "Group identity/PASS visit-05-B",
+      "pass": true
+    },
+    {
+      "check": "Three package-presence checks visit-05-B",
+      "pass": true
+    },
+    {
+      "check": "Clean absent-first/uninstall-prior package state visit-05-B",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-05-B:org.inkweft.app.a0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-05-B:org.inkweft.app.a0.test",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-05-B:org.inkweft.data.test",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-05-B:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-05-B:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-05-B:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Both environment bytes identical visit-05-B",
+      "pass": true
+    },
+    {
+      "check": "Host resource before/after recorded visit-05-B",
+      "pass": true
+    },
+    {
+      "check": "Group identity/PASS visit-06-C0",
+      "pass": true
+    },
+    {
+      "check": "Three package-presence checks visit-06-C0",
+      "pass": true
+    },
+    {
+      "check": "Clean absent-first/uninstall-prior package state visit-06-C0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-06-C0:org.inkweft.app.a0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-06-C0:org.inkweft.app.a0.test",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-06-C0:org.inkweft.data.test",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-06-C0:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-06-C0:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-06-C0:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Both environment bytes identical visit-06-C0",
+      "pass": true
+    },
+    {
+      "check": "Host resource before/after recorded visit-06-C0",
+      "pass": true
+    },
+    {
+      "check": "Group identity/PASS visit-07-C0",
+      "pass": true
+    },
+    {
+      "check": "Three package-presence checks visit-07-C0",
+      "pass": true
+    },
+    {
+      "check": "Clean absent-first/uninstall-prior package state visit-07-C0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-07-C0:org.inkweft.app.a0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-07-C0:org.inkweft.app.a0.test",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-07-C0:org.inkweft.data.test",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-07-C0:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-07-C0:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-07-C0:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Both environment bytes identical visit-07-C0",
+      "pass": true
+    },
+    {
+      "check": "Host resource before/after recorded visit-07-C0",
+      "pass": true
+    },
+    {
+      "check": "Group identity/PASS visit-08-C1",
+      "pass": true
+    },
+    {
+      "check": "Three package-presence checks visit-08-C1",
+      "pass": true
+    },
+    {
+      "check": "Clean absent-first/uninstall-prior package state visit-08-C1",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-08-C1:org.inkweft.app.a0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-08-C1:org.inkweft.app.a0.test",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-08-C1:org.inkweft.data.test",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-08-C1:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-08-C1:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-08-C1:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Both environment bytes identical visit-08-C1",
+      "pass": true
+    },
+    {
+      "check": "Host resource before/after recorded visit-08-C1",
+      "pass": true
+    },
+    {
+      "check": "Group identity/PASS visit-09-B",
+      "pass": true
+    },
+    {
+      "check": "Three package-presence checks visit-09-B",
+      "pass": true
+    },
+    {
+      "check": "Clean absent-first/uninstall-prior package state visit-09-B",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-09-B:org.inkweft.app.a0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-09-B:org.inkweft.app.a0.test",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-09-B:org.inkweft.data.test",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-09-B:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-09-B:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-09-B:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Both environment bytes identical visit-09-B",
+      "pass": true
+    },
+    {
+      "check": "Host resource before/after recorded visit-09-B",
+      "pass": true
+    },
+    {
+      "check": "Group identity/PASS visit-10-B",
+      "pass": true
+    },
+    {
+      "check": "Three package-presence checks visit-10-B",
+      "pass": true
+    },
+    {
+      "check": "Clean absent-first/uninstall-prior package state visit-10-B",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-10-B:org.inkweft.app.a0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-10-B:org.inkweft.app.a0.test",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-10-B:org.inkweft.data.test",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-10-B:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-10-B:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-10-B:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Both environment bytes identical visit-10-B",
+      "pass": true
+    },
+    {
+      "check": "Host resource before/after recorded visit-10-B",
+      "pass": true
+    },
+    {
+      "check": "Group identity/PASS visit-11-C1",
+      "pass": true
+    },
+    {
+      "check": "Three package-presence checks visit-11-C1",
+      "pass": true
+    },
+    {
+      "check": "Clean absent-first/uninstall-prior package state visit-11-C1",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-11-C1:org.inkweft.app.a0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-11-C1:org.inkweft.app.a0.test",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-11-C1:org.inkweft.data.test",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-11-C1:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-11-C1:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-11-C1:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Both environment bytes identical visit-11-C1",
+      "pass": true
+    },
+    {
+      "check": "Host resource before/after recorded visit-11-C1",
+      "pass": true
+    },
+    {
+      "check": "Group identity/PASS visit-12-C0",
+      "pass": true
+    },
+    {
+      "check": "Three package-presence checks visit-12-C0",
+      "pass": true
+    },
+    {
+      "check": "Clean absent-first/uninstall-prior package state visit-12-C0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-12-C0:org.inkweft.app.a0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-12-C0:org.inkweft.app.a0.test",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success visit-12-C0:org.inkweft.data.test",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-12-C0:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-12-C0:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success visit-12-C0:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Both environment bytes identical visit-12-C0",
+      "pass": true
+    },
+    {
+      "check": "Host resource before/after recorded visit-12-C0",
+      "pass": true
+    },
+    {
+      "check": "Group identity/PASS C1-diagnostics",
+      "pass": true
+    },
+    {
+      "check": "Three package-presence checks C1-diagnostics",
+      "pass": true
+    },
+    {
+      "check": "Clean absent-first/uninstall-prior package state C1-diagnostics",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success C1-diagnostics:org.inkweft.app.a0",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success C1-diagnostics:org.inkweft.app.a0.test",
+      "pass": true
+    },
+    {
+      "check": "Exact uninstall success C1-diagnostics:org.inkweft.data.test",
+      "pass": true
+    },
+    {
+      "check": "Exact install success C1-diagnostics:app/build/outputs/apk/debug/app-debug.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success C1-diagnostics:app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Exact install success C1-diagnostics:data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+      "pass": true
+    },
+    {
+      "check": "Both environment bytes identical C1-diagnostics",
+      "pass": true
+    },
+    {
+      "check": "Host resource before/after recorded C1-diagnostics",
+      "pass": true
+    },
+    {
+      "check": "42 installs and39 uninstalls succeeded exactly once",
+      "pass": true
+    },
+    {
+      "check": "Overall device after exactly matches before",
+      "pass": true
+    },
+    {
+      "check": "Same emulator5554 explicitly accelerated by KVM",
+      "pass": true
+    },
+    {
+      "check": "Temporary UID1001 ACL grant only expected recorded user",
+      "pass": true
+    },
+    {
+      "check": "ACL grant preserves all original lines, adds onlyuid andrequiredmask",
+      "pass": true
+    },
+    {
+      "check": "Exact successful cleanup trap",
+      "pass": true
+    },
+    {
+      "check": "ACL restoration byte-identical trap",
+      "pass": true
+    },
+    {
+      "check": "Exact successful cleanup always",
+      "pass": true
+    },
+    {
+      "check": "ACL restoration byte-identical always",
+      "pass": true
+    },
+    {
+      "check": "Original ZIP has294 unique exact text payload names",
+      "pass": true
+    },
+    {
+      "check": "Every extracted evidence file equals original ZIP bytes",
+      "pass": true
+    },
+    {
+      "check": "Exact current Library ZIP size and SHA",
+      "pass": true
+    },
+    {
+      "check": "No omitted/truncated payload and original3day retention",
+      "pass": true
+    },
+    {
+      "check": "Original uncompressed text within20MiB",
+      "pass": true
+    },
+    {
+      "check": "Independent terminal metadata exact job/run/active/attempt",
+      "pass": true
+    },
+    {
+      "check": "Independent terminal job/run success branch",
+      "pass": true
+    },
+    {
+      "check": "Independent official artifact metadata binds this ZIP",
+      "pass": true
+    },
+    {
+      "check": "Earlier clock by187s and actual39m02job within60m",
+      "pass": true
+    },
+    {
+      "check": "All measured actions enclosed by actual job",
+      "pass": true
+    },
+    {
+      "check": "Frozen clock does not invent actual job start",
+      "pass": true
+    },
+    {
+      "check": "Actual baseline/previous/new candidate aliases",
+      "pass": true
+    },
+    {
+      "check": "Only method17 has any helper cleanup request",
+      "pass": true
+    },
+    {
+      "check": "Unique helper selection remains ordinal17",
+      "pass": true
+    },
+    {
+      "check": "No force-stop command/fallback in helper logic",
+      "pass": true
+    },
+    {
+      "check": "Raw helper JUnit independently bound to enclosing host operation",
+      "pass": true
+    },
+    {
+      "check": "Every actual observation inside frozen3s/2s windows",
+      "pass": true
+    },
+    {
+      "check": "Dependency lists byte-identical across3identities",
+      "pass": true
+    },
+    {
+      "check": "Official POM availability and recorded dependency bytes agree",
+      "pass": true
+    },
+    {
+      "check": "Same complete native MuPDF AAR recorded source",
+      "pass": true
+    },
+    {
+      "check": "Recorded fixed API35 emulator display settings",
+      "pass": true
+    },
+    {
+      "check": "Overall host resource boundaries recorded",
+      "pass": true
+    },
+    {
+      "check": "Selected literal credential/private-key pattern scan has no hits",
+      "pass": true
+    },
+    {
+      "check": "No binary APK/dependency/database/key/full-logcat filename in published text payload",
+      "pass": true
+    },
+    {
+      "check": "All294 raw files unchanged throughout this independent audit",
+      "pass": true
+    }
+  ],
+  "common_probes": [
+    {
+      "name": "probe-KvmLibraryPairProbe.kt",
+      "sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c",
+      "matched": true
+    },
+    {
+      "name": "probe-KvmLocalAppendPairProbe.kt",
+      "sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+      "matched": true
+    }
+  ],
+  "method_totals": {
+    "calls": 58,
+    "distinct_selections": 36,
+    "phase_calls": {
+      "correctness": 31,
+      "common-comparison": 24,
+      "candidate-diagnostics": 3
+    },
+    "raw_junit_pass": 58,
+    "host_pass": 58,
+    "natural_exit": 57,
+    "helper_exit": 1,
+    "raw_marker_counts": {
+      "HISTORY_DELETE_WRITER_CORRECTNESS": 2,
+      "TILE_PAN_EVIDENCE": 1,
+      "TILE_PAN_STAGE": 1,
+      "KVM_PAIR_FIXTURE": 48,
+      "TILE_LOCAL_EVIDENCE": 36,
+      "KVM_RASTER_CLEANUP": 36,
+      "KVM_DIRECT_INTERVALS": 12,
+      "LIBRARY_DIRECT_SAVE_CHECKPOINT": 13,
+      "INDEX_SAVE_PROGRESS": 78,
+      "LIBRARY_INDEX_SAVE_CHECKPOINT": 13,
+      "KVM_INDEX_INTERVALS": 12,
+      "LIBRARY_READ_EVIDENCE": 13,
+      "HISTORY_DELETION_EXPOSURE_TRIAL": 60,
+      "HISTORY_DELETION_EXPOSURE_SUMMARY": 2,
+      "LIBRARY_STAGE_DIAGNOSTICS": 12
+    }
+  },
+  "methods": [
+    {
+      "ordinal": 1,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 2.109318733215332,
+      "files_sha256": {
+        "-instrumentation.log": "67279a8b3e4f817e617a39d40f116f9651337335d544b8abd13560cc5a7f0e9a",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "445dc327e06bd9c6b3c4126e0837ed0911feacd82ea76a1a86725e6ab27f2e51"
+      }
+    },
+    {
+      "ordinal": 2,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibraryPagingTest#snapshotRetainsOldClassificationAndSourceWhileWriterCommits",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.1052007675170898,
+      "files_sha256": {
+        "-instrumentation.log": "de138799740a9c42b38909a2bbc7a73500f94b9d3399035d6bd0a5a89097b35d",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "b2471774efcdfbf1a253908071adfec8b3268288e617d1a477d74e0354d28961"
+      }
+    },
+    {
+      "ordinal": 3,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibraryPagingTest#refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.6536736488342285,
+      "files_sha256": {
+        "-instrumentation.log": "bc180b13751b6bd51d48cc5c7443e524616a352c418a6098691233f2708d53e3",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "6f0a7e6bf2c65efddff29212aac6928e3ad63cdff7caabe78cc0e8e82cff0582"
+      }
+    },
+    {
+      "ordinal": 4,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.8055343627929688,
+      "files_sha256": {
+        "-instrumentation.log": "51df1270a4584e4f3a81295954d79d74a8de2777ba9f3b260161e0a58e196836",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "9fcf77bb8883191424b7b53b8967a2473878c67ba42beb4576600c4e973993fe"
+      }
+    },
+    {
+      "ordinal": 5,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.8098545074462891,
+      "files_sha256": {
+        "-instrumentation.log": "170c1eede194a918dd53b25948d9b06a035b293cc008d8e5c278d2d95f84fcda",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "9ca36a11b4185ad349b5b42512313b9a84fc5b37ae4d39bdc419e6db72cdfea9"
+      }
+    },
+    {
+      "ordinal": 6,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.6541953086853027,
+      "files_sha256": {
+        "-instrumentation.log": "b0d3ecaab7d521e22a367d8bc256078b1f4da5d25ab94f2eefea629c21a1b4ca",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "17027b793186be59d297052c35313bb1568e2808892201b00c2b5df97d9953b4"
+      }
+    },
+    {
+      "ordinal": 7,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.6066224575042725,
+      "files_sha256": {
+        "-instrumentation.log": "4122edbec45210affdb9cd2f8a7c9f49cc74fc58d667f0411de0f6485f853c34",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "89799654a5f05e4d92c47ca32f48ca98df7d674e1b3524f190b4d075b0700af0"
+      }
+    },
+    {
+      "ordinal": 8,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#oneScanSurvivesRoomObserverRefreshAcrossSevenBatches",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.0063409805297852,
+      "files_sha256": {
+        "-instrumentation.log": "be8b142e8d504273f19a127fbc9c0b6757406de5befc4e3811de908f7b1ac080",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "f4166108d439ce1d16bfa77416ce478e7b3b266700af7ef9c572865e9e305d01"
+      }
+    },
+    {
+      "ordinal": 9,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.955573558807373,
+      "files_sha256": {
+        "-instrumentation.log": "35d6198d210073c6d681577aebf4dee8cbf6ea316689213437bbf5bda93adc4f",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "b7aae44b1baa1f59a5233f3ce2206d762048125d07d708b33cc394898baa96e1"
+      }
+    },
+    {
+      "ordinal": 10,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.9565274715423584,
+      "files_sha256": {
+        "-instrumentation.log": "c1159ecafa34db85ab2c00834057e6cc479788d0cabe11fa2171625bf7f0d070",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "2fb5f5b715821b867f2180d5d8ecda93ef21ce8a5fdb45077e86f1e4abbac69a"
+      }
+    },
+    {
+      "ordinal": 11,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.0100390911102295,
+      "files_sha256": {
+        "-instrumentation.log": "4e16e91474fb5daa79915e7543aaa3547b9b72aa1f7bfa9d35c9640a5298db80",
+        "-records.json": "f3f1ae2280b440dabb9612f4bd2ebaa7477bf11c6d4b15604b7eaf5aa7efe8d7",
+        "-junit.xml": "6b1ee6d37db99c2f4cf4da493fd68bb2225b287afee6cce7bde5376fb751801b"
+      }
+    },
+    {
+      "ordinal": 12,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.0116245746612549,
+      "files_sha256": {
+        "-instrumentation.log": "1f19033aa177e3b2dd4b60adb3fc0a65b79d9ee6037cf9c4194bed14c5de371b",
+        "-records.json": "bfbcd60904444eead7506f033276a3a03c6d72e4c7776b8b815af467e0ad8f0f",
+        "-junit.xml": "4908da0ee748ca1b21d5fdfdd39695ec458c68c10b3635b4f37aab2db0c6b963"
+      }
+    },
+    {
+      "ordinal": 13,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.9063825607299805,
+      "files_sha256": {
+        "-instrumentation.log": "3907a2d5c07529c3807973afd5a6042d38b9274f4db4c333f0d518889ea92265",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "94f4bd5cef029d77c58fed519f9a143df9e316d6eab023adecae2cdae554affb"
+      }
+    },
+    {
+      "ordinal": 14,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.9063985347747803,
+      "files_sha256": {
+        "-instrumentation.log": "7cb8ee0ae5aac47bb8cfabf4263ccfccd9d491113367f6d0b893b01b6f423d30",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "3fe7b0a6c485be191a7d890a95182b3a19e92c87a3fbc90d10b158bb3c51efb1"
+      }
+    },
+    {
+      "ordinal": 15,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.9557311534881592,
+      "files_sha256": {
+        "-instrumentation.log": "76a357dcb5482ad73d427284fafc48f441506f7b53f52f0bd2f5ce16f2f4ef01",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "2d47adec57782ccfd2f0accdb06692d8e5e564d423e4cfd1eaa8c24c006f06cc"
+      }
+    },
+    {
+      "ordinal": 16,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#missingRoomGuardLogAbortsWithoutDeletingCandidates",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.9067833423614502,
+      "files_sha256": {
+        "-instrumentation.log": "fb9260b404d3b54e7d52c55df23346bc788f860a586da2f53a011067a3eefc20",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "f67ec45dd90e378f07bcbdab366a38b055d549f5ceac5f31d492595520025312"
+      }
+    },
+    {
+      "ordinal": 17,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.app.NotebookShelfUiTest#pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "AUXILIARY_AM_KILL_CONFIRMED",
+      "observations": 22,
+      "seconds": 10.795916318893433,
+      "files_sha256": {
+        "-instrumentation.log": "4ff02c8491d2cb79e58bab1fc2ab0f9f052ceb08597e8f95589d91e62f17acea",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "d9e1c0be20339d816a52eeb1fd172674789034dd46c0754ee6804538233da364"
+      }
+    },
+    {
+      "ordinal": 18,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibraryPagingTest#cancelledSourceReadSkipsDirectoryAssemblyAndNextReadKeepsClassification",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.6083149909973145,
+      "files_sha256": {
+        "-instrumentation.log": "13d4098aeea1151c71138ac32e134bc78229b12cace1836742310c1ca98574cc",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "c62bcfb236ded445ef7ffcc570e8340973e73e9a87466ed1523ddd57fe0c494c"
+      }
+    },
+    {
+      "ordinal": 19,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.RasterReadCacheTest#separatedRegionsSkipEmptyMetadataBatchesAndDecodeCrossingStrokeOnce",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.2079799175262451,
+      "files_sha256": {
+        "-instrumentation.log": "448c470a401d724e62bfdb7bb4557687a19e488645bd2dd71d5cd2a927fe82f8",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "eacef9d5ab03a13cd1af4f328204000e9611d0dff9a6a895adef49d8b001a642"
+      }
+    },
+    {
+      "ordinal": 20,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.RasterReadCacheTest#payloadMaskAndRevisionChangesCannotReuseStaleDecodedGeometry",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.6577842235565186,
+      "files_sha256": {
+        "-instrumentation.log": "458ade034f57b66d69d7b8dccc6fd85d63dea4d1fb79722b6e3efea9aa7ab793",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "fdcbffd8bfc6028e0cccef7965af7ab0250285a22dd73b3eea21ce57b8ea0036"
+      }
+    },
+    {
+      "ordinal": 21,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.RasterReadCacheTest#explicitAppendReuseSkipsOldPayloadsAcrossRevisionJumpsAndDefaultsToInvalidation",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.6566894054412842,
+      "files_sha256": {
+        "-instrumentation.log": "f1516545b677bbb8334127577a20474961fa8c28a6639245952d3fa9700b101d",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "d0529c7ce25ab1a7fa252afe337f926c6d0244994e1f08aeca58e64da71d4fa3"
+      }
+    },
+    {
+      "ordinal": 22,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.RasterReadCacheTest#appendPermissionStillRefreshesChangedPayloadVisibilityUndoAndMasks",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.7060534954071045,
+      "files_sha256": {
+        "-instrumentation.log": "221d46ea9135ded0179c519b6351670e21aa4357641555891a404934562e55f0",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "a74025cdd36595f85b8449575bf799fd4c4e99a1510894419f090b93a1fe41f2"
+      }
+    },
+    {
+      "ordinal": 23,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.RasterReadCacheTest#appendReuseRejectsHeadOrMaskChangesDuringCachedBatches",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.0079872608184814,
+      "files_sha256": {
+        "-instrumentation.log": "26abc8cb06a4d094b4a165421974233a9f8f083d1454bece78a320e0fc4decbb",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "e5170c48c8b33fed4f30ee4174ee9209d334cafbab34f3e9a470710fa4f7f3d5"
+      }
+    },
+    {
+      "ordinal": 24,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.RasterReadCacheTest#decodedCacheRemainsBoundedForManyStrokesAndDenseMasks",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.2084505558013916,
+      "files_sha256": {
+        "-instrumentation.log": "a8e16e5f54db862dffa0a2c2acd5a2a93a59d84a59fe976a81400262d28c3577",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "4f5c58d85bf15ca92185460e329cef1ec98734ab284c0c7b4c2a73bd2a46c83f"
+      }
+    },
+    {
+      "ordinal": 25,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.RasterReadCacheTest#sameRevisionMaskChangeDuringCachedVisitRejectsTheWholeRead",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.0091824531555176,
+      "files_sha256": {
+        "-instrumentation.log": "84517abcf54a19cf155ff6503d5a95e4fac00dd6f82b61732c1293ac457185ca",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "99b797a2b7eb721554988a27d5a98cb9aa4f95029fcb4db4969406e70c1a4fd5"
+      }
+    },
+    {
+      "ordinal": 26,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#appendRetainsGeometryAcrossIdleLayerRevisionsAndDestructiveChangesMatchColdFrames",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.5116653442382812,
+      "files_sha256": {
+        "-instrumentation.log": "f8547976dbe7e38bd67bb7745cdfd3c0a79e600f2ef421b2cd00363d3c854764",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "953f552c5a60559e2dc0042d1f14564c44fffcb2a2ce5c3900bb9332ae003245"
+      }
+    },
+    {
+      "ordinal": 27,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.6084513664245605,
+      "files_sha256": {
+        "-instrumentation.log": "4b0521397755df74a15560159aef7e420e907ad9b3d44df7be4bee2d3b063bbb",
+        "-records.json": "0ea4576718822fd91d67df37be003b70d11b7f9674be2b99469fe63c4ba6b475",
+        "-junit.xml": "049a3368b7139e4f7eb9e606b3dda46233f7dd0e73904bb5baaa8c610fed91b7"
+      }
+    },
+    {
+      "ordinal": 28,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.9591004848480225,
+      "files_sha256": {
+        "-instrumentation.log": "080518f11668204b216f364faed0312ad58aebbeed9dcce1b891e61439dabf19",
+        "-records.json": "a4c0e591817fd111fdee91f166e603a6473a808140184cbe74dc707cc171c5ac",
+        "-junit.xml": "3729e85381bd46593d65df2a976cf8bf15ebe3b59e9e78ad519a3ef57d9237dc"
+      }
+    },
+    {
+      "ordinal": 29,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.0102546215057373,
+      "files_sha256": {
+        "-instrumentation.log": "68a26dd58d2307d6ae80ccbfebb72ee71be08f967b0a68165efad1c33b1d5624",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "40d2357c38c2c666537e2271960b2b00327432d730e0f698af8dc778c4b895c6"
+      }
+    },
+    {
+      "ordinal": 30,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.5599775314331055,
+      "files_sha256": {
+        "-instrumentation.log": "a85d78be4a29d296e3fd7c1612dceddc5632da4a66b2207ae98b3e410e0e17ab",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "48ad48a606014c079a8ed3abe5d0a729a179d2d128f9d3744f0038c930e14bf3"
+      }
+    },
+    {
+      "ordinal": 31,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.7077212333679199,
+      "files_sha256": {
+        "-instrumentation.log": "ce48e007f711d660ba7d32583702d8deef897dd0de6b7ea0b4957be9c8c04069",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "565e90a372a35c465c48a3fbe063e32567e0d3381e03283d4b510f93f09b76bc"
+      }
+    },
+    {
+      "ordinal": 32,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-01-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4101,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.665928363800049,
+      "files_sha256": {
+        "-instrumentation.log": "2f10ad27d714ea62bfc0c5c5b44d84f9c441086f12848594e66922a0bf5e1883",
+        "-records.json": "8e0da65e50e3871295789a3c62a52e9286e926b08700c55a11a6514a8d08a923",
+        "-junit.xml": "f5c56fd6f28c258d1e786801cafb4082b40079bc0b5e615c7a1384e3fec376b4"
+      }
+    },
+    {
+      "ordinal": 33,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-01-B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4101,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 46.699899435043335,
+      "files_sha256": {
+        "-instrumentation.log": "422e94c0894174502a7cc418421256b3cac14ff30e3fbf79140c068ea6ea65f7",
+        "-records.json": "64f2563c5e38df0b65beed914168b1ee6db74ed83f59a332cf4478115e7e030f",
+        "-junit.xml": "29f2a2239a9ca3784bb4f42fbaa3c937ceb6e753edbaa83b735e21566789ecfe"
+      }
+    },
+    {
+      "ordinal": 34,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-02-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4101,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.468400955200195,
+      "files_sha256": {
+        "-instrumentation.log": "8bbd892f80ff38479cd25430e3ee3b74839b3c56ebdbdcb4f6436779d2c48663",
+        "-records.json": "9441df8064669b3de509af1351bc734d45680f23232c8b7ebdbbad2b223187bd",
+        "-junit.xml": "20383f8f3e791b6c9c383726707f8eeac28c8fcaf4e0ee10b3b1a2064ac59b55"
+      }
+    },
+    {
+      "ordinal": 35,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-02-C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4101,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 43.03919863700867,
+      "files_sha256": {
+        "-instrumentation.log": "4912f375f0ad98729757a375fc848ad19ce7bb3dfa5b7fa90cb93a79731f5aaa",
+        "-records.json": "0c3ac8f47a311caf1f0df101cdb576d7f5c10fd24983cd7268d5ce293f600e55",
+        "-junit.xml": "8f7e9e6475b6de90fc7a32f34f2802a7b0aad754ed302ec89afa9ee8cced0f3a"
+      }
+    },
+    {
+      "ordinal": 36,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-03-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4101,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.472003936767578,
+      "files_sha256": {
+        "-instrumentation.log": "6a64b19bf85cb80b04ba87a172454d68532a5f2b4c001f8bc95cc6ea31a5bcfd",
+        "-records.json": "bc0374ed4943b1beaebc42b20dba53822e15cd3ecf75c5f9a0679ba2610e4e9f",
+        "-junit.xml": "06f06d312833982d902f77397df0c8de2447be951f75bfefb53cd2af6841be6f"
+      }
+    },
+    {
+      "ordinal": 37,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-03-C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4101,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 43.089322328567505,
+      "files_sha256": {
+        "-instrumentation.log": "152a58e9fe5238ba98372dbb66e39c1d1dab5fc28e374891cbe6a0228ed45826",
+        "-records.json": "aa0dced1cba38e2d94e064962b3b8a90c5906b9ed5b94a1cd9c794a537adf5f7",
+        "-junit.xml": "a4830c8597f3e22a0bfb60f4d4779eb408aaf2509117b2ac4a2287c4613425a0"
+      }
+    },
+    {
+      "ordinal": 38,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-04-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4102,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.368465900421143,
+      "files_sha256": {
+        "-instrumentation.log": "b091e196580d733318ad2f4090fe7e0a6507beb001fe2502b403fbb8ea09963e",
+        "-records.json": "fdba8244cfc197a901111591c68f40d7a882e8876a58e35c54b35d5ef4d7ed56",
+        "-junit.xml": "f6b89842083c45e1b4082bdf2b69e724434de33665422853f7bcdf01b4cf8e56"
+      }
+    },
+    {
+      "ordinal": 39,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-04-C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4102,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 42.74467635154724,
+      "files_sha256": {
+        "-instrumentation.log": "192ee18eb0d9ed9d4cc190004a313394356c2530cc239c2ab6c5d0ee223fd2e2",
+        "-records.json": "9a68d5d1bc08b31586c32f2eeeed546cea6e1a07599ac03ea185cf1d852c3d16",
+        "-junit.xml": "603e242974276f7c2fb3e345eca099d2fc253382f9ce8e8876e1d270fa5816c6"
+      }
+    },
+    {
+      "ordinal": 40,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-05-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4102,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.6199119091033936,
+      "files_sha256": {
+        "-instrumentation.log": "a450e7f20b6f0204375482246a43303ce1ad891170c3c83dd815d19cb944c7c5",
+        "-records.json": "cc1c176dd498b50c2250d2f0e6771be1b06cdbc58b270d7ec5168a560e36053c",
+        "-junit.xml": "2a427b6c98273299a406d9baae071600889d5010cdb97786bc3e5a6830fe19b6"
+      }
+    },
+    {
+      "ordinal": 41,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-05-B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4102,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 46.704684019088745,
+      "files_sha256": {
+        "-instrumentation.log": "d29ef4216e823eeeb79b34b0a4b15de2b6fef59ac64159eb25900373dafcb701",
+        "-records.json": "2d33dc5e070269c0387807da550ed6345399bb4893b60c5a9a76ce0c7be71ea6",
+        "-junit.xml": "b33f7a930d2e0b11689737e101e41292e066ebee41d8508d3177e6e2d975bb83"
+      }
+    },
+    {
+      "ordinal": 42,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-06-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4102,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.372351884841919,
+      "files_sha256": {
+        "-instrumentation.log": "b4efff47628dd3f2413deac255bddc91d64097552b4bcf56739404f57964141e",
+        "-records.json": "49221834fa667389f76efce2572dbff6ff4d502914cff6d0d0f6824e180fb2a5",
+        "-junit.xml": "80262537901707675ce55c46e82f83f66bd537b03a012dc1a26f20c414e62de0"
+      }
+    },
+    {
+      "ordinal": 43,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-06-C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4102,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 43.19266724586487,
+      "files_sha256": {
+        "-instrumentation.log": "3c4f556ba3465913b347ed4542b9046f41ddf82c3d37d80e004c6a6fdf8b5c9f",
+        "-records.json": "145549009afd9c1768f3618e87321d7aa8cd1e45c079055681260837928af729",
+        "-junit.xml": "5dc848f1213908e425903fdd4f43062bcfdf3cd92d6435df6d57990989e5303a"
+      }
+    },
+    {
+      "ordinal": 44,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-07-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4103,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.422469615936279,
+      "files_sha256": {
+        "-instrumentation.log": "0a0c390a3a4acddb22c2ee2ff972b529271ba93690fcb135250b7734988ca280",
+        "-records.json": "1b479dc3aa591e6be0b2f78bad5acc0fd0be40c2aa9f0886c552cc68d9ec297a",
+        "-junit.xml": "9d0146bd76cf6c71c19129d93b457535d161df4553f99125763e449a635314f8"
+      }
+    },
+    {
+      "ordinal": 45,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-07-C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4103,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 43.14373564720154,
+      "files_sha256": {
+        "-instrumentation.log": "62241bea8e93849344396c8699095cf42510c553a13b3beafad38e8fddace2c7",
+        "-records.json": "9d07a0621628510dbb807e69f364c96ac5b54a6a387fbf842c4f507a5787a942",
+        "-junit.xml": "0a6f3caf4e9c77583c97c1d0662495fee017e7eda3a35df0702fa575f90cfdc8"
+      }
+    },
+    {
+      "ordinal": 46,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-08-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4103,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.4231274127960205,
+      "files_sha256": {
+        "-instrumentation.log": "48d2385614fa2a489e07d4459fa89e35897c0aef5a0bf3d796c7478f675fa9d2",
+        "-records.json": "516fb42da1e7a452bb2d3c0ff27c6524170d31634a48c4928b83a71ef4d7024c",
+        "-junit.xml": "d95b388d912eb0a021c86fa994d878918466c95c6185ae2143bc4bcf640d5843"
+      }
+    },
+    {
+      "ordinal": 47,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-08-C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4103,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 42.89289379119873,
+      "files_sha256": {
+        "-instrumentation.log": "31ba41ad8ff2c20d88f4f39970f5a55a5821b5ff7f22070fa8ae6909cc4004e1",
+        "-records.json": "1dec59dca285ec009ad667581b3e0b388d114d9cccf13162582580a34851cae6",
+        "-junit.xml": "31ee156be440490888f840867cf9abd17bac7799749697a6c8e3b89ad47d9bc2"
+      }
+    },
+    {
+      "ordinal": 48,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-09-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4103,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.621586322784424,
+      "files_sha256": {
+        "-instrumentation.log": "660f805af9274222f810f2892f7fbb052691f9728f212f72e7015daef84a2170",
+        "-records.json": "48a315c01afe46d75cfd41bb4e39a67f5caf47d92838fc1c39a0497e4124aebe",
+        "-junit.xml": "690e75ddeefd2f714b1b4ea4430f5b43782987c1a443c8f5473b655ba93d82e4"
+      }
+    },
+    {
+      "ordinal": 49,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-09-B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4103,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 46.5047812461853,
+      "files_sha256": {
+        "-instrumentation.log": "fc6921cedd063d3b6297ac1a9c30f891a3d50126d0dccb24e4371be80b9b101f",
+        "-records.json": "b93897afda20af971c634cd330934292bdb5691662967104c62c0c2c87884a2f",
+        "-junit.xml": "cb2c2c7c320a7a5137a283162ef804e438cb51d756f7c27c28a184a3b7374369"
+      }
+    },
+    {
+      "ordinal": 50,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-10-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4104,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.523525714874268,
+      "files_sha256": {
+        "-instrumentation.log": "b87b3349ce5bc7f93a7434a1681d8b9120d74e22e8e0ee60b718c3d66e61d49e",
+        "-records.json": "9ebe86130fc01f72cbd0057a52e2bc7ad94f8e34a4d9135f55e81deec3ad39f4",
+        "-junit.xml": "9b4fc7a6fce7faf9d1be61ceaa91c885946e6511db18d6ca85bc083059f465b4"
+      }
+    },
+    {
+      "ordinal": 51,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-10-B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4104,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 46.45537304878235,
+      "files_sha256": {
+        "-instrumentation.log": "d86ba183ea1aab778b2a0d2f63cd2f477fa65a2c443478c0ef8f017cf072464d",
+        "-records.json": "e0becfe56998c5dd974e3d43c21c71b9289e66a8011d3c45ec2b4459a96ae31f",
+        "-junit.xml": "deff50adc1c558cd115dbcb24defdea892dcc613380948cbf4a7041cee5b3e76"
+      }
+    },
+    {
+      "ordinal": 52,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-11-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4104,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.474942684173584,
+      "files_sha256": {
+        "-instrumentation.log": "e1d5a1a5d5f2525b54ed95ca775b020761585fd117e3d08130880b8b313fea90",
+        "-records.json": "b0d8829744c237b583423835e07c5069b6d2fecb5e12265971761ec958d75bd0",
+        "-junit.xml": "6593937abeff2052f4b88bdc460793f54f8b4fa3c56b4600766a635f737c2fad"
+      }
+    },
+    {
+      "ordinal": 53,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-11-C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4104,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 43.147540807724,
+      "files_sha256": {
+        "-instrumentation.log": "7da8746646f60a42fa58cd6bf56e61b484f0f0d2e42e48705f379328900e0c8e",
+        "-records.json": "bf59e8f6a2a3c982894603c94f682c98c05d6e39b6a864f858560d6f8157f2ef",
+        "-junit.xml": "d1ef4cc887028f60b6eb99ed8d950ea02d9470703bfcf38f7ebd67a1f363999b"
+      }
+    },
+    {
+      "ordinal": 54,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-12-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4104,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.474785804748535,
+      "files_sha256": {
+        "-instrumentation.log": "9e751b6f2f0b9fb5360511cd1a944a721fb8718cbf9a2265a13ee8ac3f77c778",
+        "-records.json": "286fc30488b8ae52ecf924b7001264ce1a9addfd3961a37b551d575402e8b484",
+        "-junit.xml": "2a89de7dae3751cfd67dfb13fa0db9da8196e1e81f02249a29b580858aefff82"
+      }
+    },
+    {
+      "ordinal": 55,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-12-C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4104,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 42.99390912055969,
+      "files_sha256": {
+        "-instrumentation.log": "9b9cc52ed36e93a1a59b8b0bb45556743ee4fe17be2901b602404592d3808ad9",
+        "-records.json": "b29ad642790897d129d86005342eda020129933719be031e6439079eaf0994ae",
+        "-junit.xml": "00f0ee487fe440ecdf31ac6267e177032fc5f96c19e9884d2bcbdf7129e2a086"
+      }
+    },
+    {
+      "ordinal": 56,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "install_group": "C1-diagnostics",
+      "selection": "org.inkweft.data.HistoryDeletionExposureTest#sameRoomWriterNaturalDeletionExposure",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 6.132878541946411,
+      "files_sha256": {
+        "-instrumentation.log": "067bd548a91e3adc449faa6271f1d915b355d1e458473b6bac933fb9be327cac",
+        "-records.json": "b33852be0f628110a130c9106f9edfcf6533622423e0f466c96d28b2a710ecf5",
+        "-junit.xml": "51e9edeccb217ec1cd45bf2a5e6d346df64aef7256425b0eddc2d992a16bd1b6"
+      }
+    },
+    {
+      "ordinal": 57,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "install_group": "C1-diagnostics",
+      "selection": "org.inkweft.data.HistoryDeletionExposureTest#separateRoomWriterNaturalDeletionExposure",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 6.477279186248779,
+      "files_sha256": {
+        "-instrumentation.log": "6152bbbf8dc25b673a299bdf695ac595251f807d71d8318721bbc0850b068ee8",
+        "-records.json": "b46e464c84458dcc5fba44655001a36fb02e708c070ac671963e69b2363d9d71",
+        "-junit.xml": "f60fbee3dcef4dd4bb6ecf1123f40847a2b0e0aae6158769b71d7eb8e3743f02"
+      }
+    },
+    {
+      "ordinal": 58,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "install_group": "C1-diagnostics",
+      "selection": "org.inkweft.data.LibraryReadPerformanceTest#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 40.891318798065186,
+      "files_sha256": {
+        "-instrumentation.log": "ca82947b7a1173f0bbe75d07667f47a78672c3fc5272d669a0b12fce4700ab5b",
+        "-records.json": "ef158f22b4d4e6bb5df03033d9f365162111d44d56be70d5fbd93944db266bee",
+        "-junit.xml": "a665d06b86743eb1ab5dc537084f5c6a28bbeb7497c146109c73fbe14f464823"
+      }
+    }
+  ],
+  "helper17": {
+    "ordinal": 17,
+    "raw_junit": "PASS",
+    "adb_exit": 0,
+    "natural_observations": 21,
+    "first_natural_seconds": 3.3769999845389975e-06,
+    "last_natural_seconds": 2.715611455000044,
+    "helper_pid": "2717",
+    "app_and_data_absent_every_natural_observation": true,
+    "request": {
+      "command": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "kill",
+        "--user",
+        "0",
+        "org.inkweft.app.a0.test"
+      ],
+      "status": "ABSENCE_CONFIRMED",
+      "started_seconds": 2.754429443999925,
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "post_observation_seconds": 2.7730047709999326,
+    "total_process_exit_seconds": 2.8104302419999385,
+    "request_to_post_observation_seconds": 0.018575327000007746,
+    "request_to_completed_observation_seconds": 0.056000798000013674,
+    "window_note": "Nominal3s natural window reserves0.25s to avoid beginning3 queries at the edge; actual request at2.754429444s. No claim of a full3s wait or externally proven cached state.",
+    "ordering_evidence": "Original monotonic observations/receipt plus hash-bound controller ordering: raw_result before processes_after; PASS+adb0+onlyhelper alive gate before one am kill; no force-stop fallback."
+  },
+  "natural_exit_summary": {
+    "count": 57,
+    "maximum_process_exit_seconds": 0.5379282339999918,
+    "maximum_observations": 1
+  },
+  "common_fixtures": {
+    "seeds": [
+      4101,
+      4102,
+      4103,
+      4104
+    ],
+    "seed_selection_groups": 8,
+    "all_three_way_equal": true,
+    "limitation": "Equal recorded fixture identity/hash/scale/settings does not assert byte-identical databases."
+  },
+  "apk_receipts": {
+    "scope": "Runner-recorded hashes, signatures, embeddedidentity, 4ABI MuPDF and dependency receipts; binaries absent, not independently re-signed or reverified.",
+    "apks": [
+      {
+        "identity": "B",
+        "path": "app/build/outputs/apk/debug/app-debug.apk",
+        "bytes": 229655255,
+        "sha256": "9888ba7b1d6440e764a8b779eca2d174b7e9ad09b35cac446cf10bbd707a00a7",
+        "signer_sha256": "111e915b87ded7cc34eaceada8cac23099ba4af211e762fcc202ae6a754fdb74"
+      },
+      {
+        "identity": "B",
+        "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+        "bytes": 10308467,
+        "sha256": "498f9c4ac389087f5cec533ee763a2bd0fc3f6b994890301bba3ae8f5b7e5dc5",
+        "signer_sha256": "111e915b87ded7cc34eaceada8cac23099ba4af211e762fcc202ae6a754fdb74"
+      },
+      {
+        "identity": "B",
+        "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+        "bytes": 22522824,
+        "sha256": "5c87d15055a61b3251685ab9861cf323541d702db784f0451dafc6c6f5964ce5",
+        "signer_sha256": "111e915b87ded7cc34eaceada8cac23099ba4af211e762fcc202ae6a754fdb74"
+      },
+      {
+        "identity": "C0",
+        "path": "app/build/outputs/apk/debug/app-debug.apk",
+        "bytes": 229748855,
+        "sha256": "64721b66c5a6d24694ff60da37f9998e792cc291804799fcfee37a3ae582ffa9",
+        "signer_sha256": "111e915b87ded7cc34eaceada8cac23099ba4af211e762fcc202ae6a754fdb74"
+      },
+      {
+        "identity": "C0",
+        "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+        "bytes": 10637051,
+        "sha256": "5dd99dd0d3a9d1c4584fd91a5d86a1baf8b0ab63abe397fbd27aa0bd3d60628c",
+        "signer_sha256": "111e915b87ded7cc34eaceada8cac23099ba4af211e762fcc202ae6a754fdb74"
+      },
+      {
+        "identity": "C0",
+        "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+        "bytes": 23276568,
+        "sha256": "a145e2adb3adcf9f2b675191720bdecba87fb32b4821a89879ccd86801309582",
+        "signer_sha256": "111e915b87ded7cc34eaceada8cac23099ba4af211e762fcc202ae6a754fdb74"
+      },
+      {
+        "identity": "C1",
+        "path": "app/build/outputs/apk/debug/app-debug.apk",
+        "bytes": 229748839,
+        "sha256": "e717ca4bfc2a10b3651a7d231b6e361b924f5e503ed710c3c93ee9731cbd7b05",
+        "signer_sha256": "111e915b87ded7cc34eaceada8cac23099ba4af211e762fcc202ae6a754fdb74"
+      },
+      {
+        "identity": "C1",
+        "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+        "bytes": 10637051,
+        "sha256": "e72b24af980135d242bb4ce3c0c2d7e6742bfa8c55387002190a1352e0d553bc",
+        "signer_sha256": "111e915b87ded7cc34eaceada8cac23099ba4af211e762fcc202ae6a754fdb74"
+      },
+      {
+        "identity": "C1",
+        "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+        "bytes": 23292952,
+        "sha256": "38049a8c4a4b4a5e0d7bf02488fbf1a0115ef59eb94318c284ff68dac9c5d435",
+        "signer_sha256": "111e915b87ded7cc34eaceada8cac23099ba4af211e762fcc202ae6a754fdb74"
+      }
+    ],
+    "common_mupdf_native": [
+      {
+        "path": "lib/arm64-v8a/libmupdf_java.so",
+        "bytes": 10840392,
+        "sha256": "5c7872c5e12ae3c00f68e14e371d3467cbfb2fd3dfefc7bb2a03d2cd491f6a4f"
+      },
+      {
+        "path": "lib/armeabi-v7a/libmupdf_java.so",
+        "bytes": 7582088,
+        "sha256": "2b24af301ba54d70c4cac09a1ae22af2c20f62b5f1046a2e8b352ca702e2ffd6"
+      },
+      {
+        "path": "lib/x86/libmupdf_java.so",
+        "bytes": 11187796,
+        "sha256": "46f512805c693c07f6e7fac50cdf3d2e028c5078f92e7d230f4c1e6e1b165ed9"
+      },
+      {
+        "path": "lib/x86_64/libmupdf_java.so",
+        "bytes": 11264136,
+        "sha256": "e9907d1e11f886662915376a1f059608e539c75cb1bc5ef57ccdf887a0367349"
+      }
+    ],
+    "dependency_counts": {
+      "B": 879,
+      "C0": 879,
+      "C1": 879
+    },
+    "dependencies_byte_identical": true,
+    "mupdf_dependencies": [
+      {
+        "path": "com.artifex.mupdf/fitz/1.28.5/3483fd70a4dbe8b13b374354dfa237b85ea8d494/fitz-1.28.5.aar",
+        "bytes": 21636412,
+        "sha256": "e6887a242882cdd2dce062430bb46b6727513e3eb94e222255cc1a37db7a7d8e"
+      },
+      {
+        "path": "com.artifex.mupdf/fitz/1.28.5/e0e1b006967205df5d778037aa1ded7ad3beceec/fitz-1.28.5.pom",
+        "bytes": 662,
+        "sha256": "d66b443446cb2bb992c0de60115ae4988584bd44d16c877d0ba5e2d400b416ff"
+      }
+    ],
+    "jvm_tests": "NOT_RUN",
+    "lint": "NOT_RUN"
+  },
+  "installations": {
+    "groups": [
+      {
+        "group": "C1-correctness",
+        "identity": "C1",
+        "methods": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31
+        ],
+        "status": "PASS",
+        "install_log_sha256": "ed158818e603f56b2a4592bb0d76fb3ef9b88158db7e8f990d5293933599bdba",
+        "environment_files": {
+          "install-C1-correctness-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-C1-correctness-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-C1-correctness-host-before.json": "31a542db606d948a12d6930a69354fdf513c06aec77e0af23acc9e4d226ad92f",
+          "install-C1-correctness-host-after.json": "0ec6b62c60a0615d833e47d429dfb25237f23cdbcb1dcbb1d8c8f04fae06f2a8"
+        }
+      },
+      {
+        "group": "visit-01-B",
+        "identity": "B",
+        "methods": [
+          32,
+          33
+        ],
+        "status": "PASS",
+        "install_log_sha256": "92a4992ad4825dfc6d381ee80c1b75916dea87d5c35aafd81f52196b22b6806c",
+        "environment_files": {
+          "install-visit-01-B-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-01-B-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-01-B-host-before.json": "4cc5185c6d0a7653fa876149432901183a5c0f6b41192c301063ad1aa6b507c1",
+          "install-visit-01-B-host-after.json": "924f25b9d83833bdec16441e1d86cebce7d5eb0613a384b36389aa61ed6b8601"
+        }
+      },
+      {
+        "group": "visit-02-C0",
+        "identity": "C0",
+        "methods": [
+          34,
+          35
+        ],
+        "status": "PASS",
+        "install_log_sha256": "847b95131f2d13d1c16e50b62556f1979a3352ce5b1c3d57c9a6ce4f0a336398",
+        "environment_files": {
+          "install-visit-02-C0-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-02-C0-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-02-C0-host-before.json": "0378043db171d190aaec2d1804f92ce5207297e8c5a0570a465250005abb5094",
+          "install-visit-02-C0-host-after.json": "e81f38f3453af035074738cfa1cdf63fec2d7fab49e5ba75ac578f346bab31b3"
+        }
+      },
+      {
+        "group": "visit-03-C1",
+        "identity": "C1",
+        "methods": [
+          36,
+          37
+        ],
+        "status": "PASS",
+        "install_log_sha256": "cd671926fbdf8121c8ecec22fdee48f9a61d6afd3b936396c37f973cc8f0df6a",
+        "environment_files": {
+          "install-visit-03-C1-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-03-C1-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-03-C1-host-before.json": "c2021fea7f974764c8555f56fdf58f6dc638e0165fbb889c63401594a78f67f6",
+          "install-visit-03-C1-host-after.json": "44c1147070fe7eade6b2a3c2e436da3479e546fa449d81349a241e84d7b3fd81"
+        }
+      },
+      {
+        "group": "visit-04-C1",
+        "identity": "C1",
+        "methods": [
+          38,
+          39
+        ],
+        "status": "PASS",
+        "install_log_sha256": "3206e3bbbb89f44fcdf19084ab3718f4be5a9711612b8d5644d0c18b35732a98",
+        "environment_files": {
+          "install-visit-04-C1-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-04-C1-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-04-C1-host-before.json": "fc3f0d8c736e1c9d19cd261da908ba2d658e4d2bc98f8256b6f7ad389436a7c1",
+          "install-visit-04-C1-host-after.json": "2df0e38e9244efff6f39e61271f2503d147d8f0fd296eb8c271375a3f3d14384"
+        }
+      },
+      {
+        "group": "visit-05-B",
+        "identity": "B",
+        "methods": [
+          40,
+          41
+        ],
+        "status": "PASS",
+        "install_log_sha256": "d71348930c52754a3f759e306e1d1fe7576c74de6ac97497df4c1e8d938a548f",
+        "environment_files": {
+          "install-visit-05-B-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-05-B-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-05-B-host-before.json": "174a905e33fdef7350885a7b77ac31ccc54653b48bd206024dc9907d3e760eef",
+          "install-visit-05-B-host-after.json": "a7f348b48789c11dfa66cb5976e5a173f297a9375b7fb9504c726d8eb06983cf"
+        }
+      },
+      {
+        "group": "visit-06-C0",
+        "identity": "C0",
+        "methods": [
+          42,
+          43
+        ],
+        "status": "PASS",
+        "install_log_sha256": "5d5f7aef7aaf85723cd4bc30c184df647fc65045d39ff98efc95cab3364ad4ba",
+        "environment_files": {
+          "install-visit-06-C0-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-06-C0-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-06-C0-host-before.json": "6d83ea8a294d54e4dd2b3eb0e07c18637bd611160f47e000c04c060524a6419f",
+          "install-visit-06-C0-host-after.json": "38a2df55a63cb88d38d5358056f78c91fae7d2379ea6f21f28b9c84bee15b53a"
+        }
+      },
+      {
+        "group": "visit-07-C0",
+        "identity": "C0",
+        "methods": [
+          44,
+          45
+        ],
+        "status": "PASS",
+        "install_log_sha256": "b274a2e0eac73316df86a468a07fbc9a69855050e874978ecb0775038183898c",
+        "environment_files": {
+          "install-visit-07-C0-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-07-C0-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-07-C0-host-before.json": "b52268cd57dc30b09fa89e73d2262775a317f15d1dbb7c5020a7d71da748dc2b",
+          "install-visit-07-C0-host-after.json": "eaaec64d1ac13cf61b622dee13eec98cc5a280d02938770608a0f789a8815121"
+        }
+      },
+      {
+        "group": "visit-08-C1",
+        "identity": "C1",
+        "methods": [
+          46,
+          47
+        ],
+        "status": "PASS",
+        "install_log_sha256": "29ee7194ad40e42d429300e3cb3ef63bfbe03009aa740f0b6e2d435317f7a75d",
+        "environment_files": {
+          "install-visit-08-C1-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-08-C1-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-08-C1-host-before.json": "20c276c498eecd59020ae3bf079e0a361fff5387f3360dbbeffd775959def9fc",
+          "install-visit-08-C1-host-after.json": "d2dd0236ee1b294e910ed8916036e303187f0bd492fb1e2397f56fdff7886e77"
+        }
+      },
+      {
+        "group": "visit-09-B",
+        "identity": "B",
+        "methods": [
+          48,
+          49
+        ],
+        "status": "PASS",
+        "install_log_sha256": "c678ef2a42e734d0f0972a28cfda75691d4087815ad0b9cbc8e4c8f91426d32d",
+        "environment_files": {
+          "install-visit-09-B-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-09-B-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-09-B-host-before.json": "50f3a8fccf7db754b73d2033840be8ba507865c6efacaa06531e2d66e10ccfdc",
+          "install-visit-09-B-host-after.json": "52e5c558a4d9a985ff69a16b6f126e0615aa658b8bf65db28afaea758b53451d"
+        }
+      },
+      {
+        "group": "visit-10-B",
+        "identity": "B",
+        "methods": [
+          50,
+          51
+        ],
+        "status": "PASS",
+        "install_log_sha256": "adf06addbeee1bc0c84dc4c03ce6c2c254c558b741ce297ea3e12357ba7e578c",
+        "environment_files": {
+          "install-visit-10-B-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-10-B-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-10-B-host-before.json": "5769977f293e5a9cd65c7ca3fe951065e4027a5de4c508416ca0e1ef13a4f7dc",
+          "install-visit-10-B-host-after.json": "98b0d954a451b6a1e6993c1ccfb1a46c1ebb7cc423e224550e3c9f47dbd476a9"
+        }
+      },
+      {
+        "group": "visit-11-C1",
+        "identity": "C1",
+        "methods": [
+          52,
+          53
+        ],
+        "status": "PASS",
+        "install_log_sha256": "bc337e45233ce6dc1301fe12b19d3bea4d739bc8b68f7579974bc18251700236",
+        "environment_files": {
+          "install-visit-11-C1-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-11-C1-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-11-C1-host-before.json": "a32cc77a8492b4643536bd91d86a9aaf55e77c0cc9def1c256711ff84a11ce6c",
+          "install-visit-11-C1-host-after.json": "8bc1b80dbcb336f92deee857b762f04065ca53a0301519938a83f390d4a6069d"
+        }
+      },
+      {
+        "group": "visit-12-C0",
+        "identity": "C0",
+        "methods": [
+          54,
+          55
+        ],
+        "status": "PASS",
+        "install_log_sha256": "aaddcb47c227b8bdf937e577184923e7ce410b3f2eeed55d93ee466e8956b59a",
+        "environment_files": {
+          "install-visit-12-C0-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-12-C0-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-12-C0-host-before.json": "9bebd73a41b92e3519ad78ecaeeda856810a419d937e7d90d6d77056f72b43c7",
+          "install-visit-12-C0-host-after.json": "f1cd4c4166bd86360cb33889b2f9fcdd9189b7e4639b0c2451f1e3282b8417d8"
+        }
+      },
+      {
+        "group": "C1-diagnostics",
+        "identity": "C1",
+        "methods": [
+          56,
+          57,
+          58
+        ],
+        "status": "PASS",
+        "install_log_sha256": "783bd6bdda3c19d0c8a4e0490a6cb5163bf16e3bca1451cfcfd0e8167982ff29",
+        "environment_files": {
+          "install-C1-diagnostics-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-C1-diagnostics-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-C1-diagnostics-host-before.json": "cb9cef56dc48f2d89288b21f5e1d03b59a2c2b659093eaeded170b67a4bd2840",
+          "install-C1-diagnostics-host-after.json": "ad1e18aa35097fa10191007c2bc10f57a2666c4f0c659edb4f513b16ab726889"
+        }
+      }
+    ],
+    "group_count": 14,
+    "successful_installs": 42,
+    "successful_uninstalls": 39,
+    "group_environment_files": 28,
+    "including_overall_environment_files": 30,
+    "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+    "device": {
+      "sdk": "35",
+      "abi": "x86_64",
+      "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+      "qemu": "1",
+      "hw_timeout_multiplier": "",
+      "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+      "density": "Physical density: 420\nOverride density: 240",
+      "font_scale": "1.0",
+      "animations": {
+        "window_animation_scale": "1.0",
+        "transition_animation_scale": "1.0",
+        "animator_duration_scale": "null"
+      }
+    },
+    "host_boundary_files": 30
+  },
+  "cleanup": {
+    "before_acl_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+    "granted_acl_sha256": "edc020d9293f5cd73dbdd9fe2d8f8b1faaefa03c50a34ba5383b879d8b4d29c1",
+    "grant_added_lines": [
+      "user:1001:rw-",
+      "mask::rw-"
+    ],
+    "both_after_exact_original_bytes": true,
+    "receipts": {
+      "trap": {
+        "receipt": {
+          "emulator": "STOPPED_CONFIRMED",
+          "command_groups": "STOPPED_CONFIRMED",
+          "acl": "RESTORED_EXACT",
+          "errors": []
+        },
+        "receipt_sha256": "33ff36212bb1677fbd3cc4ce95e18d9b692a06937705350d000ad5672594f73a",
+        "after_acl_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89"
+      },
+      "always": {
+        "receipt": {
+          "emulator": "STOPPED_CONFIRMED",
+          "command_groups": "STOPPED_CONFIRMED",
+          "acl": "RESTORED_EXACT",
+          "errors": []
+        },
+        "receipt_sha256": "33ff36212bb1677fbd3cc4ce95e18d9b692a06937705350d000ad5672594f73a",
+        "after_acl_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89"
+      }
+    }
+  },
+  "clock": {
+    "anchor_epoch": 1791942801,
+    "anchor_utc": "2026-10-14T01:53:21Z",
+    "actual_job_started_at": "2026-10-14T01:56:28Z",
+    "actual_job_started_epoch": 1791942988.0,
+    "job_completed_at": "2026-10-14T02:35:30Z",
+    "job_wall_seconds": 2342.0,
+    "anchor_lead_seconds": 187.0,
+    "phase_cutoffs": {
+      "setup": 1791945081,
+      "correctness": 1791945261,
+      "common": 1791945981,
+      "diagnostics": 1791946101
+    }
+  },
+  "phase_action_seconds": {
+    "setup": 22.693211555480957,
+    "build-B": 585.326194524765,
+    "build-C0": 503.18991351127625,
+    "build-C1": 457.57012844085693,
+    "emulator": 31.68251657485962,
+    "methods-correctness": 43.41954064369202,
+    "methods-common": 613.7661190032959,
+    "methods-diagnostics": 55.97356629371643
+  },
+  "terminal_metadata_sha256": {
+    "jobs-terminal.json": "0a88db905476d2715ab23579a4981e64d312f1b6848bfab6f047036d23e1d4a5",
+    "run-terminal.json": "546e7a607a470fb3eb049454ddafdb88b4e08f8a1feb5c85cfd4904ac40298cb",
+    "artifacts.json": "ec14b145c429a1c7779526c3baffe54c0959d583cd54468f161153d2652a0a9d"
+  },
+  "privacy": {
+    "scanned_literal_files": 294,
+    "patterns": [
+      "private_key",
+      "github_token",
+      "aws_access_key"
+    ],
+    "hits": [],
+    "scope": "Narrow exact-pattern scan, not a general guarantee. Manifest contains synthetic instrumentation and public dependency/signature receipts. Do not add APKs, DBs, private signing material, task-cache directories or environment dumps. Preserve unmodified raw hashes."
+  },
+  "limitations": [
+    "58 executions comprise36 unique selections; stale workflow label30 does not override31 correctness methods.",
+    "No claim of physical Android device performance; this is one KVM API35 AOSP ATD x86_64/SwiftShader emulator.",
+    "Natural window is3s with0.25s edge guard; helper request happened at2.754429444s, not after a literal full3s sleep. Postcheck ends upon absence, not after a mandatory2s wait.",
+    "PID presence alone does not prove that helper was cached; eligibility is rawPASS+adb0+unique helper+application/data absent, followed by safe am kill and strict disappearance.",
+    "Runtime PASS does not close statistical regression/inconclusive or GC exposure gates; unchanged analyzer conclusions remain authoritative.",
+    "Text receipts cannot independently revalidate APK signatures or native ELF binaries. JVM/lint were not run by this native job."
+  ],
+  "evidence_unchanged": {
+    "files": 294,
+    "all_hashes_match": true
+  },
+  "audit_procedure_sha256": "9e38377232124cc42b7c6ee26fa4966f30dc65ac04433c55682bb9ab87660de0"
+}

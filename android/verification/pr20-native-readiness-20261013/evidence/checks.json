@@ -1,0 +1,76 @@
+{
+  "status": "CLOUD_CHECKS_PASS_NATIVE_NOT_RUN",
+  "start_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+  "code_git": "ebb48481e7e995288c1844d43011398c513b4f4e",
+  "environment": "Existing cloud /workspace/InkWeft; no user device, real notes or AniMemo accessed",
+  "build_parameters": {
+    "jdk": "17.0.16+8",
+    "gradle": "9.4.1",
+    "offline": true,
+    "no_daemon": true,
+    "max_workers": 1,
+    "kotlin.compiler.execution.strategy": "in-process"
+  },
+  "checks": [
+    {
+      "tasks": [
+        ":data-local:testDebugUnitTest",
+        ":data-local:compileDebugAndroidTestKotlin",
+        ":app:compileDebugAndroidTestKotlin"
+      ],
+      "exit_code": 0,
+      "duration": "7m43s",
+      "jvm_tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "log": "cloud-jvm-and-android-compile.log",
+      "coverage_note": "Final production and JVM test bytes; preceded two Android-test-only recording/cleanup corrections."
+    },
+    {
+      "tasks": [
+        ":data-local:compileDebugAndroidTestKotlin",
+        ":data-local:lintDebug"
+      ],
+      "exit_code": 0,
+      "duration": "4m32s",
+      "lint_errors": 0,
+      "lint_warnings": 14,
+      "log": "cloud-final-library-compile-and-lint.log",
+      "coverage_note": "Final library Android test; GC Android test preceded only changing ambiguous exceptional committed=false to null."
+    },
+    {
+      "tasks": [
+        ":data-local:compileDebugAndroidTestKotlin"
+      ],
+      "exit_code": 0,
+      "duration": "1m50s",
+      "log": "cloud-final-gc-compile.log",
+      "coverage_note": "Final seven code files, including the GC exceptional commit-status correction."
+    },
+    {
+      "check": "prepare_sources.py B/C0/C1 materialization and complete per-file hash validation",
+      "exit_code": 0,
+      "log": "source-reconstruction.log",
+      "build_or_execution": false
+    },
+    {
+      "check": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "immutable_scopes_unchanged": [
+    ".github",
+    "backup-server",
+    "android/verification/pr20-kvm-paired-20261013",
+    "android/verification/pr20-observe-followup-20261013"
+  ],
+  "native": {
+    "new_room_gc_ui_execution": "NOT_RUN",
+    "new_performance_execution": "NOT_RUN",
+    "new_apk_build_or_install": "NOT_RUN",
+    "new_github_runs_requested": 0,
+    "security_configuration_changes": false
+  },
+  "remaining": "One proposed standard runner <=60-minute native attempt requires separate parent approval; original regression/inconclusive findings remain."
+}

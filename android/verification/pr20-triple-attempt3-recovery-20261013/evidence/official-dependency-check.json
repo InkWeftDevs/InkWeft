@@ -1,0 +1,14 @@
+{
+  "url": "https://maven.ghostscript.com/com/artifex/mupdf/fitz/1.28.5/fitz-1.28.5.pom",
+  "status": "PASS",
+  "started_epoch": 1791900798.386554,
+  "max_attempts": 1,
+  "expected_bytes": 662,
+  "expected_sha256": "d66b443446cb2bb992c0de60115ae4988584bd44d16c877d0ba5e2d400b416ff",
+  "scope": "POM availability only; no cache injection or proof of Gradle/AAR/native success.",
+  "exit_code": 0,
+  "http_code": "200",
+  "bytes": 662,
+  "sha256": "d66b443446cb2bb992c0de60115ae4988584bd44d16c877d0ba5e2d400b416ff",
+  "seconds": 0.37165260314941406
+}

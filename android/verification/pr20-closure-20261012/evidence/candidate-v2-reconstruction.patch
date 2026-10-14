@@ -1,0 +1,1422 @@
+diff --git a/android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt b/android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt
+new file mode 100644
+index 0000000000000000000000000000000000000000..6592737bf921d0d0af7ff83c30e08830864fd367
+--- /dev/null
++++ b/android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt
+@@ -0,0 +1,94 @@
++// SPDX-License-Identifier: AGPL-3.0-or-later
++package org.inkweft.app
++
++import android.content.Context
++import android.graphics.*
++import androidx.room.withTransaction
++import androidx.test.core.app.ApplicationProvider
++import androidx.test.platform.app.InstrumentationRegistry
++import kotlinx.coroutines.*
++import kotlinx.coroutines.channels.Channel
++import org.inkweft.core.*
++import org.inkweft.data.*
++import org.json.JSONObject
++import org.junit.Assert.*
++import org.junit.Test
++import java.util.UUID
++import kotlin.math.floor
++
++class NativeStrokeTileReuseTest {
++    @Test fun oneNativeShapePerStrokeMatchesPerTileConstructionThroughTransformsAndClips()=runBlocking {
++        val context=ApplicationProvider.getApplicationContext<Context>();val name="native-tile-${UUID.randomUUID()}.db";val db=NoteDatabase.open(context,name)
++        val target=Bitmap.createBitmap(1600,1800,Bitmap.Config.ARGB_8888);val reference=Bitmap.createBitmap(1600,1800,Bitmap.Config.ARGB_8888)
++        val crop=Rect(100,90,1500,1710);val events=Channel<Unit>(Channel.CONFLATED);var failed=false
++        val raster=StreamedInkRaster({events.trySend(Unit)},{failed=true;events.trySend(Unit)});val baselineJobs=RenderResources.inFlightJobs.get()
++        try{
++            val page=WorkspaceRepository(db).create("跨瓦片不可变笔迹",false,PaperStyle.BLANK).id;val repo=InkRepository(db)
++            val cut=InkCut(UUID(0,100).toString(),1f,listOf(EraserPoint(450f,640f),EraserPoint(550f,774f)),InkCutShape.RECTANGLE)
++            val values=listOf(
++                InkStroke(UUID(0,1).toString(),InkPen.PEN,Color.BLUE,18f,InkTool.STYLUS,listOf(InkSample(0f,0f,0),InkSample(1000f,1414f,100)),cuts=listOf(cut)),
++                InkStroke(UUID(0,2).toString(),InkPen.HIGHLIGHTER,0x997700cc.toInt(),24f,InkTool.STYLUS,listOf(InkSample(0f,1414f,0),InkSample(1000f,0f,100)),cuts=listOf(cut)),
++                InkStroke(UUID(0,3).toString(),InkPen.PENCIL,Color.DKGRAY,5f,InkTool.STYLUS,listOf(InkSample(100f,100f,0),InkSample(130f,120f,10)))
++            )
++            db.withTransaction{
++                if(db.ink().page(page)==null)db.ink().insertPage(InkPageRow(page,1))else check(db.ink().compareAndSet(page,0,1)==1)
++                values.forEach{db.ink().insertStroke(InkStrokeRow(it.id,page,InkStrokeCodec.encodeStored(it),it.samples.size,true,1))}
++            }
++            val source=InkRenderSource(repo,page,1,values.map{it.id}.toSet())
++            var viewport=CanvasViewport(500.0,707.0,1.0);var omitted=emptySet<String>();var allowed:Set<String>?=null
++            suspend fun draw()=withContext(Dispatchers.Main){
++                target.eraseColor(Color.WHITE);raster.draw(Canvas(target),1600,1800,viewport,1.0,false,false,source,allowed,omitted,pixelBounds=crop);raster.frameReady
++            }
++            // Differential oracle: the previous scale-1 raster path constructed native
++            // Stroke separately inside each tile. Keep that behavior only in this test.
++            fun perTileReference():Int {
++                val factor=viewport.zoom.toFloat();val originX=(floor(800-viewport.centerX*factor)%512).toInt();val originY=(floor(900-viewport.centerY*factor)%512).toInt()
++                val rectangles=buildList{for(y in Math.floorDiv(crop.top-originY,512)..Math.floorDiv(crop.bottom-1-originY,512))
++                    for(x in Math.floorDiv(crop.left-originX,512)..Math.floorDiv(crop.right-1-originX,512))add(Rect(
++                        maxOf(crop.left,originX+x*512),maxOf(crop.top,originY+y*512),minOf(crop.right,originX+(x+1)*512),minOf(crop.bottom,originY+(y+1)*512)))}
++                val regions=rectangles.map{r->val a=viewport.screenToWorld(r.left.toDouble(),r.top.toDouble(),1600.0,1800.0,1.0)
++                    val b=viewport.screenToWorld(r.right.toDouble(),r.bottom.toDouble(),1600.0,1800.0,1.0);CanvasBounds(a.x,a.y,b.x,b.y).padded(2/viewport.zoom)}
++                val matrix=Matrix().apply{setScale(factor,factor);postTranslate((800-viewport.centerX*factor).toFloat(),(900-viewport.centerY*factor).toFloat())}
++                val tiles=rectangles.map{Bitmap.createBitmap(it.width(),it.height(),Bitmap.Config.ARGB_8888)}
++                val painters=tiles.mapIndexed{i,b->Canvas(b).apply{translate(-rectangles[i].left.toFloat(),-rectangles[i].top.toFloat());concat(matrix);clipRect(0f,0f,1000f,1414f)}}
++                val renderer=InkBrushes.renderer();val pencil=PencilTileRenderer(.5f,false);var builds=0
++                try{
++                    for(stroke in values){
++                        if(stroke.id in omitted||allowed?.let{stroke.id !in it}==true)continue
++                        for(i in rectangles.indices){if(!stroke.bounds().intersects(regions[i]))continue
++                            val painter=painters[i];val saved=painter.save()
++                            try{stroke.cuts.forEach{painter.clipOutPath(VisibleInkGeometry.cutPath(it))}
++                                if(stroke.pen==InkPen.PENCIL)pencil.draw(painter,stroke)else{builds++;renderer.draw(painter,InkBrushes.stroke(stroke),matrix)}
++                            }finally{painter.restoreToCount(saved)}
++                        }
++                    }
++                    reference.eraseColor(Color.WHITE);val canvas=Canvas(reference);val paint=Paint(Paint.FILTER_BITMAP_FLAG)
++                    tiles.forEachIndexed{i,b->canvas.drawBitmap(b,null,rectangles[i],paint)}
++                    return builds
++                }finally{pencil.clear();tiles.forEach{it.recycle()}}
++            }
++            for(phase in 0..3){
++                if(phase==1)viewport=CanvasViewport(500.375,707.625,1.2)
++                if(phase==2)omitted=setOf(values[0].id)
++                if(phase==3)allowed=setOf(values[2].id)
++                withTimeout(30_000){while(!draw()){events.receive();check(!failed)}}
++                val legacyBuilds=withContext(Dispatchers.Default){perTileReference()};val stats=raster.lastBuild!!
++                val expected=when(phase){0,1->2;2->1;else->0}
++                assertEquals("Only drawn non-pencil strokes construct native shapes",expected,stats.nativeStrokeBuilds)
++                if(expected>0)assertTrue("Fixture must exercise repeated per-tile construction",legacyBuilds>stats.nativeStrokeBuilds)
++                assertTrue("phase $phase differs from the old per-tile construction",target.sameAs(reference))
++                assertTrue(stats.tiles>1);assertTrue(stats.bitmapBytes<=StreamedLayerLayout.PIXELS*4)
++                val gap=viewport.worldToScreen(500.0,707.0,1600.0,1800.0,1.0)
++                assertEquals("Erase masks remain clipped in author space",Color.WHITE,target.getPixel(gap.x.toInt(),gap.y.toInt()))
++                assertEquals("Crop exterior remains untouched",Color.WHITE,target.getPixel(crop.left-1,900))
++                if(phase==0)assertEquals("Finite paper edge remains clipped",Color.WHITE,target.getPixel(299,192))
++                InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","NATIVE_STROKE_TILE_EVIDENCE ${JSONObject()
++                    .put("phase",phase).put("nativeStrokeBuilds",stats.nativeStrokeBuilds).put("perTileReferenceBuilds",legacyBuilds)
++                    .put("tiles",stats.tiles).put("rebuilt",stats.rebuilt).put("pixelsEqual",true)}\n")})
++            }
++        }finally{
++            withContext(Dispatchers.Main){raster.clear()};withTimeoutOrNull(5000){while(RenderResources.inFlightJobs.get()>baselineJobs)delay(20)}
++            events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)
++        }
++    }
++}
+diff --git a/android/app/src/androidTest/java/org/inkweft/app/NotebookShelfUiTest.kt b/android/app/src/androidTest/java/org/inkweft/app/NotebookShelfUiTest.kt
+index b04952b83699875d2105f6ebb894a0622e2bf796..f71f7c6e63387949167bfe82ac67392a3e85268b 100644
+--- a/android/app/src/androidTest/java/org/inkweft/app/NotebookShelfUiTest.kt
++++ b/android/app/src/androidTest/java/org/inkweft/app/NotebookShelfUiTest.kt
+@@ -16,6 +16,9 @@
+ import org.junit.Test
+ import java.io.File
+ import java.util.UUID
++import java.util.concurrent.CountDownLatch
++import java.util.concurrent.TimeUnit
++import java.util.concurrent.atomic.AtomicReference
+ 
+ /** All content is synthetic. Tests do not claim the user's flicker is reproduced. */
+ class NotebookShelfUiTest {
+@@ -28,7 +31,72 @@
+     }.isSuccess}}
+     private fun noKeyboard(){compose.activityRule.scenario.onActivity{a->a.currentFocus?.clearFocus();WindowCompat.getInsetsController(a.window,a.window.decorView).hide(WindowInsetsCompat.Type.ime())};compose.waitUntil(10_000){androidx.core.view.ViewCompat.getRootWindowInsets(compose.activity.window.decorView)?.isVisible(WindowInsetsCompat.Type.ime())==false};compose.waitForIdle()}
+     private fun saved(n:Int){compose.waitUntil(10_000){runCatching{compose.onNodeWithTag("ink-surface").assertSavedInkCount(n)}.isSuccess}}
+-    private fun create():Note{ready();val title="封面测试-"+UUID.randomUUID().toString().take(6);compose.onNodeWithTag("new-note").performClick();compose.onNodeWithTag("create-page").performClick();compose.onNodeWithTag("new-title").performTextInput(title);compose.onNodeWithTag("cover-choice-forest").performScrollTo().performClick();compose.onNodeWithTag("create-note").performClick();compose.singlePageEditor();saved(0);noKeyboard();return runBlocking{app.repository.observeNotes().first()}.single{it.title==title}}
++    private fun create():Note{
++        val started=System.nanoTime();val title="封面测试-"+UUID.randomUUID().toString().take(6)
++        var stage="shelf-ready"
++        try{
++            ready()
++            stage="open-create";compose.onNodeWithTag("new-note").performClick()
++            stage="choose-page";compose.onNodeWithTag("create-page").performClick()
++            stage="enter-title";compose.onNodeWithTag("new-title").performTextInput(title)
++            stage="choose-cover";compose.onNodeWithTag("cover-choice-forest").performScrollTo().performClick()
++            stage="submit-create";compose.onNodeWithTag("create-note").performClick()
++            stage="single-page-editor";compose.singlePageEditor()
++            stage="empty-ink-saved";saved(0)
++            stage="keyboard-hidden";noKeyboard()
++            stage="read-created-note";return runBlocking{app.repository.observeNotes().first()}.single{it.title==title}
++        }catch(failure:Throwable){
++            runCatching{diagnoseCreateFailure(stage,title,(System.nanoTime()-started)/1_000_000)}
++            throw failure
++        }
++    }
++    /** Read only already-owned state after failure; do not wait for Compose idleness again. */
++    private fun diagnoseCreateFailure(stage:String,title:String,elapsedMs:Long){
++        fun emit(value:String)=InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{
++            putString("stream","SHELF_CREATE_DIAGNOSTIC $value\n")
++        })
++        val main=android.os.Looper.getMainLooper().thread
++        emit("stage=$stage elapsedMs=$elapsedMs mainState=${main.state} mainStack=${main.stackTrace.take(16).joinToString(" | ")}")
++        val snapshot=AtomicReference("main-state-unavailable");val sampled=CountDownLatch(1)
++        android.os.Handler(android.os.Looper.getMainLooper()).post{
++            try{
++                val store=compose.activity.viewModelStore
++                val owned=store.keys().mapNotNull{store.get(it)}
++                val notebook=owned.filterIsInstance<NotebookViewModel>().firstOrNull()?.ui?.value
++                val workspace=owned.filterIsInstance<WorkspaceViewModel>().firstOrNull()
++                val expectedId=workspace?.pendingCreate?.value?.firstOrNull()
++                    ?:notebook?.notes?.firstOrNull{it.title==title}?.id
++                    ?:notebook?.current?.base?.takeIf{it.title==title}?.id
++                val pages=expectedId?.let{(store.get("book-$it") as? BookPagesViewModel)?.ui?.value}
++                val ink=expectedId?.let{(store.get("ink-$it") as? InkViewModel)?.ui?.value}
++                val objects=expectedId?.let{(store.get("objects-$it") as? PageObjectViewModel)?.ui?.value}
++                val author=expectedId?.let{(store.get("authoring-$it") as? PageAuthoringViewModel)?.ui?.value}
++                val recovery=expectedId?.let{store.get("continuous-recovery-$it") as? ContinuousGroupSession}
++                val writer=expectedId?.let{store.get("continuous-writer-$it") as? ContinuousInkWriter}
++                val readLock=expectedId?.let{store.get("read-lock-$it") as? BookReadLockViewModel}
++                val study=expectedId?.let{(store.get("study-$it") as? StudyViewModel)?.ui?.value}
++                val excerpts=expectedId?.let{(store.get("excerpt-$it") as? StudyViewModel)?.ui?.value}
++                val canvases=mutableListOf<String>();val views=java.util.ArrayDeque<android.view.View>()
++                views.add(compose.activity.window.decorView);var visited=0
++                while(views.isNotEmpty()&&visited++<512){val view=views.removeFirst()
++                    if(view is InkCanvasView)canvases+="fixture=${expectedId!=null&&view.displayedPageId==expectedId},preview=${view.preview},embedded=${view.embeddedPage},shown=${view.isShown},attached=${view.isAttachedToWindow},size=${view.width}x${view.height},documentReady=${view.documentContentReady},frameReady=${view.viewportFrameReady}"
++                    if(view is android.view.ViewGroup)repeat(view.childCount){views.add(view.getChildAt(it))}
++                }
++                snapshot.set("notebookPresent=${notebook!=null} noteCount=${notebook?.notes?.size} loading=${notebook?.loading} readFailed=${notebook?.readFailed} " +
++                    "fixtureKnown=${expectedId!=null} currentPresent=${notebook?.current!=null} selectedFixture=${expectedId!=null&&notebook?.selectedId==expectedId} currentFixture=${expectedId!=null&&notebook?.current?.base?.id==expectedId} " +
++                    "createPending=${workspace?.pendingCreate?.value!=null} createBusy=${workspace?.busy?.value} workspaceError=${workspace?.error?.value!=null} " +
++                    "bookPagesPresent=${pages!=null} pageCount=${pages?.pages?.size} pageLoading=${pages?.loading} pageError=${pages?.error!=null} firstPageSelected=${expectedId!=null&&pages?.selectedId==expectedId} " +
++                    "pageBusy=${pages?.busy} pageActionUnknown=${pages?.actionUnknown} pageInsertionUnknown=${pages?.insertionUnknown} " +
++                    "inkPresent=${ink!=null} inkLoading=${ink?.loading} inkReadFailed=${ink?.readFailed} inkQueued=${ink?.queued} inkBlocked=${ink?.blocked!=null} inkProcessing=${ink?.processing} inkWindowLoading=${ink?.windowLoading} " +
++                    "objectsPresent=${objects!=null} objectsLoading=${objects?.loading} objectsBusy=${objects?.busy} objectsPending=${objects?.pending} " +
++                    "authorPresent=${author!=null} authorReady=${author?.ready} authorLoading=${author?.loading} authorProjectionLoading=${author?.projectionLoading} authorBusy=${author?.busy} authorPending=${author?.pending} " +
++                    "continuousWriterPresent=${writer!=null} continuousWriterBlocked=${writer?.blocked?.value} recoveryPresent=${recovery!=null} recoveryBusy=${recovery?.busy?.value} recoveryProblem=${recovery?.problem?.value!=null} hasAuthorDraft=${readLock?.hasDraft?.value} " +
++                    "studyBusy=${study?.busy} studyUnknown=${study?.unknown} excerptBusy=${excerpts?.busy} excerptUnknown=${excerpts?.unknown} canvasCount=${canvases.size} canvases=${canvases.take(8)} " +
++                    "navigationReady=${app.navigationReady.value} lifecycle=${compose.activity.lifecycle.currentState}")
++            }catch(error:Throwable){snapshot.set("stateFailure=${error.javaClass.simpleName}")}finally{sampled.countDown()}
++        }
++        emit("sampled=${sampled.await(1,TimeUnit.SECONDS)} ${snapshot.get()}")
++    }
+     private fun shot(name:String){compose.waitForIdle();val b=checkNotNull(InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot());try{File(compose.activity.getExternalFilesDir(null),name).outputStream().use{b.compress(Bitmap.CompressFormat.PNG,100,it)}}finally{b.recycle()}}
+     private fun rename(value:String){compose.onNodeWithTag("rename-title").performTextReplacement(value);compose.onNodeWithTag("confirm-rename").performClick();compose.waitUntil(10_000){compose.onAllNodesWithTag("rename-dialog").fetchSemanticsNodes().isEmpty()};noKeyboard()}
+     @Test fun shelfRenameCancelBlankAndPersistedIdentity(){
+diff --git a/android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt b/android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt
+index e8e93cc7583c3902602900b7cfab7e3e1c8aad88..8de3a42aec1252bb0c5a855a9b1fd63938878d5d 100644
+--- a/android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt
++++ b/android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt
+@@ -63,9 +63,9 @@
+                     .put("metadataMs",stats.metadataMs).put("rasterMs",stats.rasterMs).put("publicationMs",stats.publicationMs)
+                     .put("coldMs",fullMs).put("coldDecoded",cold.lastBuild!!.decoded).put("coldSnapshotReadRows",fullRows)
+                     .put("coldRebuilt",cold.lastBuild!!.rebuilt).put("pixelsEqual",true)
+-                for(field in listOf("reusedStrokes","geometryBytes")){
++                for(field in listOf("reusedStrokes","geometryBytes","nativeStrokeBuilds")){
+                     val getter="get"+field.replaceFirstChar{it.uppercase()}
+-                    stats.javaClass.methods.firstOrNull{it.name==getter}?.let{result.put(field,it.invoke(stats))}
++                    result.put(field,stats.javaClass.methods.firstOrNull{it.name==getter}?.invoke(stats)?:JSONObject.NULL)
+                 }
+                 InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","RASTER_PAIRED_EVIDENCE $result\n")})
+             }
+@@ -89,6 +89,15 @@
+                 source=source.copy(revision=source.revision+1,committedIds=source.committedIds+s.id)
+             }
+             compare("separated-append")
++            // After every timed frame, pin connection-local PRAGMAs to the primary writer.
++            val writerSqlite=db.withTransaction{
++                val settings=JSONObject();val sql=db.openHelper.writableDatabase
++                for(setting in listOf("page_size","auto_vacuum","journal_mode","synchronous")){
++                    sql.query("PRAGMA $setting").use{it.moveToFirst();settings.put(setting,if(setting=="journal_mode")it.getString(0) else it.getLong(0))}
++                }
++                settings
++            }
++            InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","RASTER_SQLITE_EVIDENCE ${JSONObject().put("writerSqlite",writerSqlite)}\n")})
+         }finally{
+             withContext(Dispatchers.Main){active.clear();cold.clear()}
+             withTimeoutOrNull(5000){while(RenderResources.inFlightJobs.get()>initialJobs)delay(20)}
+diff --git a/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt b/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt
+index 4565caf13aabe133d240c4340edd3f53e434eaa4..974ca3fe51785ac055faeec2599223fa4f147277 100644
+--- a/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt
++++ b/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt
+@@ -10,12 +10,15 @@
+ import kotlinx.coroutines.channels.Channel
+ import org.inkweft.core.*
+ import org.inkweft.data.*
++import org.json.JSONArray
++import org.json.JSONObject
+ import org.junit.Assert.*
+ import org.junit.Test
+ import java.util.UUID
+ import java.util.concurrent.CountDownLatch
+ import java.util.concurrent.TimeUnit
+ import java.util.concurrent.atomic.AtomicInteger
++import java.util.concurrent.CopyOnWriteArrayList
+ 
+ class StreamedInkRasterTest {
+     private fun id()=UUID.randomUUID().toString()
+@@ -77,7 +80,17 @@
+             assertNotEquals(Color.WHITE,bitmap.getPixel(50,100))
+         }finally{release.countDown();main{raster?.clear()};withTimeoutOrNull(5000){while(RenderResources.inFlightJobs.get()>baseline)delay(20)};events.close();bitmap.recycle();db.close();context.deleteDatabase(name)}
+     }
+-    @Test fun completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker()=runBlocking {
++    @Test fun completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker()=
++        completeFrameEvidence(1200,64,"original-dense")
++    @Test fun completeFrameCrossesBothTheEditorPointWindowAndDatabaseBatchBoundary()=
++        completeFrameEvidence(257,32,"bounded-two-batch")
++    private fun completeFrameEvidence(strokeCount:Int,samplesPerStroke:Int,case:String)=runBlocking {
++        val started=System.nanoTime()
++        fun evidence(stage:String,details:JSONObject=JSONObject()){
++            details.put("case",case).put("stage",stage).put("elapsedMs",(System.nanoTime()-started)/1_000_000.0)
++                .put("fixtureStrokes",strokeCount+1).put("fixturePoints",strokeCount*samplesPerStroke+2).put("frameDeadlineMs",30_000)
++            InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","STREAMED_FRAME_STAGE $details\n")})
++        }
+         val context=ApplicationProvider.getApplicationContext<Context>();val name="stream-frame-${id()}.db";val db=NoteDatabase.open(context,name)
+         var raster:StreamedInkRaster?=null;val events=Channel<Unit>(Channel.CONFLATED)
+         val bitmap=Bitmap.createBitmap(400,500,Bitmap.Config.ARGB_8888);bitmap.eraseColor(Color.WHITE)
+@@ -85,28 +98,59 @@
+         val baselineGeometry=RenderResources.snapshot()["category.ink-geometry-reservation"]?:0L
+         try{
+             val page=WorkspaceRepository(db).create("完整帧分批验证",false,PaperStyle.BLANK).id
++            evidence("fixture-start")
+             db.withTransaction{
+                 if(db.ink().page(page)==null)db.ink().insertPage(InkPageRow(page,2))else check(db.ink().compareAndSet(page,0,2)==1)
+-                repeat(1200){val s=InkStroke(id(),InkPen.PEN,Color.BLUE,3f,InkTool.STYLUS,List(64){InkSample(100f+it*.1f,100f,it.toLong())})
+-                    db.ink().insertStroke(InkStrokeRow(s.id,page,InkStrokeCodec.encodeStored(s),64,true,1))}
++                repeat(strokeCount){val s=InkStroke(id(),InkPen.PEN,Color.BLUE,3f,InkTool.STYLUS,List(samplesPerStroke){InkSample(100f+it*.1f,100f,it.toLong())})
++                    db.ink().insertStroke(InkStrokeRow(s.id,page,InkStrokeCodec.encodeStored(s),samplesPerStroke,true,1))}
+                 val last=InkStroke(id(),InkPen.PEN,Color.RED,12f,InkTool.STYLUS,listOf(InkSample(790f,200f,0),InkSample(810f,200f,20)))
+                 db.ink().insertStroke(InkStrokeRow(last.id,page,InkStrokeCodec.encodeStored(last),2,true,2))
+             }
++            evidence("fixture-complete")
+             val repo=InkRepository(db);val window=repo.readForEditing(page,bounds=CanvasBounds(0.0,0.0,1000.0,1414.0),pointBudget=8192)
+             assertFalse(window.windowComplete);assertTrue(window.strokes.none{it.stroke.color==Color.RED})
++            evidence("editor-window-complete",JSONObject().put("windowStrokes",window.strokes.size).put("windowPoints",window.strokes.sumOf{it.stroke.samples.size}))
+             val decoded=AtomicInteger();var failed=false
+-            repo.readObserver={decoded.accumulateAndGet(it.entries,::maxOf)}
++            val rows=AtomicInteger();val callbacks=AtomicInteger();val reads=CopyOnWriteArrayList<JSONObject>()
++            val frameStarted=System.nanoTime()
++            repo.readObserver={timing->
++                decoded.accumulateAndGet(timing.entries,::maxOf);rows.addAndGet(timing.entries)
++                reads.add(JSONObject().put("frameElapsedMs",(System.nanoTime()-frameStarted)/1_000_000.0)
++                    .put("rows",timing.entries).put("points",timing.decodedPoints)
++                    .put("freezeMs",timing.freezeNanos/1_000_000.0).put("decodeMs",timing.decodeNanos/1_000_000.0))
++            }
+             val source=InkRenderSource(repo,page,2,window.strokes.map{it.stroke.id}.toSet())
+             val viewport=CanvasViewport(500.0,707.0,.25)
+             var ready=false
+-            main{raster=StreamedInkRaster({events.trySend(Unit)},{failed=true;events.trySend(Unit)});raster!!.draw(Canvas(bitmap),400,500,viewport,1.0,false,false,source,null,emptySet())}
+-            withTimeout(30_000){while(!ready){events.receive();main{raster!!.draw(Canvas(bitmap),400,500,viewport,1.0,false,false,source,null,emptySet());ready=raster!!.frameReady};check(!failed)}}
++            evidence("frame-start")
++            main{raster=StreamedInkRaster({callbacks.incrementAndGet();events.trySend(Unit)},{failed=true;events.trySend(Unit)});raster!!.draw(Canvas(bitmap),400,500,viewport,1.0,false,false,source,null,emptySet())}
++            try{
++                // Preserve the original 30 s frame gate; fixture creation and editor reads
++                // remain outside it. Collect batch timings without logging on the worker.
++                withTimeout(30_000){while(!ready){events.receive();main{raster!!.draw(Canvas(bitmap),400,500,viewport,1.0,false,false,source,null,emptySet());ready=raster!!.frameReady};check(!failed)}}
++            }catch(timeout:TimeoutCancellationException){
++                val threads=JSONArray()
++                Thread.getAllStackTraces().filter{(thread,_)->thread.name=="InkWeft-streamed-raster"||thread.name=="main"}.forEach{(thread,stack)->
++                    threads.put(JSONObject().put("name",thread.name).put("state",thread.state.name).put("stack",JSONArray(stack.take(24).map{it.toString()})))
++                }
++                val details=JSONObject().put("frameElapsedMs",(System.nanoTime()-frameStarted)/1_000_000.0)
++                    .put("snapshotReads",JSONArray(reads.toList())).put("snapshotRows",rows.get()).put("changeCallbacks",callbacks.get())
++                    .put("threads",threads).put("resources",JSONObject(RenderResources.snapshot()))
++                main{details.put("pending",raster!!.pending).put("frameReady",raster!!.frameReady).put("publishedStats",raster!!.lastBuild?.toString()?:JSONObject.NULL)}
++                evidence("frame-timeout",details)
++                throw timeout
++            }
++            evidence("frame-complete",JSONObject().put("frameElapsedMs",(System.nanoTime()-frameStarted)/1_000_000.0)
++                .put("snapshotReads",JSONArray(reads.toList())).put("snapshotRows",rows.get()).put("changeCallbacks",callbacks.get())
++                .put("publishedStats",raster!!.lastBuild.toString()))
+             val pixel=viewport.worldToScreen(800.0,200.0,400.0,500.0,1.0)
+             val color=bitmap.getPixel(pixel.x.toInt(),pixel.y.toInt());assertTrue("Last batch must appear in the complete frame",Color.red(color)>180&&Color.blue(color)<100)
+             assertTrue(decoded.get() in 1..256)
++            assertEquals(strokeCount+1,rows.get());assertTrue("Complete geometry crosses database batches",reads.size>1)
+             main{raster!!.clear()};withTimeout(5000){while(RenderResources.inFlightJobs.get()>baseline)delay(20)}
+             assertFalse(raster!!.pending)
+             assertEquals(baselineGeometry,RenderResources.snapshot()["category.ink-geometry-reservation"]?:0L)
++            evidence("verified-and-released")
+         }finally{main{raster?.clear()};withTimeoutOrNull(5000){while(RenderResources.inFlightJobs.get()>baseline)delay(20)};events.close();bitmap.recycle();db.close();context.deleteDatabase(name)}
+     }
+ }
+diff --git a/android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt b/android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt
+index 4851759bf52c46799feb4dd4e72e72c4b0b29cc5..62543da08e7a3a2c62cbd4c1f1b22090a121e8ec 100644
+--- a/android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt
++++ b/android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt
+@@ -3,6 +3,7 @@
+ 
+ import android.graphics.*
+ import android.os.Trace
++import androidx.ink.strokes.Stroke
+ import kotlinx.coroutines.*
+ import org.inkweft.core.*
+ import org.inkweft.data.InkRepository
+@@ -26,7 +27,7 @@
+         val world:Boolean,val embedded:Boolean,val source:InkRenderSource,val allowed:Set<String>?,val omitted:Set<String>,val layer:String?,val pixels:Rect,val budget:Long)
+     private data class Tile(val pixels:Rect,val signature:String,val bitmap:Bitmap)
+     private data class Frame(val key:Key,val tiles:List<Tile>,val committed:Set<String>,val geometry:InkRasterCache)
+-    internal data class BuildStats(val tiles:Int,val rebuilt:Int,val decoded:Int,val bitmapBytes:Long,val metadataMs:Double=0.0,val rasterMs:Double=0.0,val publicationMs:Double=0.0,val reusedStrokes:Int=0,val geometryBytes:Long=0)
++    internal data class BuildStats(val tiles:Int,val rebuilt:Int,val decoded:Int,val bitmapBytes:Long,val metadataMs:Double=0.0,val rasterMs:Double=0.0,val publicationMs:Double=0.0,val reusedStrokes:Int=0,val geometryBytes:Long=0,val nativeStrokeBuilds:Int=0)
+     internal var lastBuild:BuildStats?=null;private set
+     private val owner="streamed-ink-"+java.util.UUID.randomUUID()
+     private var frame:Frame?=null
+@@ -137,7 +138,7 @@
+                     }}
+                     val renderer=InkBrushes.renderer()
+                     val pencil=PencilTileRenderer(min(.5f,(1/(factor*scale)).toFloat()),false){context.ensureActive()}
+-                    var decoded=0
++                    var decoded=0;var nativeStrokeBuilds=0
+                     try{
+                         if(dirty.isNotEmpty()){
+                             val region=dirty.map{regions[it]}.reduce{a,b->a.union(b)}
+@@ -147,10 +148,16 @@
+                                     context.ensureActive();decoded++
+                                     if(stroke.id in omitted||allowed!=null&&stroke.id !in allowed)continue
+                                     val inkBounds=stroke.bounds()
++                                    // Stroke and its mesh are immutable. Retain only this
++                                    // stroke's native shape until all its dirty tiles finish.
++                                    var nativeStroke:Stroke?=null
+                                     for(i in dirty){if(!inkBounds.intersects(regions[i]))continue
+                                         val painter=painters.getValue(i);val saved=painter.save()
+                                         try{stroke.cuts.forEach{painter.clipOutPath(VisibleInkGeometry.cutPath(it))}
+-                                            if(stroke.pen==InkPen.PENCIL)pencil.draw(painter,stroke)else renderer.draw(painter,InkBrushes.stroke(stroke),matrix)
++                                            if(stroke.pen==InkPen.PENCIL)pencil.draw(painter,stroke)else{
++                                                val ink=nativeStroke?:InkBrushes.stroke(stroke).also{nativeStroke=it;nativeStrokeBuilds++}
++                                                renderer.draw(painter,ink,matrix)
++                                            }
+                                         }finally{painter.restoreToCount(saved)}
+                                     }
+                                 }
+@@ -167,7 +174,7 @@
+                             frame?.takeIf{it.geometry!==geometry}?.let{RenderResources.release(it.geometry,owner)}
+                             frame=Frame(key,tiles,states.flatMap{it.committed}.toSet(),geometry)
+                             val reused=geometry.hits-previousHits
+-                            lastBuild=BuildStats(tiles.size,dirty.size,decoded-reused,tiles.sumOf{it.bitmap.allocationByteCount.toLong()},metadataMs,rasterMs,(System.nanoTime()-publicationStart)/1_000_000.0,reused,geometry.retainedBytes)
++                            lastBuild=BuildStats(tiles.size,dirty.size,decoded-reused,tiles.sumOf{it.bitmap.allocationByteCount.toLong()},metadataMs,rasterMs,(System.nanoTime()-publicationStart)/1_000_000.0,reused,geometry.retainedBytes,nativeStrokeBuilds)
+                             published=true;notifyChanged()
+                         }}
+                     }finally{pencil.clear()}
+diff --git a/android/data-local/src/androidTest/AndroidManifest.xml b/android/data-local/src/androidTest/AndroidManifest.xml
+new file mode 100644
+index 0000000000000000000000000000000000000000..ed109c7e71612e7c4fbbf531b842f53165952320
+--- /dev/null
++++ b/android/data-local/src/androidTest/AndroidManifest.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android">
++    <application>
++        <service android:name="org.inkweft.data.DatabaseCreationPeerService"
++            android:process=":database_creation_peer" android:exported="false" />
++    </application>
++</manifest>
+diff --git a/android/data-local/src/androidTest/kotlin/org/inkweft/data/BundledSqliteFactoryTest.kt b/android/data-local/src/androidTest/kotlin/org/inkweft/data/BundledSqliteFactoryTest.kt
+index 08b6c8143917c3a65678230891e6cc45a1b63e95..e3b20e6b54627e4079a0896d2401f31afed9f778 100644
+--- a/android/data-local/src/androidTest/kotlin/org/inkweft/data/BundledSqliteFactoryTest.kt
++++ b/android/data-local/src/androidTest/kotlin/org/inkweft/data/BundledSqliteFactoryTest.kt
+@@ -41,8 +41,8 @@
+                 val sql = helper.writableDatabase
+                 assertEquals(path.canonicalPath, File(sql.path).canonicalPath)
+                 assertFalse(context.getDatabasePath(name).exists())
+-                assertEquals(4096L, sql.pageSize)
+-                assertEquals(2, mode(sql))
++                assertEquals(1024L, sql.pageSize)
++                assertEquals(1, mode(sql))
+                 assertTrue(sql.isWriteAheadLoggingEnabled)
+                 sql.execSQL("INSERT INTO bounds VALUES (1,10,20,30,40)")
+                 sql.beginTransaction()
+@@ -117,6 +117,52 @@
+         }
+     }
+ 
++    @Test fun existing4096IncrementalDatabaseRetainsFormatVersionAndAuthorContent() {
++        val context = ApplicationProvider.getApplicationContext<Context>()
++        val name = "bundled-existing-4096-${UUID.randomUUID()}.db"
++        val bytes = ByteArray(64 * 1024) { (it * 31 + (it ushr 8)).toByte() }
++        val callback = object : SupportSQLiteOpenHelper.Callback(7) {
++            override fun onCreate(db: SupportSQLiteDatabase) {
++                db.execSQL("CREATE TABLE authors(id INTEGER PRIMARY KEY, payload BLOB NOT NULL)")
++            }
++            override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) = error("Unexpected upgrade")
++        }
++        val config = SupportSQLiteOpenHelper.Configuration.builder(context).name(name).callback(callback).build()
++        try {
++            RequerySQLiteOpenHelperFactory().create(config).use { helper ->
++                val db = helper.writableDatabase
++                // Seed the previous production format before enabling WAL; page-size
++                // changes need VACUUM on a single rollback-journal connection.
++                db.disableWriteAheadLogging()
++                assertFalse(db.isWriteAheadLoggingEnabled)
++                db.execSQL("PRAGMA page_size=4096")
++                db.execSQL("PRAGMA auto_vacuum=INCREMENTAL")
++                db.execSQL("VACUUM")
++                assertEquals(4096L, db.pageSize)
++                assertEquals(2, mode(db))
++                assertEquals(7, db.version)
++                helper.setWriteAheadLoggingEnabled(true)
++                assertTrue(db.isWriteAheadLoggingEnabled)
++                db.execSQL("INSERT INTO authors VALUES (7,?)", arrayOf<Any>(bytes))
++            }
++            PreservingOpenHelperFactory().create(config).use { helper ->
++                helper.setWriteAheadLoggingEnabled(true)
++                val db = helper.writableDatabase
++                assertEquals(4096L, db.pageSize)
++                assertEquals(2, mode(db))
++                assertEquals(7, db.version)
++                assertTrue(db.isWriteAheadLoggingEnabled)
++                db.query("SELECT id,payload FROM authors").use { cursor ->
++                    assertTrue(cursor.moveToFirst()); assertEquals(7, cursor.getInt(0))
++                    assertArrayEquals(bytes, cursor.getBlob(1)); assertFalse(cursor.moveToNext())
++                }
++            }
++        } finally {
++            context.deleteDatabase(name)
++            lockFile(context.getDatabasePath(name)).delete()
++        }
++    }
++
+     @Test fun independentHelpersWaitForCompleteCreationAndKeepTheSameAuthorRows() {
+         val context = ApplicationProvider.getApplicationContext<Context>()
+         val name = "bundled-concurrent-${UUID.randomUUID()}.db"
+@@ -137,7 +183,7 @@
+             return PreservingOpenHelperFactory().create(config).use { helper ->
+                 helper.setWriteAheadLoggingEnabled(true)
+                 val db = helper.writableDatabase
+-                assertEquals(4096L, db.pageSize); assertEquals(2, mode(db))
++                assertEquals(1024L, db.pageSize); assertEquals(1, mode(db))
+                 db.query("SELECT value FROM author").use { assertTrue(it.moveToFirst()); val value = it.getString(0); assertFalse(it.moveToNext()); value }
+             }
+         }
+@@ -174,13 +220,13 @@
+         fun open() = PreservingOpenHelperFactory().create(SupportSQLiteOpenHelper.Configuration.builder(context).name(name).callback(callback).build())
+             .also { it.setWriteAheadLoggingEnabled(true) }
+         try {
+-            // Models death after O_EXCL but before SQLite has committed its first header.
++            // Models an older creator dying before SQLite has committed its first header.
+             path.parentFile!!.mkdirs(); assertTrue(path.createNewFile()); assertEquals(0L, path.length())
+             open().use { helper -> assertEquals("synthetic schema interruption", runCatching { helper.writableDatabase }.exceptionOrNull()?.message) }
+             assertTrue(path.exists()); assertTrue(path.length() > 0L)
+             open().use { helper ->
+                 val db = helper.writableDatabase
+-                assertEquals(4096L, db.pageSize); assertEquals(2, mode(db)); assertEquals(1, db.version)
++                assertEquals(1024L, db.pageSize); assertEquals(1, mode(db)); assertEquals(1, db.version)
+                 db.query("SELECT value FROM author").use { assertTrue(it.moveToFirst()); assertEquals("resumed author row", it.getString(0)); assertFalse(it.moveToNext()) }
+             }
+             assertEquals(2, attempts.get())
+diff --git a/android/data-local/src/androidTest/kotlin/org/inkweft/data/DatabaseCreationPeerService.kt b/android/data-local/src/androidTest/kotlin/org/inkweft/data/DatabaseCreationPeerService.kt
+new file mode 100644
+index 0000000000000000000000000000000000000000..cf1bbb1b13d9104a82abb69f014a49288d109b2a
+--- /dev/null
++++ b/android/data-local/src/androidTest/kotlin/org/inkweft/data/DatabaseCreationPeerService.kt
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: AGPL-3.0-or-later
++package org.inkweft.data
++
++import android.app.Service
++import android.content.Intent
++import android.os.*
++import androidx.sqlite.db.SupportSQLiteDatabase
++import androidx.sqlite.db.SupportSQLiteOpenHelper
++import io.requery.android.database.sqlite.SQLiteDatabase
++import java.util.concurrent.CountDownLatch
++import java.util.concurrent.Executors
++import java.util.concurrent.TimeUnit
++
++/** Test APK only: the legacy branch deliberately never uses the sidecar lock. */
++class DatabaseCreationPeerService : Service() {
++    private val worker = Executors.newSingleThreadExecutor()
++    @Volatile private var release = CountDownLatch(0)
++    private val messenger = Messenger(object : Handler(Looper.getMainLooper()) {
++        override fun handleMessage(message: Message) {
++            when (message.what) {
++                2 -> release.countDown()
++                3 -> Process.killProcess(Process.myPid())
++                1 -> {
++                    val args = Bundle(message.data)
++                    val recipient = message.replyTo
++                    release = CountDownLatch(if (args.getBoolean("hold")) 1 else 0)
++                    worker.execute {
++                        fun reply(phase: String, failure: Throwable? = null) {
++                            recipient.send(Message.obtain().apply {
++                                data = Bundle().apply {
++                                    putString("phase", phase); putInt("pid", Process.myPid()); putInt("uid", Process.myUid())
++                                    failure?.let { putString("failure", it.toString()) }
++                                }
++                            })
++                        }
++                        try {
++                            reply("started")
++                            fun create(db: SupportSQLiteDatabase) {
++                                db.execSQL("CREATE TABLE author(id INTEGER PRIMARY KEY, payload BLOB NOT NULL)")
++                                db.execSQL("INSERT INTO author VALUES (7,?)", arrayOf<Any>(PAYLOAD))
++                                if (args.getBoolean("hold") && !args.getBoolean("mutateCommitted")) {
++                                    reply("uncommitted")
++                                    check(release.await(30, TimeUnit.SECONDS)) { "Peer release not received" }
++                                }
++                            }
++                            val path = requireNotNull(args.getString("path"))
++                            if (args.getBoolean("legacy")) {
++                                // Defaults and parameter changes belong to the old creator's
++                                // private fixture setup, before the candidate is released.
++                                SQLiteDatabase.openOrCreateDatabase(path, null).use { db ->
++                                    db.execSQL("PRAGMA auto_vacuum=" + args.getInt("mode"))
++                                    db.execSQL("VACUUM")
++                                    db.query("PRAGMA journal_mode=" + args.getString("journal", "DELETE")).use {
++                                        check(it.moveToFirst() && it.getString(0).equals(args.getString("journal"), ignoreCase = true))
++                                    }
++                                    db.beginTransaction()
++                                    try { create(db); db.version = args.getInt("version", 1); db.setTransactionSuccessful() }
++                                    finally { db.endTransaction() }
++                                    if (args.getBoolean("mutateCommitted")) {
++                                        db.beginTransaction()
++                                        try {
++                                            db.execSQL("UPDATE author SET payload=x'0001' WHERE id=7")
++                                            db.execSQL("INSERT INTO author VALUES (8,x'0002')")
++                                            reply("uncommitted")
++                                            check(release.await(30, TimeUnit.SECONDS))
++                                            // Deliberately never mark this update successful.
++                                        } finally { db.endTransaction() }
++                                    }
++                                }
++                            } else {
++                                val callback = object : SupportSQLiteOpenHelper.Callback(1) {
++                                    override fun onCreate(db: SupportSQLiteDatabase) = create(db)
++                                    override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) = error("Unexpected upgrade")
++                                }
++                                PreservingOpenHelperFactory().create(SupportSQLiteOpenHelper.Configuration.builder(this@DatabaseCreationPeerService)
++                                    .name(path).callback(callback).build()).use { helper ->
++                                    helper.setWriteAheadLoggingEnabled(true)
++                                    helper.writableDatabase.query("SELECT payload FROM author WHERE id=7").use {
++                                        check(it.moveToFirst() && it.getBlob(0).contentEquals(PAYLOAD))
++                                    }
++                                }
++                            }
++                            reply("closed")
++                        } catch (failure: Throwable) { reply("failed", failure) }
++                    }
++                }
++                else -> super.handleMessage(message)
++            }
++        }
++    })
++    override fun onBind(intent: Intent) = messenger.binder
++    override fun onDestroy() { release.countDown(); worker.shutdownNow(); super.onDestroy() }
++
++    companion object {
++        val PAYLOAD = ByteArray(32 * 1024) { (it * 31 + (it ushr 8)).toByte() }
++    }
++}
+diff --git a/android/data-local/src/androidTest/kotlin/org/inkweft/data/DatabaseCreationProcessTest.kt b/android/data-local/src/androidTest/kotlin/org/inkweft/data/DatabaseCreationProcessTest.kt
+new file mode 100644
+index 0000000000000000000000000000000000000000..df26a0e8d51e491acdc67054b622ea191f7e3724
+--- /dev/null
++++ b/android/data-local/src/androidTest/kotlin/org/inkweft/data/DatabaseCreationProcessTest.kt
+@@ -0,0 +1,205 @@
++// SPDX-License-Identifier: AGPL-3.0-or-later
++package org.inkweft.data
++
++import android.content.*
++import android.os.*
++import androidx.sqlite.db.SupportSQLiteDatabase
++import androidx.sqlite.db.SupportSQLiteOpenHelper
++import androidx.test.core.app.ApplicationProvider
++import androidx.test.platform.app.InstrumentationRegistry
++import io.requery.android.database.sqlite.SQLiteDatabase
++import org.junit.Assert.*
++import org.junit.Test
++import java.io.File
++import java.util.UUID
++import java.util.concurrent.*
++
++class DatabaseCreationProcessTest {
++    private val context = ApplicationProvider.getApplicationContext<Context>()
++    private val possiblyActivePeerPaths = ConcurrentHashMap.newKeySet<String>()
++    private fun config(path: File, create: (SupportSQLiteDatabase) -> Unit) =
++        SupportSQLiteOpenHelper.Configuration.builder(context).name(path.path)
++            .callback(object : SupportSQLiteOpenHelper.Callback(1) {
++                override fun onCreate(db: SupportSQLiteDatabase) = create(db)
++                override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) = error("Unexpected upgrade")
++            }).build()
++    private fun verify(db: SupportSQLiteDatabase, vacuum: Int, version: Int) {
++        assertEquals(1024L, db.pageSize); assertEquals(version, db.version)
++        db.query("PRAGMA auto_vacuum").use { assertTrue(it.moveToFirst()); assertEquals(vacuum, it.getInt(0)) }
++        db.query("SELECT id,payload FROM author").use {
++            assertTrue(it.moveToFirst()); assertEquals(7, it.getInt(0))
++            assertArrayEquals(DatabaseCreationPeerService.PAYLOAD, it.getBlob(1)); assertFalse(it.moveToNext())
++        }
++    }
++    private fun cleanup(path: File) {
++        if (path.path in possiblyActivePeerPaths) {
++            InstrumentationRegistry.getInstrumentation().sendStatus(0, Bundle().apply {
++                putString("stream", "DB_PROCESS cleanup=retained-unconfirmed-peer-stop\n")
++            })
++            return
++        }
++        context.deleteDatabase(path.path)
++        File(path.path + ".inkweft-open-lock").delete()
++    }
++    private fun path() = context.getDatabasePath("process-creation-${UUID.randomUUID()}.db").also { it.parentFile!!.mkdirs() }
++
++    private inner class Peer : AutoCloseable {
++        private val connected = CountDownLatch(1)
++        private val disconnected = CountDownLatch(1)
++        private val replies = LinkedBlockingQueue<Bundle>()
++        private var active = false
++        private var dead = false
++        private var activePath: String? = null
++        private fun finished() { active = false; activePath?.let { possiblyActivePeerPaths.remove(it) } }
++        private lateinit var remote: Messenger
++        private val receiver = Messenger(object : Handler(Looper.getMainLooper()) {
++            override fun handleMessage(message: Message) { replies.add(Bundle(message.data)) }
++        })
++        private val connection = object : ServiceConnection {
++            override fun onServiceConnected(name: ComponentName, binder: IBinder) { remote = Messenger(binder); connected.countDown() }
++            override fun onServiceDisconnected(name: ComponentName) { disconnected.countDown() }
++        }
++        init {
++            assertTrue(context.bindService(Intent(context, DatabaseCreationPeerService::class.java), connection, Context.BIND_AUTO_CREATE))
++            try { assertTrue("Peer bind", connected.await(30, TimeUnit.SECONDS)) }
++            catch (failure: Throwable) { context.unbindService(connection); throw failure }
++        }
++        fun start(path: File, legacy: Boolean, hold: Boolean = false, mode: Int = 1, journal: String = "DELETE", version: Int = 1, mutateCommitted: Boolean = false) {
++            active = true
++            activePath = path.path; possiblyActivePeerPaths.add(path.path)
++            remote.send(Message.obtain(null, 1).apply {
++                replyTo = receiver
++                data = Bundle().apply {
++                    putString("path", path.path); putBoolean("legacy", legacy); putBoolean("hold", hold)
++                    putInt("mode", mode); putString("journal", journal); putInt("version", version)
++                    putBoolean("mutateCommitted", mutateCommitted)
++                }
++            })
++            await("started")
++        }
++        fun await(phase: String) {
++            val reply = checkNotNull(replies.poll(30, TimeUnit.SECONDS)) { "Peer timed out waiting for $phase" }
++            if (reply.getString("phase") in listOf("closed", "failed")) finished()
++            assertNotEquals("Must be a different process", Process.myPid(), reply.getInt("pid"))
++            assertEquals("Same application UID", Process.myUid(), reply.getInt("uid"))
++            assertEquals(reply.getString("failure"), phase, reply.getString("phase"))
++            InstrumentationRegistry.getInstrumentation().sendStatus(0, Bundle().apply {
++                putString("stream", "DB_PROCESS phase=$phase parentPid=${Process.myPid()} peerPid=${reply.getInt("pid")} uid=${reply.getInt("uid")}\n")
++            })
++        }
++        fun release() = remote.send(Message.obtain(null, 2))
++        fun kill() {
++            remote.send(Message.obtain(null, 3)); assertTrue("Peer death", disconnected.await(30, TimeUnit.SECONDS))
++            dead = true; finished()
++        }
++        override fun close() {
++            try {
++                if (active && !dead) {
++                    release()
++                    val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(30)
++                    while (active && System.nanoTime() < deadline) {
++                        val reply = replies.poll(1, TimeUnit.SECONDS)
++                        if (reply?.getString("phase") in listOf("closed", "failed")) finished()
++                    }
++                    if (active) kill()
++                }
++            } finally { context.unbindService(connection) }
++        }
++    }
++
++    @Test fun lateLegacyCreatorKeepsFullAndNoneModesAndAuthorBytes() {
++        // Start the candidate first, paused at its last context path resolution.
++        // This is immediately before Requery opens the shared target. The old process
++        // creates the database while the candidate holds the sidecar lock: it cannot
++        // accidentally cooperate with that lock or the JVM monitor.
++        for (vacuum in listOf(0, 1)) for (journal in listOf("DELETE", "WAL")) {
++            val path = path(); val pool = Executors.newSingleThreadExecutor()
++            val beforeOpen = CountDownLatch(1); val resume = CountDownLatch(1)
++            var pathReads = 0
++            val gatedContext = object : ContextWrapper(context) {
++                override fun getDatabasePath(name: String): File {
++                    if (++pathReads == 2) { beforeOpen.countDown(); check(resume.await(30, TimeUnit.SECONDS)) }
++                    return super.getDatabasePath(name)
++                }
++            }
++            val callback = object : SupportSQLiteOpenHelper.Callback(1) {
++                override fun onCreate(db: SupportSQLiteDatabase) { verify(db, vacuum, 0); error("Retain unversioned author database") }
++                override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) = error("Unexpected upgrade")
++            }
++            try {
++                Peer().use { peer ->
++                    val candidate = pool.submit<Throwable?> {
++                        PreservingOpenHelperFactory().create(SupportSQLiteOpenHelper.Configuration.builder(gatedContext)
++                            .name(path.path).callback(callback).build()).use { helper ->
++                            helper.setWriteAheadLoggingEnabled(journal == "WAL")
++                            runCatching { helper.writableDatabase }.exceptionOrNull()
++                        }
++                    }
++                    assertTrue("Candidate reached open boundary", beforeOpen.await(30, TimeUnit.SECONDS))
++                    peer.start(path, legacy = true, mode = vacuum, journal = journal, version = 0); peer.await("closed")
++                    val bytes = path.readBytes()
++                    resume.countDown()
++                    assertEquals("Retain unversioned author database", candidate.get(30, TimeUnit.SECONDS)?.message)
++                    // No active connection or recovery here: compare the entire main file.
++                    assertArrayEquals(bytes, path.readBytes())
++                    SQLiteDatabase.openDatabase(path.path, null, SQLiteDatabase.OPEN_READONLY).use {
++                        verify(it, vacuum, 0)
++                        it.query("PRAGMA journal_mode").use { cursor ->
++                            assertTrue(cursor.moveToFirst()); assertEquals(journal.lowercase(), cursor.getString(0))
++                        }
++                    }
++                }
++            } finally { resume.countDown(); pool.shutdownNow(); assertTrue(pool.awaitTermination(30, TimeUnit.SECONDS)); cleanup(path) }
++        }
++    }
++
++    @Test fun twoNewProcessesWaitForCommittedSchema() {
++        val path = path(); val pool = Executors.newSingleThreadExecutor()
++        try {
++            Peer().use { peer ->
++                peer.start(path, legacy = false, hold = true); peer.await("uncommitted")
++                val started = CountDownLatch(1)
++                val candidate = pool.submit {
++                    started.countDown()
++                    PreservingOpenHelperFactory().create(config(path) { error("Second process must not create again") }).use { helper ->
++                        helper.setWriteAheadLoggingEnabled(true); verify(helper.writableDatabase, 1, 1)
++                    }
++                }
++                assertTrue(started.await(10, TimeUnit.SECONDS))
++                try { candidate.get(150, TimeUnit.MILLISECONDS); fail("Opened an unfinished schema") } catch (_: TimeoutException) { }
++                peer.release(); peer.await("closed"); candidate.get(30, TimeUnit.SECONDS)
++            }
++        } finally { pool.shutdownNow(); assertTrue(pool.awaitTermination(30, TimeUnit.SECONDS)); cleanup(path) }
++    }
++
++    @Test fun killedCreatorRollsBackAndReleasesItsProcessLock() {
++        val path = path()
++        try {
++            Peer().use { peer ->
++                peer.start(path, legacy = false, hold = true); peer.await("uncommitted"); peer.kill()
++            }
++            PreservingOpenHelperFactory().create(config(path) { db ->
++                db.query("SELECT COUNT(*) FROM sqlite_master WHERE name='author'").use { assertTrue(it.moveToFirst()); assertEquals(0, it.getInt(0)) }
++                db.execSQL("CREATE TABLE author(id INTEGER PRIMARY KEY, payload BLOB NOT NULL)")
++                db.execSQL("INSERT INTO author VALUES (7,?)", arrayOf<Any>(DatabaseCreationPeerService.PAYLOAD))
++            }).use { helper -> helper.setWriteAheadLoggingEnabled(true); verify(helper.writableDatabase, 1, 1) }
++        } finally { cleanup(path) }
++    }
++
++    @Test fun killedLegacyWriterKeepsCommittedAuthorBytesWithWalAndRollbackJournal() {
++        for (journal in listOf("DELETE", "WAL")) {
++            val path = path()
++            try {
++                Peer().use { peer ->
++                    peer.start(path, legacy = true, hold = true, journal = journal, mutateCommitted = true)
++                    peer.await("uncommitted"); peer.kill()
++                }
++                PreservingOpenHelperFactory().create(config(path) { error("Committed schema must survive writer death") }).use { helper ->
++                    helper.setWriteAheadLoggingEnabled(journal == "WAL")
++                    verify(helper.writableDatabase, 1, 1)
++                    assertTrue(helper.writableDatabase.isDatabaseIntegrityOk)
++                }
++            } finally { cleanup(path) }
++        }
++    }
++}
+diff --git a/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionBenchmarkTest.kt b/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionBenchmarkTest.kt
+index 60bc22eb6e628c57ec6e4172ead8593396f8deb2..717485c440039b05363fc2374b44873489a1874e 100644
+--- a/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionBenchmarkTest.kt
++++ b/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionBenchmarkTest.kt
+@@ -8,6 +8,7 @@
+ import androidx.test.platform.app.InstrumentationRegistry
+ import kotlinx.coroutines.*
+ import org.inkweft.core.*
++import org.json.JSONArray
+ import org.json.JSONObject
+ import org.junit.Assert.*
+ import org.junit.Test
+@@ -92,8 +93,17 @@
+                 fun JSONObject.timings(prefix:String,values:List<Double>):JSONObject {
+                     val sorted=values.sorted()
+                     return put(prefix+"P50Ms",sorted[14]).put(prefix+"P95Ms",sorted[28]).put(prefix+"MaxMs",sorted.last())
++                        .put(prefix+"SamplesMs",JSONArray(values))
+                 }
+-                val evidence=JSONObject().put("baseline",baseline).put("historicalRoots",roots).put("detachedSources",garbage)
++                // After timing, pin connection-local PRAGMAs to the primary writer without setting them.
++                val writerSqlite=db.withTransaction{
++                    val settings=JSONObject();val sql=db.openHelper.writableDatabase
++                    for(setting in listOf("page_size","auto_vacuum","journal_mode","synchronous")){
++                        sql.query("PRAGMA $setting").use{it.moveToFirst();settings.put(setting,if(setting=="journal_mode")it.getString(0) else it.getLong(0))}
++                    }
++                    settings
++                }
++                val evidence=JSONObject().put("baseline",baseline).put("historicalRoots",roots).put("detachedSources",garbage).put("writerSqlite",writerSqlite)
+                     .put("collectionRootScans",scans.get()).put("collectionMs",collectionMs)
+                     .put("pausedConcurrentRootScans",concurrentScans.get()).put("pausedScanSaves",saves.size)
+                     .put("liveConcurrentRootScans",liveScans.get()).put("liveCollectionAndSavesMs",liveMs)
+diff --git a/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt b/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt
+index 263dc1ae41009a44c8ec542bcd826a141bf546c3..f28eb61bd66d9dd4790395b818892918365ef87d 100644
+--- a/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt
++++ b/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt
+@@ -56,6 +56,38 @@
+     @Test fun sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates()=newRootBetweenBatches(false)
+     @Test fun separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates()=newRootBetweenBatches(true)
+ 
++    @Test fun overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion()=fixture{db,_,book,source->
++        val card=UUID.randomUUID().toString()
++        db.withTransaction{
++            db.study().addCard(StudyCardRow(card,book,2,"跨批引用",""))
++            for((revision,range) in listOf(1L to (1L..129L),2L to (128L..257L))){
++                db.study().revision(StudyCardRevisionRow(card,revision,"跨批引用","",null))
++                db.sourceVersions().insert(StudyCardSourceSetRow(card,revision,
++                    StudySourceRefs.encode(range.map{StudySourceVersionRef(source,it)}),true))
++            }
++        }
++        val report=HistoryStorage(db).collectDetached()
++        assertFalse(report.collectionDeferred);assertEquals(1023L,report.detachedSources)
++        assertEquals((1L..257L).toList()+1281L,db.sourceVersions().all().map{it.revision})
++    }
++
++    @Test fun malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion()=fixture{db,_,book,source->
++        val card=UUID.randomUUID().toString()
++        db.withTransaction{
++            db.study().addCard(StudyCardRow(card,book,1,"损坏引用",""))
++            db.study().revision(StudyCardRevisionRow(card,1,"损坏引用","",null))
++            db.sourceVersions().insert(StudyCardSourceSetRow(card,1,
++                StudySourceRefs.encode((1L..129L).map{StudySourceVersionRef(source,it)}),true))
++            // Transform payloads are decoded after all card source sets, so one complete
++            // root batch has been inserted before this deliberately damaged payload.
++            db.cardTransforms().insert(CardTransformOperationRow(UUID.randomUUID().toString(),book,
++                "a".repeat(64),ByteArray(4),"b".repeat(64)))
++        }
++        try{HistoryStorage(db).collectDetached();fail("malformed historical root accepted")}catch(_:IllegalArgumentException){}
++        assertEquals(1281,db.sourceVersions().all().size)
++        assertNotNull(db.sourceVersions().get(source,130))
++    }
++
+     private fun newRootBetweenBatches(separate:Boolean)=fixture{db,name,book,source->coroutineScope{
+         val other=if(separate)NoteDatabase.open(context,name)else db
+         // Open the second helper before the collection snapshot.
+diff --git a/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryConcurrencyTest.kt b/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryConcurrencyTest.kt
+index ca36f7a5ff908aa806fe0da672e8e03523b431cb..5b2545102b51365672e060a63cb9b1fb0bbc0591 100644
+--- a/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryConcurrencyTest.kt
++++ b/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryConcurrencyTest.kt
+@@ -15,10 +15,22 @@
+ import java.util.concurrent.TimeUnit
+ 
+ class HistoryConcurrencyTest {
+-    @Test fun largeLibraryAuditAllowsAuthorCommitAndCancellation()=runBlocking{coroutineScope{
++    @Test fun largeLibraryAuditAllowsAuthorCommitAndCancellation()=runBlocking{
+         val context=ApplicationProvider.getApplicationContext<Context>();val name="history-concurrency-${UUID.randomUUID()}.db";val db=NoteDatabase.open(context,name)
+         val baseline=InstrumentationRegistry.getArguments().getString("historyBaseline")=="true"
+-        try{
++        val testStarted=System.nanoTime()
++        fun phase(value:String){
++            InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{
++                putString("stream","HISTORY_CONCURRENCY_PHASE phase=$value elapsedMs=${(System.nanoTime()-testStarted)/1_000_000.0}\n")
++            })
++        }
++        suspend fun <T> timed(label:String,millis:Long,block:suspend()->T):T {
++            phase("$label:start")
++            try{return withTimeout(millis){block()}.also{phase("$label:complete")}}
++            catch(failure:TimeoutCancellationException){phase("$label:timeout");throw failure}
++        }
++        try{coroutineScope{
++            phase("fixture:start")
+             val book=WorkspaceRepository(db).create("历史并发",false,PaperStyle.BLANK).id
+             val source=UUID.randomUUID().toString();val card=UUID.randomUUID().toString()
+             val stroke=InkStroke(UUID.randomUUID().toString(),InkPen.PEN,0xff123456.toInt(),2f,InkTool.STYLUS,listOf(InkSample(20f,20f,0)))
+@@ -31,28 +43,33 @@
+                     db.sourceVersions().insert(StudyCardSourceSetRow(card,revision,StudySourceRefs.encode(listOf(StudySourceVersionRef(source,revision))),true))
+                 }
+             }
++            phase("fixture:complete")
+             val entered=CompletableDeferred<Unit>();val release=CountDownLatch(1)
+-            val history=HistoryStorage(db){if(it=="after-roots"){entered.complete(Unit);check(release.await(15,TimeUnit.SECONDS))}}
++            val history=HistoryStorage(db){phase("paused-audit:$it");if(it=="after-roots"){entered.complete(Unit);check(release.await(15,TimeUnit.SECONDS))}}
+             val audit=async(Dispatchers.IO){history.audit()}
+-            withTimeout(30_000){entered.await()}
++            try{
++            timed("paused-audit:roots",30_000){entered.await()}
+             val started=System.nanoTime();val edit=async(Dispatchers.IO){NoteRepository(db).rename(RenameNote(UUID.randomUUID().toString(),book,1,"审计时仍可保存"))}
+             delay(500);val committedWhilePaused=edit.isCompleted;release.countDown()
+-            withTimeout(10_000){edit.await()};val waitMs=(System.nanoTime()-started)/1_000_000.0
+-            val report=withTimeout(30_000){audit.await()};assertEquals(0L,report.detachedSources)
++            timed("paused-audit:edit",10_000){edit.await()};val waitMs=(System.nanoTime()-started)/1_000_000.0
++            val report=timed("paused-audit:complete",30_000){audit.await()};assertEquals(0L,report.detachedSources)
+             if(!baseline)assertTrue("Author commit blocked by root decoding",committedWhilePaused)
+             val times=mutableListOf<Double>();val unpausedStart=System.nanoTime()
+-            val scanning=async(Dispatchers.IO){HistoryStorage(db).audit()}
++            val scanning=async(Dispatchers.IO){HistoryStorage(db){phase("unpaused-audit:$it")}.audit()}
+             repeat(30){i->val before=System.nanoTime();val note=db.notes().note(book)!!;NoteRepository(db).rename(RenameNote(UUID.randomUUID().toString(),book,note.revision,"保存 $i"));times+=(System.nanoTime()-before)/1_000_000.0}
+             scanning.await();val unpausedMs=(System.nanoTime()-unpausedStart)/1_000_000.0
+             val cancelEntered=CompletableDeferred<Unit>();val cancelRelease=CountDownLatch(1)
+-            val cancelled=launch(Dispatchers.IO){HistoryStorage(db){if(it=="after-roots"){cancelEntered.complete(Unit);check(cancelRelease.await(15,TimeUnit.SECONDS))}}.audit()}
+-            withTimeout(30_000){cancelEntered.await()};val cancelStart=System.nanoTime();cancelled.cancel();cancelRelease.countDown();withTimeout(5_000){cancelled.join()}
++            val cancelled=launch(Dispatchers.IO){HistoryStorage(db){phase("cancel-audit:$it");if(it=="after-roots"){cancelEntered.complete(Unit);check(cancelRelease.await(15,TimeUnit.SECONDS))}}.audit()}
++            try{
++            timed("cancel-audit:roots",30_000){cancelEntered.await()};val cancelStart=System.nanoTime();cancelled.cancel();cancelRelease.countDown();timed("cancel-audit:join",5_000){cancelled.join()}
+             assertEquals(20_000,db.sourceVersions().all().size)
+             val sorted=times.sorted();val evidence=JSONObject().put("baseline",baseline).put("sourceVersions",20000).put("historicalCardRoots",20000)
+                 .put("committedWhileAuditPaused",committedWhilePaused).put("pausedProbeWindowMs",500).put("editCompletionIncludingProbeWaitMs",waitMs)
+                 .put("unpausedAuditAndThirtyEditsMs",unpausedMs).put("editMedianMs",sorted[15]).put("editP95Ms",sorted[28])
+                 .put("cancellationMs",(System.nanoTime()-cancelStart)/1_000_000.0).put("historyRetained",true)
+             InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","HISTORY_CONCURRENCY_EVIDENCE $evidence\n")})
+-        }finally{db.close();context.deleteDatabase(name)}
+-    }}
++            }finally{cancelRelease.countDown();withContext(NonCancellable){cancelled.cancelAndJoin()}}
++            }finally{release.countDown();withContext(NonCancellable){audit.cancelAndJoin()}}
++        }}finally{db.close();context.deleteDatabase(name)}
++    }
+ }
+diff --git a/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupIsolationTest.kt b/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupIsolationTest.kt
+index 7df77a81abd1164e5cc2b4c4b91667e92037b23c..b81870f6609a730678ae74702344773ac6b877fe 100644
+--- a/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupIsolationTest.kt
++++ b/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupIsolationTest.kt
+@@ -98,6 +98,34 @@
+         println("BACKUP_PREFLIGHT originalPhysicalBytes=${bytes.size} references=3 exactArchiveBytes=$estimate sharedOriginalRetained=true")
+     }
+ 
++    @Test fun authorCommitContinuesWhilePrivateValidationTransactionIsPaused()=fixture{context,db,root->coroutineScope{
++        val note=WorkspaceRepository(db).create("验证前的作者版次",false,PaperStyle.BLANK)
++        val entered=CompletableDeferred<Unit>();val release=CountDownLatch(1)
++        val backup=async(Dispatchers.IO){LibraryBackupRepository(context,db){fault->
++            // This hook runs after the isolated Room transaction has acquired its writer.
++            if(fault==LibraryBackupRepository.BackupFault.BEFORE_SNAPSHOT_VALIDATE){
++                entered.complete(Unit);check(release.await(10,TimeUnit.SECONDS))
++            }
++        }.snapshot()}
++        try{
++            withTimeout(10_000){entered.await()}
++            withTimeout(2_000){NoteRepository(db).save(SaveNote(id(),note.id,1,"验证期间已保存","独立作者事务"))}
++            assertEquals("验证期间已保存",db.notes().note(note.id)!!.title)
++            release.countDown()
++            withTimeout(10_000){backup.await()}.use{snapshot->
++                snapshot.file.inputStream().use{LibraryBackupRepository(context,db).inspect(it)}.use{preview->
++                    assertEquals(note.title,preview.stage.notes().note(note.id)!!.title)
++                    assertEquals(1L,preview.stage.notes().note(note.id)!!.revision)
++                    assertNull(preview.stage.notes().revision(note.id,2))
++                }
++            }
++            assertTrue(File(root,"library-backup").listFiles().orEmpty().isEmpty())
++        }finally{
++            release.countDown()
++            withContext(NonCancellable){backup.cancelAndJoin();if(!backup.isCancelled)runCatching{backup.await().close()}}
++        }
++    }}
++
+     @Test fun cloudLimitAndSpaceRejectBeforeIsolatedCopyOrArchive()=fixture{context,db,root->
+         // Deliberately metadata-only: rejection must happen before attempting to open/copy 900 MB.
+         val hash="a".repeat(64)
+diff --git a/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt b/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt
+index e9fbd685ad912ab2240d2bd5550c93f6c9d30bd5..ee05d4b5386b91797564c747bcb18160509495f2 100644
+--- a/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt
++++ b/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt
+@@ -238,10 +238,22 @@
+             return repo.snapshot().use{file->inspect(repo,file).use{it.canonical}}
+         }
+         try{
+-            val repo=LibraryBackupRepository(isolated,s)
++            val operation=java.util.concurrent.atomic.AtomicReference("baseline")
++            val lastPhase=java.util.concurrent.atomic.AtomicReference("scheduled")
++            val started=java.util.concurrent.atomic.AtomicLong(System.nanoTime())
++            fun phase(value:String){
++                lastPhase.set(value)
++                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{
++                    putString("stream","SNAPSHOT_CANCELLATION_PHASE operation=${operation.get()} phase=$value elapsedMs=${(System.nanoTime()-started.get())/1_000_000.0}\n")
++                })
++            }
++            val repo=LibraryBackupRepository(isolated,s){phase(it.name)}
++            phase("snapshot-start")
+             val baseline=repo.snapshot().use{file->
++                phase("snapshot-complete-inspect-start")
+                 inspect(repo,file).use{file.file.length() to it.canonical}
+             }
++            phase("inspect-complete")
+             val written=CompletableDeferred<Pair<File,Long>>()
+             val generation=async(start=CoroutineStart.LAZY){repo.snapshot()}
+             val observer=object:FileObserver(scratch.absolutePath,FileObserver.MODIFY){
+@@ -250,16 +262,20 @@
+                     val partial=File(scratch,path);val bytes=partial.length()
+                     // Do not count an already-complete archive as a mid-write interruption.
+                     if(bytes<=0||bytes>=baseline.first)return
+-                    if(written.complete(partial to bytes))generation.cancel(CancellationException("synthetic snapshot cancellation after write"))
++                    if(written.complete(partial to bytes)){
++                        phase("partial-observed")
++                        generation.cancel(CancellationException("synthetic snapshot cancellation after write"))
++                    }
+                 }
+             }
+             try{
++                operation.set("cancel");started.set(System.nanoTime());phase("snapshot-start")
+                 observer.startWatching();generation.start()
+                 val outcome=runCatching{withTimeout(15_000){generation.await()}}
+                 outcome.getOrNull()?.close()
+                 val failure=outcome.exceptionOrNull()
+                 androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{
+-                    putString("stream","SNAPSHOT_CANCELLATION_OUTCOME failure=${failure?.javaClass?.name} partialObserved=${written.isCompleted} cancelled=${generation.isCancelled}\n")
++                    putString("stream","SNAPSHOT_CANCELLATION_OUTCOME failure=${failure?.javaClass?.name} partialObserved=${written.isCompleted} cancelled=${generation.isCancelled} lastPhase=${lastPhase.get()} elapsedMs=${(System.nanoTime()-started.get())/1_000_000.0}\n")
+                 })
+                 assertTrue("Snapshot must be cancelled, not finish normally or time out",failure is CancellationException&&failure !is TimeoutCancellationException)
+                 assertTrue("A partial file must be observed before cancellation",written.isCompleted)
+diff --git a/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt b/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt
+index 342555e45b7fbf3e02c715f30f33c09bb49dd921..e533d138612a34e35aaf90cba8cce43d56ca1bc1 100644
+--- a/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt
++++ b/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt
+@@ -8,6 +8,7 @@
+ import kotlinx.coroutines.*
+ import kotlinx.coroutines.flow.*
+ import org.inkweft.core.*
++import org.json.JSONArray
+ import org.json.JSONObject
+ import org.junit.Assert.*
+ import org.junit.Test
+@@ -63,7 +64,7 @@
+                 assertTrue(result is SaveResult.Committed);writer=(result as SaveResult.Committed).note
+                 add((System.nanoTime()-start)/1e6)
+             }}}
+-            val first=cold.await();val coldMs=(System.nanoTime()-coldStart)/1e6;val latencies=saves.await().sorted()
++            val first=cold.await();val coldMs=(System.nanoTime()-coldStart)/1e6;val saveSamples=saves.await();val latencies=saveSamples.sorted()
+             assertEquals(targetBook,first.items.single().note.id);assertEquals(targetPage,first.items.single().pageId)
+             assertEquals(20_000,first.pendingIndex)
+             val coldScanned=scanned.get()
+@@ -96,11 +97,20 @@
+                 assertTrue(observed.getValue("previews").second<=61*600)
+                 assertEquals(body,noteRepo.read(targetBook)!!.text)
+             }
+-            val evidence=JSONObject().put("books",500).put("pages",20000).put("noteBodyChars",body.length)
++            // After timing, pin connection-local PRAGMAs to the primary writer without setting them.
++            val writerSqlite=db.withTransaction{
++                val settings=JSONObject();val sql=db.openHelper.writableDatabase
++                for(setting in listOf("page_size","auto_vacuum","journal_mode","synchronous")){
++                    sql.query("PRAGMA $setting").use{it.moveToFirst();settings.put(setting,if(setting=="journal_mode")it.getString(0) else it.getLong(0))}
++                }
++                settings
++            }
++            val evidence=JSONObject().put("books",500).put("pages",20000).put("noteBodyChars",body.length).put("writerSqlite",writerSqlite)
+                 .put("headerReadMs",headerMs).put("headerReturnedBodyChars",notes.sumOf{it.text.length})
+                 .put("coldMs",coldMs).put("coldSourceChecks",coldScanned).put("warmMedianMs",warm[2])
+                 .put("saveCount",latencies.size).put("saveP50Ms",latencies[latencies.size/2])
+                 .put("saveP95Ms",latencies[(latencies.size*95+99)/100-1]).put("saveMaxMs",latencies.last())
++                .put("saveSamplesMs",JSONArray(saveSamples))
+                 .put("writerCompletedDuringPausedSearch",completedWhilePaused)
+                 .put("shelfReturnedPreviewChars",shelf.items.sumOf{it.note.text.length})
+                 .put("shelfDirectoryBodyChars",shelf.active.sumOf{it.text.length})
+diff --git a/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt b/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt
+index 19fca189d7f91b2a85767b3666150d3feb598528..6561a477a45da8c6fc2739f274cee5faf417fceb 100644
+--- a/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt
++++ b/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt
+@@ -15,6 +15,9 @@
+ import java.util.concurrent.ConcurrentHashMap
+ import java.util.concurrent.CountDownLatch
+ import java.util.concurrent.TimeUnit
++import java.util.concurrent.atomic.AtomicBoolean
++import java.util.concurrent.atomic.AtomicInteger
++import java.util.concurrent.atomic.AtomicReference
+ 
+ class LibrarySearchRepositoryTest {
+     @Test fun classificationUsesTheReadSnapshotAfterCancellableInitialIndexing()=fixture{db->coroutineScope{
+@@ -44,6 +47,9 @@
+         assertTrue(repo.read(LibrarySearchRequest(1,notes,emptyMap(),"不存在")).items.isEmpty())
+     }
+     private fun id()=UUID.randomUUID().toString()
++    private fun evidence(value:String){androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{
++        putString("stream","LIBRARY_SEARCH_STAGE $value\n")
++    })}
+     private fun fixture(block:suspend(NoteDatabase)->Unit)=runBlocking{
+         val context=ApplicationProvider.getApplicationContext<Context>();val name="library-search-${id()}.db"
+         val db=NoteDatabase.open(context,name)
+@@ -88,6 +94,41 @@
+         assertTrue(repo.read(request.copy(query="",filter="unfiled")).items.none{it.note.id==page.id})
+     }
+ 
++    @Test fun pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh()=fixture{db->coroutineScope{
++        val workspace=WorkspaceRepository(db);val pages=NotebookPages(db)
++        val first=workspace.create("合成一",false,PaperStyle.BLANK)
++        val second=workspace.create("合成二",false,PaperStyle.BLANK)
++        assertTrue(workspace.organize(second.id,0,"","目标分类",false,false))
++        assertTrue(pages.saveSearchText(first.id,0,"old source"))
++        assertTrue(pages.saveSearchText(second.id,0,"target-only"))
++        val repo=LibrarySearchRepository(db);val entered=CompletableDeferred<Unit>();val release=CountDownLatch(1)
++        val paused=AtomicBoolean(false)
++        repo.scanObserver={query,_->
++            check(Thread.currentThread()!=Looper.getMainLooper().thread)
++            if(query=="old"&&paused.compareAndSet(false,true)){
++                entered.complete(Unit);check(release.await(10,TimeUnit.SECONDS))
++            }
++        }
++        val requests=MutableStateFlow(LibrarySearchRequest(1,listOf(first,second),emptyMap(),"old"))
++        val results=Channel<LibrarySearchResult>(Channel.UNLIMITED);val published=mutableListOf<Long>()
++        val observer=launch(Dispatchers.Main){repo.observe(requests).collect{published+=it.generation;results.send(it)}}
++        try{
++            withTimeout(5_000){entered.await()}
++            withTimeout(1_000){withContext(Dispatchers.Main){
++                for((i,term) in listOf("t","tar","target-only").withIndex())requests.value=requests.value.copy(generation=i+2L,query=term)
++                yield();yield()
++            }}
++            release.countDown()
++            suspend fun result(generation:Long)=withTimeout(5_000){var value=results.receive();while(value.generation!=generation)value=results.receive();value}
++            val latest=result(4);assertFalse(latest.failed);assertEquals(second.id,latest.items.single().pageId)
++            requests.value=requests.value.copy(generation=5,query="",type="board")
++            val cleared=result(5);assertFalse(cleared.failed);assertTrue(cleared.items.isEmpty())
++            requests.value=requests.value.copy(generation=6,type="all",filter="tag:目标分类")
++            val category=result(6);assertFalse(category.failed);assertEquals(second.id,category.items.single().note.id)
++            withContext(Dispatchers.Main){assertFalse("The paused old query must never publish",1L in published)}
++        }finally{release.countDown();observer.cancelAndJoin();results.close()}
++    }}
++
+     @Test fun twentyThousandPageRapidInputClearAndCategoryCancelOldGenerationOffMain()=fixture{db->coroutineScope{
+         val notes=ArrayList<Note>();var expectedPage=""
+         db.withTransaction{
+@@ -106,14 +147,25 @@
+                 }
+             }
+         }
++        evidence("fixtureReady books=500 pages=20000")
+         val repo=LibrarySearchRepository(db);val entered=CompletableDeferred<Unit>();val release=CountDownLatch(1)
+         val scanned=ConcurrentHashMap<String,Int>()
++        val indexed=AtomicInteger(0)
+         val indexingStarted=System.nanoTime()
+         val firstStart=System.nanoTime();val first=repo.read(LibrarySearchRequest(0,notes,emptyMap(),"target-only"))
+         val firstMs=(System.nanoTime()-firstStart)/1_000_000.0
+         assertEquals(expectedPage,first.items.single().pageId);assertEquals(20_000,first.pendingIndex)
++        evidence("foregroundComplete elapsedMs=$firstMs pending=${first.pendingIndex}")
++        val observeStart=System.nanoTime()
++        val indexStep=AtomicReference("not-started")
++        repo.indexFirstBatchStepObserver={step->
++            indexStep.set(step)
++            evidence("indexFirstBatch step=$step observeElapsedMs=${(System.nanoTime()-observeStart)/1_000_000}")
++        }
+         repo.indexObserver={query,count->
+             check(Thread.currentThread()!=Looper.getMainLooper().thread){"Search scanned text on the main thread"}
++            indexed.set(count)
++            if(count<=128)evidence("indexBatch rows=$count observeElapsedMs=${(System.nanoTime()-observeStart)/1_000_000}")
+             if(count==128){entered.complete(Unit);check(release.await(30,TimeUnit.SECONDS))}
+             if(query=="target-only"&&count%4096==0)androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{
+                 putString("stream","FTS_PROGRESS rows=$count elapsedMs=${(System.nanoTime()-indexingStarted)/1_000_000}\n")
+@@ -124,8 +176,11 @@
+         val results=Channel<LibrarySearchResult>(Channel.UNLIMITED)
+         val observer=launch(Dispatchers.Main){repo.observe(requests).collect{results.send(it)}}
+         try{
+-            withTimeout(10_000){entered.await()}
+-            // The actual scan is paused on IO. Main remains runnable and newer requests cancel it.
++            try{withTimeout(10_000){entered.await()}}catch(failure:Throwable){
++                runCatching{evidence("indexGateFailed requiredRows=128 completedRows=${indexed.get()} lastIndexStep=${indexStep.get()} observeElapsedMs=${(System.nanoTime()-observeStart)/1_000_000} slowScanRows=${scanned["slow"]?:0} observerActive=${observer.isActive} failure=${failure.javaClass.simpleName}")}
++                throw failure
++            }
++            // Background indexing is paused after 128 rows; request reads remain on IO.
+             withTimeout(1_000){withContext(Dispatchers.Main){
+                 for((i,term) in listOf("t","tar","target-only").withIndex())requests.value=requests.value.copy(generation=i+2L,query=term)
+             }}
+diff --git a/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt b/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt
+index b0b101e6db840cd618998ef4adcf44ce46d2c369..e585a0c55d66d95703e524e1083b3eac8dd52fe6 100644
+--- a/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt
++++ b/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt
+@@ -193,7 +193,7 @@
+         assertTrue(completed.databaseBytesAfter<completed.databaseBytesBefore-original.size/2)
+     }
+     @Test fun laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes()=fixture{_,root,db,_->
+-        val sql=db.openHelper.writableDatabase;assertEquals(2L,number(db,"auto_vacuum"))
++        val sql=db.openHelper.writableDatabase;sql.execSQL("PRAGMA auto_vacuum=INCREMENTAL");assertEquals(2L,number(db,"auto_vacuum"))
+         val goodFile=File(root,"good.pdf");pdf(goodFile,4*1024*1024);val good=PdfDocumentSource.fromFile(goodFile,1)
+         val badFile=File(root,"bad.pdf");pdf(badFile,1024*1024);val bad=PdfDocumentSource.fromFile(badFile,1)
+         val goodId="00000000-0000-0000-0000-000000000001";val badId="00000000-0000-0000-0000-000000000002"
+diff --git a/android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt b/android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt
+index 905ff93f9698984465171c79d77a0d06e3e10873..04af9cd7db12209b0d418b0878caacaadeccf257 100644
+--- a/android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt
++++ b/android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt
+@@ -97,9 +97,21 @@
+             // Derived roots contain only identities; source geometry is never decoded here.
+             sql.execSQL("CREATE TEMP TABLE history_source_roots (sourceId TEXT NOT NULL,revision INTEGER NOT NULL,PRIMARY KEY(sourceId,revision))")
+             try {
++                // Decode every reference as before, but cross into SQLite once per 128
++                // identities. The private TEMP primary key deduplicates roots across all
++                // history formats; at most 256 bound values are buffered at a time.
++                val pending=ArrayList<Any>(256)
++                fun flushRoots(){
++                    if(pending.isEmpty())return
++                    active.ensureActive()
++                    val values=List(pending.size/2){"(?,?)"}.joinToString(",")
++                    sql.execSQL("INSERT OR IGNORE INTO history_source_roots(sourceId,revision) VALUES $values",pending.toTypedArray())
++                    pending.clear()
++                }
+                 fun retain(refs:List<StudySourceVersionRef>){refs.forEach{ref->
+                     active.ensureActive()
+-                    sql.execSQL("INSERT INTO history_source_roots SELECT ?,? WHERE NOT EXISTS(SELECT 1 FROM history_source_roots WHERE sourceId=? AND revision=?)",arrayOf<Any>(ref.sourceId,ref.revision,ref.sourceId,ref.revision))
++                    pending.add(ref.sourceId);pending.add(ref.revision)
++                    if(pending.size==256)flushRoots()
+                 }}
+                 sql.query("SELECT sourceRefs FROM study_card_source_sets").use{c->while(c.moveToNext()){active.ensureActive();retain(StudySourceRefs.decode(c.getString(0)))}}
+                 sql.query("SELECT length(payload),payload FROM card_transform_operations").use{c->while(c.moveToNext()){
+@@ -109,6 +121,7 @@
+                 sql.query("SELECT length(payload),payload FROM recall_question_revisions").use{c->while(c.moveToNext()){
+                     active.ensureActive();require(c.getLong(0)<=RecallLimits.MAX_SPEC_BYTES);retain(RecallCodec.spec(c.getBlob(1)).sourceRefs)
+                 }}
++                flushRoots()
+                 phase("after-roots")
+                 absent("SELECT r.sourceId FROM history_source_roots r LEFT JOIN study_source_revisions s ON s.sourceId=r.sourceId AND s.revision=r.revision WHERE s.sourceId IS NULL")
+                 absent("SELECT r.commandId FROM command_receipts r LEFT JOIN note_revisions v ON v.noteId=r.noteId AND v.revision=r.committedRevision WHERE v.noteId IS NULL")
+diff --git a/android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt b/android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt
+index 46a995730e379d07894ef43cdcf08736337429fd..2f80098f5160248d3bb577029734f39c8ffa29f2 100644
+--- a/android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt
++++ b/android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt
+@@ -18,7 +18,8 @@
+  * Only trusted, locally compiled DDL is used. The archive contains values only. */
+ class LibraryBackupRepository(private val context:Context,private val db:NoteDatabase,
+     private val fault:(BackupFault)->Unit={}) {
+-    enum class BackupFault { BEFORE_RESTORE_COMMIT, AFTER_RESTORE_COMMIT, BEFORE_ISOLATED_COPY, AFTER_ISOLATED_COPY, BEFORE_SNAPSHOT_SYNC }
++    enum class BackupFault { BEFORE_RESTORE_COMMIT, AFTER_RESTORE_COMMIT, BEFORE_ISOLATED_COPY, AFTER_ISOLATED_COPY,
++        BEFORE_SNAPSHOT_VALIDATE, AFTER_SNAPSHOT_VALIDATE, BEFORE_SNAPSHOT_WRITE, BEFORE_SNAPSHOT_SYNC }
+     enum class RestoreResult { RESTORED, ALREADY_PRESENT, IDENTITY_CONFLICT, SNAPSHOT_CAPACITY_EXCEEDED }
+     class Preview internal constructor(internal val stage:NoteDatabase,internal val root:File,
+         val summary:LibraryArchive.Summary,val notes:Int,val pages:Int,val trashed:Int,val recycledPages:Int,
+@@ -82,7 +83,14 @@
+             val isolated=checkNotNull(stage)
+             // Recheck the captured generation in case edits grew the library after preflight.
+             preflight(isolated.openHelper.readableDatabase,0)
+-            validate(isolated)
++            // This writer belongs only to the private copy. Reuse its transaction context
++            // for validation's DAO reads without acquiring the author's writer connection.
++            isolated.withTransaction{
++                fault(BackupFault.BEFORE_SNAPSHOT_VALIDATE)
++                validate(isolated)
++            }
++            fault(BackupFault.AFTER_SNAPSHOT_VALIDATE)
++            fault(BackupFault.BEFORE_SNAPSHOT_WRITE)
+             val summary=FileOutputStream(path).use{file->
+                 val buffer=BufferedOutputStream(file)
+                 val result=LibraryArchive.write(buffer,SCHEMA,SqlRows(isolated),System.currentTimeMillis()){ctx.ensureActive()}
+@@ -145,7 +153,9 @@
+                 if(parsed.rows.size<SCHEMA.size)PageLayerStore.promote(sql)
+                 parsed
+             }
+-            validate(stage)
++            // Import validation has the same private-stage ownership as snapshot validation.
++            // Keep validate() itself usable by callers that manage their own live scope.
++            stage.withTransaction{validate(stage)}
+             val sql=stage.openHelper.writableDatabase
+             val notes=count(sql,"notes").toInt();val pages=count(sql,"notebook_pages").toInt()
+             val trash=sql.query("SELECT COUNT(*) FROM notebook_workspace WHERE trashedAt IS NOT NULL").use{it.moveToFirst();it.getInt(0)}
+diff --git a/android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt b/android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt
+index 1b9bbd596bbe5a8e62ab1319a95db5acfb718d8d..0f7a5f7923015780beef0cb48e85dc7bb37e8bb6 100644
+--- a/android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt
++++ b/android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt
+@@ -23,6 +23,7 @@
+ class LibrarySearchRepository(private val db:NoteDatabase) {
+     internal var scanObserver:((String,Int)->Unit)?=null
+     internal var indexObserver:((String,Int)->Unit)?=null
++    internal var indexFirstBatchStepObserver:((String)->Unit)?=null
+     // Counts rows/UTF-16 characters crossing the cursor boundary, excluding draft inputs.
+     internal var readObserver:((String,Int,Int)->Unit)?=null
+     internal var queryPlanObserver:((List<String>)->Unit)?=null
+@@ -32,7 +33,7 @@
+         var previous:LibrarySearchRequest?=null
+         val completed=MutableStateFlow(0);var indexed=0
+         launch(Dispatchers.IO){db.invalidationTracker.createFlow("page_search_text","study_cards").collectLatest{
+-            LibraryTextIndex.build(db){indexed+=it;indexObserver?.invoke(previous?.query.orEmpty(),indexed)}
++            LibraryTextIndex.build(db,onFirstBatchStep=indexFirstBatchStepObserver){indexed+=it;indexObserver?.invoke(previous?.query.orEmpty(),indexed)}
+             completed.value++
+         }}
+         combine(requests,db.invalidationTracker.createFlow(
+diff --git a/android/data-local/src/main/kotlin/org/inkweft/data/LibraryTextIndex.kt b/android/data-local/src/main/kotlin/org/inkweft/data/LibraryTextIndex.kt
+index d6e42e3a2e6c1b6210d2bfd358568a80cb52f3a3..7ebf537a0b1f62b710d0bd48d7d673499135fc5c 100644
+--- a/android/data-local/src/main/kotlin/org/inkweft/data/LibraryTextIndex.kt
++++ b/android/data-local/src/main/kotlin/org/inkweft/data/LibraryTextIndex.kt
+@@ -33,13 +33,21 @@
+             if(own)sql.setTransactionSuccessful()
+         }finally{if(own)sql.endTransaction()}
+     }
+-    suspend fun build(db:NoteDatabase,onBatch:suspend(Int)->Unit={}){
+-        while(true){val rows=db.withTransaction{prepare(db.openHelper.writableDatabase)}
++    suspend fun build(db:NoteDatabase,onFirstBatchStep:((String)->Unit)?=null,onBatch:suspend(Int)->Unit={}){
++        var firstBatch=true
++        while(true){
++            val step=if(firstBatch)onFirstBatchStep else null
++            step?.invoke("waiting-writer")
++            val rows=db.withTransaction{
++                step?.invoke("writer-acquired")
++                prepare(db.openHelper.writableDatabase,step)
++            }
++            step?.invoke("batch-committed");firstBatch=false
+             if(rows==0)return
+             onBatch(rows);delay(10) // Release the writer before author work and another bounded batch.
+         }
+     }
+-    private suspend fun prepare(sql:SupportSQLiteDatabase):Int{
++    private suspend fun prepare(sql:SupportSQLiteDatabase,step:((String)->Unit)?):Int{
+         val pending=sql.query("SELECT kind,target FROM library_search_pending ORDER BY kind,target LIMIT 64").use{c->
+             buildList{while(c.moveToNext())add(c.getInt(0) to c.getString(1))}
+         }
+@@ -49,6 +57,7 @@
+             val value=sql.query(if(kind==0)"SELECT '',text FROM page_search_text WHERE pageId=?" else "SELECT title,body FROM study_cards WHERE id=?",arrayOf(target)).use{c->
+                 if(c.moveToFirst())c.getString(0) to c.getString(1)else null
+             }
++            if(rows==0)step?.invoke("first-source-read")
+             val size=value?.let{(it.first.length.toLong()+it.second.length)*2}?:0L
+             if(rows>0&&bytes+size>1_000_000)break
+             val key=sql.query("SELECT key FROM library_search_docs WHERE kind=? AND target=?",arrayOf<Any>(kind,target)).use{if(it.moveToFirst())it.getLong(0)else null}
+@@ -58,12 +67,16 @@
+             }else{
+                 sql.execSQL("INSERT OR IGNORE INTO library_search_docs(kind,target) VALUES(?,?)",arrayOf<Any>(kind,target))
+                 val doc=key?:sql.query("SELECT key FROM library_search_docs WHERE kind=? AND target=?",arrayOf<Any>(kind,target)).use{check(it.moveToFirst());it.getLong(0)}
++                if(rows==0)step?.invoke("first-tokenizing")
+                 val terms=LibrarySearchTerms.document(value.first,value.second){context.ensureActive()}
++                if(rows==0)step?.invoke("first-tokenized")
+                 sql.execSQL("INSERT INTO library_search_fts(docid,terms) VALUES(?,?)",arrayOf<Any>(doc,terms))
++                if(rows==0)step?.invoke("first-fts-written")
+             }
+             sql.execSQL("DELETE FROM library_search_pending WHERE kind=? AND target=?",arrayOf<Any>(kind,target))
+             rows++;bytes+=size
+         }
++        step?.invoke("batch-prepared")
+         return rows
+     }
+ }
+diff --git a/android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt b/android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt
+index 70cc35bc149a58f6d4676f8ea4eb0e9d94a1f09e..57f8c4f67e59f6e76cfeed899ca25feb8dbd72ee 100644
+--- a/android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt
++++ b/android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt
+@@ -2,10 +2,6 @@
+ package org.inkweft.data
+ 
+ import android.database.sqlite.SQLiteDatabaseCorruptException
+-import android.database.sqlite.SQLiteDatabase
+-import android.system.ErrnoException
+-import android.system.Os
+-import android.system.OsConstants
+ import androidx.sqlite.db.SupportSQLiteDatabase
+ import androidx.sqlite.db.SupportSQLiteOpenHelper
+ import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
+@@ -57,7 +53,6 @@
+                         // on its inode. The JVM lock prevents overlapping local file locks.
+                         RandomAccessFile(File(directory, target.name + ".inkweft-open-lock"), "rw").use { lock ->
+                             lock.channel.lock().use {
+-                                prepareNewDatabase(target)
+                                 read().also { opened = true }
+                             }
+                         }
+@@ -68,42 +63,12 @@
+         }
+     }
+ 
+-    private fun prepareNewDatabase(target: File) {
+-        // Nonempty files and recovery sidecars belong to SQLite's existing recovery
+-        // path. A lone zero-byte file contains no author data and can be an interrupted
+-        // exclusive creation; all cooperating openers are still behind the file lock.
+-        val sidecars = listOf("-wal", "-journal", "-shm").map { File(target.path + it) }
+-        if (target.length() != 0L || sidecars.any { it.exists() }) return
+-        try { Os.close(Os.open(target.path, OsConstants.O_WRONLY or OsConstants.O_CREAT or OsConstants.O_EXCL or OsConstants.O_CLOEXEC,
+-            OsConstants.S_IRUSR or OsConstants.S_IWUSR)) }
+-        catch (failure: ErrnoException) {
+-            if (failure.errno != OsConstants.EEXIST) throw failure
+-            if (target.length() != 0L || sidecars.any { it.exists() }) return
+-        }
+-        // Requery 3.49 writes its 1024-byte header before onConfigure. The platform
+-        // connection can configure an empty file before any schema/WAL writes, without
+-        // SELinux-forbidden hard links or a rename that could replace another creator.
+-        val options = SQLiteDatabase.OpenParams.Builder()
+-            .addOpenFlags(SQLiteDatabase.NO_LOCALIZED_COLLATORS)
+-            .setJournalMode("DELETE").setSynchronousMode("FULL")
+-            .setErrorHandler { throw SQLiteDatabaseCorruptException("Database corruption reported; original files retained") }
+-            .build()
+-        SQLiteDatabase.openDatabase(target, options).use { db ->
+-            db.pageSize = 4096
+-            db.execSQL("PRAGMA auto_vacuum=INCREMENTAL")
+-            db.beginTransaction()
+-            try {
+-                // Never reset another creator's version or schema. Parameters above
+-                // must precede BEGIN; SQLite fixes an empty database's page format then.
+-                check(db.version == 0 && db.rawQuery("SELECT COUNT(*) FROM sqlite_master", null).use { it.moveToFirst(); it.getLong(0) == 0L })
+-                db.version = 0
+-                check(db.pageSize == 4096L)
+-                check(db.rawQuery("PRAGMA auto_vacuum", null).use { it.moveToFirst(); it.getInt(0) == 2 })
+-                db.setTransactionSuccessful()
+-            } finally { db.endTransaction() }
+-        }
+-        // On failure retain the database and every journal; SQLite handles recovery.
+-    }
++    // Do not pre-initialize the shared target through another SQLite connection.
++    // File existence/size checks and O_EXCL do not exclude older processes which
++    // bypass our sidecar lock. A preflight PRAGMA could modify their committed DB
++    // before schema checks reject it. Let Requery perform ordinary SQLite creation
++    // and recovery; new DBs use its native page-size/auto-vacuum defaults. Existing
++    // DBs are never reformatted or switched to INCREMENTAL by this factory.
+ 
+     private companion object { val openLock = Any() }
+ }

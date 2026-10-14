@@ -1,0 +1,857 @@
+[
+  {
+    "timestamp": "2026-10-13T18:13:14.3027867Z",
+    "line": 392,
+    "value": {
+      "ordinal": 1,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:14.9125582Z",
+    "line": 393,
+    "value": {
+      "ordinal": 2,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibraryPagingTest#snapshotRetainsOldClassificationAndSourceWhileWriterCommits",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:15.5258342Z",
+    "line": 394,
+    "value": {
+      "ordinal": 3,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibraryPagingTest#refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:16.3373201Z",
+    "line": 395,
+    "value": {
+      "ordinal": 4,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:17.1023838Z",
+    "line": 396,
+    "value": {
+      "ordinal": 5,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:17.8154154Z",
+    "line": 397,
+    "value": {
+      "ordinal": 6,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:18.4294572Z",
+    "line": 398,
+    "value": {
+      "ordinal": 7,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:19.3910077Z",
+    "line": 399,
+    "value": {
+      "ordinal": 8,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#oneScanSurvivesRoomObserverRefreshAcrossSevenBatches",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:20.3535077Z",
+    "line": 400,
+    "value": {
+      "ordinal": 9,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:21.2666107Z",
+    "line": 401,
+    "value": {
+      "ordinal": 10,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:22.2295066Z",
+    "line": 402,
+    "value": {
+      "ordinal": 11,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:23.1916988Z",
+    "line": 403,
+    "value": {
+      "ordinal": 12,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:24.1046574Z",
+    "line": 404,
+    "value": {
+      "ordinal": 13,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:24.9664670Z",
+    "line": 405,
+    "value": {
+      "ordinal": 14,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:25.9294934Z",
+    "line": 406,
+    "value": {
+      "ordinal": 15,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:26.7912005Z",
+    "line": 407,
+    "value": {
+      "ordinal": 16,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#missingRoomGuardLogAbortsWithoutDeletingCandidates",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:37.5911119Z",
+    "line": 408,
+    "value": {
+      "ordinal": 17,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.app.NotebookShelfUiTest#pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "AUXILIARY_AM_KILL_CONFIRMED",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:38.2632144Z",
+    "line": 409,
+    "value": {
+      "ordinal": 18,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibraryPagingTest#cancelledSourceReadSkipsDirectoryAssemblyAndNextReadKeepsClassification",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:39.5294088Z",
+    "line": 410,
+    "value": {
+      "ordinal": 19,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#separatedRegionsSkipEmptyMetadataBatchesAndDecodeCrossingStrokeOnce",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:40.2440490Z",
+    "line": 411,
+    "value": {
+      "ordinal": 20,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#payloadMaskAndRevisionChangesCannotReuseStaleDecodedGeometry",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:40.9576277Z",
+    "line": 412,
+    "value": {
+      "ordinal": 21,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#explicitAppendReuseSkipsOldPayloadsAcrossRevisionJumpsAndDefaultsToInvalidation",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:41.6721925Z",
+    "line": 413,
+    "value": {
+      "ordinal": 22,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#appendPermissionStillRefreshesChangedPayloadVisibilityUndoAndMasks",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:42.6873584Z",
+    "line": 414,
+    "value": {
+      "ordinal": 23,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#appendReuseRejectsHeadOrMaskChangesDuringCachedBatches",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:43.8549617Z",
+    "line": 415,
+    "value": {
+      "ordinal": 24,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#decodedCacheRemainsBoundedForManyStrokesAndDenseMasks",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:44.8725884Z",
+    "line": 416,
+    "value": {
+      "ordinal": 25,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#sameRevisionMaskChangeDuringCachedVisitRejectsTheWholeRead",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:46.4399696Z",
+    "line": 417,
+    "value": {
+      "ordinal": 26,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#appendRetainsGeometryAcrossIdleLayerRevisionsAndDestructiveChangesMatchColdFrames",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:48.1587358Z",
+    "line": 418,
+    "value": {
+      "ordinal": 27,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:49.1757908Z",
+    "line": 419,
+    "value": {
+      "ordinal": 28,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:50.2412937Z",
+    "line": 420,
+    "value": {
+      "ordinal": 29,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:51.8600529Z",
+    "line": 421,
+    "value": {
+      "ordinal": 30,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:13:59.2052326Z",
+    "line": 452,
+    "value": {
+      "ordinal": 31,
+      "phase": "common-comparison",
+      "identity": "B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:14:44.9206573Z",
+    "line": 453,
+    "value": {
+      "ordinal": 32,
+      "phase": "common-comparison",
+      "identity": "B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:14:52.0979934Z",
+    "line": 454,
+    "value": {
+      "ordinal": 33,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:15:34.1131701Z",
+    "line": 455,
+    "value": {
+      "ordinal": 34,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:15:41.3472326Z",
+    "line": 456,
+    "value": {
+      "ordinal": 35,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:16:23.8153833Z",
+    "line": 457,
+    "value": {
+      "ordinal": 36,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:16:31.2405264Z",
+    "line": 458,
+    "value": {
+      "ordinal": 37,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:17:13.8566252Z",
+    "line": 459,
+    "value": {
+      "ordinal": 38,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:17:21.0132606Z",
+    "line": 460,
+    "value": {
+      "ordinal": 39,
+      "phase": "common-comparison",
+      "identity": "B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:18:07.2372076Z",
+    "line": 461,
+    "value": {
+      "ordinal": 40,
+      "phase": "common-comparison",
+      "identity": "B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:18:14.4288330Z",
+    "line": 462,
+    "value": {
+      "ordinal": 41,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:18:56.6964155Z",
+    "line": 463,
+    "value": {
+      "ordinal": 42,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:19:04.0306354Z",
+    "line": 464,
+    "value": {
+      "ordinal": 43,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:19:46.4001160Z",
+    "line": 465,
+    "value": {
+      "ordinal": 44,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:19:53.7665925Z",
+    "line": 466,
+    "value": {
+      "ordinal": 45,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:20:36.1877083Z",
+    "line": 467,
+    "value": {
+      "ordinal": 46,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:20:43.5003577Z",
+    "line": 468,
+    "value": {
+      "ordinal": 47,
+      "phase": "common-comparison",
+      "identity": "B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:21:29.7263110Z",
+    "line": 469,
+    "value": {
+      "ordinal": 48,
+      "phase": "common-comparison",
+      "identity": "B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:21:36.9968620Z",
+    "line": 470,
+    "value": {
+      "ordinal": 49,
+      "phase": "common-comparison",
+      "identity": "B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:22:23.5824025Z",
+    "line": 471,
+    "value": {
+      "ordinal": 50,
+      "phase": "common-comparison",
+      "identity": "B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:22:31.2744850Z",
+    "line": 472,
+    "value": {
+      "ordinal": 51,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:23:14.2571026Z",
+    "line": 473,
+    "value": {
+      "ordinal": 52,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:23:21.6454593Z",
+    "line": 474,
+    "value": {
+      "ordinal": 53,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:24:03.8757405Z",
+    "line": 475,
+    "value": {
+      "ordinal": 54,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:24:12.7348644Z",
+    "line": 506,
+    "value": {
+      "ordinal": 55,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryDeletionExposureTest#sameRoomWriterNaturalDeletionExposure",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:24:18.7740412Z",
+    "line": 507,
+    "value": {
+      "ordinal": 56,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryDeletionExposureTest#separateRoomWriterNaturalDeletionExposure",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  },
+  {
+    "timestamp": "2026-10-13T18:24:58.6397773Z",
+    "line": 508,
+    "value": {
+      "ordinal": 57,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibraryReadPerformanceTest#coldSearchConcurrentSavesAndShelfReadScale",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  }
+]

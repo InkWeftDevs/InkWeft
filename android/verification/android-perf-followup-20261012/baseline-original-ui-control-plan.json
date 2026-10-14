@@ -1,0 +1,18 @@
+[
+  {
+    "label": "ui-NotebookShelfUiTest-shelfRenameCancelBlankAndPersistedIdentity",
+    "module": "app",
+    "selection": "org.inkweft.app.NotebookShelfUiTest#shelfRenameCancelBlankAndPersistedIdentity",
+    "expected": 1,
+    "clear_owned_app_first": true,
+    "reason": "Original matched APK, unchanged UI preconditions, explicit Awake; controls initial candidate single-page readiness / asynchronous menu readiness failures before applying corrected shelf wait predicate."
+  },
+  {
+    "label": "ui-NotebookShelfUiTest-coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview",
+    "module": "app",
+    "selection": "org.inkweft.app.NotebookShelfUiTest#coverChangesPersistWithoutChangingInkAndCanReturnToContentPreview",
+    "expected": 1,
+    "clear_owned_app_first": true,
+    "reason": "Original matched APK, unchanged UI preconditions, explicit Awake; controls initial candidate single-page readiness / asynchronous menu readiness failures before applying corrected shelf wait predicate."
+  }
+]

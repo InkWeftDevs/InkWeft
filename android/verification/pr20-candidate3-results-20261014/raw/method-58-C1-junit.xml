@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.data.LibraryReadPerformanceTest#coldSearchConcurrentSavesAndShelfReadScale" tests="1" failures="0" errors="0" time="40.891318798065186"><testcase classname="org.inkweft.data.LibraryReadPerformanceTest" name="coldSearchConcurrentSavesAndShelfReadScale" time="40.891318798065186" /></testsuite>

@@ -1,0 +1,111 @@
+{
+  "checked_utc": "2026-10-12T23:02:36.253900+00:00",
+  "status": "PASS_SOURCE_CONTINUITY_ONLY",
+  "v2_manifest": {
+    "path": "/workspace/scratch/pr20-closure-evidence/candidate-v2-source-sha256.json",
+    "sha256": "141f13c85e1fac7d71b5623f14650eaff4b2cd11c3e4bcdf5ccbc6e25b3cc0ae",
+    "frozen_utc": "2026-10-12T22:01:05.160946+00:00",
+    "files": 743
+  },
+  "v3_manifest": {
+    "path": "/workspace/scratch/pr20-closure-evidence/candidate-v3-source-sha256.json",
+    "sha256": "c52cbf318ce52a660d7040ad75f2a3c3c1828027c6f61633bf886deae8a214f7",
+    "frozen_utc": "2026-10-12T22:59:02.516727+00:00",
+    "files": 743
+  },
+  "v2_snapshot": {
+    "path": "/workspace/scratch/candidate-v2-source-tree",
+    "matched_files": 743,
+    "unmatched": []
+  },
+  "current_candidate": {
+    "path": "/workspace/InkWeft",
+    "matched_v3_files": 743,
+    "unmatched": [],
+    "rechecked_after_analysis": true
+  },
+  "same_path_set": true,
+  "added_files": [],
+  "removed_files": [],
+  "identical_files": 740,
+  "changed_files": 3,
+  "all_deltas_are_instrumentation_test_sources": true,
+  "categories": {
+    "other_frozen_build_inputs": {
+      "v2_files": 22,
+      "v3_files": 22,
+      "identical": 22,
+      "changed": 0
+    },
+    "android_instrumentation_tests": {
+      "v2_files": 266,
+      "v3_files": 266,
+      "identical": 263,
+      "changed": 3
+    },
+    "production_main_sources_and_resources": {
+      "v2_files": 392,
+      "v3_files": 392,
+      "identical": 392,
+      "changed": 0
+    },
+    "jvm_tests": {
+      "v2_files": 63,
+      "v3_files": 63,
+      "identical": 63,
+      "changed": 0
+    }
+  },
+  "production_frozen_files_identical": true,
+  "other_frozen_build_inputs_identical": true,
+  "deltas": [
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupIsolationTest.kt",
+      "v2_sha256": "d5dd1072bedeae268191a6f208a893ef00cb93f0970d3a17bc4cc07eafdf0fde",
+      "v3_sha256": "d1419ac63b8d4bd3052d2be041c81e5b2a6650d957d46f204722a723c0d55ff2",
+      "category": "android_instrumentation_tests",
+      "description": "Adds stage/fault/timing diagnostics and failure context to authorCommitContinuesWhilePrivateValidationTransactionIsPaused. Existing 10-second hook/snapshot waits, 2-second author-save budget, assertions and final cleanup remain in place.",
+      "unified_diff_sha256": "a48ace0a14eb57056085770bb234beec5a3c1de4334a2058cf188b1de1006a5d",
+      "unified_diff": "--- candidate-v2/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupIsolationTest.kt\n+++ candidate-v3/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupIsolationTest.kt\n@@ -100,26 +100,49 @@\n \n     @Test fun authorCommitContinuesWhilePrivateValidationTransactionIsPaused()=fixture{context,db,root->coroutineScope{\n         val note=WorkspaceRepository(db).create(\"\u9a8c\u8bc1\u524d\u7684\u4f5c\u8005\u7248\u6b21\",false,PaperStyle.BLANK)\n+        val started=System.nanoTime();var stage=\"fixture-note-complete\"\n+        val lastFault=java.util.concurrent.atomic.AtomicReference(\"none\")\n+        fun phase(value:String){\n+            androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{\n+                putString(\"stream\",\"BACKUP_VALIDATION_ISOLATION_PHASE phase=$value elapsedMs=${(System.nanoTime()-started)/1_000_000.0}\\n\")\n+            })\n+        }\n+        phase(stage)\n         val entered=CompletableDeferred<Unit>();val release=CountDownLatch(1)\n         val backup=async(Dispatchers.IO){LibraryBackupRepository(context,db){fault->\n+            lastFault.set(fault.name);phase(\"snapshot:${fault.name}\")\n             // This hook runs after the isolated Room transaction has acquired its writer.\n             if(fault==LibraryBackupRepository.BackupFault.BEFORE_SNAPSHOT_VALIDATE){\n                 entered.complete(Unit);check(release.await(10,TimeUnit.SECONDS))\n             }\n         }.snapshot()}\n         try{\n+            stage=\"await-validation-hook\";phase(\"$stage:start\")\n             withTimeout(10_000){entered.await()}\n+            phase(\"$stage:complete\")\n+            stage=\"author-save\";phase(\"$stage:start\")\n             withTimeout(2_000){NoteRepository(db).save(SaveNote(id(),note.id,1,\"\u9a8c\u8bc1\u671f\u95f4\u5df2\u4fdd\u5b58\",\"\u72ec\u7acb\u4f5c\u8005\u4e8b\u52a1\"))}\n+            phase(\"$stage:complete\")\n             assertEquals(\"\u9a8c\u8bc1\u671f\u95f4\u5df2\u4fdd\u5b58\",db.notes().note(note.id)!!.title)\n             release.countDown()\n+            stage=\"await-snapshot\";phase(\"$stage:start\")\n             withTimeout(10_000){backup.await()}.use{snapshot->\n+                phase(\"$stage:complete\")\n+                stage=\"inspect\";phase(\"$stage:start\")\n                 snapshot.file.inputStream().use{LibraryBackupRepository(context,db).inspect(it)}.use{preview->\n                     assertEquals(note.title,preview.stage.notes().note(note.id)!!.title)\n                     assertEquals(1L,preview.stage.notes().note(note.id)!!.revision)\n                     assertNull(preview.stage.notes().revision(note.id,2))\n                 }\n+                phase(\"$stage:complete\")\n             }\n+            stage=\"scratch-cleanup-assertion\"\n             assertTrue(File(root,\"library-backup\").listFiles().orEmpty().isEmpty())\n+            phase(\"complete\")\n+        }catch(failure:Throwable){\n+            runCatching{phase(\"failure currentStage=$stage lastSnapshotFault=${lastFault.get()} exception=${failure.javaClass.simpleName}\")}\n+                .onFailure(failure::addSuppressed)\n+            throw failure\n         }finally{\n             release.countDown()\n             withContext(NonCancellable){backup.cancelAndJoin();if(!backup.isCancelled)runCatching{backup.await().close()}}\n"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt",
+      "v2_sha256": "9e4dc68ec757c5e2f1c97d73a5b93343ae4ec7b65165fa372cad1edc8808417b",
+      "v3_sha256": "a47f892262d656dcc6ec65e984681265d593e19f88ecaa13d135d2a9f3e65bd2",
+      "category": "android_instrumentation_tests",
+      "description": "Replaces the standalone LibraryTextIndex.build step with the real observe/index path plus 30 author saves, progress and raw duration samples, committed-row/readiness measurements, three checkpoint labels and final persisted-author assertions. Existing direct-search timing remains; index progress logging can affect index wall time and scheduling.",
+      "unified_diff_sha256": "b52c10d579b7b98771158061e12ee3dc5bff9a73eca832bc2ec2ff48a4f7a183",
+      "unified_diff": "--- candidate-v2/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt\n+++ candidate-v3/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt\n@@ -18,9 +18,14 @@\n import java.util.concurrent.atomic.AtomicInteger\n \n /** Also compiles unchanged at a128bb07. The optional new projection observer is discovered\n- * reflectively; timing and correctness use the same fixture/API on both revisions. */\n+ * reflectively; timing and correctness use the same fixture/API on both revisions.\n+ * Save checkpoints are emitted outside measured save calls. Index progress is emitted\n+ * after commits; logging can contribute to index wall time and concurrent scheduling. */\n class LibraryReadPerformanceTest {\n     private fun id()=UUID.randomUUID().toString()\n+    private fun checkpoint(marker:String,value:JSONObject){\n+        InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString(\"stream\",\"$marker $value\\n\")})\n+    }\n     @Test fun coldSearchConcurrentSavesAndShelfReadScale()=runBlocking{coroutineScope{\n         val context=ApplicationProvider.getApplicationContext<Context>()\n         val name=\"library-read-probe-${id()}.db\";val db=NoteDatabase.open(context,name)\n@@ -83,7 +88,84 @@\n             }finally{release.countDown();paused.cancelAndJoin()}\n             if(headerMethod!=null)assertTrue(\"Independent WAL reader must not reserve the Room writer\",completedWhilePaused)\n             repo.scanObserver=null\n-            LibraryTextIndex.build(db)\n+            checkpoint(\"LIBRARY_DIRECT_SAVE_CHECKPOINT\",JSONObject()\n+                .put(\"coldMs\",coldMs).put(\"coldSourceChecks\",coldScanned)\n+                .put(\"saveCount\",latencies.size).put(\"saveSamplesMs\",JSONArray(saveSamples))\n+                .put(\"saveP50Ms\",latencies[latencies.size/2])\n+                .put(\"saveP95Ms\",latencies[(latencies.size*95+99)/100-1]).put(\"saveMaxMs\",latencies.last())\n+                .put(\"writerCompletedDuringPausedSearch\",completedWhilePaused))\n+            // Additional scenario: the real observe() path builds FTS while author saves run.\n+            // The paused-reader save advanced the head; refresh before issuing the next edit.\n+            writer=checkNotNull(noteRepo.read(writer.id))\n+            val observedAuthorStartRevision=writer.revision\n+            val observeRows=AtomicInteger();val observeChecks=AtomicInteger()\n+            val firstObservedBatch=CompletableDeferred<Unit>()\n+            val allRowsCommitted=CompletableDeferred<Unit>()\n+            val observedIndexReady=CompletableDeferred<LibrarySearchResult>()\n+            val observeStart=System.nanoTime()\n+            var firstObservedBatchMs=0.0;var allObservedRowsMs=0.0\n+            repo.scanObserver={_,_->observeChecks.incrementAndGet()}\n+            repo.indexObserver={_,count->\n+                observeRows.set(count)\n+                val firstBatch=!firstObservedBatch.isCompleted\n+                if(firstBatch){\n+                    firstObservedBatchMs=(System.nanoTime()-observeStart)/1e6\n+                    firstObservedBatch.complete(Unit)\n+                }\n+                if(count==first.pendingIndex){\n+                    allObservedRowsMs=(System.nanoTime()-observeStart)/1e6\n+                    allRowsCommitted.complete(Unit)\n+                }\n+                if(firstBatch||count%4096==0||count==first.pendingIndex){\n+                    checkpoint(\"INDEX_SAVE_PROGRESS\",JSONObject().put(\"rows\",count)\n+                        .put(\"elapsedMs\",(System.nanoTime()-observeStart)/1e6))\n+                }\n+            }\n+            val observeJob=launch(Dispatchers.Main){\n+                repo.observe(flowOf(request.copy(generation=2))).collect{result->\n+                    assertFalse(result.failed)\n+                    assertEquals(targetBook,result.items.single().note.id)\n+                    assertEquals(targetPage,result.items.single().pageId)\n+                    if(result.pendingIndex==0)observedIndexReady.complete(result)\n+                }\n+            }\n+            val observeEvidence=try{\n+                // Natural first committed batch: no sleeps or artificial index/writer pauses.\n+                firstObservedBatch.await()\n+                val rowsBeforeSaves=observeRows.get()\n+                val samples=JSONArray();val durations=ArrayList<Double>()\n+                withContext(Dispatchers.IO){repeat(30){i->\n+                    val rowsBefore=observeRows.get();val checksBefore=observeChecks.get()\n+                    val start=System.nanoTime()\n+                    val result=noteRepo.save(SaveNote(id(),writer.id,writer.revision,writer.title,\"Synthetic indexed edit $i\"))\n+                    val elapsed=(System.nanoTime()-start)/1e6\n+                    val rowsAfter=observeRows.get();val checksAfter=observeChecks.get()\n+                    assertTrue(result is SaveResult.Committed);writer=(result as SaveResult.Committed).note\n+                    durations+=elapsed\n+                    samples.put(JSONObject().put(\"sample\",i).put(\"elapsedMs\",elapsed)\n+                        .put(\"indexRowsStart\",rowsBefore).put(\"indexRowsEnd\",rowsAfter)\n+                        .put(\"sourceChecksStart\",checksBefore).put(\"sourceChecksEnd\",checksAfter))\n+                }}\n+                val rowsAfterSaves=observeRows.get()\n+                val sorted=durations.sorted()\n+                val savedSamples=JSONObject().put(\"indexRowsBeforeSaves\",rowsBeforeSaves).put(\"indexRowsAfterSaves\",rowsAfterSaves)\n+                    .put(\"firstCommittedBatchMs\",firstObservedBatchMs)\n+                    .put(\"saveCount\",durations.size).put(\"saveP50Ms\",sorted[sorted.size/2])\n+                    .put(\"saveP95Ms\",sorted[(sorted.size*95+99)/100-1]).put(\"saveMaxMs\",sorted.last())\n+                    .put(\"saveSamplesMs\",JSONArray(durations)).put(\"saveProgressSamples\",samples)\n+                    .put(\"sourceChecksAfterSaves\",observeChecks.get())\n+                checkpoint(\"LIBRARY_INDEX_SAVE_CHECKPOINT\",savedSamples)\n+                allRowsCommitted.await()\n+                observedIndexReady.await()\n+                val readyMs=(System.nanoTime()-observeStart)/1e6\n+                assertEquals(first.pendingIndex,observeRows.get())\n+                savedSamples.put(\"indexRowsFinal\",observeRows.get())\n+                    .put(\"allIndexRowsCommittedMs\",allObservedRowsMs).put(\"searchIndexReadyMs\",readyMs)\n+                    .put(\"sourceChecks\",observeChecks.get())\n+            }finally{\n+                withContext(NonCancellable){observeJob.cancelAndJoin()}\n+                repo.indexObserver=null;repo.scanObserver=null\n+            }\n             val warm=buildList{repeat(5){val start=System.nanoTime();val result=repo.read(request)\n                 add((System.nanoTime()-start)/1e6);assertEquals(targetPage,result.items.single().pageId);assertEquals(0,result.pendingIndex)}}.sorted()\n             val observed=HashMap<String,Pair<Int,Int>>()\n@@ -97,6 +179,10 @@\n                 assertTrue(observed.getValue(\"previews\").second<=61*600)\n                 assertEquals(body,noteRepo.read(targetBook)!!.text)\n             }\n+            val persistedAuthor=checkNotNull(noteRepo.read(writer.id))\n+            assertEquals(observedAuthorStartRevision+30L,persistedAuthor.revision)\n+            assertEquals(\"Synthetic indexed edit 29\",persistedAuthor.text)\n+            assertEquals(writer,persistedAuthor)\n             // After timing, pin connection-local PRAGMAs to the primary writer without setting them.\n             val writerSqlite=db.withTransaction{\n                 val settings=JSONObject();val sql=db.openHelper.writableDatabase\n@@ -111,6 +197,7 @@\n                 .put(\"saveCount\",latencies.size).put(\"saveP50Ms\",latencies[latencies.size/2])\n                 .put(\"saveP95Ms\",latencies[(latencies.size*95+99)/100-1]).put(\"saveMaxMs\",latencies.last())\n                 .put(\"saveSamplesMs\",JSONArray(saveSamples))\n+                .put(\"observeIndexConcurrentSaves\",observeEvidence)\n                 .put(\"writerCompletedDuringPausedSearch\",completedWhilePaused)\n                 .put(\"shelfReturnedPreviewChars\",shelf.items.sumOf{it.note.text.length})\n                 .put(\"shelfDirectoryBodyChars\",shelf.active.sumOf{it.text.length})\n"
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt",
+      "v2_sha256": "7645cf9bf542385d8468b4bdb3299cafb87137ef59113183699034bca490bd58",
+      "v3_sha256": "6f71c49df4ef7ead6d501aaa55a5d193876ec94a8550035ae00c338390255c1f",
+      "category": "android_instrumentation_tests",
+      "description": "Adds VACUUM immediately after the fixture PRAGMA auto_vacuum=INCREMENTAL in laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes; retains the auto_vacuum=2 assertion. This establishes the requested test database format before Room pooled reads; no production initialization change.",
+      "unified_diff_sha256": "c4120bedf6f06ff0c5fa4b41e1dfd9c3bec1293cbe34faab32b7447cf7e9f042",
+      "unified_diff": "--- candidate-v2/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt\n+++ candidate-v3/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt\n@@ -193,7 +193,8 @@\n         assertTrue(completed.databaseBytesAfter<completed.databaseBytesBefore-original.size/2)\n     }\n     @Test fun laterCorruptionStillReclaimsSuccessfullyMigratedDatabaseBytes()=fixture{_,root,db,_->\n-        val sql=db.openHelper.writableDatabase;sql.execSQL(\"PRAGMA auto_vacuum=INCREMENTAL\");assertEquals(2L,number(db,\"auto_vacuum\"))\n+        // Establish the requested fixture format before checking it through Room's read pool.\n+        val sql=db.openHelper.writableDatabase;sql.execSQL(\"PRAGMA auto_vacuum=INCREMENTAL\");sql.execSQL(\"VACUUM\");assertEquals(2L,number(db,\"auto_vacuum\"))\n         val goodFile=File(root,\"good.pdf\");pdf(goodFile,4*1024*1024);val good=PdfDocumentSource.fromFile(goodFile,1)\n         val badFile=File(root,\"bad.pdf\");pdf(badFile,1024*1024);val bad=PdfDocumentSource.fromFile(badFile,1)\n         val goodId=\"00000000-0000-0000-0000-000000000001\";val badId=\"00000000-0000-0000-0000-000000000002\"\n"
+    }
+  ],
+  "evidence_continuity": {
+    "v2_existing_execution_records": "Retain their original v2 source/APK identity and observed outcomes. Matching production and unchanged test source supports continuity, not relabeling a v2 execution as v3.",
+    "v3_build": "Reported active by parent at delegation; this source-only check does not verify build completion or artifacts.",
+    "changed_test_execution": "Requires v3 test APK execution for new/modified scenarios.",
+    "final_performance_pair": "PENDING; no baseline-final/candidate-v3 performance result is supplied by this task.",
+    "database_bytes": "Not proven equal; see performance-fixture-comparability.md."
+  },
+  "docker": {
+    "inspected": false,
+    "modified": false,
+    "scope_note": "Android source manifests do not establish Docker source or build continuity. Docker remains under parent ownership and was not touched."
+  },
+  "actions": {
+    "repository_sources_modified": false,
+    "historical_evidence_modified": false,
+    "builds_run": false,
+    "adb_or_native_run": false,
+    "remote_calls_run": false,
+    "remote_mutations_run": false
+  },
+  "validation_boundary": "Exact byte continuity of the 743 frozen Android inputs, checked against v2 snapshot/current v3 sources. No binary reproducibility, new build success, native pass or performance improvement is inferred from this check."
+}

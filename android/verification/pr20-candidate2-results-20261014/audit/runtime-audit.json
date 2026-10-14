@@ -1,0 +1,1716 @@
+{
+  "status": "INDEPENDENT_RUNTIME_RECORD_AUDIT_PASS",
+  "scope": "Read-only independent original text-evidence audit; no build/ADB/network/permissions or binary APK execution/reverification. Performance acceptance is separate.",
+  "run_id": 38441089594,
+  "job_id": 115447545993,
+  "active_git": "6b180ef65fa0d966f42967fe6a592f7bfe0a8ae5",
+  "readiness_git": "6c72fd8b20228cc324fd835efa3f505f1f179997",
+  "identities": {
+    "B": {
+      "git": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+      "canonical_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8"
+    },
+    "C0": {
+      "git": "ebb48481e7e995288c1844d43011398c513b4f4e",
+      "canonical_manifest_sha256": "c0e3b9a4cfa9b5a602e47422f080add43353d64acacea505cc8f3ebee4c91e63"
+    },
+    "C1": {
+      "git": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+      "canonical_manifest_sha256": "7592c7990537bde681d0179539f58e1cd79822695bfcfd4b19882d9e1f738e90"
+    }
+  },
+  "archive": {
+    "artifact_id": 11837544923,
+    "archive_sha256": "e3218dda22503f2bc085cf2e96284ce0bd24f5b05c40dcee772c13b2ec7318aa",
+    "archive_bytes": 769104,
+    "payload_files": 289,
+    "uncompressed_bytes": 3638425
+  },
+  "archive_verification_receipt_sha256": "fdae6b5ad44d64ea67e2a21ff555ba28923f5af6373d5917facf7ebef41550f4",
+  "manifest_sha256": "dcbf83341b87ce3419d178f8579b56af9a77e84e1969dd848ec3490c759d172c",
+  "summary_sha256": "3c42a4cda8800112e647e69c67e80467f4e3c1cda312d34fb7b7a3508ae94b72",
+  "summary_before_packaging_sha256": "92c44831dcc73fe2d01e9fe27b259723060db2b52f419b580428b8f3d38597b3",
+  "controller_hashes": {
+    "README.md": "a152cc6257266590cd5e2962570c42e8c8137a0b99b50d8021a8e54bbfc927d9",
+    "authorization.json": "e22b58660ae1262ae3fdfe6a20b03eb5cab2aff759e7293e89a91d52567a9555",
+    "budget-revision.json": "0de35f7063e25c9c75daa7f4a1719eb525d40d2bdbc311c380133669dcfd582a",
+    "cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "clock-contract.json": "27c0402923b91c024485bba9b9c9a8d93f6a87f2fff6c408f3f7c1de46e61939",
+    "clock-server-receipt.json": "81b628032f60fc90b6b29881189123304e0b7666efa7cda5b76d55fcee051bc7",
+    "package.py": "ba7618e5011e5baf2540b85588569073628d5342c8a201228b175732c6de3b61",
+    "preflight.json": "2779d41db5b76cc5604476f316007068e4d4c84a2c7747a3ef0d6751e5000d7a",
+    "run.py": "5c5d2f2666d2fc8e9b85268680a7f3b58babde6abc752289badba65a0da7d715",
+    "workflow.proposed.yml": "036cd396213295f8613d4419e55e6ee8269948b9069f0e818127029a1f2fb4a4"
+  },
+  "checks": {
+    "total": 1137,
+    "passed": 1137,
+    "issues": []
+  },
+  "frozen_input_count": 8,
+  "common_probes": [
+    {
+      "name": "probe-KvmLibraryPairProbe.kt",
+      "sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c",
+      "matched": true
+    },
+    {
+      "name": "probe-KvmLocalAppendPairProbe.kt",
+      "sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+      "matched": true
+    }
+  ],
+  "method_totals": {
+    "calls": 57,
+    "distinct_selections": 35,
+    "phase_calls": {
+      "correctness": 30,
+      "common-comparison": 24,
+      "candidate-diagnostics": 3
+    },
+    "raw_junit_pass": 57,
+    "host_pass": 57,
+    "adb_zero": 57,
+    "natural_exit": 56,
+    "allowed_helper_exit": 1,
+    "raw_marker_counts": {
+      "HISTORY_DELETE_WRITER_CORRECTNESS": 2,
+      "TILE_PAN_EVIDENCE": 1,
+      "TILE_PAN_STAGE": 1,
+      "KVM_PAIR_FIXTURE": 48,
+      "TILE_LOCAL_EVIDENCE": 36,
+      "KVM_RASTER_CLEANUP": 36,
+      "KVM_DIRECT_INTERVALS": 12,
+      "LIBRARY_DIRECT_SAVE_CHECKPOINT": 13,
+      "INDEX_SAVE_PROGRESS": 78,
+      "LIBRARY_INDEX_SAVE_CHECKPOINT": 13,
+      "KVM_INDEX_INTERVALS": 12,
+      "LIBRARY_READ_EVIDENCE": 13,
+      "HISTORY_DELETION_EXPOSURE_TRIAL": 60,
+      "HISTORY_DELETION_EXPOSURE_SUMMARY": 2,
+      "LIBRARY_STAGE_DIAGNOSTICS": 12
+    }
+  },
+  "methods": [
+    {
+      "ordinal": 1,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 2.0456383228302,
+      "files_sha256": {
+        "-instrumentation.log": "0d359714979427fd2c6b19c2d45f20f601c6aab1d3a45681876bece33dac0582",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "de2866a02659aeaf2ff5c93785098f2f93878a5971d7bb763d4254e8ecfa1daa"
+      }
+    },
+    {
+      "ordinal": 2,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibraryPagingTest#snapshotRetainsOldClassificationAndSourceWhileWriterCommits",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.6082043647766113,
+      "files_sha256": {
+        "-instrumentation.log": "cc81d86fce0db724d8ec0fa181bc55a0fb581de87e55918da43cf47ec5e734bd",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "a469af091205c428c648b9329d9ca31748fe5fc01b6603092547dce77c45828d"
+      }
+    },
+    {
+      "ordinal": 3,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibraryPagingTest#refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.6118636131286621,
+      "files_sha256": {
+        "-instrumentation.log": "671e81e27c4605684c7063f08a2d0c6cedc435ca32891cc55ffb6c8df71275dd",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "f2817579e33c069e8fed5c5bd981ee1c0272f55f0f9d1ee410ed379e0256845f"
+      }
+    },
+    {
+      "ordinal": 4,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.8098247051239014,
+      "files_sha256": {
+        "-instrumentation.log": "0535a718fdccf9aea1a312efed7d8a0e7d7514fe7984c7ad10aab87fc10f3e73",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "53466b7f7c7646a0172721c3d719af7c84c2fdfe5083dbf74725892fdf065411"
+      }
+    },
+    {
+      "ordinal": 5,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.7635409832000732,
+      "files_sha256": {
+        "-instrumentation.log": "236c3da6cca1e050ed839a427338f8e0e72873925329bb5dec644d4b7f8701d0",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "03ff9c6858eb9b4629e10ebb756e98e57f796b6f3de61fcfd9abb9335db7cad1"
+      }
+    },
+    {
+      "ordinal": 6,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.7113776206970215,
+      "files_sha256": {
+        "-instrumentation.log": "5d608b388bd58d9e8e12c742382b9f526538e2aaa56194dffc7927f71f466627",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "3c64a8363d744216249a087b4d0be9fb7a942d210db99b8f82c820c4ecec1dff"
+      }
+    },
+    {
+      "ordinal": 7,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.6122074127197266,
+      "files_sha256": {
+        "-instrumentation.log": "0179b28940566ee0f1e6d0ab9e0c60f6aca95f3fef066d1c004fea390cdb29bb",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "b5dfabcdb43a3ffffdc437da38c41ad87cf040149539200db820b63d34251bd0"
+      }
+    },
+    {
+      "ordinal": 8,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#oneScanSurvivesRoomObserverRefreshAcrossSevenBatches",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.9598202705383301,
+      "files_sha256": {
+        "-instrumentation.log": "bd2ff179b324d2806a6526504e155d114dd6ec80b7b32adc3dec0e32d15eca83",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "cb4562742128d66ad1e9de6ff641261f86a3e5c309c96acac32d922259b69d9b"
+      }
+    },
+    {
+      "ordinal": 9,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.960688591003418,
+      "files_sha256": {
+        "-instrumentation.log": "67df36381acbb30d2e07de6a9ed3c65843f35f4c624adb8034fd6026e163984b",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "ad70a5828ccc570fef3eafb6330cb8823a5e36becf20870351abad8e10abd413"
+      }
+    },
+    {
+      "ordinal": 10,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.911057710647583,
+      "files_sha256": {
+        "-instrumentation.log": "5fc164dbe9dcc65014f12f05f526b6e504b2f7cbdf401bf520f70fa8d3ef6db3",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "13bcc64ede165e1e73bfb8499bc602b53a99473d73833496d148d0ee29d552d8"
+      }
+    },
+    {
+      "ordinal": 11,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.9609432220458984,
+      "files_sha256": {
+        "-instrumentation.log": "0cc182251abf85c7f407c985a068424a95e209c056187eb846513625317362ff",
+        "-records.json": "f3f1ae2280b440dabb9612f4bd2ebaa7477bf11c6d4b15604b7eaf5aa7efe8d7",
+        "-junit.xml": "75b9b53f7143c5925adb89e17108ceda84b75b0126057b149fd607e03b29f879"
+      }
+    },
+    {
+      "ordinal": 12,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.9602563381195068,
+      "files_sha256": {
+        "-instrumentation.log": "78a2639f0d509541db92ebea7711085b7659ad3b9a2f39dfa705b0fb03b55c0f",
+        "-records.json": "bfbcd60904444eead7506f033276a3a03c6d72e4c7776b8b815af467e0ad8f0f",
+        "-junit.xml": "9f3e51e90c8590d117b953c063fde238749efaf9dff0b2f0c66fd51152a65760"
+      }
+    },
+    {
+      "ordinal": 13,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.9108912944793701,
+      "files_sha256": {
+        "-instrumentation.log": "ac76f7cc96339ea444af63f2e04fed2dd5b14fa51f0e33769fe97f2cdc7c5c9d",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "1f14235cfb3e5075458a13cb6276e00bde9706544de77d5333bec1750fbf9a84"
+      }
+    },
+    {
+      "ordinal": 14,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.8596963882446289,
+      "files_sha256": {
+        "-instrumentation.log": "1c9ffff617f6677bcb6e4c1f2a0c8ec6258a982f030831ce635b9193db6548a7",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "f4744764bde443d859cca7c3d059da951e5f8169e4c2524493b05279d7732507"
+      }
+    },
+    {
+      "ordinal": 15,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.9609146118164062,
+      "files_sha256": {
+        "-instrumentation.log": "d26ca443cbd78e3396b70d1b4b7d6b429a5c4980bfcec951ce66b46c6f6874c6",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "d3e04828229106d6b37634b9892593eb406b457fb6ff4fdb7cbe7700f2111bd0"
+      }
+    },
+    {
+      "ordinal": 16,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.HistoryCollectionTest#missingRoomGuardLogAbortsWithoutDeletingCandidates",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.8595104217529297,
+      "files_sha256": {
+        "-instrumentation.log": "c6132a1d0e77f9aaa59193bc85c70ee2b4c918df4c33c22c408b10024cadf8e6",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "1fb5c73c7e3bdc8eff8a1d2b73bd8ca5e15aaf5435c829a0a354b15aa6e72316"
+      }
+    },
+    {
+      "ordinal": 17,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.app.NotebookShelfUiTest#pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "AUXILIARY_AM_KILL_CONFIRMED",
+      "observations": 21,
+      "seconds": 10.797305345535278,
+      "files_sha256": {
+        "-instrumentation.log": "f9232bd31092777a8729b6e34fbdee8e617471046759699e7fa2764765f6165d",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "51bb20be73b01f81af3c95ed8dcd5341dba687ebc31336cfceeb82745323c894"
+      }
+    },
+    {
+      "ordinal": 18,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.LibraryPagingTest#cancelledSourceReadSkipsDirectoryAssemblyAndNextReadKeepsClassification",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.6695730686187744,
+      "files_sha256": {
+        "-instrumentation.log": "c66d2306f489b12515f8865cc61b0bc10ac892232f1adbb49d52c8a1277b8249",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "5c09e5108cfc36c390399000588f654d414c38016a8ef4d0739b9317b442896a"
+      }
+    },
+    {
+      "ordinal": 19,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.RasterReadCacheTest#separatedRegionsSkipEmptyMetadataBatchesAndDecodeCrossingStrokeOnce",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.2633912563323975,
+      "files_sha256": {
+        "-instrumentation.log": "3ccd2eab5e54c77ca951ab2d9355d23a11a31a06026f95629a8e188e74939272",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "f27ccd1efeb6013c15caac8b4beed70ecca12440986146e29562cc9aed70f505"
+      }
+    },
+    {
+      "ordinal": 20,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.RasterReadCacheTest#payloadMaskAndRevisionChangesCannotReuseStaleDecodedGeometry",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.7118470668792725,
+      "files_sha256": {
+        "-instrumentation.log": "b48f2dfb30cde8f7edf373dbe37263812180099ed358eecbb6089cd0a45d848c",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "8c5c7062275635e8228f343bb5dca07384fc93ad490edd6a723a69cc45ed8748"
+      }
+    },
+    {
+      "ordinal": 21,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.RasterReadCacheTest#explicitAppendReuseSkipsOldPayloadsAcrossRevisionJumpsAndDefaultsToInvalidation",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.710770845413208,
+      "files_sha256": {
+        "-instrumentation.log": "1d427859c3c6f5aa2ef9b9c6c57d4ff9ec83b34b24affc8364a400e3eeef06e5",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "e30b438914947cb9eab5b25458b1bcea21dadd975f597e29b297f3380b117bec"
+      }
+    },
+    {
+      "ordinal": 22,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.RasterReadCacheTest#appendPermissionStillRefreshesChangedPayloadVisibilityUndoAndMasks",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 0.711674690246582,
+      "files_sha256": {
+        "-instrumentation.log": "7486607bfc6c274dafdce83211aea041e98c820387d0497ee643b15eb54e4fda",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "f420afe43744461d95356ef0d643886d7ddeb86a9535e7d208c31608fe1f8d36"
+      }
+    },
+    {
+      "ordinal": 23,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.RasterReadCacheTest#appendReuseRejectsHeadOrMaskChangesDuringCachedBatches",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.0122478008270264,
+      "files_sha256": {
+        "-instrumentation.log": "82e6b0963c8ee965f73f3d70245922813218c6a3d36b854ca7aeec8370674a7d",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "03d99c346f8335e85b08510563b5c789f9ee02672afaabb270fd17db5cf0fc77"
+      }
+    },
+    {
+      "ordinal": 24,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.RasterReadCacheTest#decodedCacheRemainsBoundedForManyStrokesAndDenseMasks",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.1646873950958252,
+      "files_sha256": {
+        "-instrumentation.log": "d2d9cbe2426c00aa7d3dcc54948d498834fc7d084c247aa5884e010db8221ce4",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "cd0752d0dde1a12e93f560834b936fc98b05312ddcd78fe33f560bb20ca9bbe7"
+      }
+    },
+    {
+      "ordinal": 25,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.data.RasterReadCacheTest#sameRevisionMaskChangeDuringCachedVisitRejectsTheWholeRead",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.0145692825317383,
+      "files_sha256": {
+        "-instrumentation.log": "66a0d2f05fe316db66bd14b0720281c1cd8c4cd585ddead111319d8088a284bd",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "0e535bc9233aa776fe5d7002be191cf80f044adb455295d36a71be7dfa911f96"
+      }
+    },
+    {
+      "ordinal": 26,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#appendRetainsGeometryAcrossIdleLayerRevisionsAndDestructiveChangesMatchColdFrames",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.5642449855804443,
+      "files_sha256": {
+        "-instrumentation.log": "04a826bc690e74d1bca5cae242937f0fdc257728b9799e4ab6eec31860adebcc",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "c1db79a0cc9690ab84e7c74fa1ecfde91c74bbccd4e65105590f052f6f51bb42"
+      }
+    },
+    {
+      "ordinal": 27,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.7154643535614014,
+      "files_sha256": {
+        "-instrumentation.log": "d634f9a27d51ccc7beb04da7a25ebd01c5197d41292c3246f250956f358192f6",
+        "-records.json": "0ea4576718822fd91d67df37be003b70d11b7f9674be2b99469fe63c4ba6b475",
+        "-junit.xml": "8a2b7fd43d2466678c7f562a4e850c85d29c5ef23fdb8ad7ea3f11b473fce3f0"
+      }
+    },
+    {
+      "ordinal": 28,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.0139086246490479,
+      "files_sha256": {
+        "-instrumentation.log": "ec95d0da08fac6a31cad707a0b2dfc14a9da2ce8af547edc3352f4a84118749a",
+        "-records.json": "3db8b1182173b6512afabcaed91072ccf01a95e52db4476999399f3ac1292e51",
+        "-junit.xml": "b7f82c1db4bf2d0364e8a6a4cbc36bcc2423516e2b8efbeb9c4733bf589aec29"
+      }
+    },
+    {
+      "ordinal": 29,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.0623128414154053,
+      "files_sha256": {
+        "-instrumentation.log": "5424bddcb8b89f36fbd8a8880b9721c157f09aa08a83390fdc6f2d48d3bb5da2",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "c7382a461319943455fc655b7415fdd68ac6ed8baec770d57225c6baafa71883"
+      }
+    },
+    {
+      "ordinal": 30,
+      "phase": "correctness",
+      "identity": "C1",
+      "install_group": "C1-correctness",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 1.6155073642730713,
+      "files_sha256": {
+        "-instrumentation.log": "a4d7658c3b9bfed6c83450bb5703fd506ef7f78ca2c53548d67be9d711928cfa",
+        "-records.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "-junit.xml": "18c57f041f103b8182a3c1c08eb8a0802bd1d797b2c671a18d5bcc8ea511d858"
+      }
+    },
+    {
+      "ordinal": 31,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-01-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4101,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.473606824874878,
+      "files_sha256": {
+        "-instrumentation.log": "71b7e11d41ed5ec405995535c108417543f4c563c7ff78e45aff09dac8eba653",
+        "-records.json": "5d7fc5a954432e7b45f582c9f09ac47711cb0498d3696df2deb9c05c2347028a",
+        "-junit.xml": "47167d8e357942c9da99e0b71fe986239d80ffb8c3c8ddbc74d796ea4237250c"
+      }
+    },
+    {
+      "ordinal": 32,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-01-B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4101,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 45.71174621582031,
+      "files_sha256": {
+        "-instrumentation.log": "08b898d844a84b9e7606d192edad952a3321b85c2170323a7a7be3e853c1a35c",
+        "-records.json": "3294983f78f79d42071eeb908375de66c6c35aec745b9782f4fb9dd64d1004cd",
+        "-junit.xml": "61a8a6da952835f2ffc401268364046fa89248bd6bc83526fc9102040acdeafa"
+      }
+    },
+    {
+      "ordinal": 33,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-02-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4101,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.424439191818237,
+      "files_sha256": {
+        "-instrumentation.log": "7c4cc87bb3532e315210978a7fcf875525a0d77d83ca1f40e0d47fee7eced861",
+        "-records.json": "fcddae5cb1afe6cf27d25608f4f12a53a78da1dc31c6fb51f82ee5bad95aefda",
+        "-junit.xml": "c7f82c160212d80a63ec8e3d974188dd2b6a2cd6bb3a4c8afd85f0fd7501205b"
+      }
+    },
+    {
+      "ordinal": 34,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-02-C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4101,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 42.01159191131592,
+      "files_sha256": {
+        "-instrumentation.log": "7df22c5cef21d8534b7386733d1fa5aacd4eb30ed9ac79d1738ae749db646370",
+        "-records.json": "ae77a26fa83d122d8bfb89bd4b9d15e4361e2026a0f545687659f470ba570481",
+        "-junit.xml": "109ac6cb059744511a80fd43001d3b8ec0c27b4753f0929428b328caedcd19fb"
+      }
+    },
+    {
+      "ordinal": 35,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-03-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4101,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.47776460647583,
+      "files_sha256": {
+        "-instrumentation.log": "25da2646e14ca6450454af4da1129108cdcb52240a3ccb5d03a56322732119cf",
+        "-records.json": "ff399773c88ed6eaebe18645b2e6c62c7522577f893ac1c5fbeab7375be97d46",
+        "-junit.xml": "a696304be4a7ee490086783c3a441eba893be2a160330f74b8e320c220b3aa4e"
+      }
+    },
+    {
+      "ordinal": 36,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-03-C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4101,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 42.46407175064087,
+      "files_sha256": {
+        "-instrumentation.log": "ed1ac637b855ab854bbf89835d89a97842551faed0f76c15badbf1f785675925",
+        "-records.json": "6acf74dd6c398c080e2f9a3000352fc6c5622582c35709b3085cdaf0c0b103f0",
+        "-junit.xml": "b6d279cfe14d6934f0d6dc28dd2ded18ad895f74d64c46c5b5183b3a48978586"
+      }
+    },
+    {
+      "ordinal": 37,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-04-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4102,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.623823642730713,
+      "files_sha256": {
+        "-instrumentation.log": "ec5796eaf539cc286e3f662356b2f52ed9ad9204228223692839edc2e4aa9686",
+        "-records.json": "91b88e751357a45ee6720086f07beace5da800a1e92a19a81c9a4e85849ccccc",
+        "-junit.xml": "7f06bbc267feabe8482f01eedd4b233bd4d3b43b0df67ed9b8b9f0bd15b61f5e"
+      }
+    },
+    {
+      "ordinal": 38,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-04-C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4102,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 42.61207127571106,
+      "files_sha256": {
+        "-instrumentation.log": "bcd08e8dec5a2c386956cf3f051eb8920831b2ffd32c6b2612497c5370e4361a",
+        "-records.json": "020aaefd6cf1308fee0a437eeba90f8bc8cfa51367d11d3dfb4fc5360cfe2bbf",
+        "-junit.xml": "1120960b8a276da6e889310b7828a740989106c38683f2265a8973300da2319f"
+      }
+    },
+    {
+      "ordinal": 39,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-05-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4102,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.481555461883545,
+      "files_sha256": {
+        "-instrumentation.log": "6c4cdd8b0c2203e05bc86fc325d4b7fb7974adf6764e917374d54f233618aec9",
+        "-records.json": "f0eea77679dfc73e95f01e3a811f7ec85909559dd6b1f8ca0bec96f3f6a29a14",
+        "-junit.xml": "23385936863c47e8a961b5e4e776389b33081205b559cb24f8f9f1aa141df22c"
+      }
+    },
+    {
+      "ordinal": 40,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-05-B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4102,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 46.21969127655029,
+      "files_sha256": {
+        "-instrumentation.log": "16a47b3f371c97c44bc48f252912ed99bf3719ee3f654434a45bca26b3f3276f",
+        "-records.json": "93f12a58ca97b5c3e2466da8cecf2bb262a6c5a1e2401aff95e189144fd75cab",
+        "-junit.xml": "54e52c0f693f02b751aee391a89a4b128d04ebee5f0fe63312e34fe892deb6a5"
+      }
+    },
+    {
+      "ordinal": 41,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-06-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4102,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.42924690246582,
+      "files_sha256": {
+        "-instrumentation.log": "fed286535c7fc71086288ef4361cd58743b1006afd9572d21b4fce21068c1b13",
+        "-records.json": "639131b4c621eac016cb624e63d51e5bc2c64d6ac588af0166c7a52ae1c4ee07",
+        "-junit.xml": "e3dc01afb1c83214c380da83520f341f8249cfc889f41becdefb551b26dbab7d"
+      }
+    },
+    {
+      "ordinal": 42,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-06-C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4102,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 42.26338219642639,
+      "files_sha256": {
+        "-instrumentation.log": "63c1b465578a82ddb779fdf2b2b6b6c283102768549f5f34af6b35d494fcd7fd",
+        "-records.json": "301e92414805ebb341e7c1af5d9e75b113da22d8a5d0dea0c4e5300f7015c1a9",
+        "-junit.xml": "baadedffe39aaf122fc05891c8c281a82617ee33d23a1d6324040e29412cf79e"
+      }
+    },
+    {
+      "ordinal": 43,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-07-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4103,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.577422142028809,
+      "files_sha256": {
+        "-instrumentation.log": "a4f0672e6952a449cb7a3990b67f56125ea88cb3164f0d7c9826984d2e9b55f0",
+        "-records.json": "bfdfa0e29c13f5003294493aaa1733d03bd1876dc95ead899eaa601168410e1c",
+        "-junit.xml": "4ad68233ae0a8f61f5861c484d6e88ad4033592c7c9dfeefdd50660612b9acd5"
+      }
+    },
+    {
+      "ordinal": 44,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-07-C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4103,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 42.36435866355896,
+      "files_sha256": {
+        "-instrumentation.log": "b1c85147e1924440bc4f1fa1d758c6c80f2a5a6505a309f0c7b8467d0b16fac6",
+        "-records.json": "2aeca17721cad0532d5ee0a7878f0f788b631248131e75c04221c496458eddf3",
+        "-junit.xml": "6c9ace5e5c0acfeba116aae5a7c4244074e120c8f3c5e912354b2302e1e8c8bc"
+      }
+    },
+    {
+      "ordinal": 45,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-08-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4103,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.579467535018921,
+      "files_sha256": {
+        "-instrumentation.log": "0f5fa94fbd032d6a5b63ef61fce116142078db4e57ca1abc7582684db92d12dc",
+        "-records.json": "7056dc5db81e02b35e1767f08657454f6c5005742563450699e9cd504656d5ac",
+        "-junit.xml": "57906a603c471cab073d8419d246066b0dce29510806181046d5fb643ad88595"
+      }
+    },
+    {
+      "ordinal": 46,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-08-C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4103,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 42.41615414619446,
+      "files_sha256": {
+        "-instrumentation.log": "7d2f54c37258833dd942d82f6f8bd9cb67e9647065025f3ef5310b25cffb0085",
+        "-records.json": "279c9fa1c31b39c5ecdc0b219b631a2f46d7cf0076e23c0f12b22b924ad401d3",
+        "-junit.xml": "fa7c24116c647dfd100570fab750ba39d4ce189f481d5a819badabda8b7f647a"
+      }
+    },
+    {
+      "ordinal": 47,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-09-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4103,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.578531503677368,
+      "files_sha256": {
+        "-instrumentation.log": "3f245d28ba424c723c24595c4f6723cf483a23a43a59a3da60660a4f5b6d8dca",
+        "-records.json": "b47a6cdcd0079b9f5a3303c1791c5828653ff318d2a9261e2fa30d8bae226878",
+        "-junit.xml": "5e66a7a011eeee15ef663655a82c287bcae0cedd662c569d74b6b88cf6185961"
+      }
+    },
+    {
+      "ordinal": 48,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-09-B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4103,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 46.22081279754639,
+      "files_sha256": {
+        "-instrumentation.log": "196bacebd2aa691bc0bc545c3ac283bd48417807848de84bd612062dc78cac24",
+        "-records.json": "98de1c0bf56a56d12f203a1d9eb687529b1d957ae219384cc4d96ac7d2675a47",
+        "-junit.xml": "8c8c330d094022a9c7b51bc23945d8dde51954948d6d00a1861729adfaf748a3"
+      }
+    },
+    {
+      "ordinal": 49,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-10-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4104,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.533111572265625,
+      "files_sha256": {
+        "-instrumentation.log": "cb734027eb1a29e003c4a4db9c14dcf2de93c4cac6e37ed25fad4ee43d4ab55b",
+        "-records.json": "3ede227ca72839ccce75007544648aeadd6034c0274aa6ccdbd1a4c2a268c026",
+        "-junit.xml": "3fc638e861e2c83c958f44dd298f824b43b62b2d90f97283b5c6158b81329c85"
+      }
+    },
+    {
+      "ordinal": 50,
+      "phase": "common-comparison",
+      "identity": "B",
+      "install_group": "visit-10-B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4104,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 46.580389738082886,
+      "files_sha256": {
+        "-instrumentation.log": "d2fc3ab64065506c18e56d87414ab23e9ba2bf37d7635308256b080b4a841a99",
+        "-records.json": "d3607847ea98c27248210f6858cd5d4fe767ef4bd66fadde44d56f25fe744553",
+        "-junit.xml": "32eaa2497f7d2200bc50382f2bad2d419a51554fe3c303f3c4c35bf70f52911c"
+      }
+    },
+    {
+      "ordinal": 51,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-11-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4104,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.834317684173584,
+      "files_sha256": {
+        "-instrumentation.log": "bd86951f7697a33f048966e392d7a5c39861be6837b46a28b61504ea5893f59a",
+        "-records.json": "c9b4f6d6966cd2f55337efb884c80f20faf94d33647a5f18a6236f46ab13f0c0",
+        "-junit.xml": "34609b1de57fa1f66cc423ddf658296be185235bd7b6a849737d8032a51bac80"
+      }
+    },
+    {
+      "ordinal": 52,
+      "phase": "common-comparison",
+      "identity": "C1",
+      "install_group": "visit-11-C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4104,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 42.97706604003906,
+      "files_sha256": {
+        "-instrumentation.log": "8cc5812bc9e80e48eb11aea5216d49866210453c7d8d4c8ba7b32b087d5e84a9",
+        "-records.json": "659671706c6e161f211c1ec0dbaf23f48de9c14a730cf92b7c266ad52dad8f54",
+        "-junit.xml": "e921907be35af1b91f6d22b4ed68d6f8aef09a4c4a81e0698b3a856b25b79961"
+      }
+    },
+    {
+      "ordinal": 53,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-12-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "seed": 4104,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 4.586199760437012,
+      "files_sha256": {
+        "-instrumentation.log": "c572bd6fbe35d5d3607e40f01030d53924c3d0954b09739bdca2878a6d0ed922",
+        "-records.json": "9b0c30aef729b3aa62679069a5e55b6b3b84eb72227967abf4f8c89e939a2eed",
+        "-junit.xml": "4eb16f5c8d090a1160e4a765e87bde2605f36bbe3038b9632f64027b6969067b"
+      }
+    },
+    {
+      "ordinal": 54,
+      "phase": "common-comparison",
+      "identity": "C0",
+      "install_group": "visit-12-C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": 4104,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 42.22452759742737,
+      "files_sha256": {
+        "-instrumentation.log": "3f914090c52cf22ce1c2ea195a54615a682c45119db0161520b34a8bbed4b984",
+        "-records.json": "5dcd7b8f8a537d96824ea65b0b6ecdda210f8f9322bf16d77fea6d9a4a67181c",
+        "-junit.xml": "c08db1fcbd3716183f91ec44137bbb220cf30ac19f92b88d44037ee91fcb30d4"
+      }
+    },
+    {
+      "ordinal": 55,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "install_group": "C1-diagnostics",
+      "selection": "org.inkweft.data.HistoryDeletionExposureTest#sameRoomWriterNaturalDeletionExposure",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 5.787014961242676,
+      "files_sha256": {
+        "-instrumentation.log": "4d4c2b532f2316b8ba6d638e10663e7da88dd9984ba3e7e44b9641347269eb69",
+        "-records.json": "e5d647e03ad8ac3abda307e0e90ffaae9ece778fad75cb7483c56f38b9643c60",
+        "-junit.xml": "2512a141d79e92ae6fc4a8576a6f964ea35f349dfebb3456f470253e934b8d81"
+      }
+    },
+    {
+      "ordinal": 56,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "install_group": "C1-diagnostics",
+      "selection": "org.inkweft.data.HistoryDeletionExposureTest#separateRoomWriterNaturalDeletionExposure",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 6.033604383468628,
+      "files_sha256": {
+        "-instrumentation.log": "cd9a0343de8b3976385c4d28a128f835a0cb88d63eab4b2751484c6ff0ad5026",
+        "-records.json": "ab39f68acacc5e805e7a7daf088d4fcd23da18f448103a9ef262388b360a2fbc",
+        "-junit.xml": "2136ae70ecc3b1d8a29268c4e90c7494c617bac482ec43a9adf8d831f5eb0d92"
+      }
+    },
+    {
+      "ordinal": 57,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "install_group": "C1-diagnostics",
+      "selection": "org.inkweft.data.LibraryReadPerformanceTest#coldSearchConcurrentSavesAndShelfReadScale",
+      "seed": null,
+      "raw_junit": "PASS",
+      "host": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "observations": 1,
+      "seconds": 39.859893560409546,
+      "files_sha256": {
+        "-instrumentation.log": "e4db3721f36d4b1a53314ce0a7fabe76f7b88da8d0ce19d73eb6f6ee82c03510",
+        "-records.json": "11e6c979cb1485e1cdcb22413453cf7d259e9430a7525d62815315da2d04f42d",
+        "-junit.xml": "ef3da049c7c5868aafec98661902197aec1640f0dda25f7d41c560513ca24766"
+      }
+    }
+  ],
+  "helper17": {
+    "ordinal": 17,
+    "raw_junit": "PASS",
+    "adb_exit": 0,
+    "natural_observations": 20,
+    "first_natural_seconds": 2.7539999791770242e-06,
+    "last_natural_seconds": 2.692380139000079,
+    "helper_pid": "2744",
+    "app_and_data_absent_every_natural_observation": true,
+    "request": {
+      "command": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "kill",
+        "--user",
+        "0",
+        "org.inkweft.app.a0.test"
+      ],
+      "status": "ABSENCE_CONFIRMED",
+      "started_seconds": 2.7500910280000426,
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "post_observation_seconds": 2.7713043380001636,
+    "total_process_exit_seconds": 2.8135595000001103,
+    "request_to_post_observation_seconds": 0.021213310000121055,
+    "request_to_completed_observation_seconds": 0.06346847200006778,
+    "window_note": "Nominal3s natural window reserves0.25s to avoid beginning3 queries at the edge; actual request at2.750091s. No claim of a full3s wait or externally proven cached state.",
+    "ordering_evidence": "Original monotonic observations/receipt plus hash-bound controller ordering: raw_result before processes_after; PASS+adb0+onlyhelper alive gate before one am kill; no force-stop fallback."
+  },
+  "natural_exit_summary": {
+    "methods": 56,
+    "maximum_process_exit_seconds": 0.05047686300008536,
+    "maximum_observations": 1
+  },
+  "common_fixtures": {
+    "seeds": [
+      4101,
+      4102,
+      4103,
+      4104
+    ],
+    "seed_selection_groups": 8,
+    "all_three_way_identical": true,
+    "scope": "Recorded fixture identity/hash/row/writer settings equality; not a claim that database files are byte-identical."
+  },
+  "apk_receipts": {
+    "scope": "Nine APK recorded hash/size/signer and three embeddedapp identities crosschecked. Frozen runner verified apksigner and ELF signatures and rehashed before installing. APK/AAR/.so binaries are absent from artifact; independent binary signature/ELF/dependency revalidation NOT_PERFORMED.",
+    "apks": [
+      {
+        "identity": "B",
+        "path": "app/build/outputs/apk/debug/app-debug.apk",
+        "bytes": 229655251,
+        "sha256": "4076a9cc594690c0c1e96dc617c460f14ca6080066c151c3546261f47a73d1c7",
+        "signer_sha256": "c63ad278ee90a7845869c98b20c5348c20487a177995c985c13eaca707e246f7"
+      },
+      {
+        "identity": "B",
+        "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+        "bytes": 10308467,
+        "sha256": "b97979698b1e20021065b8b06851224919b802fd6323240a7494002897293384",
+        "signer_sha256": "c63ad278ee90a7845869c98b20c5348c20487a177995c985c13eaca707e246f7"
+      },
+      {
+        "identity": "B",
+        "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+        "bytes": 22522824,
+        "sha256": "d687aa5605f3bb973e4f677567c06556201b4f83b3ea031d8624697ffef9ccd3",
+        "signer_sha256": "c63ad278ee90a7845869c98b20c5348c20487a177995c985c13eaca707e246f7"
+      },
+      {
+        "identity": "C0",
+        "path": "app/build/outputs/apk/debug/app-debug.apk",
+        "bytes": 229747847,
+        "sha256": "16a9e264decf0c73c4b88f96d05383236c9688d75a7701a47a24ad2ed6abcaa3",
+        "signer_sha256": "c63ad278ee90a7845869c98b20c5348c20487a177995c985c13eaca707e246f7"
+      },
+      {
+        "identity": "C0",
+        "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+        "bytes": 10566911,
+        "sha256": "0863f3b2933fe9a1992af8e93133ec0235a6ab93ac0e6b207e4428205cc7fb89",
+        "signer_sha256": "c63ad278ee90a7845869c98b20c5348c20487a177995c985c13eaca707e246f7"
+      },
+      {
+        "identity": "C0",
+        "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+        "bytes": 23243800,
+        "sha256": "c3363dfa752941b3ce1ba6caba07b45d2abeae3f805e68a3a4f0115fbce60e9c",
+        "signer_sha256": "c63ad278ee90a7845869c98b20c5348c20487a177995c985c13eaca707e246f7"
+      },
+      {
+        "identity": "C1",
+        "path": "app/build/outputs/apk/debug/app-debug.apk",
+        "bytes": 229748859,
+        "sha256": "ab82c7780a4703cf6bea9d1fe649ed854f745c24ddb4188e2610ec472d6a929b",
+        "signer_sha256": "c63ad278ee90a7845869c98b20c5348c20487a177995c985c13eaca707e246f7"
+      },
+      {
+        "identity": "C1",
+        "path": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+        "bytes": 10637051,
+        "sha256": "6eb9ab713f896bbdbda6f2fa773723153bc40835c386e6bbb1f357f87150a510",
+        "signer_sha256": "c63ad278ee90a7845869c98b20c5348c20487a177995c985c13eaca707e246f7"
+      },
+      {
+        "identity": "C1",
+        "path": "data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+        "bytes": 23276568,
+        "sha256": "8cab8f89483a644a6f9e44d12890a90a64736b5775dc1fefac94f7c470afb6c4",
+        "signer_sha256": "c63ad278ee90a7845869c98b20c5348c20487a177995c985c13eaca707e246f7"
+      }
+    ],
+    "common_mupdf_native": [
+      {
+        "path": "lib/arm64-v8a/libmupdf_java.so",
+        "bytes": 10840392,
+        "sha256": "5c7872c5e12ae3c00f68e14e371d3467cbfb2fd3dfefc7bb2a03d2cd491f6a4f"
+      },
+      {
+        "path": "lib/armeabi-v7a/libmupdf_java.so",
+        "bytes": 7582088,
+        "sha256": "2b24af301ba54d70c4cac09a1ae22af2c20f62b5f1046a2e8b352ca702e2ffd6"
+      },
+      {
+        "path": "lib/x86/libmupdf_java.so",
+        "bytes": 11187796,
+        "sha256": "46f512805c693c07f6e7fac50cdf3d2e028c5078f92e7d230f4c1e6e1b165ed9"
+      },
+      {
+        "path": "lib/x86_64/libmupdf_java.so",
+        "bytes": 11264136,
+        "sha256": "e9907d1e11f886662915376a1f059608e539c75cb1bc5ef57ccdf887a0367349"
+      }
+    ],
+    "dependency_counts": {
+      "B": 879,
+      "C0": 879,
+      "C1": 879
+    },
+    "dependency_lists_byte_identical": true,
+    "mupdf_dependency_records": [
+      {
+        "path": "com.artifex.mupdf/fitz/1.28.5/3483fd70a4dbe8b13b374354dfa237b85ea8d494/fitz-1.28.5.aar",
+        "bytes": 21636412,
+        "sha256": "e6887a242882cdd2dce062430bb46b6727513e3eb94e222255cc1a37db7a7d8e"
+      },
+      {
+        "path": "com.artifex.mupdf/fitz/1.28.5/e0e1b006967205df5d778037aa1ded7ad3beceec/fitz-1.28.5.pom",
+        "bytes": 662,
+        "sha256": "d66b443446cb2bb992c0de60115ae4988584bd44d16c877d0ba5e2d400b416ff"
+      }
+    ],
+    "jvm_tests": "NOT_RUN",
+    "lint": "NOT_RUN"
+  },
+  "installations": {
+    "groups": [
+      {
+        "group": "C1-correctness",
+        "identity": "C1",
+        "methods": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30
+        ],
+        "status": "PASS",
+        "install_log_sha256": "ed158818e603f56b2a4592bb0d76fb3ef9b88158db7e8f990d5293933599bdba",
+        "environment_files": {
+          "install-C1-correctness-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-C1-correctness-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-C1-correctness-host-before.json": "94929fba43b82b4ee91295ff25011c71553d7a6bd066bd7be4d36f4dcaf42270",
+          "install-C1-correctness-host-after.json": "8c18dbb0d65d62496420e8b1f1c802a12d85bb3d7b7965b5d17d2d9e95980de8"
+        }
+      },
+      {
+        "group": "visit-01-B",
+        "identity": "B",
+        "methods": [
+          31,
+          32
+        ],
+        "status": "PASS",
+        "install_log_sha256": "be7231fe93167bc4ef1dba7b319a160df76de28d114814357ec8c51228076f0e",
+        "environment_files": {
+          "install-visit-01-B-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-01-B-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-01-B-host-before.json": "771c595352c656edba574294372d9a92e32a92763824d603bc0c62436bb1c1a4",
+          "install-visit-01-B-host-after.json": "6c643c3daea163d82b72cc96dcee6fd2b8efd2157e358f5841255a0397fe2513"
+        }
+      },
+      {
+        "group": "visit-02-C0",
+        "identity": "C0",
+        "methods": [
+          33,
+          34
+        ],
+        "status": "PASS",
+        "install_log_sha256": "5dd676d269301f672f46ad1c351f0586a13aa9ef2cf13fd3604b77275afd0681",
+        "environment_files": {
+          "install-visit-02-C0-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-02-C0-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-02-C0-host-before.json": "dddea5320f6b2486651a1dd5b7fd17b42342479edc454d816083d8290f260c53",
+          "install-visit-02-C0-host-after.json": "7eb0d5ff7fa41219433563c46ae6d1b67437d1055c5a69ec4debbb313ea73d76"
+        }
+      },
+      {
+        "group": "visit-03-C1",
+        "identity": "C1",
+        "methods": [
+          35,
+          36
+        ],
+        "status": "PASS",
+        "install_log_sha256": "1aa2f70bdd81fa5b5dc0f2cdee53b188c610cdf086238f2362b682f1aafa580a",
+        "environment_files": {
+          "install-visit-03-C1-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-03-C1-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-03-C1-host-before.json": "ce3634af5b79f22cbf44daacbe1daa10528fc76b7f983debca1357c3dfde7566",
+          "install-visit-03-C1-host-after.json": "f7f6b28298af3b688a16e33f797c4b734cdacb70256013acac4c0f241ae0c2a4"
+        }
+      },
+      {
+        "group": "visit-04-C1",
+        "identity": "C1",
+        "methods": [
+          37,
+          38
+        ],
+        "status": "PASS",
+        "install_log_sha256": "3700809cbb366d45da75d5eda01d1385f084f2b80d6a29438b36f5b45ba1e048",
+        "environment_files": {
+          "install-visit-04-C1-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-04-C1-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-04-C1-host-before.json": "f4319da646c902dc892b7fc26b980edd1103dec3bee4f06e0da62f6bbdafbb49",
+          "install-visit-04-C1-host-after.json": "1d8c259c83053f594674d942ced73035da0ee755c30d177567f9763b3faa0fd9"
+        }
+      },
+      {
+        "group": "visit-05-B",
+        "identity": "B",
+        "methods": [
+          39,
+          40
+        ],
+        "status": "PASS",
+        "install_log_sha256": "6f505bd1c992612c901d4357d9339b9aa91322f82c45567f31ed0139b5a449a5",
+        "environment_files": {
+          "install-visit-05-B-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-05-B-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-05-B-host-before.json": "4389222560f04c5eee4207a1421fabe69460dd2a5d322bd200396d6c57c0bc17",
+          "install-visit-05-B-host-after.json": "3d2ee7c7ac04250cf9e4c9cdcbf099174e5c231b900535e795452881c2356d7b"
+        }
+      },
+      {
+        "group": "visit-06-C0",
+        "identity": "C0",
+        "methods": [
+          41,
+          42
+        ],
+        "status": "PASS",
+        "install_log_sha256": "71e44b2f1b9085a05e8a56c2d62c769fc6f723689d31adac6a35eaace2969dba",
+        "environment_files": {
+          "install-visit-06-C0-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-06-C0-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-06-C0-host-before.json": "8eb74a550209ccb454a28f1ccd299cd94fea2eaf8dc74e655c4dcdf93f0121ee",
+          "install-visit-06-C0-host-after.json": "b698ee9df938916bdbb6080c67f88399c3379dffc9930a0fe48314853a6110fa"
+        }
+      },
+      {
+        "group": "visit-07-C0",
+        "identity": "C0",
+        "methods": [
+          43,
+          44
+        ],
+        "status": "PASS",
+        "install_log_sha256": "6448dc1649f495bd462f692a69aabfc28e16eb2c8419951f9eb5833a0eb5b89c",
+        "environment_files": {
+          "install-visit-07-C0-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-07-C0-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-07-C0-host-before.json": "20414bd5ef6571f28fa7d8a96da57cf170015fb9642a933f79583f6314567d73",
+          "install-visit-07-C0-host-after.json": "5ad00d1876a5fc933b2079dbf9abfb579350ddd79462a6c269a79947df9876a5"
+        }
+      },
+      {
+        "group": "visit-08-C1",
+        "identity": "C1",
+        "methods": [
+          45,
+          46
+        ],
+        "status": "PASS",
+        "install_log_sha256": "998fefb9f090c184c02edcbd23c4dc8a7237fdb2a18fa47b2c7aa7d955f2d852",
+        "environment_files": {
+          "install-visit-08-C1-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-08-C1-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-08-C1-host-before.json": "d4c6924825037315762c0b03e0a7f1e4ceb04f43c01d5acf630864296938ecc7",
+          "install-visit-08-C1-host-after.json": "ba3b2fe94fefee1236138d3d23128c246b41b0a3c1b72a65c13402f7eebcaf96"
+        }
+      },
+      {
+        "group": "visit-09-B",
+        "identity": "B",
+        "methods": [
+          47,
+          48
+        ],
+        "status": "PASS",
+        "install_log_sha256": "23f203a07bbd395e7e14ebb36331ca9f5092a584eaed3458cc0fea5e9dec4138",
+        "environment_files": {
+          "install-visit-09-B-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-09-B-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-09-B-host-before.json": "4795869cf434d98720206782b44975938057d141bfd6b4326f1ee2b34b6a40e1",
+          "install-visit-09-B-host-after.json": "fdab5c15a678c0ee229643c5f76c66e835d59c5c0ba4af466fba717a276f3391"
+        }
+      },
+      {
+        "group": "visit-10-B",
+        "identity": "B",
+        "methods": [
+          49,
+          50
+        ],
+        "status": "PASS",
+        "install_log_sha256": "895bfbbe8073253c5ebde0c82a205ebc8513aceb7e083ab04033edc2e5d921de",
+        "environment_files": {
+          "install-visit-10-B-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-10-B-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-10-B-host-before.json": "9973a256eac765c0092b90ce2fe05122cc3c107a009533c6703705f3c338a66c",
+          "install-visit-10-B-host-after.json": "b63de0b525ed51e4c368ce470dadcc92784b149e1d7456fa48836eb1787194fe"
+        }
+      },
+      {
+        "group": "visit-11-C1",
+        "identity": "C1",
+        "methods": [
+          51,
+          52
+        ],
+        "status": "PASS",
+        "install_log_sha256": "1bd555ede4b56bf55b94bd1d58ca6d781177145aa80577ec9345f4e5393b02c3",
+        "environment_files": {
+          "install-visit-11-C1-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-11-C1-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-11-C1-host-before.json": "5e25efa0d0219a7bea56471ff87f32b43e005a52db5ea2db25a4a0185bf9b34c",
+          "install-visit-11-C1-host-after.json": "3842e94e8fdf06034e5f9cae249d2f7a26e0201b3e6bb1aa198c4de5ac85cc97"
+        }
+      },
+      {
+        "group": "visit-12-C0",
+        "identity": "C0",
+        "methods": [
+          53,
+          54
+        ],
+        "status": "PASS",
+        "install_log_sha256": "0b6ec086ed21ccece94b81be2a1cd6a5284907c2cc0bae67a472600688e3184a",
+        "environment_files": {
+          "install-visit-12-C0-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-visit-12-C0-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-visit-12-C0-host-before.json": "6b5a72958a71c384789ce2d8f0689442f842fa0618eb847f7394fc5b0bb9b568",
+          "install-visit-12-C0-host-after.json": "6b62ca32f268696931830fc28a1a4fdd7e44b28dbb1970833fdcae7486df357c"
+        }
+      },
+      {
+        "group": "C1-diagnostics",
+        "identity": "C1",
+        "methods": [
+          55,
+          56,
+          57
+        ],
+        "status": "PASS",
+        "install_log_sha256": "667a1a84cf90db1a17ff5b8b182420b66c25da121b29ca57a4282135a0312b4a",
+        "environment_files": {
+          "install-C1-diagnostics-environment-before.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "install-C1-diagnostics-environment-after.json": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+        },
+        "host_files": {
+          "install-C1-diagnostics-host-before.json": "81dfb7551e4731bf3764149ade25c489c792f2cfee058e3460b32688293a4094",
+          "install-C1-diagnostics-host-after.json": "9713d4266b0ed8241bb0d4abdb5ac5c4c7aa02dc30e2c164e3f7b15473610497"
+        }
+      }
+    ],
+    "group_count": 14,
+    "successful_installs": 42,
+    "successful_uninstalls": 39,
+    "group_environment_files": 28,
+    "including_overall_environment_files": 30,
+    "all_environment_bytes_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+    "device": {
+      "sdk": "35",
+      "abi": "x86_64",
+      "fingerprint": "Android/sdk_slim_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys",
+      "qemu": "1",
+      "hw_timeout_multiplier": "",
+      "size": "Physical size: 1080x1920\nOverride size: 1920x1200",
+      "density": "Physical density: 420\nOverride density: 240",
+      "font_scale": "1.0",
+      "animations": {
+        "window_animation_scale": "1.0",
+        "transition_animation_scale": "1.0",
+        "animator_duration_scale": "null"
+      }
+    },
+    "host_boundaries": 30
+  },
+  "cleanup": {
+    "before_acl_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+    "granted_acl_sha256": "edc020d9293f5cd73dbdd9fe2d8f8b1faaefa03c50a34ba5383b879d8b4d29c1",
+    "grant_added_lines": [
+      "user:1001:rw-",
+      "mask::rw-"
+    ],
+    "both_after_original_bytes_match": true,
+    "receipts": {
+      "trap": {
+        "receipt": {
+          "emulator": "STOPPED_CONFIRMED",
+          "command_groups": "STOPPED_CONFIRMED",
+          "acl": "RESTORED_EXACT",
+          "errors": []
+        },
+        "receipt_sha256": "33ff36212bb1677fbd3cc4ce95e18d9b692a06937705350d000ad5672594f73a",
+        "after_acl_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89"
+      },
+      "always": {
+        "receipt": {
+          "emulator": "STOPPED_CONFIRMED",
+          "command_groups": "STOPPED_CONFIRMED",
+          "acl": "RESTORED_EXACT",
+          "errors": []
+        },
+        "receipt_sha256": "33ff36212bb1677fbd3cc4ce95e18d9b692a06937705350d000ad5672594f73a",
+        "after_acl_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89"
+      }
+    }
+  },
+  "clock": {
+    "anchor_epoch": 1791913339,
+    "anchor_utc": "2026-10-13T17:42:19Z",
+    "phase_cutoff_epochs": {
+      "setup": 1791915619,
+      "correctness": 1791915799,
+      "common": 1791916519,
+      "diagnostics": 1791916639
+    },
+    "actual_job_start_verification": "BOUND_LOCAL_METADATA",
+    "actual_job_started_epoch": 1791913473.0,
+    "actual_job_started_at": "2026-10-13T17:44:33Z",
+    "anchor_lead_seconds": 134.0,
+    "job_conclusion": "success",
+    "job_wall_seconds": 2458.0
+  },
+  "phase_action_seconds": {
+    "setup": 33.66606879234314,
+    "build-B": 624.2864017486572,
+    "build-C0": 542.1282999515533,
+    "build-C1": 473.3727192878723,
+    "emulator": 32.164674520492554,
+    "methods-correctness": 42.84111666679382,
+    "methods-common": 611.9547743797302,
+    "methods-diagnostics": 54.63256478309631
+  },
+  "limitations": [
+    "Runtime audit PASS is not a performance-improvement verdict; use unchanged frozen analyzer and retain every regression/inconclusive result.",
+    "Cloud KVM API35 AOSP ATD x86_64 emulator with SwiftShader, not a physical Android device.",
+    "APK/native/dependency checks inspect runner receipts and hash-bound code only; no APK/AAR/native binaries supplied or reverified here.",
+    "Auxiliary cleanup state is observed by pidof before/after and code order; no unsupported claim the original PID was cached or that it waited a full3seconds.",
+    "57 executions contain35 distinct selections, not57 distinct test methods.",
+    "The same recorded fixture hash/scale/seed and writer settings do not imply byte-identical databases."
+  ],
+  "evidence_unchanged": {
+    "files": 291,
+    "all_sha256_matched": true
+  },
+  "audit_procedure_sha256": "3712ace7374a8316b50432a5ea118309e9f5310bba82dd179b8c5d8b4ddba2a3"
+}

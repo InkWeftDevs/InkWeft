@@ -1,0 +1,30 @@
+{
+  "run_id": 38379928087,
+  "run_url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/38379928087",
+  "workflow_commit": "371d461cc069f8a090ccc2f844068fae68e0770d",
+  "workflow_sha256": "01a50c6bf5e56c456bd70480ff7c9b1dd2fc3afb66968c51dc4368bcecbbbbb5",
+  "zip_name": "pr20-kvm-paired-38379928087.zip",
+  "zip_bytes": 516600,
+  "zip_sha256": "235f250c867f22328762d4b19c1ca719cdc1baa73af5976fd94896c05e435220",
+  "artifact_id": 11804705533,
+  "job_started_at": "2026-10-13T09:56:46Z",
+  "job_completed_at": "2026-10-13T10:20:22Z",
+  "job_seconds": 1416,
+  "setup_seconds": 978.7945694923401,
+  "source_manifest_verification": "Independently reconstructed all B948/C961 file hashes from immutable Git blobs plus explicitly frozen overlays; matched",
+  "dependency_receipts": 879,
+  "source_and_execution_manifest_verification": "All 21 frozen execution files match fixed workflow commit. The prepared workflow template is historical; actual corrected workflow hash is recorded separately.",
+  "previous_failed_run": {
+    "id": 38379138319,
+    "url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/38379138319",
+    "head": "7821bdd425a579199a60767550f2e9d1ccf808c8",
+    "conclusion": "failure",
+    "jobs": 0,
+    "methods": 0,
+    "artifacts": 0,
+    "reason": "runner.temp invalid in job env; YAML/Bash preflight did not validate GitHub expression context",
+    "kvm": "NOT_TOUCHED"
+  },
+  "new_runs_during_artifact_review": 0,
+  "apk_or_private_data_committed": false
+}

@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "reviewed_utc": "2026-10-13T02:19:33.920110+00:00",
+  "status": "STATIC_REVIEW_PASS_NO_BLOCKING_FINDINGS_NATIVE_DIAGNOSIS_PENDING",
+  "candidate_sources": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt": "aebfc90c0a9354a15995b47ed0f9d62037adb9009ecfb5fbf21c7749d7e0c7ea",
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt": "31325f357e719d4fe61354645f499ce06ecf8079e64fddb471c069f44ad3f5ec"
+  },
+  "portable_patch": {
+    "path": "raster-metadata-diagnostics-portable.patch",
+    "sha256": "1fc0348e2b4aae0ecf38cace3959fad5c4798871acee6ec1aac7d46452883d08"
+  },
+  "preservation_checks": {
+    "assert_source_lines": {
+      "count": 18,
+      "byte_for_byte_line_equal": true,
+      "before_sha256": "306d9244d5a6252e7a4dd146476b5ced23d98c3d96e4d6b6d40db2202f9c6296",
+      "after_sha256": "306d9244d5a6252e7a4dd146476b5ced23d98c3d96e4d6b6d40db2202f9c6296"
+    },
+    "timeout_source_lines": {
+      "count": 3,
+      "byte_for_byte_line_equal": true,
+      "before_sha256": "f234adbbe2af8d756950d784e54176418a3c774d9b1fea66b75bb1513794fa0f",
+      "after_sha256": "f234adbbe2af8d756950d784e54176418a3c774d9b1fea66b75bb1513794fa0f"
+    },
+    "spatial_index_worktree_diff_bytes": 0
+  },
+  "clock_and_cpu": {
+    "null_observer": "Safe-call assignments do not evaluate RHS when receiver is null; no probe/clock/record allocation on the disabled path.",
+    "official_language_reference": "https://kotlinlang.org/docs/null-safety.html#safe-call-operator",
+    "cpu_guard": "Both endpoint CPU samples and their difference must be nonnegative, and sampled Linux thread IDs equal; otherwise JSON null.",
+    "cpu_scope": "Cumulative sampled-thread CPU, not exclusive coroutine CPU.",
+    "admission_and_preparation": "Includes preparation transactions, yields, Room scheduling/admission; not isolated SQL lock waiting.",
+    "query_and_digest": "Ready callback entry to original final map; metadata queries, filtering and digest updates.",
+    "hex_and_result": "Original SHA finalization, Formatter and result allocation in unchanged execution order; not a Formatter-only timer."
+  },
+  "observer_and_cancellation": [
+    "Per-repository volatile nullable observer is captured once per call; default null.",
+    "Callback invoked only after successful SpatialIndex.read return outside its transaction; no catch swallowing production failures, callback failures or cancellation.",
+    "Tile opts in only for timed local append, collects to CopyOnWriteArrayList, resets observer in finally before forced full rendering.",
+    "JSON construction and status output remain outside append timing at the original evidence point."
+  ],
+  "counter_boundaries": {
+    "preparationRows": "Sum of existing BuildBatch rows; may contain hints/cuts or repeated identities, not unique strokes.",
+    "queryBatches": "Includes terminating empty metadata query.",
+    "metadataRows": "Rows before allowed/omitted filtering.",
+    "nativeStrokeBuilds": "Existing lastBuild getter reflected outside timing; if baseline getter absent, field is omitted, never zero-filled."
+  },
+  "baseline_patch_receipt": {
+    "file": "baseline-raster-diagnostic-patch-application.json",
+    "review_mode": "Read saved root receipt only; did not apply patch or rehash entire baseline.",
+    "exit_code": 0,
+    "fuzz": 0,
+    "recorded_source_count": 734,
+    "recorded_changed_paths": [
+      "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt",
+      "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt"
+    ]
+  },
+  "native_conclusion": "No diagnostic native timing or root-cause conclusion. Diagnostic-on measurements include observation overhead and do not replace default-off performance results.",
+  "actions": {
+    "source_edits": false,
+    "builds": false,
+    "adb": false,
+    "native_tests": false,
+    "commits": false,
+    "pushes": false,
+    "writes": "Only this scratch JSON/MD pair"
+  }
+}

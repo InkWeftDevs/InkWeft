@@ -1,0 +1,220 @@
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/.setup/java-home -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :core-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core-domain:compileKotlin UP-TO-DATE
+> Task :core-domain:compileJava NO-SOURCE
+> Task :core-domain:processResources NO-SOURCE
+> Task :core-domain:classes UP-TO-DATE
+> Task :core-domain:jar UP-TO-DATE
+> Task :core-domain:compileTestKotlin UP-TO-DATE
+> Task :core-domain:compileTestJava NO-SOURCE
+> Task :core-domain:processTestResources NO-SOURCE
+> Task :core-domain:testClasses UP-TO-DATE
+> Task :core-domain:test UP-TO-DATE
+> Task :data-local:preBuild UP-TO-DATE
+> Task :data-local:preDebugBuild UP-TO-DATE
+> Task :data-local:generateDebugResources UP-TO-DATE
+> Task :data-local:packageDebugResources UP-TO-DATE
+> Task :data-local:processDebugNavigationResources UP-TO-DATE
+> Task :data-local:parseDebugLocalResources UP-TO-DATE
+> Task :data-local:generateDebugRFile UP-TO-DATE
+> Task :data-local:kspDebugKotlin UP-TO-DATE
+> Task :data-local:compileDebugKotlin UP-TO-DATE
+> Task :data-local:javaPreCompileDebug UP-TO-DATE
+> Task :data-local:compileDebugJavaWithJavac NO-SOURCE
+> Task :data-local:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :data-local:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :data-local:preDebugUnitTestBuild UP-TO-DATE
+> Task :data-local:generateDebugUnitTestStubRFile UP-TO-DATE
+> Task :data-local:kspDebugUnitTestKotlin UP-TO-DATE
+> Task :data-local:compileDebugUnitTestKotlin UP-TO-DATE
+> Task :data-local:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :data-local:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :data-local:processDebugJavaRes UP-TO-DATE
+> Task :data-local:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :data-local:testDebugUnitTest UP-TO-DATE
+> Task :data-local:checkDebugAarMetadata UP-TO-DATE
+> Task :data-local:mergeDebugJniLibFolders UP-TO-DATE
+> Task :data-local:mergeDebugNativeLibs NO-SOURCE
+> Task :data-local:stripDebugDebugSymbols NO-SOURCE
+> Task :data-local:copyDebugJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :data-local:extractDebugAnnotations UP-TO-DATE
+> Task :data-local:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :data-local:generateDebugAssets UP-TO-DATE
+> Task :data-local:mergeDebugAssets UP-TO-DATE
+> Task :data-local:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :data-local:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :data-local:prepareDebugArtProfile UP-TO-DATE
+> Task :data-local:prepareLintJarForPublish UP-TO-DATE
+> Task :data-local:processDebugManifest UP-TO-DATE
+> Task :data-local:mergeDebugJavaResource UP-TO-DATE
+> Task :data-local:syncDebugLibJars UP-TO-DATE
+> Task :data-local:writeDebugAarMetadata UP-TO-DATE
+> Task :data-local:bundleDebugLocalLintAar UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :data-local:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :data-local:mapDebugSourceSetPaths UP-TO-DATE
+> Task :data-local:compileDebugLibraryResources UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :data-local:createFullJarDebug UP-TO-DATE
+> Task :data-local:writeDebugLintModelMetadata UP-TO-DATE
+> Task :app:generateDebugAndroidTestLintModel UP-TO-DATE
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :data-local:extractProguardFiles UP-TO-DATE
+> Task :data-local:generateDebugLintModel UP-TO-DATE
+> Task :app:generateDebugLintReportModel UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:generateDebugUnitTestLintModel UP-TO-DATE
+> Task :data-local:lintAnalyzeDebug UP-TO-DATE
+> Task :app:lintAnalyzeDebug UP-TO-DATE
+> Task :app:lintAnalyzeDebugAndroidTest UP-TO-DATE
+> Task :app:lintAnalyzeDebugUnitTest UP-TO-DATE
+> Task :data-local:preDebugAndroidTestBuild UP-TO-DATE
+> Task :data-local:generateDebugAndroidTestLintModel
+> Task :data-local:generateDebugUnitTestLintModel UP-TO-DATE
+> Task :data-local:lintAnalyzeDebugUnitTest UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:generateInkWeftBuildIdentity UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:generateDebugGlobalSynthetics UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:mergeDebugJavaResource UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :data-local:bundleLibRuntimeToDirDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:dexBuilderDebug UP-TO-DATE
+> Task :app:mergeProjectDexDebug UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :data-local:copyDebugJniLibsProjectOnly UP-TO-DATE
+> Task :app:mergeDebugNativeLibs UP-TO-DATE
+> Task :app:stripDebugDebugSymbols UP-TO-DATE
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:packageDebug UP-TO-DATE
+> Task :app:createDebugApkListingFileRedirect UP-TO-DATE
+> Task :app:assembleDebug UP-TO-DATE
+> Task :data-local:generateDebugAndroidTestResources UP-TO-DATE
+> Task :data-local:packageDebugAndroidTestResources UP-TO-DATE
+> Task :data-local:processDebugAndroidTestNavigationResources UP-TO-DATE
+> Task :data-local:parseDebugAndroidTestLocalResources UP-TO-DATE
+> Task :data-local:generateDebugAndroidTestRFile UP-TO-DATE
+> Task :data-local:kspDebugAndroidTestKotlin
+> Task :data-local:lintAnalyzeDebugAndroidTest
+> Task :data-local:compileDebugAndroidTestKotlin
+> Task :app:lintReportDebug UP-TO-DATE
+> Task :app:lintDebug
+> Task :data-local:javaPreCompileDebugAndroidTest UP-TO-DATE
+> Task :data-local:generateDebugAndroidTestAssets UP-TO-DATE
+> Task :data-local:mergeDebugAndroidTestAssets UP-TO-DATE
+> Task :data-local:compressDebugAndroidTestAssets UP-TO-DATE
+> Task :data-local:generateDebugAndroidTestGlobalSynthetics UP-TO-DATE
+> Task :data-local:checkDebugAndroidTestDuplicateClasses UP-TO-DATE
+> Task :data-local:desugarDebugAndroidTestFileDependencies UP-TO-DATE
+> Task :data-local:mergeExtDexDebugAndroidTest UP-TO-DATE
+> Task :data-local:mergeLibDexDebugAndroidTest UP-TO-DATE
+> Task :data-local:checkDebugAndroidTestAarMetadata UP-TO-DATE
+> Task :data-local:mapDebugAndroidTestSourceSetPaths UP-TO-DATE
+> Task :data-local:compileDebugAndroidTestNavigationResources UP-TO-DATE
+> Task :data-local:mergeDebugAndroidTestResources UP-TO-DATE
+> Task :data-local:processDebugAndroidTestManifest UP-TO-DATE
+> Task :data-local:processDebugAndroidTestResources UP-TO-DATE
+> Task :data-local:mergeDebugAndroidTestJniLibFolders UP-TO-DATE
+> Task :data-local:mergeDebugAndroidTestNativeLibs UP-TO-DATE
+> Task :data-local:stripDebugAndroidTestDebugSymbols UP-TO-DATE
+> Task :data-local:validateSigningDebugAndroidTest UP-TO-DATE
+> Task :data-local:writeDebugAndroidTestSigningConfigVersions UP-TO-DATE
+> Task :app:processDebugAndroidTestManifest UP-TO-DATE
+> Task :app:generateDebugAndroidTestBuildConfig UP-TO-DATE
+> Task :app:generateDebugAndroidTestResources UP-TO-DATE
+> Task :app:packageDebugAndroidTestResources UP-TO-DATE
+> Task :app:processDebugAndroidTestNavigationResources UP-TO-DATE
+> Task :app:parseDebugAndroidTestLocalResources UP-TO-DATE
+> Task :app:generateDebugAndroidTestRFile UP-TO-DATE
+> Task :app:compileDebugAndroidTestKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebugAndroidTest UP-TO-DATE
+> Task :app:compileDebugAndroidTestJavaWithJavac UP-TO-DATE
+> Task :app:generateDebugAndroidTestAssets UP-TO-DATE
+> Task :app:mergeDebugAndroidTestAssets UP-TO-DATE
+> Task :app:compressDebugAndroidTestAssets UP-TO-DATE
+> Task :app:generateDebugAndroidTestGlobalSynthetics UP-TO-DATE
+> Task :app:processDebugAndroidTestJavaRes UP-TO-DATE
+> Task :app:mergeDebugAndroidTestJavaResource UP-TO-DATE
+> Task :app:checkDebugAndroidTestDuplicateClasses UP-TO-DATE
+> Task :app:desugarDebugAndroidTestFileDependencies UP-TO-DATE
+> Task :app:mergeExtDexDebugAndroidTest UP-TO-DATE
+> Task :app:mergeLibDexDebugAndroidTest UP-TO-DATE
+> Task :app:checkDebugAndroidTestAarMetadata UP-TO-DATE
+> Task :app:mapDebugAndroidTestSourceSetPaths UP-TO-DATE
+> Task :app:compileDebugAndroidTestNavigationResources UP-TO-DATE
+> Task :app:mergeDebugAndroidTestResources UP-TO-DATE
+> Task :app:processDebugAndroidTestResources UP-TO-DATE
+> Task :app:dexBuilderDebugAndroidTest UP-TO-DATE
+> Task :app:mergeProjectDexDebugAndroidTest UP-TO-DATE
+> Task :app:mergeDebugAndroidTestJniLibFolders UP-TO-DATE
+> Task :app:mergeDebugAndroidTestNativeLibs NO-SOURCE
+> Task :app:stripDebugAndroidTestDebugSymbols NO-SOURCE
+> Task :app:validateSigningDebugAndroidTest UP-TO-DATE
+> Task :app:writeDebugAndroidTestSigningConfigVersions UP-TO-DATE
+> Task :app:packageDebugAndroidTest UP-TO-DATE
+> Task :app:createDebugAndroidTestApkListingFileRedirect UP-TO-DATE
+> Task :app:assembleDebugAndroidTest UP-TO-DATE
+
+> Task :data-local:compileDebugAndroidTestKotlin
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRepositoryTest.kt:206:26 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StudyCommand'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/BundledSqliteFactoryTest.kt:42:55 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt:247:33 'constructor(p0: String!, p1: Int): FileObserver' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:78:25 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:93:97 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:121:25 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:131:25 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:201:102 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:207:70 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:209:111 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:223:102 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:226:70 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/PageAuthoringRepositoryTest.kt:134:42 The corresponding parameter in the supertype 'Rows' is named 'consume'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/RecallStudyRepositoryTest.kt:206:62 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallLoadedAttempt'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/RecallStudyRepositoryTest.kt:212:72 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallLoadedAttempt'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/RecallStudyRepositoryTest.kt:232:61 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallLoadedAttempt'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/RecallStudyRepositoryTest.kt:233:74 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallLoadedAttempt'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/RecallStudyRepositoryTest.kt:268:102 Unnecessary non-null assertion (!!) on a non-null receiver of type 'KnowledgeData.CardPresentation'.
+w: file:///workspace/scratch/inkweft-baseline-a128bb07/android/data-local/src/androidTest/kotlin/org/inkweft/data/StudyOrganizationRepositoryTest.kt:135:39 Unnecessary non-null assertion (!!) on a non-null receiver of type 'KnowledgeRow'.
+
+> Task :data-local:compileDebugAndroidTestJavaWithJavac NO-SOURCE
+> Task :data-local:processDebugAndroidTestJavaRes UP-TO-DATE
+> Task :data-local:mergeDebugAndroidTestJavaResource UP-TO-DATE
+> Task :data-local:dexBuilderDebugAndroidTest
+> Task :data-local:mergeProjectDexDebugAndroidTest
+> Task :data-local:packageDebugAndroidTest
+> Task :data-local:createDebugAndroidTestApkListingFileRedirect UP-TO-DATE
+> Task :data-local:assembleDebugAndroidTest
+
+BUILD SUCCESSFUL in 4m 23s
+162 actionable tasks: 8 executed, 154 up-to-date
