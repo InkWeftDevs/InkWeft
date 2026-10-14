@@ -1,0 +1,64 @@
+{
+  "from_git": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+  "to_git": "a9ccf2cc727a7957e8fb00115f0060d80b287de1",
+  "file_deltas": {
+    "android/VERIFY-SCREENING.md": {
+      "before": null,
+      "after": {
+        "bytes": 5185,
+        "sha256": "d1fc29d9d2664327d580ea6a9058c2a2d377115fa5905bde91866187f9f3fd1c"
+      }
+    },
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt": {
+      "before": {
+        "bytes": 10501,
+        "sha256": "4deefcf739ebbdd1ead6e4e2259b72e4b5af07a122d2ff766ccff311f3e188de"
+      },
+      "after": {
+        "bytes": 10651,
+        "sha256": "b05c4c93f2c0ed36204bb548c20f8d95c0dca5a35238e05361ac3655f6f9a061"
+      }
+    },
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt": {
+      "before": {
+        "bytes": 16836,
+        "sha256": "33b4e9cc4fcf3fac593f0abc5dc6e2c070e10603a179979ec57be2d554198f48"
+      },
+      "after": {
+        "bytes": 17308,
+        "sha256": "99cdd6b82f48f3553577ae9fad7473019a77293f618df8f3c1dcb29650ad4571"
+      }
+    },
+    "android/verify.py": {
+      "before": {
+        "bytes": 9526,
+        "sha256": "9b6af1099563c3c7a3f9b5a3ad0b51609c70b6c2ca1e8c23f99e58cf347bc4f2"
+      },
+      "after": {
+        "bytes": 18147,
+        "sha256": "c8858920e558c47b097eea19b9e4b366bedd0022cf1ea7bdc24e8562c547a356"
+      }
+    },
+    "ci/pr20_build_cache.init.gradle": {
+      "before": null,
+      "after": {
+        "bytes": 2584,
+        "sha256": "d3e02bb3d9d237530867e04eac9892d526093fb51fdf85fcd2928bdab715e830"
+      }
+    },
+    "ci/test_android_screen.py": {
+      "before": null,
+      "after": {
+        "bytes": 16815,
+        "sha256": "bd4eefc66353818c93218f9f3978c78ca8caa69725bd8b8681aad33fdece7be0"
+      }
+    },
+    "ci/test_pr20_build_cache.py": {
+      "before": null,
+      "after": {
+        "bytes": 8532,
+        "sha256": "5523ae7e35ced537d2c22b15ee7046cbd9b641c203d4418ac6a501fe2c72f35b"
+      }
+    }
+  }
+}

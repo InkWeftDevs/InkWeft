@@ -1,0 +1,820 @@
+{
+  "status": "FROZEN_SCREENING_LOG_SCHEMA",
+  "schema": 1,
+  "scope": "SCREENING_ONLY",
+  "fixed_probe_sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c",
+  "allowed_marker_counts": {
+    "KVM_PAIR_FIXTURE": 1,
+    "KVM_DIRECT_INTERVALS": 1,
+    "LIBRARY_DIRECT_SAVE_CHECKPOINT": 1,
+    "INDEX_SAVE_PROGRESS": 6,
+    "LIBRARY_INDEX_SAVE_CHECKPOINT": 1,
+    "KVM_INDEX_INTERVALS": 1,
+    "LIBRARY_READ_EVIDENCE": 1
+  },
+  "records_per_completed_library_method": 12,
+  "marker_payload_max_bytes": 65536,
+  "method_payload_max_bytes": 262144,
+  "json_depth_limit": 12,
+  "finite_numbers_only": true,
+  "forbid_duplicate_keys": true,
+  "unknown_keys": "reject forwarding and mark log-derived screen incomplete; retain raw artifact",
+  "timing": "forward only after instrumentation and process isolation finish",
+  "schemas": {
+    "KVM_PAIR_FIXTURE": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label",
+        "seed",
+        "logicalSha256",
+        "rowCounts",
+        "writerSqlite"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "enum": [
+            "library-before"
+          ]
+        },
+        "seed": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "logicalSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "rowCounts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "notes",
+            "note_revisions",
+            "notebook_workspace",
+            "notebook_pages",
+            "page_search_text",
+            "library_search_pending"
+          ],
+          "properties": {
+            "notes": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "note_revisions": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "notebook_workspace": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "notebook_pages": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "page_search_text": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "library_search_pending": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            }
+          }
+        },
+        "writerSqlite": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "page_size",
+            "auto_vacuum",
+            "journal_mode",
+            "synchronous"
+          ],
+          "properties": {
+            "page_size": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "auto_vacuum": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "journal_mode": {
+              "type": "string",
+              "enum": [
+                "wal"
+              ]
+            },
+            "synchronous": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "KVM_DIRECT_INTERVALS": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coldStartNs",
+        "coldEndNs",
+        "saves"
+      ],
+      "properties": {
+        "coldStartNs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "coldEndNs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saves": {
+          "type": "array",
+          "length": 30,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sample",
+              "startNs",
+              "endNs",
+              "elapsedMs",
+              "checksStart",
+              "checksEnd",
+              "committedRevision",
+              "committed"
+            ],
+            "properties": {
+              "sample": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "startNs": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "endNs": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "elapsedMs": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "checksStart": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "checksEnd": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "committedRevision": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "committed": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "LIBRARY_DIRECT_SAVE_CHECKPOINT": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coldMs",
+        "coldSourceChecks",
+        "saveCount",
+        "saveSamplesMs",
+        "saveP50Ms",
+        "saveP95Ms",
+        "saveMaxMs",
+        "writerCompletedDuringPausedSearch"
+      ],
+      "properties": {
+        "coldMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "coldSourceChecks": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveCount": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveSamplesMs": {
+          "type": "array",
+          "length": 30,
+          "items": {
+            "type": "number",
+            "finite": true,
+            "minimum": 0
+          }
+        },
+        "saveP50Ms": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveP95Ms": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveMaxMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "writerCompletedDuringPausedSearch": {
+          "type": "boolean"
+        }
+      }
+    },
+    "INDEX_SAVE_PROGRESS": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rows",
+        "elapsedMs"
+      ],
+      "properties": {
+        "rows": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "elapsedMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        }
+      }
+    },
+    "LIBRARY_INDEX_SAVE_CHECKPOINT": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "indexRowsBeforeSaves",
+        "indexRowsAfterSaves",
+        "firstCommittedBatchMs",
+        "saveCount",
+        "saveP50Ms",
+        "saveP95Ms",
+        "saveMaxMs",
+        "saveSamplesMs",
+        "saveProgressSamples",
+        "sourceChecksAfterSaves"
+      ],
+      "properties": {
+        "indexRowsBeforeSaves": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "indexRowsAfterSaves": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "firstCommittedBatchMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveCount": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveP50Ms": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveP95Ms": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveMaxMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveSamplesMs": {
+          "type": "array",
+          "length": 30,
+          "items": {
+            "type": "number",
+            "finite": true,
+            "minimum": 0
+          }
+        },
+        "saveProgressSamples": {
+          "type": "array",
+          "length": 30,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sample",
+              "elapsedMs",
+              "startNs",
+              "endNs",
+              "committed",
+              "committedRevision",
+              "indexRowsStart",
+              "indexRowsEnd",
+              "sourceChecksStart",
+              "sourceChecksEnd"
+            ],
+            "properties": {
+              "sample": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "elapsedMs": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "startNs": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "endNs": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "committed": {
+                "type": "boolean"
+              },
+              "committedRevision": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "indexRowsStart": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "indexRowsEnd": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "sourceChecksStart": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "sourceChecksEnd": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "sourceChecksAfterSaves": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        }
+      }
+    },
+    "KVM_INDEX_INTERVALS": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observeStartNs",
+        "batches"
+      ],
+      "properties": {
+        "observeStartNs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "batches": {
+          "type": "array",
+          "length": 313,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "rows",
+              "committedNs"
+            ],
+            "properties": {
+              "rows": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "committedNs": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "LIBRARY_READ_EVIDENCE": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "books",
+        "pages",
+        "noteBodyChars",
+        "writerSqlite",
+        "headerReadMs",
+        "headerReturnedBodyChars",
+        "coldMs",
+        "coldSourceChecks",
+        "warmMedianMs",
+        "warmSamplesMs",
+        "saveCount",
+        "saveP50Ms",
+        "saveP95Ms",
+        "saveMaxMs",
+        "saveSamplesMs",
+        "observeIndexConcurrentSaves",
+        "writerCompletedDuringPausedSearch",
+        "shelfReturnedPreviewChars",
+        "shelfDirectoryBodyChars",
+        "projectionRows",
+        "projectionChars",
+        "fullBodyOnDemandMatches"
+      ],
+      "properties": {
+        "books": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "pages": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "noteBodyChars": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "writerSqlite": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "page_size",
+            "auto_vacuum",
+            "journal_mode",
+            "synchronous"
+          ],
+          "properties": {
+            "page_size": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "auto_vacuum": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "journal_mode": {
+              "type": "string",
+              "enum": [
+                "wal"
+              ]
+            },
+            "synchronous": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            }
+          }
+        },
+        "headerReadMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "headerReturnedBodyChars": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "coldMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "coldSourceChecks": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "warmMedianMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "warmSamplesMs": {
+          "type": "array",
+          "length": 5,
+          "items": {
+            "type": "number",
+            "finite": true,
+            "minimum": 0
+          }
+        },
+        "saveCount": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveP50Ms": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveP95Ms": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveMaxMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveSamplesMs": {
+          "type": "array",
+          "length": 30,
+          "items": {
+            "type": "number",
+            "finite": true,
+            "minimum": 0
+          }
+        },
+        "observeIndexConcurrentSaves": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "indexRowsBeforeSaves",
+            "indexRowsAfterSaves",
+            "firstCommittedBatchMs",
+            "saveCount",
+            "saveP50Ms",
+            "saveP95Ms",
+            "saveMaxMs",
+            "saveSamplesMs",
+            "saveProgressSamples",
+            "sourceChecksAfterSaves",
+            "indexRowsFinal",
+            "allIndexRowsCommittedMs",
+            "searchIndexReadyMs",
+            "sourceChecks"
+          ],
+          "properties": {
+            "indexRowsBeforeSaves": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "indexRowsAfterSaves": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "firstCommittedBatchMs": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "saveCount": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "saveP50Ms": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "saveP95Ms": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "saveMaxMs": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "saveSamplesMs": {
+              "type": "array",
+              "length": 30,
+              "items": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              }
+            },
+            "saveProgressSamples": {
+              "type": "array",
+              "length": 30,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "sample",
+                  "elapsedMs",
+                  "startNs",
+                  "endNs",
+                  "committed",
+                  "committedRevision",
+                  "indexRowsStart",
+                  "indexRowsEnd",
+                  "sourceChecksStart",
+                  "sourceChecksEnd"
+                ],
+                "properties": {
+                  "sample": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  },
+                  "elapsedMs": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  },
+                  "startNs": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  },
+                  "endNs": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  },
+                  "committed": {
+                    "type": "boolean"
+                  },
+                  "committedRevision": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  },
+                  "indexRowsStart": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  },
+                  "indexRowsEnd": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  },
+                  "sourceChecksStart": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  },
+                  "sourceChecksEnd": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  }
+                }
+              }
+            },
+            "sourceChecksAfterSaves": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "indexRowsFinal": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "allIndexRowsCommittedMs": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "searchIndexReadyMs": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "sourceChecks": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            }
+          }
+        },
+        "writerCompletedDuringPausedSearch": {
+          "type": "boolean"
+        },
+        "shelfReturnedPreviewChars": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "shelfDirectoryBodyChars": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "projectionRows": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "projectionChars": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "fullBodyOnDemandMatches": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "extra_checks": {
+    "fixture_seed": "exact method-plan seed",
+    "fixture_counts": {
+      "notes": 501,
+      "note_revisions": 501,
+      "notebook_workspace": 501,
+      "notebook_pages": 20001,
+      "page_search_text": 20000,
+      "library_search_pending": 20000
+    },
+    "writerSqlite": {
+      "page_size": 1024,
+      "auto_vacuum": 1,
+      "journal_mode": "wal",
+      "synchronous": 2
+    },
+    "progress_rows": [
+      64,
+      4096,
+      8192,
+      12288,
+      16384,
+      20000
+    ],
+    "save_samples": "exact sample indices 0..29 and identical ordered values in duplicate checkpoints/final evidence",
+    "batches": "exact 313 rows: 64 increments through 19968, then 20000; monotonic committedNs",
+    "booleans": "retain frozen probe/analyzer assertions; booleans are not numeric sample values",
+    "strings": "only fixed enum labels/journal mode and 64-hex logical digest; no arbitrary path/url/message fields"
+  }
+}

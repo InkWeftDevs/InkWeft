@@ -1,0 +1,83 @@
+{
+  "status": "PREPARED_NOT_COMPILED_NOT_RUN",
+  "baseline_git": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+  "candidate_git": "7949011ca2b84492f6438d275a09d28faef3b472",
+  "source_manifest_sha256": {
+    "B": "7f57a4a4dc6cf118173873b71a3c484c25273fd1f759ec70aa4503caedc0746c",
+    "C": "a3b67e29a9012ef5ea64b9e351e521c05827943fa29f899c6595329e5ff7eaca"
+  },
+  "runner": "ubuntu-24.04 standard GitHub-hosted",
+  "pairs": [
+    {
+      "pair": 1,
+      "seed": 4101,
+      "order": [
+        "C",
+        "B"
+      ]
+    },
+    {
+      "pair": 2,
+      "seed": 4102,
+      "order": [
+        "B",
+        "C"
+      ]
+    },
+    {
+      "pair": 3,
+      "seed": 4103,
+      "order": [
+        "B",
+        "C"
+      ]
+    },
+    {
+      "pair": 4,
+      "seed": 4104,
+      "order": [
+        "C",
+        "B"
+      ]
+    }
+  ],
+  "per_visit": [
+    "local-append-1-4-8",
+    "library-direct-and-index-save-30-each",
+    "history-paused-and-live-save-30-each"
+  ],
+  "instrumentation_calls": 24,
+  "work_deadline_minutes": 55,
+  "job_timeout_minutes": 60,
+  "setup_cutoff_minutes": 26,
+  "retries": 0,
+  "new_runs_authorized": false,
+  "quantile": "nearest-rank ceil(n*p)-1 from raw ordered values; preserve legacy fields separately",
+  "proposed_time_regression_bands": {
+    "raster_all_phase_times": {
+      "relative": 0.1,
+      "absolute_ms": 5
+    },
+    "save_p50": {
+      "relative": 0.1,
+      "absolute_ms": 1
+    },
+    "save_p95": {
+      "relative": 0.15,
+      "absolute_ms": 5
+    },
+    "save_max": {
+      "relative": 0.25,
+      "absolute_ms": 20
+    },
+    "search_and_index_completion": {
+      "relative": 0.1,
+      "absolute_ms": 500
+    },
+    "gc_completion": {
+      "relative": 0.1,
+      "absolute_ms": 100
+    }
+  },
+  "limitation": "Engineering screening bands, not statistical proof of no regression or an existing user SLA. Unknown complete baseline/Library/GC KVM runtimes; deadline may leave INCOMPLETE."
+}
