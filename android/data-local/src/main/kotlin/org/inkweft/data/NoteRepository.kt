@@ -11,23 +11,40 @@ enum class NoteFaultPoint { BEFORE_RENAME_RECEIPT, AFTER_RENAME_TRANSACTION }
 /** Single local-user author-write entry; title operations never accept body text. */
 class NoteRepository(private val db:NoteDatabase,private val fault:(NoteFaultPoint)->Unit={}) {
     private val dao=db.notes()
+    // Synthetic diagnostics only. Null does not read a clock or allocate an event.
+    internal var saveStageObserver:((String)->Unit)?=null
     fun observeNotes():Flow<List<Note>> = dao.observeNotes().map{rows->rows.map{it.domain()}}
     /** Directory entries are not editable heads; read(id) supplies the author body on open. */
     fun observeNoteHeaders():Flow<List<Note>> = dao.observeNoteHeaders().map{rows->rows.map{it.domain()}}
     suspend fun read(id:String):Note?=dao.note(id)?.domain()
 
-    suspend fun save(command:SaveNote):SaveResult=db.withTransaction {
+    suspend fun save(command:SaveNote):SaveResult {
+        val stage=saveStageObserver
+        return if(stage==null)saveTransaction(command,null)else tracedSave(command,stage)
+    }
+    private suspend fun tracedSave(command:SaveNote,stage:(String)->Unit):SaveResult {
+        stage("waiting-writer")
+        val result=saveTransaction(command,stage)
+        stage("transaction-returned")
+        return result
+    }
+    private suspend fun saveTransaction(command:SaveNote,stage:((String)->Unit)?):SaveResult=db.withTransaction {
+        stage?.invoke("writer-acquired")
         val digest=command.digest()
         val previous=dao.receipt(command.commandId)
         if(previous!=null)return@withTransaction replay(previous,command.noteId,digest)
         val current=dao.note(command.noteId)
+        stage?.invoke("head-read")
         if(current?.revision!=command.expectedRevision && !(current==null&&command.expectedRevision==0L))return@withTransaction SaveResult.Conflict(current?.domain())
         val revision=command.expectedRevision+1;val at=System.currentTimeMillis()
         val row=NoteRow(command.noteId,revision,command.title,command.text,at)
         if(current==null)dao.insertNote(row)
         else if(dao.compareAndSet(row.id,command.expectedRevision,revision,row.title,row.text,at)!=1)return@withTransaction SaveResult.Conflict(dao.note(row.id)?.domain())
+        stage?.invoke("head-written")
         dao.insertRevision(NoteRevisionRow(row.id,revision,row.title,row.text,at))
+        stage?.invoke("revision-written")
         dao.insertReceipt(ReceiptRow(command.commandId,row.id,digest,revision))
+        stage?.invoke("receipt-written")
         SaveResult.Committed(row.domain())
     }
     suspend fun rename(command:RenameNote):SaveResult {

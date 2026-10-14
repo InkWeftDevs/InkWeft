@@ -24,9 +24,13 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
     internal var scanObserver:((String,Int)->Unit)?=null
     internal var indexObserver:((String,Int)->Unit)?=null
     internal var indexFirstBatchStepObserver:((String)->Unit)?=null
+    internal var indexBatchStepObserver:((String)->Unit)?=null
     // Counts rows/UTF-16 characters crossing the cursor boundary, excluding draft inputs.
     internal var readObserver:((String,Int,Int)->Unit)?=null
     internal var queryPlanObserver:((List<String>)->Unit)?=null
+    internal var querySqlObserver:((String)->Unit)?=null
+    // Synthetic diagnostic runs only. Null keeps the original UDFs and reads no clocks.
+    internal var udfObserver:((LibrarySearchUdfRead)->Unit)?=null
     @Volatile private var diagnostics:LibrarySearchDiagnostics?=null
     // Install before collecting/reading. The default null observer creates no trace or clock reads.
     internal var stageObserver:((String,Long,Long,Long,Long,Int)->Unit)?
@@ -38,7 +42,7 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
         val observation=LibrarySearchObservation(tracing){request,trace->read(request,trace)}
         val completed=MutableStateFlow(0);var indexed=0
         launch(Dispatchers.IO){db.invalidationTracker.createFlow("page_search_text","study_cards").collectLatest{
-            LibraryTextIndex.build(db,onFirstBatchStep=indexFirstBatchStepObserver){indexed+=it;indexObserver?.invoke(observation.query,indexed)}
+            LibraryTextIndex.build(db,onFirstBatchStep=indexFirstBatchStepObserver,onBatchStep=indexBatchStepObserver){indexed+=it;indexObserver?.invoke(observation.query,indexed)}
             tracing?.event("index-build-completed",count=completed.value+1)
             completed.value++
         }}
@@ -54,6 +58,8 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
         return withContext(Dispatchers.IO){
         require(request.offset>=0&&request.pageSize in 1..500)
         trace?.event("read-start")
+        val reportUdf=udfObserver;val udf=reportUdf?.let{LibrarySearchUdfRead()}
+        var primaryFailure:Throwable?=null
         // Requery's deferred transaction pins one WAL read snapshot without joining Room's
         // author-write queue. Keep all native calls on this thread until endTransaction.
         val active=currentCoroutineContext();val cancellation=android.os.CancellationSignal()
@@ -65,13 +71,26 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
                 trace?.event("connection-open")
                 active.ensureActive()
                 var scanned=0
-                reader.addFunction("library_contains",1,{args,result->
-                    active.ensureActive();result.set(if(args.getString(0).orEmpty().contains(request.query,true))1 else 0)
-                })
-                reader.addFunction("library_source_contains",1,{args,result->
-                    active.ensureActive();scanObserver?.invoke(request.query,++scanned)
-                    result.set(if(args.getString(0).orEmpty().contains(request.query,true))1 else 0)
-                })
+                if(udf==null){
+                    reader.addFunction("library_contains",1,{args,result->
+                        active.ensureActive();result.set(if(args.getString(0).orEmpty().contains(request.query,true))1 else 0)
+                    })
+                    reader.addFunction("library_source_contains",1,{args,result->
+                        active.ensureActive();scanObserver?.invoke(request.query,++scanned)
+                        result.set(if(args.getString(0).orEmpty().contains(request.query,true))1 else 0)
+                    })
+                }else{
+                    // Same arity, flags, Boolean operation and cancellation checks. Separate
+                    // names identify fields without an extra SQL argument or text logging.
+                    for((field,totals) in listOf("title" to udf.title,"body" to udf.body,"tags" to udf.tags))
+                        reader.addFunction("library_contains_$field",1,{args,result->
+                            active.ensureActive();result.set(totals.contains(args,request.query))
+                        })
+                    reader.addFunction("library_source_contains",1,{args,result->
+                        active.ensureActive();scanObserver?.invoke(request.query,++scanned)
+                        result.set(udf.source.contains(args,request.query))
+                    })
+                }
                 // SQLite NOCASE/lower() are ASCII-only. A big-endian UTF-16 blob compares
                 // exactly like Kotlin's Locale.ROOT title sort, including supplementary chars.
                 reader.addFunction("library_title",1,{args,result->
@@ -84,35 +103,34 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
                     override fun query(query:String,bindArgs:Array<out Any?>)=reader.query(SimpleSQLiteQuery(query,bindArgs),cancellation)
                 }
                 active.ensureActive();reader.beginTransactionDeferred()
-                try{trace?.event("snapshot-open");readSnapshot(request,sql,trace){active.ensureActive()}}
+                try{trace?.event("snapshot-open");readSnapshot(request,sql,trace,udf){active.ensureActive()}}
                 finally{reader.endTransaction();trace?.event("snapshot-closed")}
             }.also{trace?.event("connection-closed")}}catch(failure:Exception){active.ensureActive();throw failure}finally{watcher.cancel()}
-        };trace?.event("read-end",result.items.size);result
-        }catch(c:CancellationException){trace?.event("read-cancel");throw c}
-        catch(failure:Exception){trace?.event("read-error");throw failure}
+        };trace?.event("read-end",result.items.size);if(udf!=null)udf.completed=true;result
+        }catch(c:CancellationException){primaryFailure=c;trace?.event("read-cancel");throw c}
+        catch(failure:Exception){primaryFailure=failure;trace?.event("read-error");throw failure}
+        catch(failure:Throwable){primaryFailure=failure;throw failure}
+        finally{if(udf!=null)try{reportUdf?.invoke(udf)}catch(reportFailure:Throwable){
+            val original=primaryFailure
+            if(original==null)throw reportFailure
+            if(original!==reportFailure)original.addSuppressed(reportFailure)
+        }}
         }
     }
 
-    private fun readSnapshot(request:LibrarySearchRequest,sql:SupportSQLiteDatabase,trace:LibrarySearchReadTrace?,check:()->Unit):LibrarySearchResult {
+    private fun readSnapshot(request:LibrarySearchRequest,sql:SupportSQLiteDatabase,trace:LibrarySearchReadTrace?,udf:LibrarySearchUdfRead?,check:()->Unit):LibrarySearchResult {
         // Only open drafts enter this temporary overlay. Saved titles, revisions, ordering,
         // classification and search sources are all read from the same author snapshot.
         // execSQL has no CancellationSignal overload. Stop between temporary-table steps,
         // including when there are no drafts or matching source rows to run a row check.
         check()
-        // An empty overlay needs no temporary schema changes. Name every CTE column so
-        // the same shelf queries can use the empty relation and the populated table.
-        val draftsCte=if(request.drafts.isEmpty())
-            "library_drafts(id,revision,title,text,position) AS (SELECT CAST(NULL AS TEXT),CAST(NULL AS INTEGER),CAST(NULL AS TEXT),CAST(NULL AS TEXT),CAST(NULL AS INTEGER) WHERE 0),"
-        else {
-            sql.execSQL("CREATE TEMP TABLE library_drafts(id TEXT PRIMARY KEY,revision INTEGER,title TEXT,text TEXT,position INTEGER)")
-            request.drafts.values.forEachIndexed{index,draft->check();sql.execSQL("INSERT INTO library_drafts VALUES(?,?,?,?,?)",
-                arrayOf<Any>(draft.base.id,draft.base.revision,draft.title,draft.text,index))}
-            ""
-        }
+        sql.execSQL("CREATE TEMP TABLE library_drafts(id TEXT PRIMARY KEY,revision INTEGER,title TEXT,text TEXT,position INTEGER)")
+        request.drafts.values.forEachIndexed{index,draft->check();sql.execSQL("INSERT INTO library_drafts VALUES(?,?,?,?,?)",
+            arrayOf<Any>(draft.base.id,draft.base.revision,draft.title,draft.text,index))}
         trace?.event("drafts-ready",request.drafts.size)
         check()
         val shelf="""
-            WITH $draftsCte shelf AS (
+            WITH shelf AS (
                 SELECT n.id,COALESCE(d.revision,n.revision) revision,COALESCE(d.title,n.title) title,
                     n.updatedAt,0 draftPosition,
                     COALESCE(w.world,0) world,COALESCE(w.paper,1) paper,COALESCE(w.folder,'') folder,COALESCE(w.tags,'') tags,
@@ -183,7 +201,10 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
             }}
             trace?.event("card-hits-end")
         }
-        val match=if(terms==null)"1" else """(library_contains(title)=1 OR library_contains(COALESCE((SELECT d.text FROM library_drafts d WHERE d.id=shelf.id),(SELECT n.text FROM notes n WHERE n.id=shelf.id)))=1 OR library_contains(tags)=1
+        val titleContains=if(udf==null)"library_contains" else "library_contains_title"
+        val bodyContains=if(udf==null)"library_contains" else "library_contains_body"
+        val tagsContains=if(udf==null)"library_contains" else "library_contains_tags"
+        val match=if(terms==null)"1" else """($titleContains(title)=1 OR $bodyContains(COALESCE((SELECT d.text FROM library_drafts d WHERE d.id=shelf.id),(SELECT n.text FROM notes n WHERE n.id=shelf.id)))=1 OR $tagsContains(tags)=1
             OR EXISTS(SELECT 1 FROM library_page_hits h WHERE h.notebookId=shelf.id)
             OR EXISTS(SELECT 1 FROM library_card_hits h WHERE h.notebookId=shelf.id))"""
         val order="pinned DESC,"+(if(request.byTitle)"library_title(title),"else "")+"updatedAt DESC,draftPosition,id"
@@ -201,8 +222,11 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
             ORDER BY page.pinned DESC,"""+(if(request.byTitle)"library_title(page.title),"else "")+
             "page.updatedAt DESC,page.draftPosition,page.id"
         val pageArgs=arrayOf<Any>(request.pageSize+1,request.offset)
+        querySqlObserver?.invoke(pageQuery)
         queryPlanObserver?.invoke(sql.query("EXPLAIN QUERY PLAN $pageQuery",pageArgs).use{rows->buildList{while(rows.moveToNext())add(rows.getString(3))}})
         trace?.event("page-start")
+        val pageWall=if(udf==null)0L else System.nanoTime()
+        val pageCpu=if(udf==null)0L else android.os.Debug.threadCpuTimeNanos()
         sql.query(pageQuery,pageArgs).use{rows->while(rows.moveToNext()){
             check();val id=rows.getString(0);val preview=rows.getString(3);previewChars+=preview.length
             val note=Note(id,rows.getLong(1),rows.getString(2),preview)
@@ -211,6 +235,11 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
                 revision=rows.getLong(11),coverKey=rows.getString(12),selectedPageId=rows.getString(13),centerX=rows.getDouble(16),centerY=rows.getDouble(17),zoom=rows.getDouble(18))
             matched+=LibraryShelfItem(note,workspace,if(rows.isNull(14))null else rows.getString(14),rows.getInt(15)!=0)
         }}
+        if(udf!=null){
+            val cpuEnd=android.os.Debug.threadCpuTimeNanos();val wallEnd=System.nanoTime()
+            udf.pageTimingValid=pageCpu>=0&&cpuEnd>=pageCpu&&wallEnd>=pageWall
+            if(udf.pageTimingValid){udf.pageCpuNs=cpuEnd-pageCpu;udf.pageWallNs=wallEnd-pageWall}
+        }
         trace?.event("page-end",matched.size)
         readObserver?.invoke("previews",matched.size,previewChars)
         val nextOffset=if(matched.size>request.pageSize)request.offset+request.pageSize else null
@@ -237,5 +266,39 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
         return LibrarySearchResult(request.generation,matched.take(request.pageSize),active,folders,tags.toList(),favorites,unfiled,trashed,
             query=request.query,filter=request.filter,type=request.type,byTitle=request.byTitle,offset=request.offset,nextOffset=nextOffset,
             pendingIndex=pending)
+    }
+}
+
+/** Per-read synthetic diagnostics. No query, author text, IDs or per-row event objects. */
+internal class LibrarySearchUdfRead {
+    val title=LibrarySearchUdfTotals();val body=LibrarySearchUdfTotals()
+    val tags=LibrarySearchUdfTotals();val source=LibrarySearchUdfTotals()
+    var pageWallNs=0L;var pageCpuNs=0L;var pageTimingValid=false;var completed=false
+}
+
+internal class LibrarySearchUdfTotals {
+    var calls=0L;var utf16Chars=0L;var matches=0L
+    var conversionWallNs=0L;var conversionCpuNs=0L
+    var containsWallNs=0L;var containsCpuNs=0L
+    var timingValid=true
+    fun contains(args:SQLiteDatabase.Function.Args,query:String):Int {
+        calls++
+        // Each interval is synchronous on this native callback's thread. Clock calls
+        // themselves add overhead; these totals are causal diagnostics, not benchmarks.
+        val conversionWall=System.nanoTime();val conversionCpu=android.os.Debug.threadCpuTimeNanos()
+        val text=args.getString(0).orEmpty()
+        val conversionCpuEnd=android.os.Debug.threadCpuTimeNanos();val conversionWallEnd=System.nanoTime()
+        if(conversionCpu>=0&&conversionCpuEnd>=conversionCpu&&conversionWallEnd>=conversionWall){
+            conversionCpuNs+=conversionCpuEnd-conversionCpu;conversionWallNs+=conversionWallEnd-conversionWall
+        }else timingValid=false
+        utf16Chars+=text.length
+        val containsWall=System.nanoTime();val containsCpu=android.os.Debug.threadCpuTimeNanos()
+        val found=text.contains(query,true)
+        val containsCpuEnd=android.os.Debug.threadCpuTimeNanos();val containsWallEnd=System.nanoTime()
+        if(containsCpu>=0&&containsCpuEnd>=containsCpu&&containsWallEnd>=containsWall){
+            containsCpuNs+=containsCpuEnd-containsCpu;containsWallNs+=containsWallEnd-containsWall
+        }else timingValid=false
+        if(found)matches++
+        return if(found)1 else 0
     }
 }

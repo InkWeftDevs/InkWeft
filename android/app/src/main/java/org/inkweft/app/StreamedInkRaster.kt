@@ -29,6 +29,9 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
     private data class Frame(val key:Key,val tiles:List<Tile>,val committed:Set<String>,val geometry:InkRasterCache)
     internal data class BuildStats(val tiles:Int,val rebuilt:Int,val decoded:Int,val bitmapBytes:Long,val metadataMs:Double=0.0,val rasterMs:Double=0.0,val publicationMs:Double=0.0,val reusedStrokes:Int=0,val geometryBytes:Long=0,val nativeStrokeBuilds:Int=0)
     internal var lastBuild:BuildStats?=null;private set
+    /** Null in normal rendering; diagnostic storage never retains native geometry. */
+    internal var diagnostics:RasterFrameDiagnostics?=null
+    private var diagnosticFrame:RasterFrameDiagnostics.Frame?=null
     private val owner="streamed-ink-"+java.util.UUID.randomUUID()
     private var frame:Frame?=null
     private var requested:Key?=null
@@ -51,17 +54,19 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
         old.source.revision<=next.source.revision&&old.allowed==next.allowed&&old.omitted==next.omitted)
     private fun previewCompatible(old:Key,next:Key)=old.source==next.source&&old.width==next.width&&old.height==next.height&&old.density==next.density&&
         old.world==next.world&&old.embedded==next.embedded&&old.layer==next.layer&&old.allowed==next.allowed&&old.omitted==next.omitted
-    private fun notifyChanged()=InkFrameInvalidations.enqueue(changed)
+    private fun notifyChanged(diagnostic:RasterFrameDiagnostics.Frame?=null)=InkFrameInvalidations.enqueue(changed,diagnostic)
     var frameReady=false;private set
     val pending get()=job!=null
     fun contains(id:String)=frame?.let{frameReady&&id in it.committed}==true
     private fun release(value:Frame){value.tiles.forEach{RenderResources.release(it.bitmap,owner)};RenderResources.release(value.geometry,owner)}
     fun clear(){
+        diagnosticFrame?.stamp(RasterFrameDiagnostics.Stage.CLEAR_REQUESTED);diagnosticFrame=null
         generation++;job?.cancel();job=null;requested=null;rejected=null;frameReady=false;lastBuild=null
         frame?.let(::release);frame=null
     }
     fun draw(canvas:Canvas,width:Int,height:Int,viewport:CanvasViewport,density:Double,world:Boolean,embedded:Boolean,
         source:InkRenderSource,allowed:Set<String>?,omitted:Set<String>,layer:String?=null,pixelBounds:Rect?=null,pixelBudget:Long=StreamedLayerLayout.PIXELS){
+        val diagnosticDrawStart=if(diagnostics!=null||diagnosticFrame!=null)System.nanoTime()else 0L
         frameReady=false
         if(width<=0||height<=0)return
         val pixels=pixelBounds?.let(::Rect)?:Rect(0,0,width,height)
@@ -69,9 +74,11 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
         require(pixels.left>=0&&pixels.top>=0&&pixels.right<=width&&pixels.bottom<=height&&pixelBudget>0)
         val key=Key(width,height,viewport,density,world,embedded,source,allowed,omitted,layer,pixels,pixelBudget)
         frame?.takeUnless{projection(it.key,key)||previewCompatible(it.key,key)}?.let{release(it);frame=null}
-        if(requested!=null&&requested!=key){generation++;job?.cancel();job=null;requested=null}
+        if(requested!=null&&requested!=key){diagnosticFrame?.stamp(RasterFrameDiagnostics.Stage.SUPERSEDED);generation++;job?.cancel();job=null;requested=null}
         if(frame?.key!=key&&requested==null&&rejected!=key){
             requested=key;val token=++generation
+            val diagnostic=diagnostics?.begin(token,source.revision,diagnosticDrawStart)
+            diagnosticFrame=diagnostic
             val previous=frame
             val append=previous?.let{it.key.source.revision<source.revision&&compatible(it.key,key)}==true
             val geometry=previous?.takeIf{it.key.source.repository===source.repository&&it.key.source.page==source.page&&
@@ -85,6 +92,7 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
                 val cookie=cookies.incrementAndGet();Trace.beginAsyncSection("InkWeft.ink.frame",cookie)
                 val created=mutableListOf<Tile>();var published=false
                 try{withContext(worker){
+                    diagnostic?.stamp(RasterFrameDiagnostics.Stage.WORKER_START)
                     val context=currentCoroutineContext()
                     // Reserve a bounded geometry cache independently of bitmap resolution.
                     // Fractional pans and zooms still rerasterize with the exact new matrix.
@@ -117,8 +125,10 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
                     }
                     val regions=rectangles.map(::bounds)
                     val metadataStart=System.nanoTime()
+                    diagnostic?.stamp(RasterFrameDiagnostics.Stage.METADATA_START,metadataStart)
                     val states=source.repository.rasterRegions(source.page,source.revision,source.authoringRevision,layer,regions,allowed,omitted,source.committedIds)
                     val metadataMs=(System.nanoTime()-metadataStart)/1_000_000.0;val rasterStart=System.nanoTime()
+                    diagnostic?.stamp(RasterFrameDiagnostics.Stage.RASTER_START,rasterStart)
                     val old=previous?.takeIf{projection(it.key,key)}?.let{f->
                         val dx=(f.key.viewport.centerX-viewport.centerX)*factor;val dy=(f.key.viewport.centerY-viewport.centerY)*factor
                         if(kotlin.math.abs(dx-round(dx))>1e-6||kotlin.math.abs(dy-round(dy))>1e-6||kotlin.math.abs(dx*scale-round(dx*scale))>1e-6||kotlin.math.abs(dy*scale-round(dy*scale))>1e-6)emptyMap()
@@ -157,7 +167,7 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
                                         val painter=painters.getValue(i);val saved=painter.save()
                                         try{stroke.cuts.forEach{painter.clipOutPath(VisibleInkGeometry.cutPath(it))}
                                             if(stroke.pen==InkPen.PENCIL)pencil.draw(painter,stroke)else{
-                                                val ink=nativeStroke?:InkBrushes.stroke(stroke).also{nativeStroke=it;nativeStrokeBuilds++}
+                                                val ink=nativeStroke?:(diagnostic?.measureNative{InkBrushes.stroke(stroke)}?:InkBrushes.stroke(stroke)).also{nativeStroke=it;nativeStrokeBuilds++}
                                                 renderer.draw(painter,ink,matrix)
                                             }
                                         }finally{painter.restoreToCount(saved)}
@@ -168,8 +178,11 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
                         }
                         source.repository.validateRenderRevision(source.page,source.revision,source.authoringRevision)
                         val rasterMs=(System.nanoTime()-rasterStart)/1_000_000.0;val publicationStart=System.nanoTime()
+                        diagnostic?.stamp(RasterFrameDiagnostics.Stage.PREPARE_START,publicationStart)
                         context.ensureActive();created.forEach{it.bitmap.prepareToDraw()}
+                        diagnostic?.stamp(RasterFrameDiagnostics.Stage.PREPARE_END)
                         withContext(Dispatchers.Main.immediate){if(generation==token){
+                            diagnostic?.stamp(RasterFrameDiagnostics.Stage.PUBLICATION_ENTER)
                             tiles.forEach{RenderResources.track(it.bitmap,it.bitmap.allocationByteCount.toLong(),"ink-frame",owner,RenderResources.Role.ACTIVE)}
                             RenderResources.track(geometry,InkRasterCache.MAX_BYTES,"ink-geometry-reservation",owner,RenderResources.Role.CACHE)
                             frame?.tiles?.filter{oldTile->tiles.none{it.bitmap===oldTile.bitmap}}?.forEach{RenderResources.release(it.bitmap,owner)}
@@ -177,23 +190,26 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
                             frame=Frame(key,tiles,states.flatMap{it.committed}.toSet(),geometry)
                             val reused=geometry.hits-previousHits
                             lastBuild=BuildStats(tiles.size,dirty.size,decoded-reused,tiles.sumOf{it.bitmap.allocationByteCount.toLong()},metadataMs,rasterMs,(System.nanoTime()-publicationStart)/1_000_000.0,reused,geometry.retainedBytes,nativeStrokeBuilds)
-                            published=true;notifyChanged()
+                            diagnostic?.stamp(RasterFrameDiagnostics.Stage.PUBLISHED)
+                            published=true;notifyChanged(diagnostic)
                         }}
                     }finally{pencil.clear()}
-                }}catch(_:CancellationException){RenderResources.cancelledJobs.incrementAndGet()}
-                catch(_:RenderBudgetBusy){if(generation==token){frame?.let(::release);frame=null;delay(500);notifyChanged()}}
-                catch(_:Exception){if(generation==token){rejected=key;failed()}}
+                }}catch(_:CancellationException){diagnostic?.stamp(RasterFrameDiagnostics.Stage.CANCELLED);RenderResources.cancelledJobs.incrementAndGet()}
+                catch(_:RenderBudgetBusy){diagnostic?.stamp(RasterFrameDiagnostics.Stage.BUDGET_BUSY);if(generation==token){frame?.let(::release);frame=null;delay(500);notifyChanged(diagnostic)}}
+                catch(_:Exception){diagnostic?.stamp(RasterFrameDiagnostics.Stage.FAILED);if(generation==token){rejected=key;failed()}}
                 finally{
                     RenderResources.releaseOwner(workerOwner)
                     if(!published)created.forEach{it.bitmap.recycle()}
                     Trace.endAsyncSection("InkWeft.ink.frame",cookie);RenderResources.inFlightJobs.decrementAndGet()
-                    if(generation==token){job=null;requested=null;notifyChanged()}
+                    diagnostic?.stamp(RasterFrameDiagnostics.Stage.WORKER_FINALLY)
+                    if(generation==token){job=null;requested=null;notifyChanged(diagnostic)}
                 }
             }
         }
         frame?.takeIf{compatible(it.key,key)}?.let{f->
             f.tiles.forEach{canvas.drawBitmap(it.bitmap,null,it.pixels,paint)};frameReady=f.key==key
         }
+        if(frameReady){diagnosticFrame?.ready(diagnosticDrawStart);diagnosticFrame=null}
         if(!frameReady)frame?.takeIf{it.key!=key&&previewCompatible(it.key,key)}?.let{f->
             val ratio=(viewport.zoom/f.key.viewport.zoom).toFloat();val dx=((f.key.viewport.centerX-viewport.centerX)*viewport.zoom*density).toFloat();val dy=((f.key.viewport.centerY-viewport.centerY)*viewport.zoom*density).toFloat()
             f.tiles.forEach{t->canvas.drawBitmap(t.bitmap,null,RectF((t.pixels.left-width/2)*ratio+width/2+dx,(t.pixels.top-height/2)*ratio+height/2+dy,
@@ -210,10 +226,18 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
 /** Layer completions share the platform's next frame, avoiding a redraw per layer callback. */
 private object InkFrameInvalidations {
     private val callbacks=LinkedHashSet<()->Unit>()
-    fun enqueue(callback:()->Unit){
+    private var diagnostics:MutableMap<()->Unit,RasterFrameDiagnostics.Frame>?=null
+    fun enqueue(callback:()->Unit,diagnostic:RasterFrameDiagnostics.Frame?){
+        if(diagnostic!=null){
+            diagnostic.enqueued()
+            val pending=diagnostics?:mutableMapOf<()->Unit,RasterFrameDiagnostics.Frame>().also{diagnostics=it}
+            pending.put(callback,diagnostic)?.takeIf{it!==diagnostic}?.notificationSuperseded()
+        }
         val schedule=callbacks.isEmpty();callbacks.add(callback)
         if(schedule)android.view.Choreographer.getInstance().postFrameCallback{
-            val pending=callbacks.toList();callbacks.clear();pending.forEach{it()}
+            val pending=callbacks.toList();callbacks.clear()
+            val observed=diagnostics;diagnostics=null
+            pending.forEach{observed?.get(it)?.notified();it()}
         }
     }
 }

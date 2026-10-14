@@ -33,10 +33,13 @@ internal object LibraryTextIndex {
             if(own)sql.setTransactionSuccessful()
         }finally{if(own)sql.endTransaction()}
     }
-    suspend fun build(db:NoteDatabase,onFirstBatchStep:((String)->Unit)?=null,onBatch:suspend(Int)->Unit={}){
+    suspend fun build(db:NoteDatabase,onFirstBatchStep:((String)->Unit)?=null,
+        onBatchStep:((String)->Unit)?=null,onBatch:suspend(Int)->Unit={}){
         var firstBatch=true
         while(true){
-            val step=if(firstBatch)onFirstBatchStep else null
+            val firstStep=if(firstBatch)onFirstBatchStep else null
+            val step:((String)->Unit)?=if(onBatchStep==null)firstStep
+                else {{name:String->onBatchStep(name);firstStep?.invoke(name)}}
             step?.invoke("preparing-batch")
             // Ordinary read queries and CPU work do not enter Room's author-write queue.
             val prepared=prepare(db.openHelper.readableDatabase,step)

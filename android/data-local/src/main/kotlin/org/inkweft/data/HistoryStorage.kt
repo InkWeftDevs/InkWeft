@@ -16,14 +16,26 @@ data class HistoryStorageReport(val groups:List<HistoryStorageGroup>,val detache
     val reclaimableBytes get()=detachedSourceBytes+detachedPreviewBytes
 }
 
+/** Synthetic diagnostics only; guard values are the existing reads, never extra SQL. */
+internal data class HistoryGcBatchEvent(val phase:String,val afterSequence:Long,val candidates:Int,
+    val expectedDataVersion:Long,val expectedChanges:Long,val observedDataVersion:Long,val observedChanges:Long)
+
 /** One retention policy: receipts and all author history remain roots, including hidden/trash rows.
  * Keeping these roots also covers in-memory undo, SavedState and unconfirmed requests without
  * pretending that their process lifetime or a timestamp proves a record disposable. */
-class HistoryStorage(private val db:NoteDatabase,private val phase:(String)->Unit={}) {
+class HistoryStorage internal constructor(private val db:NoteDatabase,private val phase:(String)->Unit,
+    private val batchObserver:((HistoryGcBatchEvent)->Unit)?) {
+    constructor(db:NoteDatabase,phase:(String)->Unit={}):this(db,phase,null)
     suspend fun audit():HistoryStorageReport=run(false)
     suspend fun collectDetached():HistoryStorageReport=run(true)
     private data class Candidate(val sequence:Long,val kind:Int,val id:String,val revision:Long,val bytes:Long)
     private data class WriterVersion(val external:Long,val changes:Long)
+    private fun observeBatch(name:String,sequence:Long,size:Int,expected:WriterVersion?,observed:WriterVersion){
+        // The production constructor supplies null: no event, clock read or callback.
+        val observer=batchObserver?:return
+        val before=checkNotNull(expected)
+        observer(HistoryGcBatchEvent(name,sequence,size,before.external,before.changes,observed.external,observed.changes))
+    }
     private fun writerVersion(sql:SupportSQLiteDatabase):WriterVersion {
         check(sql.inTransaction())
         val external=sql.query("PRAGMA data_version").use{it.moveToFirst();it.getLong(0)}
@@ -64,18 +76,26 @@ class HistoryStorage(private val db:NoteDatabase,private val phase:(String)->Uni
                 val candidates=sql.query("SELECT sequence,kind,id,revision,bytes FROM history_candidates WHERE sequence>? ORDER BY sequence LIMIT 256",arrayOf(sequence)).use{c->
                     buildList{while(c.moveToNext())add(Candidate(c.getLong(0),c.getInt(1),c.getString(2),c.getLong(3),c.getLong(4)))}
                 }
+                val before=expected
+                // Keep the disabled diagnostic free of a captured mutable Ref/holder.
+                val diagnosticObserved=if(batchObserver==null)null else arrayOfNulls<WriterVersion>(1)
                 val committed=db.originalMaintenanceMutex.withLock{db.withTransaction{
                     val writer=db.openHelper.writableDatabase
-                    if(writerVersion(writer)!=expected)return@withTransaction false
+                    val actual=writerVersion(writer);diagnosticObserved?.set(0,actual)
+                    observeBatch("guard-checked",sequence,candidates.size,before,actual)
+                    if(actual!=expected)return@withTransaction false
+                    if(candidates.isNotEmpty())observeBatch("before-delete",sequence,candidates.size,before,actual)
                     for(candidate in candidates){
                         active.ensureActive()
                         if(candidate.kind==0)writer.execSQL("DELETE FROM study_source_revisions WHERE sourceId=? AND revision=?",arrayOf<Any>(candidate.id,candidate.revision))
                         else writer.execSQL("DELETE FROM object_previews WHERE digest=?",arrayOf(candidate.id))
                     }
+                    if(candidates.isNotEmpty())observeBatch("after-delete",sequence,candidates.size,before,actual)
                     if(candidates.isNotEmpty())phase("before-batch-commit")
                     expected=writerVersion(writer)
                     true
                 }}
+                if(diagnosticObserved!=null)observeBatch("transaction-returned",sequence,candidates.size,before,checkNotNull(diagnosticObserved[0]))
                 if(!committed){changed=true;break}
                 if(candidates.isEmpty())break
                 for(candidate in candidates){
