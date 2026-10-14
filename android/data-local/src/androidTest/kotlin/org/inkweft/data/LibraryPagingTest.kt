@@ -103,6 +103,41 @@ class LibraryPagingTest {
         assertEquals(1,complete.favorites);assertEquals(0,complete.unfiled);assertEquals(1,complete.trashed)
         assertEquals(2,metadataRows.get())
     }}
+    @Test fun cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState()=fixture{db->coroutineScope{
+        val workspace=WorkspaceRepository(db);val note=workspace.create("Initial",false,PaperStyle.BLANK)
+        assertTrue(NotebookPages(db).saveSearchText(note.id,0,"body-page"))
+        val repo=LibrarySearchRepository(db)
+        val request=LibrarySearchRequest(1,listOf(note),emptyMap(),"body")
+        val boundaries=listOf("connection-open" to "snapshot-open","snapshot-open" to "drafts-ready",
+            "drafts-ready" to "scope-start","scope-start" to "scope-end",
+            "scope-end" to "hits-ready","hits-ready" to "page-hits-start")
+        boundaries.forEachIndexed{index,(stage,nextStage)->
+            val entered=CompletableDeferred<Unit>();val release=CountDownLatch(1);val events=mutableListOf<String>()
+            repo.stageObserver={name,_,_,_,_,_->
+                events+=name
+                if(name==stage){entered.complete(Unit);check(release.await(10,TimeUnit.SECONDS))}
+            }
+            val reading=async(Dispatchers.IO){repo.read(request)}
+            try{
+                withTimeout(5_000){entered.await()}
+                withTimeout(5_000){withContext(Dispatchers.IO){
+                    assertTrue(NoteRepository(db).save(SaveNote(id(),note.id,index+1L,"Saved $stage","body-$stage")) is SaveResult.Committed)
+                    assertTrue(workspace.organize(note.id,workspace.get(note.id).revision,"folder-$stage","tag",true,false))
+                }}
+                reading.cancel();release.countDown();withTimeout(5_000){reading.join()}
+                assertTrue(reading.isCancelled)
+                assertFalse("Cancelled at $stage but entered $nextStage: $events",events.contains(nextStage))
+                assertFalse(events.contains("metadata-start"))
+                if(stage!="connection-open")assertTrue(events.contains("snapshot-closed"))
+            }finally{release.countDown();reading.cancelAndJoin();repo.stageObserver=null}
+            val fresh=repo.read(request)
+            val item=fresh.items.single()
+            assertEquals(index+2L,item.note.revision);assertEquals("Saved $stage",item.note.title)
+            assertEquals("body-$stage",item.note.text);assertEquals("folder-$stage",item.workspace.folder)
+            assertEquals(mapOf("folder-$stage" to 1),fresh.folders)
+            assertEquals(listOf("tag"),fresh.tags);assertEquals(1,fresh.favorites)
+        }
+    }}
     @Test fun refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState()=fixture{db->
         val workspace=WorkspaceRepository(db);val note=workspace.create("Saved title",false,PaperStyle.BLANK)
         // A restored legacy row may contain Unicode whitespace even though current writes trim it.

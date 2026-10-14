@@ -63,6 +63,7 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
                 throw android.database.sqlite.SQLiteDatabaseCorruptException("Library search corruption; author data retained")
             }.use{reader->
                 trace?.event("connection-open")
+                active.ensureActive()
                 var scanned=0
                 reader.addFunction("library_contains",1,{args,result->
                     active.ensureActive();result.set(if(args.getString(0).orEmpty().contains(request.query,true))1 else 0)
@@ -77,14 +78,14 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
                     active.ensureActive();val title=args.getString(0).lowercase(Locale.ROOT)
                     result.set(ByteArray(title.length*2){i->(title[i/2].code ushr if(i%2==0)8 else 0).toByte()})
                 })
-                reader.addFunction("library_blank",1,{args,result->result.set(if(args.getString(0).orEmpty().isBlank())1 else 0)})
+                reader.addFunction("library_blank",1,{args,result->active.ensureActive();result.set(if(args.getString(0).orEmpty().isBlank())1 else 0)})
                 val sql=object:SupportSQLiteDatabase by reader{
                     override fun query(query:String)=reader.query(SimpleSQLiteQuery(query),cancellation)
                     override fun query(query:String,bindArgs:Array<out Any?>)=reader.query(SimpleSQLiteQuery(query,bindArgs),cancellation)
                 }
-                reader.beginTransactionDeferred()
-                trace?.event("snapshot-open")
-                try{readSnapshot(request,sql,trace){active.ensureActive()}}finally{reader.endTransaction();trace?.event("snapshot-closed")}
+                active.ensureActive();reader.beginTransactionDeferred()
+                try{trace?.event("snapshot-open");readSnapshot(request,sql,trace){active.ensureActive()}}
+                finally{reader.endTransaction();trace?.event("snapshot-closed")}
             }.also{trace?.event("connection-closed")}}catch(failure:Exception){active.ensureActive();throw failure}finally{watcher.cancel()}
         };trace?.event("read-end",result.items.size);result
         }catch(c:CancellationException){trace?.event("read-cancel");throw c}
@@ -95,10 +96,14 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
     private fun readSnapshot(request:LibrarySearchRequest,sql:SupportSQLiteDatabase,trace:LibrarySearchReadTrace?,check:()->Unit):LibrarySearchResult {
         // Only open drafts enter this temporary overlay. Saved titles, revisions, ordering,
         // classification and search sources are all read from the same author snapshot.
+        // execSQL has no CancellationSignal overload. Stop between temporary-table steps,
+        // including when there are no drafts or matching source rows to run a row check.
+        check()
         sql.execSQL("CREATE TEMP TABLE library_drafts(id TEXT PRIMARY KEY,revision INTEGER,title TEXT,text TEXT,position INTEGER)")
         request.drafts.values.forEachIndexed{index,draft->check();sql.execSQL("INSERT INTO library_drafts VALUES(?,?,?,?,?)",
             arrayOf<Any>(draft.base.id,draft.base.revision,draft.title,draft.text,index))}
         trace?.event("drafts-ready",request.drafts.size)
+        check()
         val shelf="""
             WITH shelf AS (
                 SELECT n.id,COALESCE(d.revision,n.revision) revision,COALESCE(d.title,n.title) title,
@@ -126,14 +131,20 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
             if(request.type!="all")add("world="+if(request.type=="board")"1"else"0")
         }.joinToString(" AND ")
         trace?.event("scope-start")
+        check()
         sql.execSQL("CREATE TEMP TABLE library_scope(id TEXT PRIMARY KEY)")
+        check()
         sql.execSQL("$shelf INSERT INTO library_scope SELECT id FROM shelf WHERE $filter",args.toTypedArray())
         trace?.event("scope-end")
+        check()
         sql.execSQL("CREATE TEMP TABLE library_page_hits(notebookId TEXT,id TEXT,position INTEGER)")
+        check()
         sql.execSQL("CREATE INDEX library_page_hit_order ON library_page_hits(notebookId,position,id)")
+        check()
         sql.execSQL("CREATE TEMP TABLE library_card_hits(notebookId TEXT PRIMARY KEY)")
         val terms=request.query.takeIf{it.isNotBlank()}?.let(LibrarySearchTerms::query)
         trace?.event("hits-ready")
+        check()
         if(terms!=null){
             // Filter the authoritative source inside SQLite. Unmatched bodies never enter a
             // CursorWindow or a temp sort; only compact hit identities cross the boundary.
