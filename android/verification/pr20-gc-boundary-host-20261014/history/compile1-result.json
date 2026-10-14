@@ -1,0 +1,9 @@
+{
+  "exit_code": 0,
+  "elapsed_seconds": 70.6215793650008,
+  "finished_utc": "2026-10-14T09:19:44.028017+00:00",
+  "source_unchanged": true,
+  "log_sha256": "a8c09a9eb399c3b4de6f1f7db822066b5dab8b2db31e2be7d333e738ebf55247",
+  "native_execution": false,
+  "final_acceptance": false
+}

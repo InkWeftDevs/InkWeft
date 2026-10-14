@@ -1,0 +1,28 @@
+{
+  "status": "SELF_REVIEW_STATIC_SCOPE_AND_LIFECYCLE_CHECKS_ONLY",
+  "new_test_sha256": "98b69ea1d09e0bce21646d79f50f9b7dd9396c9e73bb1a9baea647de7cdf6b72",
+  "new_test_lines": 377,
+  "fixture_domain_construction_byte_identical": true,
+  "existing_natural_probe_unchanged": true,
+  "production_gc_unchanged": true,
+  "new_methods": 2,
+  "trials_each": 30,
+  "source_versions": 1281,
+  "detached_versions": 1280,
+  "native_execution": false,
+  "independent_source_review": "PARENT_PENDING",
+  "hook_dependency": "Old native guard failed on invalid UUID; source repaired, no new native PASS yet.",
+  "manual_review": [
+    "Rename stays in original caller context; context element only labels it, no outer transaction.",
+    "GC/author/finish tokens differ; task and transaction identities are namespaced by database.",
+    "Main SQLite transaction is selected to span rename receipt; trigger-sync and nested DAO END are excluded.",
+    "Eleven disjoint wall intervals cover request to return; BEGIN/END CPU differences are same-thread only.",
+    "Before/after DELETE observations include callback overhead, not pure SQL execution or exact lock duration.",
+    "All producer coroutines finish or cancel/join before writer-ledger drain; terminal event is published first.",
+    "Unfinished writer ledger prevents helper close/delete and fails the diagnostic; no silent timeout-to-null.",
+    "Trace validation is separate from quiescence, so overflow still allows safe helper cleanup after real exits.",
+    "Collector and author helpers each receive a close attempt even if closing the other fails.",
+    "JSON/status writes occur after measured work; partial values and first failure are retained.",
+    "No resampling, dropped-sample pass, natural/conditional pooling or competition quantiles below20."
+  ]
+}

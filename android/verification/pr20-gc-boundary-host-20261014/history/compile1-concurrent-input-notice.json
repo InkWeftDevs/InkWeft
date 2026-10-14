@@ -1,0 +1,10 @@
+{
+  "noticed_utc": "2026-10-14T09:19:32.262784+00:00",
+  "file": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveBoundaryDiagnosticsTest.kt",
+  "known_prechange_tracked_sha256": "03ef99d05bc814fa19d755b0d3fb534f84da6f04e1af024dc0433c8f367a276a",
+  "currently_read_sha256": "03ef99d05bc814fa19d755b0d3fb534f84da6f04e1af024dc0433c8f367a276a",
+  "change_owner": "/root/save_boundary",
+  "reason": "Root authorized fixing invalid UUID IDs in two old guard methods while compile1 is active.",
+  "compile1_binding_status": "NOT_EXACT_ALL_INPUTS_CONCURRENT_TEST_EDIT",
+  "required_after_stable": "One incremental compile after guard and GC file become stable; no native claim."
+}

@@ -1,0 +1,144 @@
+{
+  "status": "READ_ONLY_RECHECK_AND_UNEXECUTED_PROPOSAL_NOT_NATIVE_ACCEPTANCE",
+  "repository_head_at_review": "4278f310d6f8a742072725f77fda3fdb92c22431",
+  "run_id": 38520196523,
+  "job_id": 115707901766,
+  "new_native_runs": 0,
+  "new_builds": 0,
+  "network_calls": 0,
+  "production_edits": [],
+  "test_edits": [],
+  "ci_edits": [],
+  "git_mutations": [],
+  "input_files": {
+    "official/job-decoded.log": {
+      "sha256": "d1634bbeb118100737e2c9d6d6111fca972f2fb05999b5604ff34f0d0e7c9f62",
+      "bytes": 1107962
+    },
+    "extracted/method-56-C1-records.json": {
+      "sha256": "aefe54dcc3cdbac19d474b0cc4025e3b089eba800007549ff36db837c30f41ed",
+      "bytes": 38433
+    },
+    "extracted/method-57-C1-records.json": {
+      "sha256": "c898fbbea2f6229f31bf1aada97c76fcdcda4a9c6a42aea67a5b13ddc4855757",
+      "bytes": 39116
+    }
+  },
+  "groups": [
+    {
+      "ordinal": 56,
+      "connection": "same-room",
+      "committed": 30,
+      "trials": 30,
+      "precommit_point_exposed": 0,
+      "exposed_indices": [],
+      "competition_p50_ms": null,
+      "competition_p95_ms": null,
+      "exposed_max_observed_ms": null,
+      "first_root_scans": 30,
+      "finish_root_scans": 30,
+      "first_deleted": 0,
+      "finish_deleted": 38400,
+      "first_deferred": 30,
+      "first_total_ms": 576.216202,
+      "finish_total_ms": 2007.209923,
+      "combined_total_ms": 2583.426125,
+      "exact_delete_intervals_recorded": false,
+      "pure_sqlite_lock_wait_ms": null
+    },
+    {
+      "ordinal": 57,
+      "connection": "separate-room",
+      "committed": 30,
+      "trials": 30,
+      "precommit_point_exposed": 1,
+      "exposed_indices": [
+        9
+      ],
+      "competition_p50_ms": null,
+      "competition_p95_ms": null,
+      "exposed_max_observed_ms": 84.060999,
+      "first_root_scans": 30,
+      "finish_root_scans": 30,
+      "first_deleted": 1280,
+      "finish_deleted": 37120,
+      "first_deferred": 29,
+      "first_total_ms": 627.612375,
+      "finish_total_ms": 1994.869167,
+      "combined_total_ms": 2622.481542,
+      "exact_delete_intervals_recorded": false,
+      "pure_sqlite_lock_wait_ms": null
+    }
+  ],
+  "source_bindings": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt": {
+      "sha256": "b96890478129bbb7b0bbb538c3cf8d5f2e97f2b8b5e2e34d8057c855c9ec6ca9",
+      "bytes": 14910
+    },
+    "android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt": {
+      "sha256": "c904a8ebc9b2aed64266a82d24b8f1395621314a9087fd6f0de6298b8865fb47",
+      "bytes": 23735
+    },
+    "android/data-local/src/main/kotlin/org/inkweft/data/SaveBoundaryDiagnostics.kt": {
+      "sha256": "392bf0e25e6f62d77f915eec628eac16f3f374e0de5287fb02435d29c0cecab9",
+      "bytes": 6771
+    },
+    "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt": {
+      "sha256": "052467625c685a79f72337379b2d4e70718440c6717e91c6d18677c9c1982581",
+      "bytes": 5207
+    },
+    "android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt": {
+      "sha256": "a9351355ca45af5f6f5db34109fa68d6bf10505d3117ed60a7c68cc000b05e89",
+      "bytes": 4833
+    },
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryStorageTest.kt": {
+      "sha256": "488676c044a894661350b6d2d0450b5d331c9ac438e95822e7271ab09ef409c2",
+      "bytes": 8180
+    },
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt": {
+      "sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5",
+      "bytes": 14734
+    },
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionExposureTest.kt": {
+      "sha256": "7e98a67eec4f9242fc4c18e6bf662ec1d86c346796ebc28ab0971be1a9f0224f",
+      "bytes": 12930
+    },
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionCausalTest.kt": {
+      "sha256": "4f80b8ce32e1aa2bae1d919b96c06b1897e7a8500c748822efd05119ba87ec4a",
+      "bytes": 18607
+    },
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionBenchmarkTest.kt": {
+      "sha256": "2b04bd2de3bc4cd6d030b14b8c12096c3a3604ddaa39324a65703cee1de30e34",
+      "bytes": 7933
+    },
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveBoundaryDiagnosticsTest.kt": {
+      "sha256": "03ef99d05bc814fa19d755b0d3fb534f84da6f04e1af024dc0433c8f367a276a",
+      "bytes": 27176
+    }
+  },
+  "safety_review": {
+    "production_bug_demonstrated": false,
+    "new_fix_justified_by_current_latency_evidence": false,
+    "preserve": [
+      "initial writer version",
+      "private read snapshot ending before DELETE",
+      "per-batch dual-component writer guard",
+      "256-row short transactions",
+      "all historical source roots and conservative shadow retention",
+      "malformed-reference abort",
+      "rollback and resume",
+      "default-off diagnostics"
+    ],
+    "existing_safety_tests_read_not_rerun": [
+      "oneScanSurvivesRoomObserverRefreshAcrossSevenBatches",
+      "sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion",
+      "malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+      "interruptedBatchRollsBackAndReopenedCollectionResumes",
+      "missingRoomGuardLogAbortsWithoutDeletingCandidates"
+    ]
+  }
+}
