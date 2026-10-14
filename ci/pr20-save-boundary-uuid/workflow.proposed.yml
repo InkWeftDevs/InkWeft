@@ -14,7 +14,7 @@ jobs:
   causal:
     name: DIAGNOSTIC_ONLY one source / one data APK / ten methods
     if: github.event_name == 'push' && github.ref == 'refs/heads/codex/kvm-pr20-save-boundary-uuid-20261014' && github.event.created ==
-      false && github.event.before == '0000000000000000000000000000000000000000' && github.run_attempt == 1
+      false && github.event.before == '818493a1e8a4d2121e125d5ba39c4219f1977720' && github.run_attempt == 1
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
