@@ -1,0 +1,1556 @@
+{
+  "status": "PASS_ALL_READ_PHASES_90_SAMPLE_OVERLAPS_AND_INTERVAL_UNIONS",
+  "scope": "EXISTING_ACTUAL_NATIVE_RECORDS_LOCAL_ARITHMETIC_ONLY",
+  "source_records_sha256": "61eb1e524e001498e9a3ceaa59a85529439610f590e329052bc0b75846da716d",
+  "compared_derived_sha256": "6e703793fcf44a5a6685dd55f8b02ea45c44ff6386c433d34bb71b6f2dabc1ce",
+  "independent_producer_or_analyzer_imported": false,
+  "checker_sha256": "b9f05040eeb4a7be2f2e709796dbdedd43940be419c87efad3523262255f31ef",
+  "modes": {
+    "IDLE": {
+      "window_ms": 68.360126,
+      "read_summary": {
+        "readStageCounts": {},
+        "outcomes": {},
+        "lastWorkStageCounts": {},
+        "ioUnionOverlapWholeWindowMs": 0.0,
+        "snapshotUnionOverlapWholeWindowMs": 0.0,
+        "completePrecomputeUnionOverlapWholeWindowMs": 0.0,
+        "indexWriterRunUnionOverlapWholeWindowMs": 0.0,
+        "phases": {
+          "dispatch": {
+            "complete": 0,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "connection_open": {
+            "complete": 0,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "register_functions_and_begin": {
+            "complete": 0,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "drafts": {
+            "complete": 0,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "scope": {
+            "complete": 0,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "hit_temp_setup": {
+            "complete": 0,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "page_hits": {
+            "complete": 0,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "card_hits": {
+            "complete": 0,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "result_page": {
+            "complete": 0,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "metadata": {
+            "complete": 0,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "pending": {
+            "complete": 0,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          }
+        }
+      },
+      "all_30_sample_overlaps": [
+        {
+          "sample": 0,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 1,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 2,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 3,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 4,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 5,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 6,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 7,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 8,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 9,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 10,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 11,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 12,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 13,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 14,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 15,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 16,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 17,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 18,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 19,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 20,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 21,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 22,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 23,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 24,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 25,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 26,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 27,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 28,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 29,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        }
+      ],
+      "index_queue_exposed_samples": [],
+      "started_read_last_work_stages": {},
+      "cross_thread_io_cpu_null_count": 0
+    },
+    "DIRECT": {
+      "window_ms": 105.442867,
+      "read_summary": {
+        "readStageCounts": {
+          "read-requested": 1,
+          "read-start": 1,
+          "connection-open": 1,
+          "snapshot-open": 1,
+          "drafts-ready": 1,
+          "scope-start": 1,
+          "scope-end": 1,
+          "hits-ready": 1,
+          "page-hits-start": 1,
+          "page-hits-end": 1,
+          "card-hits-start": 1,
+          "card-hits-end": 1,
+          "page-start": 1,
+          "page-end": 1,
+          "metadata-start": 1,
+          "metadata-end": 1,
+          "pending-start": 1,
+          "pending-end": 1,
+          "snapshot-closed": 1,
+          "connection-closed": 1,
+          "read-end": 1
+        },
+        "outcomes": {
+          "read-end": 1
+        },
+        "lastWorkStageCounts": {
+          "pending-end": 1
+        },
+        "ioUnionOverlapWholeWindowMs": 105.442867,
+        "snapshotUnionOverlapWholeWindowMs": 105.442867,
+        "completePrecomputeUnionOverlapWholeWindowMs": 0.0,
+        "indexWriterRunUnionOverlapWholeWindowMs": 0.0,
+        "phases": {
+          "dispatch": {
+            "complete": 1,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 1,
+              "p50": 0.025758,
+              "p95": 0.025758,
+              "max": 0.025758
+            },
+            "sameThreadCpuMs": {
+              "n": 1,
+              "p50": 0.025558,
+              "p95": 0.025558,
+              "max": 0.025558
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "connection_open": {
+            "complete": 1,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 1,
+              "p50": 0.233836,
+              "p95": 0.233836,
+              "max": 0.233836
+            },
+            "sameThreadCpuMs": {
+              "n": 1,
+              "p50": 0.233996,
+              "p95": 0.233996,
+              "max": 0.233996
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "register_functions_and_begin": {
+            "complete": 1,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 1,
+              "p50": 0.088261,
+              "p95": 0.088261,
+              "max": 0.088261
+            },
+            "sameThreadCpuMs": {
+              "n": 1,
+              "p50": 0.088001,
+              "p95": 0.088001,
+              "max": 0.088001
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "drafts": {
+            "complete": 1,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 1,
+              "p50": 0.874525,
+              "p95": 0.874525,
+              "max": 0.874525
+            },
+            "sameThreadCpuMs": {
+              "n": 1,
+              "p50": 0.874965,
+              "p95": 0.874965,
+              "max": 0.874965
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "scope": {
+            "complete": 1,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 1,
+              "p50": 2.652688,
+              "p95": 2.652688,
+              "max": 2.652688
+            },
+            "sameThreadCpuMs": {
+              "n": 1,
+              "p50": 2.653389,
+              "p95": 2.653389,
+              "max": 2.653389
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "hit_temp_setup": {
+            "complete": 1,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 1,
+              "p50": 0.371791,
+              "p95": 0.371791,
+              "max": 0.371791
+            },
+            "sameThreadCpuMs": {
+              "n": 1,
+              "p50": 0.37132,
+              "p95": 0.37132,
+              "max": 0.37132
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "page_hits": {
+            "complete": 1,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 1,
+              "p50": 284.272668,
+              "p95": 284.272668,
+              "max": 284.272668
+            },
+            "sameThreadCpuMs": {
+              "n": 1,
+              "p50": 271.004066,
+              "p95": 271.004066,
+              "max": 271.004066
+            },
+            "unionOverlapWholeWindowMs": 105.442867
+          },
+          "card_hits": {
+            "complete": 1,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 1,
+              "p50": 0.488503,
+              "p95": 0.488503,
+              "max": 0.488503
+            },
+            "sameThreadCpuMs": {
+              "n": 1,
+              "p50": 0.275007,
+              "p95": 0.275007,
+              "max": 0.275007
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "result_page": {
+            "complete": 1,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 1,
+              "p50": 97.289333,
+              "p95": 97.289333,
+              "max": 97.289333
+            },
+            "sameThreadCpuMs": {
+              "n": 1,
+              "p50": 92.022452,
+              "p95": 92.022452,
+              "max": 92.022452
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "metadata": {
+            "complete": 1,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 1,
+              "p50": 5.756995,
+              "p95": 5.756995,
+              "max": 5.756995
+            },
+            "sameThreadCpuMs": {
+              "n": 1,
+              "p50": 5.700561,
+              "p95": 5.700561,
+              "max": 5.700561
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "pending": {
+            "complete": 1,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 1,
+              "p50": 0.769389,
+              "p95": 0.769389,
+              "max": 0.769389
+            },
+            "sameThreadCpuMs": {
+              "n": 1,
+              "p50": 0.76963,
+              "p95": 0.76963,
+              "max": 0.76963
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          }
+        }
+      },
+      "all_30_sample_overlaps": [
+        {
+          "sample": 0,
+          "readIoUnionOverlapMs": 4.537009,
+          "snapshotUnionOverlapMs": 4.537009,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 1,
+          "readIoUnionOverlapMs": 2.484769,
+          "snapshotUnionOverlapMs": 2.484769,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 2,
+          "readIoUnionOverlapMs": 2.239095,
+          "snapshotUnionOverlapMs": 2.239095,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 3,
+          "readIoUnionOverlapMs": 1.921625,
+          "snapshotUnionOverlapMs": 1.921625,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 4,
+          "readIoUnionOverlapMs": 2.24888,
+          "snapshotUnionOverlapMs": 2.24888,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 5,
+          "readIoUnionOverlapMs": 2.011218,
+          "snapshotUnionOverlapMs": 2.011218,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 6,
+          "readIoUnionOverlapMs": 5.279918,
+          "snapshotUnionOverlapMs": 5.279918,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 7,
+          "readIoUnionOverlapMs": 5.443901,
+          "snapshotUnionOverlapMs": 5.443901,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 8,
+          "readIoUnionOverlapMs": 9.392518,
+          "snapshotUnionOverlapMs": 9.392518,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 9,
+          "readIoUnionOverlapMs": 2.240387,
+          "snapshotUnionOverlapMs": 2.240387,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 10,
+          "readIoUnionOverlapMs": 2.26876,
+          "snapshotUnionOverlapMs": 2.26876,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 11,
+          "readIoUnionOverlapMs": 1.777312,
+          "snapshotUnionOverlapMs": 1.777312,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 12,
+          "readIoUnionOverlapMs": 4.804264,
+          "snapshotUnionOverlapMs": 4.804264,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 13,
+          "readIoUnionOverlapMs": 5.61229,
+          "snapshotUnionOverlapMs": 5.61229,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 14,
+          "readIoUnionOverlapMs": 3.384151,
+          "snapshotUnionOverlapMs": 3.384151,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 15,
+          "readIoUnionOverlapMs": 2.280397,
+          "snapshotUnionOverlapMs": 2.280397,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 16,
+          "readIoUnionOverlapMs": 2.295149,
+          "snapshotUnionOverlapMs": 2.295149,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 17,
+          "readIoUnionOverlapMs": 3.043066,
+          "snapshotUnionOverlapMs": 3.043066,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 18,
+          "readIoUnionOverlapMs": 1.832143,
+          "snapshotUnionOverlapMs": 1.832143,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 19,
+          "readIoUnionOverlapMs": 2.110095,
+          "snapshotUnionOverlapMs": 2.110095,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 20,
+          "readIoUnionOverlapMs": 2.054642,
+          "snapshotUnionOverlapMs": 2.054642,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 21,
+          "readIoUnionOverlapMs": 2.264303,
+          "snapshotUnionOverlapMs": 2.264303,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 22,
+          "readIoUnionOverlapMs": 2.175431,
+          "snapshotUnionOverlapMs": 2.175431,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 23,
+          "readIoUnionOverlapMs": 5.202073,
+          "snapshotUnionOverlapMs": 5.202073,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 24,
+          "readIoUnionOverlapMs": 4.400186,
+          "snapshotUnionOverlapMs": 4.400186,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 25,
+          "readIoUnionOverlapMs": 9.446588,
+          "snapshotUnionOverlapMs": 9.446588,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 26,
+          "readIoUnionOverlapMs": 2.208701,
+          "snapshotUnionOverlapMs": 2.208701,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 27,
+          "readIoUnionOverlapMs": 2.143364,
+          "snapshotUnionOverlapMs": 2.143364,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 28,
+          "readIoUnionOverlapMs": 1.804842,
+          "snapshotUnionOverlapMs": 1.804842,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        },
+        {
+          "sample": 29,
+          "readIoUnionOverlapMs": 2.299315,
+          "snapshotUnionOverlapMs": 2.299315,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            1
+          ]
+        }
+      ],
+      "index_queue_exposed_samples": [],
+      "started_read_last_work_stages": {
+        "pending-end": 1
+      },
+      "cross_thread_io_cpu_null_count": 0
+    },
+    "OBSERVE": {
+      "window_ms": 218.188628,
+      "read_summary": {
+        "readStageCounts": {
+          "observe-request": 1,
+          "observe-index-initial": 1,
+          "observe-invalidation": 30,
+          "observe-scheduled": 29,
+          "observe-debounce-start": 1,
+          "observe-debounce-cancel": 1,
+          "observe-read-start": 28,
+          "read-requested": 28,
+          "read-start": 26,
+          "connection-open": 26,
+          "snapshot-open": 25,
+          "drafts-ready": 25,
+          "scope-start": 23,
+          "scope-end": 23,
+          "hits-ready": 10,
+          "page-hits-start": 9,
+          "snapshot-closed": 25,
+          "read-cancel": 26,
+          "observe-read-cancel": 28
+        },
+        "outcomes": {
+          "cancelled_before_io_start": 3,
+          "read-cancel": 26
+        },
+        "lastWorkStageCounts": {
+          "null": 1,
+          "page-hits-start": 9,
+          "scope-end": 13,
+          "drafts-ready": 2,
+          "connection-open": 1,
+          "read-requested": 2,
+          "hits-ready": 1
+        },
+        "ioUnionOverlapWholeWindowMs": 195.717059,
+        "snapshotUnionOverlapWholeWindowMs": 174.399279,
+        "completePrecomputeUnionOverlapWholeWindowMs": 97.951393,
+        "indexWriterRunUnionOverlapWholeWindowMs": 21.54356,
+        "phases": {
+          "dispatch": {
+            "complete": 26,
+            "incomplete": 2,
+            "wallMs": {
+              "n": 26,
+              "p50": 0.097354,
+              "p95": 1.186057,
+              "max": 1.526601
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 7.298123
+          },
+          "connection_open": {
+            "complete": 26,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 26,
+              "p50": 0.148419,
+              "p95": 0.401184,
+              "max": 0.718834
+            },
+            "sameThreadCpuMs": {
+              "n": 26,
+              "p50": 0.144233,
+              "p95": 0.27714,
+              "max": 0.323619
+            },
+            "unionOverlapWholeWindowMs": 5.671919
+          },
+          "register_functions_and_begin": {
+            "complete": 25,
+            "incomplete": 1,
+            "wallMs": {
+              "n": 25,
+              "p50": 0.08101,
+              "p95": 0.177663,
+              "max": 0.207678
+            },
+            "sameThreadCpuMs": {
+              "n": 25,
+              "p50": 0.08057,
+              "p95": 0.142922,
+              "max": 0.143632
+            },
+            "unionOverlapWholeWindowMs": 2.435942
+          },
+          "drafts": {
+            "complete": 25,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 25,
+              "p50": 0.7969,
+              "p95": 1.913083,
+              "max": 3.502406
+            },
+            "sameThreadCpuMs": {
+              "n": 25,
+              "p50": 0.79677,
+              "p95": 1.029058,
+              "max": 1.034932
+            },
+            "unionOverlapWholeWindowMs": 24.53789
+          },
+          "scope": {
+            "complete": 23,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 23,
+              "p50": 2.469446,
+              "p95": 5.689354,
+              "max": 6.296754
+            },
+            "sameThreadCpuMs": {
+              "n": 23,
+              "p50": 2.185494,
+              "p95": 2.49238,
+              "max": 2.656746
+            },
+            "unionOverlapWholeWindowMs": 69.054672
+          },
+          "hit_temp_setup": {
+            "complete": 10,
+            "incomplete": 13,
+            "wallMs": {
+              "n": 10,
+              "p50": 0.415305,
+              "p95": 2.295739,
+              "max": 2.295739
+            },
+            "sameThreadCpuMs": {
+              "n": 10,
+              "p50": 0.402385,
+              "p95": 0.649372,
+              "max": 0.649372
+            },
+            "unionOverlapWholeWindowMs": 6.880429
+          },
+          "page_hits": {
+            "complete": 0,
+            "incomplete": 9,
+            "wallMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "card_hits": {
+            "complete": 0,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "result_page": {
+            "complete": 0,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "metadata": {
+            "complete": 0,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          },
+          "pending": {
+            "complete": 0,
+            "incomplete": 0,
+            "wallMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null
+            },
+            "unionOverlapWholeWindowMs": 0.0
+          }
+        }
+      },
+      "all_30_sample_overlaps": [
+        {
+          "sample": 0,
+          "readIoUnionOverlapMs": 0.0,
+          "snapshotUnionOverlapMs": 0.0,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": []
+        },
+        {
+          "sample": 1,
+          "readIoUnionOverlapMs": 5.01077,
+          "snapshotUnionOverlapMs": 4.731967,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            2
+          ]
+        },
+        {
+          "sample": 2,
+          "readIoUnionOverlapMs": 8.818719,
+          "snapshotUnionOverlapMs": 8.1778,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            2,
+            3
+          ]
+        },
+        {
+          "sample": 3,
+          "readIoUnionOverlapMs": 5.134614,
+          "snapshotUnionOverlapMs": 4.677837,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            3,
+            4
+          ]
+        },
+        {
+          "sample": 4,
+          "readIoUnionOverlapMs": 10.579184,
+          "snapshotUnionOverlapMs": 8.470251,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            4,
+            5
+          ]
+        },
+        {
+          "sample": 5,
+          "readIoUnionOverlapMs": 4.675294,
+          "snapshotUnionOverlapMs": 4.252858,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            6
+          ]
+        },
+        {
+          "sample": 6,
+          "readIoUnionOverlapMs": 4.202222,
+          "snapshotUnionOverlapMs": 3.760498,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            6,
+            7
+          ]
+        },
+        {
+          "sample": 7,
+          "readIoUnionOverlapMs": 4.293638,
+          "snapshotUnionOverlapMs": 3.864302,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            7,
+            8
+          ]
+        },
+        {
+          "sample": 8,
+          "readIoUnionOverlapMs": 3.576576,
+          "snapshotUnionOverlapMs": 3.092929,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            8,
+            9
+          ]
+        },
+        {
+          "sample": 9,
+          "readIoUnionOverlapMs": 7.423403,
+          "snapshotUnionOverlapMs": 6.878486,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            9,
+            10
+          ]
+        },
+        {
+          "sample": 10,
+          "readIoUnionOverlapMs": 4.90227,
+          "snapshotUnionOverlapMs": 4.90227,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            10
+          ]
+        },
+        {
+          "sample": 11,
+          "readIoUnionOverlapMs": 3.588673,
+          "snapshotUnionOverlapMs": 2.9581,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            10,
+            11
+          ]
+        },
+        {
+          "sample": 12,
+          "readIoUnionOverlapMs": 3.945261,
+          "snapshotUnionOverlapMs": 1.22925,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            11,
+            13
+          ]
+        },
+        {
+          "sample": 13,
+          "readIoUnionOverlapMs": 6.957461,
+          "snapshotUnionOverlapMs": 6.296804,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            13,
+            14
+          ]
+        },
+        {
+          "sample": 14,
+          "readIoUnionOverlapMs": 6.339147,
+          "snapshotUnionOverlapMs": 5.878655,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            14,
+            15
+          ]
+        },
+        {
+          "sample": 15,
+          "readIoUnionOverlapMs": 2.430939,
+          "snapshotUnionOverlapMs": 2.430939,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            15
+          ]
+        },
+        {
+          "sample": 16,
+          "readIoUnionOverlapMs": 7.370433,
+          "snapshotUnionOverlapMs": 6.741191,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            16,
+            17
+          ]
+        },
+        {
+          "sample": 17,
+          "readIoUnionOverlapMs": 23.550693,
+          "snapshotUnionOverlapMs": 22.973968,
+          "indexWriterRunUnionOverlapMs": 21.54356,
+          "queueIndexWriterRunOverlapMs": 21.523241,
+          "overlappingReadIds": [
+            17,
+            18
+          ]
+        },
+        {
+          "sample": 18,
+          "readIoUnionOverlapMs": 7.191099,
+          "snapshotUnionOverlapMs": 5.782083,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            18,
+            19
+          ]
+        },
+        {
+          "sample": 19,
+          "readIoUnionOverlapMs": 7.378547,
+          "snapshotUnionOverlapMs": 6.67218,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            19,
+            20
+          ]
+        },
+        {
+          "sample": 20,
+          "readIoUnionOverlapMs": 6.324345,
+          "snapshotUnionOverlapMs": 6.324345,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            20
+          ]
+        },
+        {
+          "sample": 21,
+          "readIoUnionOverlapMs": 8.9072,
+          "snapshotUnionOverlapMs": 7.875723,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            20,
+            21
+          ]
+        },
+        {
+          "sample": 22,
+          "readIoUnionOverlapMs": 6.053874,
+          "snapshotUnionOverlapMs": 5.35532,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            21,
+            22
+          ]
+        },
+        {
+          "sample": 23,
+          "readIoUnionOverlapMs": 3.441205,
+          "snapshotUnionOverlapMs": 2.867896,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            22,
+            23
+          ]
+        },
+        {
+          "sample": 24,
+          "readIoUnionOverlapMs": 2.345933,
+          "snapshotUnionOverlapMs": 2.088231,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            23
+          ]
+        },
+        {
+          "sample": 25,
+          "readIoUnionOverlapMs": 8.541599,
+          "snapshotUnionOverlapMs": 7.943263,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            24,
+            25
+          ]
+        },
+        {
+          "sample": 26,
+          "readIoUnionOverlapMs": 5.80753,
+          "snapshotUnionOverlapMs": 5.002908,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            25
+          ]
+        },
+        {
+          "sample": 27,
+          "readIoUnionOverlapMs": 9.791229,
+          "snapshotUnionOverlapMs": 7.814791,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            25,
+            27
+          ]
+        },
+        {
+          "sample": 28,
+          "readIoUnionOverlapMs": 7.315563,
+          "snapshotUnionOverlapMs": 6.65233,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            27,
+            28
+          ]
+        },
+        {
+          "sample": 29,
+          "readIoUnionOverlapMs": 4.330201,
+          "snapshotUnionOverlapMs": 3.711686,
+          "indexWriterRunUnionOverlapMs": 0.0,
+          "queueIndexWriterRunOverlapMs": 0.0,
+          "overlappingReadIds": [
+            28,
+            29
+          ]
+        }
+      ],
+      "index_queue_exposed_samples": [
+        17
+      ],
+      "started_read_last_work_stages": {
+        "page-hits-start": 9,
+        "scope-end": 13,
+        "drafts-ready": 2,
+        "connection-open": 1,
+        "hits-ready": 1
+      },
+      "cross_thread_io_cpu_null_count": 1
+    }
+  },
+  "caveat": "Sorted endpoint geometry only. Missing phase endings remain censored. Overlap is exposure, not causal or additive save cost."
+}

@@ -1,0 +1,69 @@
+{
+  "status": "PASS_EXACT_PREP_TO_ACTIVE_DELTA",
+  "scope": "LOCAL_READ_ONLY_COMMITTED_BYTES_NO_NATIVE_NO_NETWORK",
+  "source_git": "94379190b9ad0e1034f136ea9887fb0ac12e7ea7",
+  "readiness_git": "a69c173c16bd8a434cc1eab9ef8ff2ad56070c19",
+  "prep_git": "818493a1e8a4d2121e125d5ba39c4219f1977720",
+  "active_git": "ac63ce66ed4aaec0372c56b39be97e3335966c31",
+  "worktree": "/workspace/InkWeft-save-boundary-uuid-run",
+  "worktree_clean": true,
+  "local_head": "ac63ce66ed4aaec0372c56b39be97e3335966c31",
+  "prior_bound_review_sha256": "751b5ba4f13ed0c41a5fcbfdc544afcd392a5f5d9c3fa32a3f7636b9c7399509",
+  "prep_diff": [
+    "ci/pr20-save-boundary-uuid/EXECUTION_SHA256SUMS",
+    "ci/pr20-save-boundary-uuid/authorization.json",
+    "ci/pr20-save-boundary-uuid/package.py",
+    "ci/pr20-save-boundary-uuid/run.py"
+  ],
+  "active_diff": [
+    ".github/workflows/pr20-save-boundary-uuid.yml",
+    "ci/pr20-save-boundary-uuid/EXECUTION_SHA256SUMS",
+    "ci/pr20-save-boundary-uuid/workflow.proposed.yml"
+  ],
+  "prep_six_files_match_bound": true,
+  "active_proposed_matches_workflow": true,
+  "active_guard_exact_prep_parent": "818493a1e8a4d2121e125d5ba39c4219f1977720",
+  "workflow_sha256": "ec4a5787bc1800374970dbe86ff69f747e5663c242f8695a8280f1de20566bec",
+  "manifest_verification": {
+    "818493a1e8a4d2121e125d5ba39c4219f1977720": {
+      "sha256": "bcd566d099d8ec453fc9e4083324888c05780cb22eaeeab7e971e1e4d1a40b59",
+      "entries": {
+        "ci/pr20-save-boundary-uuid/authorization.json": "1dfb41d1dd2a6e3306689d447ffa3bce14edb62dc565e4ad9ac1371a811ca7cc",
+        "ci/pr20-save-boundary-uuid/cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+        "ci/pr20-save-boundary-uuid/markers.py": "d27e19a7ae5b090436b8e70d5a2d914119e343eeb40e01352359d27f30215857",
+        "ci/pr20-save-boundary-uuid/package.py": "40884ee45660403cc4fee0a0c3f9c1fc49abdf543bf75c4bc99c7dbf4cb8b1c5",
+        "ci/pr20-save-boundary-uuid/run.py": "3b1ebc563743231bde81a51cad0fb549ed707063f3dd4ad04e308f9c60227577",
+        "ci/pr20-save-boundary-uuid/workflow.proposed.yml": "ad384526953c3751c221c6121843fed86dec545c4fda868485862b9cf5fb321c"
+      }
+    },
+    "ac63ce66ed4aaec0372c56b39be97e3335966c31": {
+      "sha256": "7a372eac1b5b6c92bc66e48c09a87670ce276e2d9bd7ca424d402f2970da9f46",
+      "entries": {
+        ".github/workflows/pr20-save-boundary-uuid.yml": "ec4a5787bc1800374970dbe86ff69f747e5663c242f8695a8280f1de20566bec",
+        "ci/pr20-save-boundary-uuid/authorization.json": "1dfb41d1dd2a6e3306689d447ffa3bce14edb62dc565e4ad9ac1371a811ca7cc",
+        "ci/pr20-save-boundary-uuid/cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+        "ci/pr20-save-boundary-uuid/markers.py": "d27e19a7ae5b090436b8e70d5a2d914119e343eeb40e01352359d27f30215857",
+        "ci/pr20-save-boundary-uuid/package.py": "40884ee45660403cc4fee0a0c3f9c1fc49abdf543bf75c4bc99c7dbf4cb8b1c5",
+        "ci/pr20-save-boundary-uuid/run.py": "3b1ebc563743231bde81a51cad0fb549ed707063f3dd4ad04e308f9c60227577",
+        "ci/pr20-save-boundary-uuid/workflow.proposed.yml": "ec4a5787bc1800374970dbe86ff69f747e5663c242f8695a8280f1de20566bec"
+      }
+    }
+  },
+  "readiness_files_unchanged": {
+    "android/verification/pr20-save-boundary-uuid-20261014/C1-source-manifest.json": "8788c9f8b8cf5f3bd82c644563ba1e228943b48f9ec614d7d61fbdb629e02d3d",
+    "android/verification/pr20-save-boundary-uuid-20261014/PLAN.md": "bd4da8e0d92fd1c90a524c2a7234ea416a0cbebe5b4f27867264dffa47a5d44c",
+    "android/verification/pr20-save-boundary-uuid-20261014/SHA256SUMS": "629d254baa9249b315f4d21402e0f2d048cce1f382243a417a8994f112ce22a0",
+    "android/verification/pr20-save-boundary-uuid-20261014/marker-contract.json": "a5b97b1f50633b88275aeeaad3cde686cda8022d385953a3e2020a471abcf0e9",
+    "android/verification/pr20-save-boundary-uuid-20261014/method-plan.json": "cf5800f39b55524ccded154d72ab94421323b34861b8dea3d03e454c3d07117a",
+    "android/verification/pr20-save-boundary-uuid-20261014/original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "android/verification/pr20-save-boundary-uuid-20261014/prepare_sources.py": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516",
+    "android/verification/pr20-save-boundary-uuid-20261014/source-spec.json": "d09bcba6e4d726cb233170213177f39d6e2bf49f94f40284283c7da32cdfe2c6"
+  },
+  "all_android_files_unchanged_from_readiness": true,
+  "remaining_findings": [],
+  "limitations": [
+    "No remote state, push or run identity verification; root owns those checks.",
+    "No build, native execution, workflow trigger or performance acceptance performed.",
+    "New failure consumer remains outside this review."
+  ]
+}

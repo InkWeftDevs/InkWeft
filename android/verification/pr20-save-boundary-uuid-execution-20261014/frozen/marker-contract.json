@@ -1,0 +1,837 @@
+{
+  "status": "FROZEN",
+  "scope": "DIAGNOSTIC_ONLY",
+  "methods": {
+    "1": {
+      "selection": "org.inkweft.data.NoteRepositoryTest#sameCommandReturnsSameCommittedRevision",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/NoteRepositoryTest.kt",
+      "test_source_sha256": "46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a"
+    },
+    "2": {
+      "selection": "org.inkweft.data.NoteRepositoryTest#staleEditorCannotOverwriteNewHead",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/NoteRepositoryTest.kt",
+      "test_source_sha256": "46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a"
+    },
+    "3": {
+      "selection": "org.inkweft.data.NoteRepositoryTest#blankTextAndHistorySurviveReopen",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/NoteRepositoryTest.kt",
+      "test_source_sha256": "46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a"
+    },
+    "4": {
+      "selection": "org.inkweft.data.NoteRepositoryTest#oldReceiptIsNotReplacedWithCurrentHead",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/NoteRepositoryTest.kt",
+      "test_source_sha256": "46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a"
+    },
+    "5": {
+      "selection": "org.inkweft.data.LibraryTextIndexPreparationTest#cancelledFtsWriteRollsBackBeforeClearingPending",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryTextIndexPreparationTest.kt",
+      "test_source_sha256": "2b0bf878258086f80e349bf6360b833dd3b4c652aa8f5c7fcf6cce6ec892badb"
+    },
+    "6": {
+      "selection": "org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt",
+      "test_source_sha256": "b05c4c93f2c0ed36204bb548c20f8d95c0dca5a35238e05361ac3655f6f9a061"
+    },
+    "7": {
+      "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt",
+      "test_source_sha256": "b05c4c93f2c0ed36204bb548c20f8d95c0dca5a35238e05361ac3655f6f9a061"
+    },
+    "8": {
+      "selection": "org.inkweft.data.LibrarySaveBoundaryDiagnosticsTest#boundariesPreserveCommitRollbackReplayAndRecovery",
+      "marker_policy": "none",
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveBoundaryDiagnosticsTest.kt",
+      "test_source_sha256": "cd1b0ba9e112a19e16fdea36b1b867183c890a4addb8c6ebfdfe7986f4a73038",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "kind": "none"
+    },
+    "9": {
+      "selection": "org.inkweft.data.LibrarySaveBoundaryDiagnosticsTest#observerFailureOverflowAndDelegateFailureDoNotChangeSaveOutcome",
+      "marker_policy": "none",
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveBoundaryDiagnosticsTest.kt",
+      "test_source_sha256": "cd1b0ba9e112a19e16fdea36b1b867183c890a4addb8c6ebfdfe7986f4a73038",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "kind": "none"
+    },
+    "10": {
+      "selection": "org.inkweft.data.LibrarySaveBoundaryDiagnosticsTest#singleSeedIdleDirectAndObserveBoundaries",
+      "marker_policy": "required",
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveBoundaryDiagnosticsTest.kt",
+      "test_source_sha256": "cd1b0ba9e112a19e16fdea36b1b867183c890a4addb8c6ebfdfe7986f4a73038",
+      "markers": {
+        "LIBRARY_SAVE_BOUNDARY_RESULT": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 32768
+        },
+        "LIBRARY_SAVE_BOUNDARY_EVENTS": {
+          "min_count": 3,
+          "max_count": 129,
+          "payload_max_bytes": 32768
+        },
+        "LIBRARY_SAVE_BOUNDARY_READS": {
+          "min_count": 2,
+          "max_count": 66,
+          "payload_max_bytes": 32768
+        },
+        "LIBRARY_SAVE_BOUNDARY_END": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 4096
+        }
+      },
+      "method_payload_max_bytes": 7340032,
+      "kind": "save-boundary"
+    }
+  },
+  "schemas": {
+    "LIBRARY_SAVE_BOUNDARY_RESULT": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "diagnosticOnly",
+        "seed",
+        "mode",
+        "readiness",
+        "fixture",
+        "startRevision",
+        "saves"
+      ],
+      "properties": {
+        "schema": {
+          "type": "integer",
+          "const": 1
+        },
+        "diagnosticOnly": {
+          "type": "boolean",
+          "const": true
+        },
+        "seed": {
+          "type": "integer",
+          "const": 4101
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "IDLE",
+            "DIRECT",
+            "OBSERVE"
+          ],
+          "maxLength": 7
+        },
+        "readiness": {
+          "type": "string",
+          "enum": [
+            "fixture-ready",
+            "first-source-check",
+            "first-index-commit"
+          ],
+          "maxLength": 18
+        },
+        "fixture": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rowCounts",
+            "logicalSha256",
+            "writerSqlite"
+          ],
+          "properties": {
+            "rowCounts": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "notes",
+                "note_revisions",
+                "notebook_workspace",
+                "notebook_pages",
+                "page_search_text",
+                "library_search_pending"
+              ],
+              "properties": {
+                "notes": {
+                  "type": "integer",
+                  "const": 501
+                },
+                "note_revisions": {
+                  "type": "integer",
+                  "const": 501
+                },
+                "notebook_workspace": {
+                  "type": "integer",
+                  "const": 501
+                },
+                "notebook_pages": {
+                  "type": "integer",
+                  "const": 20001
+                },
+                "page_search_text": {
+                  "type": "integer",
+                  "const": 20000
+                },
+                "library_search_pending": {
+                  "type": "integer",
+                  "const": 20000
+                }
+              }
+            },
+            "logicalSha256": {
+              "type": "string",
+              "const": "1c69bba77781ba0c0b642309b8e869ff21c9a440fd7714894e67c572b95c9dcf"
+            },
+            "writerSqlite": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "page_size",
+                "auto_vacuum",
+                "journal_mode",
+                "synchronous"
+              ],
+              "properties": {
+                "page_size": {
+                  "type": "integer",
+                  "const": 1024
+                },
+                "auto_vacuum": {
+                  "type": "integer",
+                  "const": 1
+                },
+                "journal_mode": {
+                  "type": "string",
+                  "const": "wal"
+                },
+                "synchronous": {
+                  "type": "integer",
+                  "const": 2
+                }
+              }
+            }
+          }
+        },
+        "startRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 32
+        },
+        "saves": {
+          "type": "array",
+          "minItems": 30,
+          "maxItems": 30,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sample",
+              "startNs",
+              "endNs",
+              "elapsedMs",
+              "committed",
+              "revision",
+              "sourceChecksStart",
+              "sourceChecksEnd",
+              "indexRowsStart",
+              "indexRowsEnd"
+            ],
+            "properties": {
+              "sample": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 29
+              },
+              "startNs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "endNs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "elapsedMs": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 300000
+              },
+              "committed": {
+                "type": "boolean",
+                "const": true
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 2,
+                "maximum": 62
+              },
+              "sourceChecksStart": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100000000
+              },
+              "sourceChecksEnd": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100000000
+              },
+              "indexRowsStart": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100000000
+              },
+              "indexRowsEnd": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100000000
+              }
+            }
+          }
+        }
+      }
+    },
+    "LIBRARY_SAVE_BOUNDARY_EVENTS": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "mode",
+        "part",
+        "events"
+      ],
+      "properties": {
+        "schema": {
+          "type": "integer",
+          "const": 1
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "IDLE",
+            "DIRECT",
+            "OBSERVE"
+          ],
+          "maxLength": 7
+        },
+        "part": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 42
+        },
+        "events": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 96,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "stage",
+              "sample",
+              "task",
+              "transaction",
+              "depth",
+              "successRequested",
+              "outcome",
+              "wallNs",
+              "threadCpuNs",
+              "threadId"
+            ],
+            "properties": {
+              "stage": {
+                "type": "string",
+                "enum": [
+                  "room-begin-enter",
+                  "room-begin-exit",
+                  "room-end-enter",
+                  "room-end-exit",
+                  "room-success-enter",
+                  "room-success-exit",
+                  "save-failed",
+                  "save-head-read",
+                  "save-head-written",
+                  "save-receipt-written",
+                  "save-request",
+                  "save-returned",
+                  "save-revision-written",
+                  "save-writer-acquired",
+                  "sqlite-begin-enter",
+                  "sqlite-begin-exit",
+                  "sqlite-end-enter",
+                  "sqlite-end-exit",
+                  "sqlite-success-enter",
+                  "sqlite-success-exit",
+                  "writer-run-enter",
+                  "writer-run-exit",
+                  "writer-submit",
+                  "writer-submit-failed"
+                ],
+                "maxLength": 21
+              },
+              "sample": {
+                "type": "integer",
+                "minimum": -1,
+                "maximum": 29
+              },
+              "task": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "transaction": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "depth": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 32
+              },
+              "successRequested": {
+                "type": "boolean"
+              },
+              "outcome": {
+                "type": "string",
+                "enum": [
+                  "entered",
+                  "returned",
+                  "threw"
+                ],
+                "maxLength": 8
+              },
+              "wallNs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "threadCpuNs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "threadId": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9223372036854775807
+              }
+            }
+          }
+        }
+      }
+    },
+    "LIBRARY_SAVE_BOUNDARY_READS": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "mode",
+        "part",
+        "events"
+      ],
+      "properties": {
+        "schema": {
+          "type": "integer",
+          "const": 1
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "IDLE",
+            "DIRECT",
+            "OBSERVE"
+          ],
+          "maxLength": 7
+        },
+        "part": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 21
+        },
+        "events": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 96,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "owner",
+              "stage",
+              "read",
+              "count",
+              "wallNs",
+              "threadCpuNs",
+              "threadId"
+            ],
+            "properties": {
+              "owner": {
+                "type": "string",
+                "enum": [
+                  "control",
+                  "read",
+                  "index"
+                ],
+                "maxLength": 7
+              },
+              "stage": {
+                "type": "string",
+                "enum": [
+                  "batch-committed",
+                  "batch-precomputed",
+                  "batch-written",
+                  "card-hits-end",
+                  "card-hits-start",
+                  "committed",
+                  "connection-closed",
+                  "connection-open",
+                  "direct-end",
+                  "direct-start",
+                  "drafts-ready",
+                  "first-fts-written",
+                  "first-source-checked",
+                  "first-source-read",
+                  "first-tokenized",
+                  "first-tokenizing",
+                  "hits-ready",
+                  "index-build-completed",
+                  "metadata-end",
+                  "metadata-start",
+                  "observe-debounce-cancel",
+                  "observe-debounce-end",
+                  "observe-debounce-start",
+                  "observe-index-completed",
+                  "observe-index-initial",
+                  "observe-invalidation",
+                  "observe-read-cancel",
+                  "observe-read-end",
+                  "observe-read-error",
+                  "observe-read-start",
+                  "observe-request",
+                  "observe-scheduled",
+                  "page-end",
+                  "page-hits-end",
+                  "page-hits-start",
+                  "page-start",
+                  "pending-end",
+                  "pending-start",
+                  "preparing-batch",
+                  "read-cancel",
+                  "read-end",
+                  "read-error",
+                  "read-requested",
+                  "read-start",
+                  "scope-end",
+                  "scope-start",
+                  "snapshot-closed",
+                  "snapshot-open",
+                  "waiting-writer",
+                  "writer-acquired"
+                ],
+                "maxLength": 23
+              },
+              "read": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "count": {
+                "type": "integer",
+                "minimum": -1,
+                "maximum": 100000000
+              },
+              "wallNs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "threadCpuNs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "threadId": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9223372036854775807
+              }
+            }
+          }
+        }
+      }
+    },
+    "LIBRARY_SAVE_BOUNDARY_END": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "mode",
+        "completed",
+        "committedSaves",
+        "recordedEvents",
+        "recordedReadEvents",
+        "droppedEvents",
+        "droppedReadEvents",
+        "invalid"
+      ],
+      "properties": {
+        "schema": {
+          "type": "integer",
+          "const": 1
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "IDLE",
+            "DIRECT",
+            "OBSERVE"
+          ],
+          "maxLength": 7
+        },
+        "completed": {
+          "type": "boolean",
+          "const": true
+        },
+        "committedSaves": {
+          "type": "integer",
+          "const": 30
+        },
+        "recordedEvents": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4096
+        },
+        "recordedReadEvents": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2048
+        },
+        "droppedEvents": {
+          "type": "integer",
+          "const": 0
+        },
+        "droppedReadEvents": {
+          "type": "integer",
+          "const": 0
+        },
+        "invalid": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    }
+  },
+  "reviewed_source_sha256": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt": "c904a8ebc9b2aed64266a82d24b8f1395621314a9087fd6f0de6298b8865fb47",
+    "android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt": "a9351355ca45af5f6f5db34109fa68d6bf10505d3117ed60a7c68cc000b05e89",
+    "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt": "052467625c685a79f72337379b2d4e70718440c6717e91c6d18677c9c1982581",
+    "android/data-local/src/main/kotlin/org/inkweft/data/SaveBoundaryDiagnostics.kt": "392bf0e25e6f62d77f915eec628eac16f3f374e0de5287fb02435d29c0cecab9",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveBoundaryDiagnosticsTest.kt": "cd1b0ba9e112a19e16fdea36b1b867183c890a4addb8c6ebfdfe7986f4a73038",
+    "android/data-local/src/test/kotlin/org/inkweft/data/SaveBoundaryDiagnosticsTest.kt": "d1bd148f6f787bf636d005d5f0932b4e4e02c65c0953ece313eb0e7bbd789dc6"
+  },
+  "expected_initial_fixture": {
+    "run_id": 38520196523,
+    "job_id": 115707901766,
+    "seed": 4101,
+    "record_path": "android/verification/pr20-match-execution-20261014/extracted/method-37-C1-records.json",
+    "record_sha256": "503ba43db34ba8871db640701ad716f77c64e1a20b7afe86df7411e571898048",
+    "logical_sha256": "1c69bba77781ba0c0b642309b8e869ff21c9a440fd7714894e67c572b95c9dcf",
+    "binding_scope": "Initial seed fixture only; OBSERVE uses that same recipe receipt after DIRECT/paused save have modified writer rows. Future native equality must pass this fixed hash."
+  },
+  "failure_log_forwarding": {
+    "marker": "INKWEFT_CAUSAL_FAILURE_LOG",
+    "max_count": 1,
+    "raw_max_bytes": 262144,
+    "envelope_max_bytes": 1581056,
+    "never_counts_as_pass": true,
+    "schema": {
+      "type": "object",
+      "required": [
+        "schema",
+        "scope",
+        "run_id",
+        "run_attempt",
+        "workflow_sha",
+        "source_commit",
+        "source_spec_sha256",
+        "method_plan_sha256",
+        "test_source_sha256",
+        "ordinal",
+        "identity",
+        "selection",
+        "status",
+        "junit_status",
+        "adb_exit",
+        "process_exit_outcome",
+        "raw_log_sha256",
+        "raw_bytes",
+        "original_utf8",
+        "forwarding_status",
+        "refusal_reason"
+      ],
+      "properties": {
+        "schema": {
+          "const": 1
+        },
+        "scope": {
+          "const": "DIAGNOSTIC_FAILURE_ONLY"
+        },
+        "run_id": {
+          "type": "string",
+          "pattern": "[0-9]+",
+          "maxLength": 24
+        },
+        "run_attempt": {
+          "const": "1"
+        },
+        "workflow_sha": {
+          "type": "string",
+          "pattern": "[0-9a-f]{40}",
+          "maxLength": 40
+        },
+        "source_commit": {
+          "type": "string",
+          "pattern": "[0-9a-f]{40}",
+          "maxLength": 40
+        },
+        "source_spec_sha256": {
+          "type": "string",
+          "pattern": "[0-9a-f]{64}",
+          "maxLength": 64
+        },
+        "method_plan_sha256": {
+          "type": "string",
+          "pattern": "[0-9a-f]{64}",
+          "maxLength": 64
+        },
+        "test_source_sha256": {
+          "type": "string",
+          "pattern": "[0-9a-f]{64}",
+          "maxLength": 64
+        },
+        "ordinal": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "identity": {
+          "const": "C1"
+        },
+        "selection": {
+          "enum": [
+            "org.inkweft.data.NoteRepositoryTest#sameCommandReturnsSameCommittedRevision",
+            "org.inkweft.data.NoteRepositoryTest#staleEditorCannotOverwriteNewHead",
+            "org.inkweft.data.NoteRepositoryTest#blankTextAndHistorySurviveReopen",
+            "org.inkweft.data.NoteRepositoryTest#oldReceiptIsNotReplacedWithCurrentHead",
+            "org.inkweft.data.LibraryTextIndexPreparationTest#cancelledFtsWriteRollsBackBeforeClearingPending",
+            "org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState",
+            "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+            "org.inkweft.data.LibrarySaveBoundaryDiagnosticsTest#boundariesPreserveCommitRollbackReplayAndRecovery",
+            "org.inkweft.data.LibrarySaveBoundaryDiagnosticsTest#observerFailureOverflowAndDelegateFailureDoNotChangeSaveOutcome",
+            "org.inkweft.data.LibrarySaveBoundaryDiagnosticsTest#singleSeedIdleDirectAndObserveBoundaries"
+          ]
+        },
+        "status": {
+          "enum": [
+            "FAIL",
+            "INCOMPLETE"
+          ]
+        },
+        "junit_status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "INCOMPLETE",
+            null
+          ]
+        },
+        "adb_exit": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -2147483648,
+          "maximum": 2147483647
+        },
+        "process_exit_outcome": {
+          "enum": [
+            "NATURAL_EXIT",
+            "UNCONFIRMED",
+            null
+          ]
+        },
+        "raw_log_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "[0-9a-f]{64}",
+          "maxLength": 64
+        },
+        "raw_bytes": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "original_utf8": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "[\\s\\S]*",
+          "maxLength": 262144
+        },
+        "forwarding_status": {
+          "enum": [
+            "FORWARDED",
+            "REFUSED"
+          ]
+        },
+        "refusal_reason": {
+          "enum": [
+            "UNSAFE_PATH_OR_METHOD",
+            "MISSING_LOG",
+            "OVERSIZE",
+            "HASH_MISMATCH",
+            "SENSITIVE",
+            "INVALID_UTF8",
+            "READ_ERROR",
+            null
+          ]
+        }
+      }
+    }
+  }
+}

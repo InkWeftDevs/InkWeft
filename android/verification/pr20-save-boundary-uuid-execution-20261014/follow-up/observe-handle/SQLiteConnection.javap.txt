@@ -1,0 +1,2628 @@
+Compiled from "SQLiteConnection.java"
+public final class io.requery.android.database.sqlite.SQLiteConnection implements androidx.core.os.CancellationSignal$OnCancelListener {
+  private static final java.lang.String TAG;
+
+  private static final boolean DEBUG;
+
+  private static final java.lang.String[] EMPTY_STRING_ARRAY;
+
+  private static final byte[] EMPTY_BYTE_ARRAY;
+
+  private static final java.util.regex.Pattern TRIM_SQL_PATTERN;
+
+  private final io.requery.android.database.sqlite.CloseGuard mCloseGuard;
+
+  private final io.requery.android.database.sqlite.SQLiteConnectionPool mPool;
+
+  private final io.requery.android.database.sqlite.SQLiteDatabaseConfiguration mConfiguration;
+
+  private final int mConnectionId;
+
+  private final boolean mIsPrimaryConnection;
+
+  private final boolean mIsReadOnlyConnection;
+
+  private final io.requery.android.database.sqlite.SQLiteConnection$PreparedStatementCache mPreparedStatementCache;
+
+  private io.requery.android.database.sqlite.SQLiteConnection$PreparedStatement mPreparedStatementPool;
+
+  private final io.requery.android.database.sqlite.SQLiteConnection$OperationLog mRecentOperations;
+
+  private long mConnectionPtr;
+
+  private boolean mOnlyAllowReadOnlyOperations;
+
+  private int mCancellationSignalAttachCount;
+
+  static final boolean $assertionsDisabled;
+
+  private static native long nativeOpen(java.lang.String, int, java.lang.String, boolean, boolean);
+
+  private static native void nativeClose(long);
+
+  private static native void nativeRegisterCustomFunction(long, io.requery.android.database.sqlite.SQLiteCustomFunction);
+
+  private static native void nativeRegisterFunction(long, io.requery.android.database.sqlite.SQLiteFunction);
+
+  private static native void nativeRegisterLocalizedCollators(long, java.lang.String);
+
+  private static native long nativePrepareStatement(long, java.lang.String);
+
+  private static native void nativeFinalizeStatement(long, long);
+
+  private static native int nativeGetParameterCount(long, long);
+
+  private static native boolean nativeIsReadOnly(long, long);
+
+  private static native int nativeGetColumnCount(long, long);
+
+  private static native java.lang.String nativeGetColumnName(long, long, int);
+
+  private static native void nativeBindNull(long, long, int);
+
+  private static native void nativeBindLong(long, long, int, long);
+
+  private static native void nativeBindDouble(long, long, int, double);
+
+  private static native void nativeBindString(long, long, int, java.lang.String);
+
+  private static native void nativeBindBlob(long, long, int, byte[]);
+
+  private static native void nativeResetStatementAndClearBindings(long, long);
+
+  private static native void nativeExecute(long, long);
+
+  private static native long nativeExecuteForLong(long, long);
+
+  private static native java.lang.String nativeExecuteForString(long, long);
+
+  private static native int nativeExecuteForBlobFileDescriptor(long, long);
+
+  private static native int nativeExecuteForChangedRowCount(long, long);
+
+  private static native long nativeExecuteForLastInsertedRowId(long, long);
+
+  private static native long nativeExecuteForCursorWindow(long, long, long, int, int, boolean);
+
+  private static native int nativeGetDbLookaside(long);
+
+  private static native void nativeCancel(long);
+
+  private static native void nativeResetCancel(long, boolean);
+
+  private static native boolean nativeHasCodec();
+
+  private static native void nativeLoadExtension(long, java.lang.String, java.lang.String);
+
+  private static native void nativeRegisterUpdateHook(long, io.requery.android.database.sqlite.SQLiteUpdateHook);
+
+  public static boolean hasCodec();
+    Code:
+       0: invokestatic  #3                  // Method nativeHasCodec:()Z
+       3: ireturn
+
+  private io.requery.android.database.sqlite.SQLiteConnection(io.requery.android.database.sqlite.SQLiteConnectionPool, io.requery.android.database.sqlite.SQLiteDatabaseConfiguration, int, boolean);
+    Code:
+       0: aload_0
+       1: invokespecial #7                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: invokestatic  #13                 // Method io/requery/android/database/sqlite/CloseGuard.get:()Lio/requery/android/database/sqlite/CloseGuard;
+       8: putfield      #19                 // Field mCloseGuard:Lio/requery/android/database/sqlite/CloseGuard;
+      11: aload_0
+      12: new           #23                 // class io/requery/android/database/sqlite/SQLiteConnection$OperationLog
+      15: dup
+      16: invokespecial #25                 // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog."<init>":()V
+      19: putfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+      22: aload_0
+      23: aload_1
+      24: putfield      #30                 // Field mPool:Lio/requery/android/database/sqlite/SQLiteConnectionPool;
+      27: aload_0
+      28: new           #34                 // class io/requery/android/database/sqlite/SQLiteDatabaseConfiguration
+      31: dup
+      32: aload_2
+      33: invokespecial #36                 // Method io/requery/android/database/sqlite/SQLiteDatabaseConfiguration."<init>":(Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;)V
+      36: putfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+      39: aload_0
+      40: iload_3
+      41: putfield      #43                 // Field mConnectionId:I
+      44: aload_0
+      45: iload         4
+      47: putfield      #47                 // Field mIsPrimaryConnection:Z
+      50: aload_0
+      51: aload_2
+      52: getfield      #51                 // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.openFlags:I
+      55: iconst_1
+      56: iand
+      57: ifeq          64
+      60: iconst_1
+      61: goto          65
+      64: iconst_0
+      65: putfield      #56                 // Field mIsReadOnlyConnection:Z
+      68: aload_0
+      69: new           #59                 // class io/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache
+      72: dup
+      73: aload_0
+      74: aload_0
+      75: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+      78: getfield      #61                 // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.maxSqlCacheSize:I
+      81: invokespecial #64                 // Method io/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache."<init>":(Lio/requery/android/database/sqlite/SQLiteConnection;I)V
+      84: putfield      #67                 // Field mPreparedStatementCache:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache;
+      87: aload_0
+      88: getfield      #19                 // Field mCloseGuard:Lio/requery/android/database/sqlite/CloseGuard;
+      91: ldc           #71                 // String close
+      93: invokevirtual #73                 // Method io/requery/android/database/sqlite/CloseGuard.open:(Ljava/lang/String;)V
+      96: return
+
+  protected void finalize() throws java.lang.Throwable;
+    Code:
+       0: aload_0
+       1: getfield      #30                 // Field mPool:Lio/requery/android/database/sqlite/SQLiteConnectionPool;
+       4: ifnull        23
+       7: aload_0
+       8: getfield      #77                 // Field mConnectionPtr:J
+      11: lconst_0
+      12: lcmp
+      13: ifeq          23
+      16: aload_0
+      17: getfield      #30                 // Field mPool:Lio/requery/android/database/sqlite/SQLiteConnectionPool;
+      20: invokevirtual #81                 // Method io/requery/android/database/sqlite/SQLiteConnectionPool.onConnectionLeaked:()V
+      23: aload_0
+      24: iconst_1
+      25: invokevirtual #86                 // Method dispose:(Z)V
+      28: aload_0
+      29: invokespecial #90                 // Method java/lang/Object.finalize:()V
+      32: goto          42
+      35: astore_1
+      36: aload_0
+      37: invokespecial #90                 // Method java/lang/Object.finalize:()V
+      40: aload_1
+      41: athrow
+      42: return
+    Exception table:
+       from    to  target type
+           0    28    35   any
+
+  static io.requery.android.database.sqlite.SQLiteConnection open(io.requery.android.database.sqlite.SQLiteConnectionPool, io.requery.android.database.sqlite.SQLiteDatabaseConfiguration, int, boolean);
+    Code:
+       0: new           #1                  // class io/requery/android/database/sqlite/SQLiteConnection
+       3: dup
+       4: aload_0
+       5: aload_1
+       6: iload_2
+       7: iload_3
+       8: invokespecial #93                 // Method "<init>":(Lio/requery/android/database/sqlite/SQLiteConnectionPool;Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;IZ)V
+      11: astore        4
+      13: aload         4
+      15: invokevirtual #96                 // Method open:()V
+      18: aload         4
+      20: areturn
+      21: astore        5
+      23: aload         4
+      25: iconst_0
+      26: invokevirtual #86                 // Method dispose:(Z)V
+      29: aload         5
+      31: athrow
+    Exception table:
+       from    to  target type
+          13    20    21   Class android/database/sqlite/SQLiteException
+
+  void close();
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: invokevirtual #86                 // Method dispose:(Z)V
+       5: return
+
+  private void open();
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+       5: getfield      #100                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.path:Ljava/lang/String;
+       8: aload_0
+       9: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+      12: getfield      #51                 // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.openFlags:I
+      15: ldc           #104                // int -536870913
+      17: iand
+      18: aload_0
+      19: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+      22: getfield      #105                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.label:Ljava/lang/String;
+      25: getstatic     #108                // Field io/requery/android/database/sqlite/SQLiteDebug.DEBUG_SQL_STATEMENTS:Z
+      28: getstatic     #113                // Field io/requery/android/database/sqlite/SQLiteDebug.DEBUG_SQL_TIME:Z
+      31: invokestatic  #116                // Method nativeOpen:(Ljava/lang/String;ILjava/lang/String;ZZ)J
+      34: putfield      #77                 // Field mConnectionPtr:J
+      37: aload_0
+      38: invokevirtual #120                // Method setPageSize:()V
+      41: aload_0
+      42: invokevirtual #123                // Method setForeignKeyModeFromConfiguration:()V
+      45: aload_0
+      46: invokevirtual #126                // Method setJournalSizeLimit:()V
+      49: aload_0
+      50: invokevirtual #129                // Method setAutoCheckpointInterval:()V
+      53: invokestatic  #3                  // Method nativeHasCodec:()Z
+      56: ifne          67
+      59: aload_0
+      60: invokevirtual #132                // Method setWalModeFromConfiguration:()V
+      63: aload_0
+      64: invokevirtual #135                // Method setLocaleFromConfiguration:()V
+      67: aload_0
+      68: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+      71: getfield      #138                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.customFunctions:Ljava/util/List;
+      74: invokeinterface #142,  1          // InterfaceMethod java/util/List.size:()I
+      79: istore_1
+      80: iconst_0
+      81: istore_2
+      82: iload_2
+      83: iload_1
+      84: if_icmpge     118
+      87: aload_0
+      88: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+      91: getfield      #138                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.customFunctions:Ljava/util/List;
+      94: iload_2
+      95: invokeinterface #148,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     100: checkcast     #151                // class io/requery/android/database/sqlite/SQLiteCustomFunction
+     103: astore_3
+     104: aload_0
+     105: getfield      #77                 // Field mConnectionPtr:J
+     108: aload_3
+     109: invokestatic  #153                // Method nativeRegisterCustomFunction:(JLio/requery/android/database/sqlite/SQLiteCustomFunction;)V
+     112: iinc          2, 1
+     115: goto          82
+     118: aload_0
+     119: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+     122: getfield      #157                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.functions:Ljava/util/List;
+     125: invokeinterface #142,  1          // InterfaceMethod java/util/List.size:()I
+     130: istore_2
+     131: iconst_0
+     132: istore_3
+     133: iload_3
+     134: iload_2
+     135: if_icmpge     171
+     138: aload_0
+     139: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+     142: getfield      #157                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.functions:Ljava/util/List;
+     145: iload_3
+     146: invokeinterface #148,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     151: checkcast     #160                // class io/requery/android/database/sqlite/SQLiteFunction
+     154: astore        4
+     156: aload_0
+     157: getfield      #77                 // Field mConnectionPtr:J
+     160: aload         4
+     162: invokestatic  #162                // Method nativeRegisterFunction:(JLio/requery/android/database/sqlite/SQLiteFunction;)V
+     165: iinc          3, 1
+     168: goto          133
+     171: aload_0
+     172: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+     175: getfield      #166                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.customExtensions:Ljava/util/List;
+     178: invokeinterface #169,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     183: astore_3
+     184: aload_3
+     185: invokeinterface #173,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     190: ifeq          224
+     193: aload_3
+     194: invokeinterface #178,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     199: checkcast     #182                // class io/requery/android/database/sqlite/SQLiteCustomExtension
+     202: astore        4
+     204: aload_0
+     205: getfield      #77                 // Field mConnectionPtr:J
+     208: aload         4
+     210: getfield      #184                // Field io/requery/android/database/sqlite/SQLiteCustomExtension.path:Ljava/lang/String;
+     213: aload         4
+     215: getfield      #185                // Field io/requery/android/database/sqlite/SQLiteCustomExtension.entryPoint:Ljava/lang/String;
+     218: invokestatic  #188                // Method nativeLoadExtension:(JLjava/lang/String;Ljava/lang/String;)V
+     221: goto          184
+     224: aload_0
+     225: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+     228: getfield      #192                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.sqliteUpdateHook:Lio/requery/android/database/sqlite/SQLiteUpdateHook;
+     231: astore_3
+     232: aload_3
+     233: ifnull        244
+     236: aload_0
+     237: getfield      #77                 // Field mConnectionPtr:J
+     240: aload_3
+     241: invokestatic  #196                // Method nativeRegisterUpdateHook:(JLio/requery/android/database/sqlite/SQLiteUpdateHook;)V
+     244: return
+
+  private void dispose(boolean);
+    Code:
+       0: aload_0
+       1: getfield      #19                 // Field mCloseGuard:Lio/requery/android/database/sqlite/CloseGuard;
+       4: ifnull        25
+       7: iload_1
+       8: ifeq          18
+      11: aload_0
+      12: getfield      #19                 // Field mCloseGuard:Lio/requery/android/database/sqlite/CloseGuard;
+      15: invokevirtual #200                // Method io/requery/android/database/sqlite/CloseGuard.warnIfOpen:()V
+      18: aload_0
+      19: getfield      #19                 // Field mCloseGuard:Lio/requery/android/database/sqlite/CloseGuard;
+      22: invokevirtual #203                // Method io/requery/android/database/sqlite/CloseGuard.close:()V
+      25: aload_0
+      26: getfield      #77                 // Field mConnectionPtr:J
+      29: lconst_0
+      30: lcmp
+      31: ifeq          87
+      34: aload_0
+      35: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+      38: ldc           #71                 // String close
+      40: aconst_null
+      41: aconst_null
+      42: invokevirtual #205                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.beginOperation:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)I
+      45: istore_2
+      46: aload_0
+      47: getfield      #67                 // Field mPreparedStatementCache:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache;
+      50: invokevirtual #209                // Method io/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache.evictAll:()V
+      53: aload_0
+      54: getfield      #77                 // Field mConnectionPtr:J
+      57: invokestatic  #212                // Method nativeClose:(J)V
+      60: aload_0
+      61: lconst_0
+      62: putfield      #77                 // Field mConnectionPtr:J
+      65: aload_0
+      66: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+      69: iload_2
+      70: invokevirtual #216                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperation:(I)V
+      73: goto          87
+      76: astore_3
+      77: aload_0
+      78: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+      81: iload_2
+      82: invokevirtual #216                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperation:(I)V
+      85: aload_3
+      86: athrow
+      87: return
+    Exception table:
+       from    to  target type
+          46    65    76   any
+
+  private void setPageSize();
+    Code:
+       0: aload_0
+       1: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+       4: invokevirtual #220                // Method io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.isInMemoryDb:()Z
+       7: ifne          62
+      10: aload_0
+      11: getfield      #56                 // Field mIsReadOnlyConnection:Z
+      14: ifne          62
+      17: invokestatic  #223                // Method io/requery/android/database/sqlite/SQLiteGlobal.getDefaultPageSize:()I
+      20: i2l
+      21: lstore_1
+      22: aload_0
+      23: ldc           #228                // String PRAGMA page_size
+      25: aconst_null
+      26: aconst_null
+      27: invokevirtual #230                // Method executeForLong:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)J
+      30: lstore_3
+      31: lload_3
+      32: lload_1
+      33: lcmp
+      34: ifeq          62
+      37: aload_0
+      38: new           #234                // class java/lang/StringBuilder
+      41: dup
+      42: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+      45: ldc           #237                // String PRAGMA page_size=
+      47: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      50: lload_1
+      51: invokevirtual #243                // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+      54: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      57: aconst_null
+      58: aconst_null
+      59: invokevirtual #250                // Method execute:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)V
+      62: return
+
+  private void setAutoCheckpointInterval();
+    Code:
+       0: aload_0
+       1: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+       4: invokevirtual #220                // Method io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.isInMemoryDb:()Z
+       7: ifne          65
+      10: aload_0
+      11: getfield      #56                 // Field mIsReadOnlyConnection:Z
+      14: ifne          65
+      17: invokestatic  #254                // Method io/requery/android/database/sqlite/SQLiteGlobal.getWALAutoCheckpoint:()I
+      20: i2l
+      21: lstore_1
+      22: aload_0
+      23: ldc_w         #257                // String PRAGMA wal_autocheckpoint
+      26: aconst_null
+      27: aconst_null
+      28: invokevirtual #230                // Method executeForLong:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)J
+      31: lstore_3
+      32: lload_3
+      33: lload_1
+      34: lcmp
+      35: ifeq          65
+      38: aload_0
+      39: new           #234                // class java/lang/StringBuilder
+      42: dup
+      43: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+      46: ldc_w         #259                // String PRAGMA wal_autocheckpoint=
+      49: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      52: lload_1
+      53: invokevirtual #243                // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+      56: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      59: aconst_null
+      60: aconst_null
+      61: invokevirtual #230                // Method executeForLong:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)J
+      64: pop2
+      65: return
+
+  private void setJournalSizeLimit();
+    Code:
+       0: aload_0
+       1: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+       4: invokevirtual #220                // Method io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.isInMemoryDb:()Z
+       7: ifne          65
+      10: aload_0
+      11: getfield      #56                 // Field mIsReadOnlyConnection:Z
+      14: ifne          65
+      17: invokestatic  #261                // Method io/requery/android/database/sqlite/SQLiteGlobal.getJournalSizeLimit:()I
+      20: i2l
+      21: lstore_1
+      22: aload_0
+      23: ldc_w         #264                // String PRAGMA journal_size_limit
+      26: aconst_null
+      27: aconst_null
+      28: invokevirtual #230                // Method executeForLong:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)J
+      31: lstore_3
+      32: lload_3
+      33: lload_1
+      34: lcmp
+      35: ifeq          65
+      38: aload_0
+      39: new           #234                // class java/lang/StringBuilder
+      42: dup
+      43: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+      46: ldc_w         #266                // String PRAGMA journal_size_limit=
+      49: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      52: lload_1
+      53: invokevirtual #243                // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+      56: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      59: aconst_null
+      60: aconst_null
+      61: invokevirtual #230                // Method executeForLong:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)J
+      64: pop2
+      65: return
+
+  private void setForeignKeyModeFromConfiguration();
+    Code:
+       0: aload_0
+       1: getfield      #56                 // Field mIsReadOnlyConnection:Z
+       4: ifne          65
+       7: aload_0
+       8: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+      11: getfield      #268                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.foreignKeyConstraintsEnabled:Z
+      14: ifeq          21
+      17: lconst_1
+      18: goto          22
+      21: lconst_0
+      22: lstore_1
+      23: aload_0
+      24: ldc_w         #271                // String PRAGMA foreign_keys
+      27: aconst_null
+      28: aconst_null
+      29: invokevirtual #230                // Method executeForLong:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)J
+      32: lstore_3
+      33: lload_3
+      34: lload_1
+      35: lcmp
+      36: ifeq          65
+      39: aload_0
+      40: new           #234                // class java/lang/StringBuilder
+      43: dup
+      44: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+      47: ldc_w         #273                // String PRAGMA foreign_keys=
+      50: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      53: lload_1
+      54: invokevirtual #243                // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+      57: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      60: aconst_null
+      61: aconst_null
+      62: invokevirtual #250                // Method execute:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)V
+      65: return
+
+  private void setWalModeFromConfiguration();
+    Code:
+       0: aload_0
+       1: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+       4: invokevirtual #220                // Method io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.isInMemoryDb:()Z
+       7: ifne          62
+      10: aload_0
+      11: getfield      #56                 // Field mIsReadOnlyConnection:Z
+      14: ifne          62
+      17: aload_0
+      18: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+      21: getfield      #51                 // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.openFlags:I
+      24: ldc_w         #275                // int 536870912
+      27: iand
+      28: ifeq          48
+      31: aload_0
+      32: ldc_w         #276                // String WAL
+      35: invokevirtual #278                // Method setJournalMode:(Ljava/lang/String;)V
+      38: aload_0
+      39: invokestatic  #281                // Method io/requery/android/database/sqlite/SQLiteGlobal.getWALSyncMode:()Ljava/lang/String;
+      42: invokevirtual #284                // Method setSyncMode:(Ljava/lang/String;)V
+      45: goto          62
+      48: aload_0
+      49: invokestatic  #287                // Method io/requery/android/database/sqlite/SQLiteGlobal.getDefaultJournalMode:()Ljava/lang/String;
+      52: invokevirtual #278                // Method setJournalMode:(Ljava/lang/String;)V
+      55: aload_0
+      56: invokestatic  #290                // Method io/requery/android/database/sqlite/SQLiteGlobal.getDefaultSyncMode:()Ljava/lang/String;
+      59: invokevirtual #284                // Method setSyncMode:(Ljava/lang/String;)V
+      62: return
+
+  private void setSyncMode(java.lang.String);
+    Code:
+       0: aload_0
+       1: ldc_w         #293                // String PRAGMA synchronous
+       4: aconst_null
+       5: aconst_null
+       6: invokevirtual #295                // Method executeForString:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)Ljava/lang/String;
+       9: astore_2
+      10: aload_2
+      11: invokestatic  #299                // Method canonicalizeSyncMode:(Ljava/lang/String;)Ljava/lang/String;
+      14: aload_1
+      15: invokestatic  #299                // Method canonicalizeSyncMode:(Ljava/lang/String;)Ljava/lang/String;
+      18: invokevirtual #303                // Method java/lang/String.equalsIgnoreCase:(Ljava/lang/String;)Z
+      21: ifne          50
+      24: aload_0
+      25: new           #234                // class java/lang/StringBuilder
+      28: dup
+      29: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+      32: ldc_w         #309                // String PRAGMA synchronous=
+      35: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      38: aload_1
+      39: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      42: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      45: aconst_null
+      46: aconst_null
+      47: invokevirtual #250                // Method execute:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)V
+      50: return
+
+  private static java.lang.String canonicalizeSyncMode(java.lang.String);
+    Code:
+       0: aload_0
+       1: astore_1
+       2: iconst_m1
+       3: istore_2
+       4: aload_1
+       5: invokevirtual #311                // Method java/lang/String.hashCode:()I
+       8: tableswitch   { // 48 to 50
+                    48: 36
+                    49: 51
+                    50: 66
+               default: 78
+          }
+      36: aload_1
+      37: ldc_w         #314                // String 0
+      40: invokevirtual #316                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      43: ifeq          78
+      46: iconst_0
+      47: istore_2
+      48: goto          78
+      51: aload_1
+      52: ldc_w         #320                // String 1
+      55: invokevirtual #316                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      58: ifeq          78
+      61: iconst_1
+      62: istore_2
+      63: goto          78
+      66: aload_1
+      67: ldc_w         #322                // String 2
+      70: invokevirtual #316                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      73: ifeq          78
+      76: iconst_2
+      77: istore_2
+      78: iload_2
+      79: tableswitch   { // 0 to 2
+                     0: 104
+                     1: 108
+                     2: 112
+               default: 116
+          }
+     104: ldc_w         #324                // String OFF
+     107: areturn
+     108: ldc_w         #326                // String NORMAL
+     111: areturn
+     112: ldc_w         #328                // String FULL
+     115: areturn
+     116: aload_0
+     117: areturn
+
+  private void setJournalMode(java.lang.String);
+    Code:
+       0: aload_0
+       1: ldc_w         #330                // String PRAGMA journal_mode
+       4: aconst_null
+       5: aconst_null
+       6: invokevirtual #295                // Method executeForString:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)Ljava/lang/String;
+       9: astore_2
+      10: aload_2
+      11: aload_1
+      12: invokevirtual #303                // Method java/lang/String.equalsIgnoreCase:(Ljava/lang/String;)Z
+      15: ifne          126
+      18: aload_0
+      19: new           #234                // class java/lang/StringBuilder
+      22: dup
+      23: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+      26: ldc_w         #332                // String PRAGMA journal_mode=
+      29: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      32: aload_1
+      33: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      36: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      39: aconst_null
+      40: aconst_null
+      41: invokevirtual #295                // Method executeForString:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)Ljava/lang/String;
+      44: astore_3
+      45: aload_3
+      46: aload_1
+      47: invokevirtual #303                // Method java/lang/String.equalsIgnoreCase:(Ljava/lang/String;)Z
+      50: ifeq          54
+      53: return
+      54: goto          67
+      57: astore_3
+      58: aload_3
+      59: instanceof    #334                // class android/database/sqlite/SQLiteDatabaseLockedException
+      62: ifne          67
+      65: aload_3
+      66: athrow
+      67: ldc_w         #336                // String SQLiteConnection
+      70: new           #234                // class java/lang/StringBuilder
+      73: dup
+      74: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+      77: ldc_w         #338                // String Could not change the database journal mode of \'
+      80: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      83: aload_0
+      84: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+      87: getfield      #105                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.label:Ljava/lang/String;
+      90: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      93: ldc_w         #340                // String \' from \'
+      96: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      99: aload_2
+     100: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     103: ldc_w         #342                // String \' to \'
+     106: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     109: aload_1
+     110: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     113: ldc_w         #344                // String \' because the database is locked.  This usually means that there are other open connections to the database which prevents the database from enabling or disabling write-ahead logging mode.  Proceeding without changing the journal mode.
+     116: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     119: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     122: invokestatic  #346                // Method android/util/Log.w:(Ljava/lang/String;Ljava/lang/String;)I
+     125: pop
+     126: return
+    Exception table:
+       from    to  target type
+          18    53    57   Class android/database/sqlite/SQLiteException
+
+  private void setLocaleFromConfiguration();
+    Code:
+       0: aload_0
+       1: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+       4: getfield      #352                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.locale:Ljava/util/Locale;
+       7: invokevirtual #356                // Method java/util/Locale.toString:()Ljava/lang/String;
+      10: astore_1
+      11: aload_0
+      12: getfield      #77                 // Field mConnectionPtr:J
+      15: aload_1
+      16: invokestatic  #359                // Method nativeRegisterLocalizedCollators:(JLjava/lang/String;)V
+      19: aload_0
+      20: getfield      #56                 // Field mIsReadOnlyConnection:Z
+      23: ifeq          27
+      26: return
+      27: aload_0
+      28: ldc_w         #363                // String CREATE TABLE IF NOT EXISTS android_metadata (locale TEXT)
+      31: aconst_null
+      32: aconst_null
+      33: invokevirtual #250                // Method execute:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)V
+      36: aload_0
+      37: ldc_w         #365                // String SELECT locale FROM android_metadata UNION SELECT NULL ORDER BY locale DESC LIMIT 1
+      40: aconst_null
+      41: aconst_null
+      42: invokevirtual #295                // Method executeForString:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)Ljava/lang/String;
+      45: astore_2
+      46: aload_2
+      47: ifnull        59
+      50: aload_2
+      51: aload_1
+      52: invokevirtual #316                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      55: ifeq          59
+      58: return
+      59: aload_0
+      60: ldc_w         #367                // String BEGIN
+      63: aconst_null
+      64: aconst_null
+      65: invokevirtual #250                // Method execute:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)V
+      68: iconst_0
+      69: istore_3
+      70: aload_0
+      71: ldc_w         #369                // String DELETE FROM android_metadata
+      74: aconst_null
+      75: aconst_null
+      76: invokevirtual #250                // Method execute:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)V
+      79: aload_0
+      80: ldc_w         #371                // String INSERT INTO android_metadata (locale) VALUES(?)
+      83: iconst_1
+      84: anewarray     #8                  // class java/lang/Object
+      87: dup
+      88: iconst_0
+      89: aload_1
+      90: aastore
+      91: aconst_null
+      92: invokevirtual #250                // Method execute:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)V
+      95: aload_0
+      96: ldc_w         #373                // String REINDEX LOCALIZED
+      99: aconst_null
+     100: aconst_null
+     101: invokevirtual #250                // Method execute:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)V
+     104: iconst_1
+     105: istore_3
+     106: aload_0
+     107: iload_3
+     108: ifeq          117
+     111: ldc_w         #375                // String COMMIT
+     114: goto          120
+     117: ldc_w         #377                // String ROLLBACK
+     120: aconst_null
+     121: aconst_null
+     122: invokevirtual #250                // Method execute:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)V
+     125: goto          152
+     128: astore        4
+     130: aload_0
+     131: iload_3
+     132: ifeq          141
+     135: ldc_w         #375                // String COMMIT
+     138: goto          144
+     141: ldc_w         #377                // String ROLLBACK
+     144: aconst_null
+     145: aconst_null
+     146: invokevirtual #250                // Method execute:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)V
+     149: aload         4
+     151: athrow
+     152: goto          206
+     155: astore_2
+     156: new           #98                 // class android/database/sqlite/SQLiteException
+     159: dup
+     160: new           #234                // class java/lang/StringBuilder
+     163: dup
+     164: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+     167: ldc_w         #381                // String Failed to change locale for db \'
+     170: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     173: aload_0
+     174: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+     177: getfield      #105                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.label:Ljava/lang/String;
+     180: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     183: ldc_w         #342                // String \' to \'
+     186: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     189: aload_1
+     190: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     193: ldc_w         #383                // String \'.
+     196: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     199: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     202: invokespecial #385                // Method android/database/sqlite/SQLiteException."<init>":(Ljava/lang/String;)V
+     205: athrow
+     206: return
+    Exception table:
+       from    to  target type
+          70   106   128   any
+         128   130   128   any
+          27    58   155   Class java/lang/RuntimeException
+          59   152   155   Class java/lang/RuntimeException
+
+  public void enableLocalizedCollators();
+    Code:
+       0: invokestatic  #3                  // Method nativeHasCodec:()Z
+       3: ifeq          10
+       6: aload_0
+       7: invokevirtual #135                // Method setLocaleFromConfiguration:()V
+      10: return
+
+  void reconfigure(io.requery.android.database.sqlite.SQLiteDatabaseConfiguration);
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: putfield      #387                // Field mOnlyAllowReadOnlyOperations:Z
+       5: aload_1
+       6: getfield      #138                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.customFunctions:Ljava/util/List;
+       9: invokeinterface #142,  1          // InterfaceMethod java/util/List.size:()I
+      14: istore_2
+      15: iconst_0
+      16: istore_3
+      17: iload_3
+      18: iload_2
+      19: if_icmpge     69
+      22: aload_1
+      23: getfield      #138                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.customFunctions:Ljava/util/List;
+      26: iload_3
+      27: invokeinterface #148,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+      32: checkcast     #151                // class io/requery/android/database/sqlite/SQLiteCustomFunction
+      35: astore        4
+      37: aload_0
+      38: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+      41: getfield      #138                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.customFunctions:Ljava/util/List;
+      44: aload         4
+      46: invokeinterface #390,  2          // InterfaceMethod java/util/List.contains:(Ljava/lang/Object;)Z
+      51: ifne          63
+      54: aload_0
+      55: getfield      #77                 // Field mConnectionPtr:J
+      58: aload         4
+      60: invokestatic  #153                // Method nativeRegisterCustomFunction:(JLio/requery/android/database/sqlite/SQLiteCustomFunction;)V
+      63: iinc          3, 1
+      66: goto          17
+      69: aload_1
+      70: getfield      #157                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.functions:Ljava/util/List;
+      73: invokeinterface #142,  1          // InterfaceMethod java/util/List.size:()I
+      78: istore_3
+      79: iconst_0
+      80: istore        4
+      82: iload         4
+      84: iload_3
+      85: if_icmpge     136
+      88: aload_1
+      89: getfield      #157                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.functions:Ljava/util/List;
+      92: iload         4
+      94: invokeinterface #148,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+      99: checkcast     #160                // class io/requery/android/database/sqlite/SQLiteFunction
+     102: astore        5
+     104: aload_0
+     105: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+     108: getfield      #157                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.functions:Ljava/util/List;
+     111: aload         5
+     113: invokeinterface #390,  2          // InterfaceMethod java/util/List.contains:(Ljava/lang/Object;)Z
+     118: ifne          130
+     121: aload_0
+     122: getfield      #77                 // Field mConnectionPtr:J
+     125: aload         5
+     127: invokestatic  #162                // Method nativeRegisterFunction:(JLio/requery/android/database/sqlite/SQLiteFunction;)V
+     130: iinc          4, 1
+     133: goto          82
+     136: aload_1
+     137: getfield      #192                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.sqliteUpdateHook:Lio/requery/android/database/sqlite/SQLiteUpdateHook;
+     140: astore        4
+     142: aload         4
+     144: ifnull        156
+     147: aload_0
+     148: getfield      #77                 // Field mConnectionPtr:J
+     151: aload         4
+     153: invokestatic  #196                // Method nativeRegisterUpdateHook:(JLio/requery/android/database/sqlite/SQLiteUpdateHook;)V
+     156: aload_1
+     157: getfield      #268                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.foreignKeyConstraintsEnabled:Z
+     160: aload_0
+     161: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+     164: getfield      #268                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.foreignKeyConstraintsEnabled:Z
+     167: if_icmpeq     174
+     170: iconst_1
+     171: goto          175
+     174: iconst_0
+     175: istore        5
+     177: aload_1
+     178: getfield      #51                 // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.openFlags:I
+     181: aload_0
+     182: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+     185: getfield      #51                 // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.openFlags:I
+     188: ixor
+     189: ldc_w         #275                // int 536870912
+     192: iand
+     193: ifeq          200
+     196: iconst_1
+     197: goto          201
+     200: iconst_0
+     201: istore        6
+     203: aload_1
+     204: getfield      #352                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.locale:Ljava/util/Locale;
+     207: aload_0
+     208: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+     211: getfield      #352                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.locale:Ljava/util/Locale;
+     214: invokevirtual #393                // Method java/util/Locale.equals:(Ljava/lang/Object;)Z
+     217: ifne          224
+     220: iconst_1
+     221: goto          225
+     224: iconst_0
+     225: istore        7
+     227: aload_0
+     228: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+     231: aload_1
+     232: invokevirtual #394                // Method io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.updateParametersFrom:(Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;)V
+     235: iload         5
+     237: ifeq          244
+     240: aload_0
+     241: invokevirtual #123                // Method setForeignKeyModeFromConfiguration:()V
+     244: iload         6
+     246: ifeq          253
+     249: aload_0
+     250: invokevirtual #132                // Method setWalModeFromConfiguration:()V
+     253: iload         7
+     255: ifeq          262
+     258: aload_0
+     259: invokevirtual #135                // Method setLocaleFromConfiguration:()V
+     262: return
+
+  void setOnlyAllowReadOnlyOperations(boolean);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #387                // Field mOnlyAllowReadOnlyOperations:Z
+       5: return
+
+  boolean isPreparedStatementInCache(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #67                 // Field mPreparedStatementCache:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache;
+       4: aload_1
+       5: invokevirtual #397                // Method io/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       8: ifnull        15
+      11: iconst_1
+      12: goto          16
+      15: iconst_0
+      16: ireturn
+
+  public boolean isPrimaryConnection();
+    Code:
+       0: aload_0
+       1: getfield      #47                 // Field mIsPrimaryConnection:Z
+       4: ireturn
+
+  public void prepare(java.lang.String, io.requery.android.database.sqlite.SQLiteStatementInfo);
+    Code:
+       0: aload_1
+       1: ifnonnull     15
+       4: new           #400                // class java/lang/IllegalArgumentException
+       7: dup
+       8: ldc_w         #402                // String sql must not be null.
+      11: invokespecial #404                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      14: athrow
+      15: aload_0
+      16: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+      19: ldc_w         #405                // String prepare
+      22: aload_1
+      23: aconst_null
+      24: invokevirtual #205                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.beginOperation:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)I
+      27: istore_3
+      28: aload_0
+      29: aload_1
+      30: invokevirtual #407                // Method acquirePreparedStatement:(Ljava/lang/String;)Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;
+      33: astore        4
+      35: aload_2
+      36: ifnull        132
+      39: aload_2
+      40: aload         4
+      42: getfield      #411                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mNumParameters:I
+      45: putfield      #416                // Field io/requery/android/database/sqlite/SQLiteStatementInfo.numParameters:I
+      48: aload_2
+      49: aload         4
+      51: getfield      #421                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mReadOnly:Z
+      54: putfield      #424                // Field io/requery/android/database/sqlite/SQLiteStatementInfo.readOnly:Z
+      57: aload_0
+      58: getfield      #77                 // Field mConnectionPtr:J
+      61: aload         4
+      63: getfield      #427                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mStatementPtr:J
+      66: invokestatic  #430                // Method nativeGetColumnCount:(JJ)I
+      69: istore        5
+      71: iload         5
+      73: ifne          86
+      76: aload_2
+      77: getstatic     #434                // Field EMPTY_STRING_ARRAY:[Ljava/lang/String;
+      80: putfield      #438                // Field io/requery/android/database/sqlite/SQLiteStatementInfo.columnNames:[Ljava/lang/String;
+      83: goto          132
+      86: aload_2
+      87: iload         5
+      89: anewarray     #304                // class java/lang/String
+      92: putfield      #438                // Field io/requery/android/database/sqlite/SQLiteStatementInfo.columnNames:[Ljava/lang/String;
+      95: iconst_0
+      96: istore        6
+      98: iload         6
+     100: iload         5
+     102: if_icmpge     132
+     105: aload_2
+     106: getfield      #438                // Field io/requery/android/database/sqlite/SQLiteStatementInfo.columnNames:[Ljava/lang/String;
+     109: iload         6
+     111: aload_0
+     112: getfield      #77                 // Field mConnectionPtr:J
+     115: aload         4
+     117: getfield      #427                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mStatementPtr:J
+     120: iload         6
+     122: invokestatic  #441                // Method nativeGetColumnName:(JJI)Ljava/lang/String;
+     125: aastore
+     126: iinc          6, 1
+     129: goto          98
+     132: aload_0
+     133: aload         4
+     135: invokevirtual #445                // Method releasePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+     138: goto          152
+     141: astore        7
+     143: aload_0
+     144: aload         4
+     146: invokevirtual #445                // Method releasePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+     149: aload         7
+     151: athrow
+     152: aload_0
+     153: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     156: iload_3
+     157: invokevirtual #216                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperation:(I)V
+     160: goto          191
+     163: astore        4
+     165: aload_0
+     166: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     169: iload_3
+     170: aload         4
+     172: invokevirtual #449                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.failOperation:(ILjava/lang/Exception;)V
+     175: aload         4
+     177: athrow
+     178: astore        8
+     180: aload_0
+     181: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     184: iload_3
+     185: invokevirtual #216                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperation:(I)V
+     188: aload         8
+     190: athrow
+     191: return
+    Exception table:
+       from    to  target type
+          35   132   141   any
+         141   143   141   any
+          28   152   163   Class java/lang/RuntimeException
+          28   152   178   any
+         163   180   178   any
+
+  public void execute(java.lang.String, java.lang.Object[], androidx.core.os.CancellationSignal);
+    Code:
+       0: aload_1
+       1: ifnonnull     15
+       4: new           #400                // class java/lang/IllegalArgumentException
+       7: dup
+       8: ldc_w         #402                // String sql must not be null.
+      11: invokespecial #404                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      14: athrow
+      15: aload_0
+      16: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+      19: ldc_w         #453                // String execute
+      22: aload_1
+      23: aload_2
+      24: invokevirtual #205                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.beginOperation:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)I
+      27: istore        4
+      29: aload_0
+      30: aload_1
+      31: invokevirtual #407                // Method acquirePreparedStatement:(Ljava/lang/String;)Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;
+      34: astore        5
+      36: aload_0
+      37: aload         5
+      39: invokevirtual #454                // Method throwIfStatementForbidden:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      42: aload_0
+      43: aload         5
+      45: aload_2
+      46: invokevirtual #457                // Method bindArguments:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;[Ljava/lang/Object;)V
+      49: aload_0
+      50: aload         5
+      52: invokevirtual #461                // Method applyBlockGuardPolicy:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      55: aload_0
+      56: aload_3
+      57: invokevirtual #464                // Method attachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+      60: aload_0
+      61: getfield      #77                 // Field mConnectionPtr:J
+      64: aload         5
+      66: getfield      #427                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mStatementPtr:J
+      69: invokestatic  #468                // Method nativeExecute:(JJ)V
+      72: aload_0
+      73: aload_3
+      74: invokevirtual #472                // Method detachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+      77: goto          90
+      80: astore        6
+      82: aload_0
+      83: aload_3
+      84: invokevirtual #472                // Method detachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+      87: aload         6
+      89: athrow
+      90: aload_0
+      91: aload         5
+      93: invokevirtual #445                // Method releasePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      96: goto          110
+      99: astore        7
+     101: aload_0
+     102: aload         5
+     104: invokevirtual #445                // Method releasePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+     107: aload         7
+     109: athrow
+     110: aload_0
+     111: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     114: iload         4
+     116: invokevirtual #216                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperation:(I)V
+     119: goto          152
+     122: astore        5
+     124: aload_0
+     125: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     128: iload         4
+     130: aload         5
+     132: invokevirtual #449                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.failOperation:(ILjava/lang/Exception;)V
+     135: aload         5
+     137: athrow
+     138: astore        8
+     140: aload_0
+     141: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     144: iload         4
+     146: invokevirtual #216                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperation:(I)V
+     149: aload         8
+     151: athrow
+     152: return
+    Exception table:
+       from    to  target type
+          60    72    80   any
+          80    82    80   any
+          36    90    99   any
+          99   101    99   any
+          29   110   122   Class java/lang/RuntimeException
+          29   110   138   any
+         122   140   138   any
+
+  public long executeForLong(java.lang.String, java.lang.Object[], androidx.core.os.CancellationSignal);
+    Code:
+       0: aload_1
+       1: ifnonnull     15
+       4: new           #400                // class java/lang/IllegalArgumentException
+       7: dup
+       8: ldc_w         #402                // String sql must not be null.
+      11: invokespecial #404                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      14: athrow
+      15: aload_0
+      16: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+      19: ldc_w         #475                // String executeForLong
+      22: aload_1
+      23: aload_2
+      24: invokevirtual #205                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.beginOperation:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)I
+      27: istore        4
+      29: aload_0
+      30: aload_1
+      31: invokevirtual #407                // Method acquirePreparedStatement:(Ljava/lang/String;)Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;
+      34: astore        5
+      36: aload_0
+      37: aload         5
+      39: invokevirtual #454                // Method throwIfStatementForbidden:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      42: aload_0
+      43: aload         5
+      45: aload_2
+      46: invokevirtual #457                // Method bindArguments:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;[Ljava/lang/Object;)V
+      49: aload_0
+      50: aload         5
+      52: invokevirtual #461                // Method applyBlockGuardPolicy:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      55: aload_0
+      56: aload_3
+      57: invokevirtual #464                // Method attachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+      60: aload_0
+      61: getfield      #77                 // Field mConnectionPtr:J
+      64: aload         5
+      66: getfield      #427                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mStatementPtr:J
+      69: invokestatic  #476                // Method nativeExecuteForLong:(JJ)J
+      72: lstore        6
+      74: aload_0
+      75: aload_3
+      76: invokevirtual #472                // Method detachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+      79: aload_0
+      80: aload         5
+      82: invokevirtual #445                // Method releasePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      85: aload_0
+      86: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+      89: iload         4
+      91: invokevirtual #216                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperation:(I)V
+      94: lload         6
+      96: lreturn
+      97: astore        8
+      99: aload_0
+     100: aload_3
+     101: invokevirtual #472                // Method detachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+     104: aload         8
+     106: athrow
+     107: astore        9
+     109: aload_0
+     110: aload         5
+     112: invokevirtual #445                // Method releasePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+     115: aload         9
+     117: athrow
+     118: astore        5
+     120: aload_0
+     121: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     124: iload         4
+     126: aload         5
+     128: invokevirtual #449                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.failOperation:(ILjava/lang/Exception;)V
+     131: aload         5
+     133: athrow
+     134: astore        10
+     136: aload_0
+     137: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     140: iload         4
+     142: invokevirtual #216                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperation:(I)V
+     145: aload         10
+     147: athrow
+    Exception table:
+       from    to  target type
+          60    74    97   any
+          97    99    97   any
+          36    79   107   any
+          97   109   107   any
+          29    85   118   Class java/lang/RuntimeException
+          97   118   118   Class java/lang/RuntimeException
+          29    85   134   any
+          97   136   134   any
+
+  public java.lang.String executeForString(java.lang.String, java.lang.Object[], androidx.core.os.CancellationSignal);
+    Code:
+       0: aload_1
+       1: ifnonnull     15
+       4: new           #400                // class java/lang/IllegalArgumentException
+       7: dup
+       8: ldc_w         #402                // String sql must not be null.
+      11: invokespecial #404                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      14: athrow
+      15: aload_0
+      16: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+      19: ldc_w         #480                // String executeForString
+      22: aload_1
+      23: aload_2
+      24: invokevirtual #205                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.beginOperation:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)I
+      27: istore        4
+      29: aload_0
+      30: aload_1
+      31: invokevirtual #407                // Method acquirePreparedStatement:(Ljava/lang/String;)Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;
+      34: astore        5
+      36: aload_0
+      37: aload         5
+      39: invokevirtual #454                // Method throwIfStatementForbidden:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      42: aload_0
+      43: aload         5
+      45: aload_2
+      46: invokevirtual #457                // Method bindArguments:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;[Ljava/lang/Object;)V
+      49: aload_0
+      50: aload         5
+      52: invokevirtual #461                // Method applyBlockGuardPolicy:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      55: aload_0
+      56: aload_3
+      57: invokevirtual #464                // Method attachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+      60: aload_0
+      61: getfield      #77                 // Field mConnectionPtr:J
+      64: aload         5
+      66: getfield      #427                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mStatementPtr:J
+      69: invokestatic  #481                // Method nativeExecuteForString:(JJ)Ljava/lang/String;
+      72: astore        6
+      74: aload_0
+      75: aload_3
+      76: invokevirtual #472                // Method detachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+      79: aload_0
+      80: aload         5
+      82: invokevirtual #445                // Method releasePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      85: aload_0
+      86: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+      89: iload         4
+      91: invokevirtual #216                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperation:(I)V
+      94: aload         6
+      96: areturn
+      97: astore        7
+      99: aload_0
+     100: aload_3
+     101: invokevirtual #472                // Method detachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+     104: aload         7
+     106: athrow
+     107: astore        8
+     109: aload_0
+     110: aload         5
+     112: invokevirtual #445                // Method releasePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+     115: aload         8
+     117: athrow
+     118: astore        5
+     120: aload_0
+     121: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     124: iload         4
+     126: aload         5
+     128: invokevirtual #449                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.failOperation:(ILjava/lang/Exception;)V
+     131: aload         5
+     133: athrow
+     134: astore        9
+     136: aload_0
+     137: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     140: iload         4
+     142: invokevirtual #216                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperation:(I)V
+     145: aload         9
+     147: athrow
+    Exception table:
+       from    to  target type
+          60    74    97   any
+          97    99    97   any
+          36    79   107   any
+          97   109   107   any
+          29    85   118   Class java/lang/RuntimeException
+          97   118   118   Class java/lang/RuntimeException
+          29    85   134   any
+          97   136   134   any
+
+  public android.os.ParcelFileDescriptor executeForBlobFileDescriptor(java.lang.String, java.lang.Object[], androidx.core.os.CancellationSignal);
+    Code:
+       0: aload_1
+       1: ifnonnull     15
+       4: new           #400                // class java/lang/IllegalArgumentException
+       7: dup
+       8: ldc_w         #402                // String sql must not be null.
+      11: invokespecial #404                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      14: athrow
+      15: aload_0
+      16: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+      19: ldc_w         #485                // String executeForBlobFileDescriptor
+      22: aload_1
+      23: aload_2
+      24: invokevirtual #205                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.beginOperation:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)I
+      27: istore        4
+      29: aload_0
+      30: aload_1
+      31: invokevirtual #407                // Method acquirePreparedStatement:(Ljava/lang/String;)Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;
+      34: astore        5
+      36: aload_0
+      37: aload         5
+      39: invokevirtual #454                // Method throwIfStatementForbidden:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      42: aload_0
+      43: aload         5
+      45: aload_2
+      46: invokevirtual #457                // Method bindArguments:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;[Ljava/lang/Object;)V
+      49: aload_0
+      50: aload         5
+      52: invokevirtual #461                // Method applyBlockGuardPolicy:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      55: aload_0
+      56: aload_3
+      57: invokevirtual #464                // Method attachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+      60: aload_0
+      61: getfield      #77                 // Field mConnectionPtr:J
+      64: aload         5
+      66: getfield      #427                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mStatementPtr:J
+      69: invokestatic  #487                // Method nativeExecuteForBlobFileDescriptor:(JJ)I
+      72: istore        6
+      74: iload         6
+      76: iflt          87
+      79: iload         6
+      81: invokestatic  #490                // Method android/os/ParcelFileDescriptor.adoptFd:(I)Landroid/os/ParcelFileDescriptor;
+      84: goto          88
+      87: aconst_null
+      88: astore        7
+      90: aload_0
+      91: aload_3
+      92: invokevirtual #472                // Method detachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+      95: aload_0
+      96: aload         5
+      98: invokevirtual #445                // Method releasePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+     101: aload_0
+     102: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     105: iload         4
+     107: invokevirtual #216                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperation:(I)V
+     110: aload         7
+     112: areturn
+     113: astore        8
+     115: aload_0
+     116: aload_3
+     117: invokevirtual #472                // Method detachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+     120: aload         8
+     122: athrow
+     123: astore        9
+     125: aload_0
+     126: aload         5
+     128: invokevirtual #445                // Method releasePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+     131: aload         9
+     133: athrow
+     134: astore        5
+     136: aload_0
+     137: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     140: iload         4
+     142: aload         5
+     144: invokevirtual #449                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.failOperation:(ILjava/lang/Exception;)V
+     147: aload         5
+     149: athrow
+     150: astore        10
+     152: aload_0
+     153: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     156: iload         4
+     158: invokevirtual #216                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperation:(I)V
+     161: aload         10
+     163: athrow
+    Exception table:
+       from    to  target type
+          60    90   113   any
+         113   115   113   any
+          36    95   123   any
+         113   125   123   any
+          29   101   134   Class java/lang/RuntimeException
+         113   134   134   Class java/lang/RuntimeException
+          29   101   150   any
+         113   152   150   any
+
+  public int executeForChangedRowCount(java.lang.String, java.lang.Object[], androidx.core.os.CancellationSignal);
+    Code:
+       0: aload_1
+       1: ifnonnull     15
+       4: new           #400                // class java/lang/IllegalArgumentException
+       7: dup
+       8: ldc_w         #402                // String sql must not be null.
+      11: invokespecial #404                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      14: athrow
+      15: iconst_0
+      16: istore        4
+      18: aload_0
+      19: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+      22: ldc_w         #496                // String executeForChangedRowCount
+      25: aload_1
+      26: aload_2
+      27: invokevirtual #205                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.beginOperation:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)I
+      30: istore        5
+      32: aload_0
+      33: aload_1
+      34: invokevirtual #407                // Method acquirePreparedStatement:(Ljava/lang/String;)Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;
+      37: astore        6
+      39: aload_0
+      40: aload         6
+      42: invokevirtual #454                // Method throwIfStatementForbidden:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      45: aload_0
+      46: aload         6
+      48: aload_2
+      49: invokevirtual #457                // Method bindArguments:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;[Ljava/lang/Object;)V
+      52: aload_0
+      53: aload         6
+      55: invokevirtual #461                // Method applyBlockGuardPolicy:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      58: aload_0
+      59: aload_3
+      60: invokevirtual #464                // Method attachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+      63: aload_0
+      64: getfield      #77                 // Field mConnectionPtr:J
+      67: aload         6
+      69: getfield      #427                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mStatementPtr:J
+      72: invokestatic  #498                // Method nativeExecuteForChangedRowCount:(JJ)I
+      75: istore        4
+      77: iload         4
+      79: istore        7
+      81: aload_0
+      82: aload_3
+      83: invokevirtual #472                // Method detachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+      86: aload_0
+      87: aload         6
+      89: invokevirtual #445                // Method releasePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      92: aload_0
+      93: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+      96: iload         5
+      98: invokevirtual #501                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperationDeferLog:(I)Z
+     101: ifeq          134
+     104: aload_0
+     105: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     108: iload         5
+     110: new           #234                // class java/lang/StringBuilder
+     113: dup
+     114: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+     117: ldc_w         #505                // String changedRows=
+     120: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     123: iload         4
+     125: invokevirtual #507                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     128: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     131: invokevirtual #510                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.logOperation:(ILjava/lang/String;)V
+     134: iload         7
+     136: ireturn
+     137: astore        8
+     139: aload_0
+     140: aload_3
+     141: invokevirtual #472                // Method detachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+     144: aload         8
+     146: athrow
+     147: astore        9
+     149: aload_0
+     150: aload         6
+     152: invokevirtual #445                // Method releasePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+     155: aload         9
+     157: athrow
+     158: astore        6
+     160: aload_0
+     161: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     164: iload         5
+     166: aload         6
+     168: invokevirtual #449                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.failOperation:(ILjava/lang/Exception;)V
+     171: aload         6
+     173: athrow
+     174: astore        10
+     176: aload_0
+     177: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     180: iload         5
+     182: invokevirtual #501                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperationDeferLog:(I)Z
+     185: ifeq          218
+     188: aload_0
+     189: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     192: iload         5
+     194: new           #234                // class java/lang/StringBuilder
+     197: dup
+     198: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+     201: ldc_w         #505                // String changedRows=
+     204: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     207: iload         4
+     209: invokevirtual #507                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     212: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     215: invokevirtual #510                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.logOperation:(ILjava/lang/String;)V
+     218: aload         10
+     220: athrow
+    Exception table:
+       from    to  target type
+          63    81   137   any
+         137   139   137   any
+          39    86   147   any
+         137   149   147   any
+          32    92   158   Class java/lang/RuntimeException
+         137   158   158   Class java/lang/RuntimeException
+          32    92   174   any
+         137   176   174   any
+
+  public long executeForLastInsertedRowId(java.lang.String, java.lang.Object[], androidx.core.os.CancellationSignal);
+    Code:
+       0: aload_1
+       1: ifnonnull     15
+       4: new           #400                // class java/lang/IllegalArgumentException
+       7: dup
+       8: ldc_w         #402                // String sql must not be null.
+      11: invokespecial #404                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      14: athrow
+      15: aload_0
+      16: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+      19: ldc_w         #514                // String executeForLastInsertedRowId
+      22: aload_1
+      23: aload_2
+      24: invokevirtual #205                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.beginOperation:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)I
+      27: istore        4
+      29: aload_0
+      30: aload_1
+      31: invokevirtual #407                // Method acquirePreparedStatement:(Ljava/lang/String;)Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;
+      34: astore        5
+      36: aload_0
+      37: aload         5
+      39: invokevirtual #454                // Method throwIfStatementForbidden:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      42: aload_0
+      43: aload         5
+      45: aload_2
+      46: invokevirtual #457                // Method bindArguments:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;[Ljava/lang/Object;)V
+      49: aload_0
+      50: aload         5
+      52: invokevirtual #461                // Method applyBlockGuardPolicy:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      55: aload_0
+      56: aload_3
+      57: invokevirtual #464                // Method attachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+      60: aload_0
+      61: getfield      #77                 // Field mConnectionPtr:J
+      64: aload         5
+      66: getfield      #427                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mStatementPtr:J
+      69: invokestatic  #516                // Method nativeExecuteForLastInsertedRowId:(JJ)J
+      72: lstore        6
+      74: aload_0
+      75: aload_3
+      76: invokevirtual #472                // Method detachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+      79: aload_0
+      80: aload         5
+      82: invokevirtual #445                // Method releasePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      85: aload_0
+      86: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+      89: iload         4
+      91: invokevirtual #216                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperation:(I)V
+      94: lload         6
+      96: lreturn
+      97: astore        8
+      99: aload_0
+     100: aload_3
+     101: invokevirtual #472                // Method detachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+     104: aload         8
+     106: athrow
+     107: astore        9
+     109: aload_0
+     110: aload         5
+     112: invokevirtual #445                // Method releasePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+     115: aload         9
+     117: athrow
+     118: astore        5
+     120: aload_0
+     121: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     124: iload         4
+     126: aload         5
+     128: invokevirtual #449                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.failOperation:(ILjava/lang/Exception;)V
+     131: aload         5
+     133: athrow
+     134: astore        10
+     136: aload_0
+     137: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     140: iload         4
+     142: invokevirtual #216                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperation:(I)V
+     145: aload         10
+     147: athrow
+    Exception table:
+       from    to  target type
+          60    74    97   any
+          97    99    97   any
+          36    79   107   any
+          97   109   107   any
+          29    85   118   Class java/lang/RuntimeException
+          97   118   118   Class java/lang/RuntimeException
+          29    85   134   any
+          97   136   134   any
+
+  public int executeForCursorWindow(java.lang.String, java.lang.Object[], io.requery.android.database.CursorWindow, int, int, boolean, androidx.core.os.CancellationSignal);
+    Code:
+       0: aload_1
+       1: ifnonnull     15
+       4: new           #400                // class java/lang/IllegalArgumentException
+       7: dup
+       8: ldc_w         #402                // String sql must not be null.
+      11: invokespecial #404                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      14: athrow
+      15: aload_3
+      16: ifnonnull     30
+      19: new           #400                // class java/lang/IllegalArgumentException
+      22: dup
+      23: ldc_w         #519                // String window must not be null.
+      26: invokespecial #404                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      29: athrow
+      30: aload_3
+      31: invokevirtual #521                // Method io/requery/android/database/CursorWindow.acquireReference:()V
+      34: iconst_m1
+      35: istore        8
+      37: iconst_m1
+      38: istore        9
+      40: iconst_m1
+      41: istore        10
+      43: aload_0
+      44: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+      47: ldc_w         #526                // String executeForCursorWindow
+      50: aload_1
+      51: aload_2
+      52: invokevirtual #205                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.beginOperation:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)I
+      55: istore        11
+      57: aload_0
+      58: aload_1
+      59: invokevirtual #407                // Method acquirePreparedStatement:(Ljava/lang/String;)Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;
+      62: astore        12
+      64: aload_0
+      65: aload         12
+      67: invokevirtual #454                // Method throwIfStatementForbidden:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      70: aload_0
+      71: aload         12
+      73: aload_2
+      74: invokevirtual #457                // Method bindArguments:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;[Ljava/lang/Object;)V
+      77: aload_0
+      78: aload         12
+      80: invokevirtual #461                // Method applyBlockGuardPolicy:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      83: aload_0
+      84: aload         7
+      86: invokevirtual #464                // Method attachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+      89: aload_0
+      90: getfield      #77                 // Field mConnectionPtr:J
+      93: aload         12
+      95: getfield      #427                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mStatementPtr:J
+      98: aload_3
+      99: getfield      #528                // Field io/requery/android/database/CursorWindow.mWindowPtr:J
+     102: iload         4
+     104: iload         5
+     106: iload         6
+     108: invokestatic  #531                // Method nativeExecuteForCursorWindow:(JJJIIZ)J
+     111: lstore        13
+     113: lload         13
+     115: bipush        32
+     117: lshr
+     118: l2i
+     119: istore        8
+     121: lload         13
+     123: l2i
+     124: istore        9
+     126: aload_3
+     127: invokevirtual #535                // Method io/requery/android/database/CursorWindow.getNumRows:()I
+     130: istore        10
+     132: aload_3
+     133: iload         8
+     135: invokevirtual #538                // Method io/requery/android/database/CursorWindow.setStartPosition:(I)V
+     138: iload         9
+     140: istore        15
+     142: aload_0
+     143: aload         7
+     145: invokevirtual #472                // Method detachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+     148: aload_0
+     149: aload         12
+     151: invokevirtual #445                // Method releasePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+     154: aload_0
+     155: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     158: iload         11
+     160: invokevirtual #501                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperationDeferLog:(I)Z
+     163: ifeq          239
+     166: aload_0
+     167: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     170: iload         11
+     172: new           #234                // class java/lang/StringBuilder
+     175: dup
+     176: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+     179: ldc_w         #541                // String window=\'
+     182: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     185: aload_3
+     186: invokevirtual #543                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     189: ldc_w         #546                // String \', startPos=
+     192: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     195: iload         4
+     197: invokevirtual #507                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     200: ldc_w         #548                // String , actualPos=
+     203: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     206: iload         8
+     208: invokevirtual #507                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     211: ldc_w         #550                // String , filledRows=
+     214: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     217: iload         10
+     219: invokevirtual #507                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     222: ldc_w         #552                // String , countedRows=
+     225: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     228: iload         9
+     230: invokevirtual #507                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     233: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     236: invokevirtual #510                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.logOperation:(ILjava/lang/String;)V
+     239: aload_3
+     240: invokevirtual #554                // Method io/requery/android/database/CursorWindow.releaseReference:()V
+     243: iload         15
+     245: ireturn
+     246: astore        16
+     248: aload_0
+     249: aload         7
+     251: invokevirtual #472                // Method detachCancellationSignal:(Landroidx/core/os/CancellationSignal;)V
+     254: aload         16
+     256: athrow
+     257: astore        17
+     259: aload_0
+     260: aload         12
+     262: invokevirtual #445                // Method releasePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+     265: aload         17
+     267: athrow
+     268: astore        12
+     270: aload_0
+     271: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     274: iload         11
+     276: aload         12
+     278: invokevirtual #449                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.failOperation:(ILjava/lang/Exception;)V
+     281: aload         12
+     283: athrow
+     284: astore        18
+     286: aload_0
+     287: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     290: iload         11
+     292: invokevirtual #501                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.endOperationDeferLog:(I)Z
+     295: ifeq          371
+     298: aload_0
+     299: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     302: iload         11
+     304: new           #234                // class java/lang/StringBuilder
+     307: dup
+     308: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+     311: ldc_w         #541                // String window=\'
+     314: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     317: aload_3
+     318: invokevirtual #543                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     321: ldc_w         #546                // String \', startPos=
+     324: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     327: iload         4
+     329: invokevirtual #507                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     332: ldc_w         #548                // String , actualPos=
+     335: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     338: iload         8
+     340: invokevirtual #507                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     343: ldc_w         #550                // String , filledRows=
+     346: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     349: iload         10
+     351: invokevirtual #507                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     354: ldc_w         #552                // String , countedRows=
+     357: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     360: iload         9
+     362: invokevirtual #507                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     365: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     368: invokevirtual #510                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.logOperation:(ILjava/lang/String;)V
+     371: aload         18
+     373: athrow
+     374: astore        19
+     376: aload_3
+     377: invokevirtual #554                // Method io/requery/android/database/CursorWindow.releaseReference:()V
+     380: aload         19
+     382: athrow
+    Exception table:
+       from    to  target type
+          89   142   246   any
+         246   248   246   any
+          64   148   257   any
+         246   259   257   any
+          57   154   268   Class java/lang/RuntimeException
+         246   268   268   Class java/lang/RuntimeException
+          57   154   284   any
+         246   286   284   any
+          34   239   374   any
+         246   376   374   any
+
+  private io.requery.android.database.sqlite.SQLiteConnection$PreparedStatement acquirePreparedStatement(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #67                 // Field mPreparedStatementCache:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache;
+       4: aload_1
+       5: invokevirtual #397                // Method io/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       8: checkcast     #412                // class io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement
+      11: astore_2
+      12: iconst_0
+      13: istore_3
+      14: aload_2
+      15: ifnull        29
+      18: aload_2
+      19: getfield      #557                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mInUse:Z
+      22: ifne          27
+      25: aload_2
+      26: areturn
+      27: iconst_1
+      28: istore_3
+      29: aload_0
+      30: getfield      #77                 // Field mConnectionPtr:J
+      33: aload_1
+      34: invokestatic  #560                // Method nativePrepareStatement:(JLjava/lang/String;)J
+      37: lstore        4
+      39: aload_0
+      40: getfield      #77                 // Field mConnectionPtr:J
+      43: lload         4
+      45: invokestatic  #564                // Method nativeGetParameterCount:(JJ)I
+      48: istore        6
+      50: aload_1
+      51: invokestatic  #567                // Method io/requery/android/database/sqlite/SQLiteStatementType.getSqlStatementType:(Ljava/lang/String;)I
+      54: istore        7
+      56: aload_0
+      57: getfield      #77                 // Field mConnectionPtr:J
+      60: lload         4
+      62: invokestatic  #573                // Method nativeIsReadOnly:(JJ)Z
+      65: istore        8
+      67: aload_0
+      68: aload_1
+      69: lload         4
+      71: iload         6
+      73: iload         7
+      75: iload         8
+      77: invokevirtual #577                // Method obtainPreparedStatement:(Ljava/lang/String;JIIZ)Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;
+      80: astore_2
+      81: iload_3
+      82: ifne          108
+      85: iload         7
+      87: invokestatic  #581                // Method isCacheable:(I)Z
+      90: ifeq          108
+      93: aload_0
+      94: getfield      #67                 // Field mPreparedStatementCache:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache;
+      97: aload_1
+      98: aload_2
+      99: invokevirtual #584                // Method io/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     102: pop
+     103: aload_2
+     104: iconst_1
+     105: putfield      #588                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mInCache:Z
+     108: goto          136
+     111: astore        6
+     113: aload_2
+     114: ifnull        124
+     117: aload_2
+     118: getfield      #588                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mInCache:Z
+     121: ifne          133
+     124: aload_0
+     125: getfield      #77                 // Field mConnectionPtr:J
+     128: lload         4
+     130: invokestatic  #591                // Method nativeFinalizeStatement:(JJ)V
+     133: aload         6
+     135: athrow
+     136: aload_2
+     137: iconst_1
+     138: putfield      #557                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mInUse:Z
+     141: aload_2
+     142: areturn
+    Exception table:
+       from    to  target type
+          39   108   111   Class java/lang/RuntimeException
+
+  private void releasePreparedStatement(io.requery.android.database.sqlite.SQLiteConnection$PreparedStatement);
+    Code:
+       0: aload_1
+       1: iconst_0
+       2: putfield      #557                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mInUse:Z
+       5: aload_1
+       6: getfield      #588                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mInCache:Z
+       9: ifeq          42
+      12: aload_0
+      13: getfield      #77                 // Field mConnectionPtr:J
+      16: aload_1
+      17: getfield      #427                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mStatementPtr:J
+      20: invokestatic  #594                // Method nativeResetStatementAndClearBindings:(JJ)V
+      23: goto          47
+      26: astore_2
+      27: aload_0
+      28: getfield      #67                 // Field mPreparedStatementCache:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache;
+      31: aload_1
+      32: getfield      #597                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mSql:Ljava/lang/String;
+      35: invokevirtual #600                // Method io/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      38: pop
+      39: goto          47
+      42: aload_0
+      43: aload_1
+      44: invokevirtual #603                // Method finalizePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      47: return
+    Exception table:
+       from    to  target type
+          12    23    26   Class android/database/sqlite/SQLiteException
+
+  private void finalizePreparedStatement(io.requery.android.database.sqlite.SQLiteConnection$PreparedStatement);
+    Code:
+       0: aload_0
+       1: getfield      #77                 // Field mConnectionPtr:J
+       4: aload_1
+       5: getfield      #427                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mStatementPtr:J
+       8: invokestatic  #591                // Method nativeFinalizeStatement:(JJ)V
+      11: aload_0
+      12: aload_1
+      13: invokevirtual #606                // Method recyclePreparedStatement:(Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;)V
+      16: return
+
+  private void attachCancellationSignal(androidx.core.os.CancellationSignal);
+    Code:
+       0: aload_1
+       1: ifnull        39
+       4: aload_1
+       5: invokevirtual #609                // Method androidx/core/os/CancellationSignal.throwIfCanceled:()V
+       8: aload_0
+       9: dup
+      10: getfield      #614                // Field mCancellationSignalAttachCount:I
+      13: iconst_1
+      14: iadd
+      15: putfield      #614                // Field mCancellationSignalAttachCount:I
+      18: aload_0
+      19: getfield      #614                // Field mCancellationSignalAttachCount:I
+      22: iconst_1
+      23: if_icmpne     39
+      26: aload_0
+      27: getfield      #77                 // Field mConnectionPtr:J
+      30: iconst_1
+      31: invokestatic  #617                // Method nativeResetCancel:(JZ)V
+      34: aload_1
+      35: aload_0
+      36: invokevirtual #621                // Method androidx/core/os/CancellationSignal.setOnCancelListener:(Landroidx/core/os/CancellationSignal$OnCancelListener;)V
+      39: return
+
+  private void detachCancellationSignal(androidx.core.os.CancellationSignal);
+    Code:
+       0: aload_1
+       1: ifnull        55
+       4: getstatic     #625                // Field $assertionsDisabled:Z
+       7: ifne          25
+      10: aload_0
+      11: getfield      #614                // Field mCancellationSignalAttachCount:I
+      14: ifgt          25
+      17: new           #628                // class java/lang/AssertionError
+      20: dup
+      21: invokespecial #630                // Method java/lang/AssertionError."<init>":()V
+      24: athrow
+      25: aload_0
+      26: dup
+      27: getfield      #614                // Field mCancellationSignalAttachCount:I
+      30: iconst_1
+      31: isub
+      32: putfield      #614                // Field mCancellationSignalAttachCount:I
+      35: aload_0
+      36: getfield      #614                // Field mCancellationSignalAttachCount:I
+      39: ifne          55
+      42: aload_1
+      43: aconst_null
+      44: invokevirtual #621                // Method androidx/core/os/CancellationSignal.setOnCancelListener:(Landroidx/core/os/CancellationSignal$OnCancelListener;)V
+      47: aload_0
+      48: getfield      #77                 // Field mConnectionPtr:J
+      51: iconst_0
+      52: invokestatic  #617                // Method nativeResetCancel:(JZ)V
+      55: return
+
+  public void onCancel();
+    Code:
+       0: aload_0
+       1: getfield      #77                 // Field mConnectionPtr:J
+       4: invokestatic  #631                // Method nativeCancel:(J)V
+       7: return
+
+  private void bindArguments(io.requery.android.database.sqlite.SQLiteConnection$PreparedStatement, java.lang.Object[]);
+    Code:
+       0: aload_2
+       1: ifnull        9
+       4: aload_2
+       5: arraylength
+       6: goto          10
+       9: iconst_0
+      10: istore_3
+      11: iload_3
+      12: aload_1
+      13: getfield      #411                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mNumParameters:I
+      16: if_icmpeq     70
+      19: new           #234                // class java/lang/StringBuilder
+      22: dup
+      23: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+      26: ldc_w         #634                // String Expected
+      29: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      32: aload_1
+      33: getfield      #411                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mNumParameters:I
+      36: invokevirtual #507                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      39: ldc_w         #636                // String  bind arguments but
+      42: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      45: iload_3
+      46: invokevirtual #507                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      49: ldc_w         #638                // String  were provided.
+      52: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      55: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      58: astore        4
+      60: new           #640                // class android/database/sqlite/SQLiteBindOrColumnIndexOutOfRangeException
+      63: dup
+      64: aload         4
+      66: invokespecial #642                // Method android/database/sqlite/SQLiteBindOrColumnIndexOutOfRangeException."<init>":(Ljava/lang/String;)V
+      69: athrow
+      70: iload_3
+      71: ifne          75
+      74: return
+      75: aload_1
+      76: getfield      #427                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mStatementPtr:J
+      79: lstore        4
+      81: iconst_0
+      82: istore        6
+      84: iload         6
+      86: iload_3
+      87: if_icmpge     285
+      90: aload_2
+      91: iload         6
+      93: aaload
+      94: astore        7
+      96: aload         7
+      98: invokestatic  #643                // Method getTypeOfObject:(Ljava/lang/Object;)I
+     101: tableswitch   { // 0 to 4
+                     0: 136
+                     1: 152
+                     2: 176
+                     3: 221
+                     4: 200
+               default: 221
+          }
+     136: aload_0
+     137: getfield      #77                 // Field mConnectionPtr:J
+     140: lload         4
+     142: iload         6
+     144: iconst_1
+     145: iadd
+     146: invokestatic  #647                // Method nativeBindNull:(JJI)V
+     149: goto          279
+     152: aload_0
+     153: getfield      #77                 // Field mConnectionPtr:J
+     156: lload         4
+     158: iload         6
+     160: iconst_1
+     161: iadd
+     162: aload         7
+     164: checkcast     #651                // class java/lang/Number
+     167: invokevirtual #653                // Method java/lang/Number.longValue:()J
+     170: invokestatic  #657                // Method nativeBindLong:(JJIJ)V
+     173: goto          279
+     176: aload_0
+     177: getfield      #77                 // Field mConnectionPtr:J
+     180: lload         4
+     182: iload         6
+     184: iconst_1
+     185: iadd
+     186: aload         7
+     188: checkcast     #651                // class java/lang/Number
+     191: invokevirtual #661                // Method java/lang/Number.doubleValue:()D
+     194: invokestatic  #665                // Method nativeBindDouble:(JJID)V
+     197: goto          279
+     200: aload_0
+     201: getfield      #77                 // Field mConnectionPtr:J
+     204: lload         4
+     206: iload         6
+     208: iconst_1
+     209: iadd
+     210: aload         7
+     212: checkcast     #669                // class "[B"
+     215: invokestatic  #671                // Method nativeBindBlob:(JJI[B)V
+     218: goto          279
+     221: aload         7
+     223: instanceof    #675                // class java/lang/Boolean
+     226: ifeq          261
+     229: aload_0
+     230: getfield      #77                 // Field mConnectionPtr:J
+     233: lload         4
+     235: iload         6
+     237: iconst_1
+     238: iadd
+     239: aload         7
+     241: checkcast     #675                // class java/lang/Boolean
+     244: invokevirtual #677                // Method java/lang/Boolean.booleanValue:()Z
+     247: ifeq          254
+     250: lconst_1
+     251: goto          255
+     254: lconst_0
+     255: invokestatic  #657                // Method nativeBindLong:(JJIJ)V
+     258: goto          279
+     261: aload_0
+     262: getfield      #77                 // Field mConnectionPtr:J
+     265: lload         4
+     267: iload         6
+     269: iconst_1
+     270: iadd
+     271: aload         7
+     273: invokevirtual #680                // Method java/lang/Object.toString:()Ljava/lang/String;
+     276: invokestatic  #681                // Method nativeBindString:(JJILjava/lang/String;)V
+     279: iinc          6, 1
+     282: goto          84
+     285: return
+
+  private static int getTypeOfObject(java.lang.Object);
+    Code:
+       0: aload_0
+       1: ifnonnull     6
+       4: iconst_0
+       5: ireturn
+       6: aload_0
+       7: instanceof    #669                // class "[B"
+      10: ifeq          15
+      13: iconst_4
+      14: ireturn
+      15: aload_0
+      16: instanceof    #687                // class java/lang/Float
+      19: ifne          29
+      22: aload_0
+      23: instanceof    #689                // class java/lang/Double
+      26: ifeq          31
+      29: iconst_2
+      30: ireturn
+      31: aload_0
+      32: instanceof    #691                // class java/lang/Long
+      35: ifne          59
+      38: aload_0
+      39: instanceof    #693                // class java/lang/Integer
+      42: ifne          59
+      45: aload_0
+      46: instanceof    #695                // class java/lang/Short
+      49: ifne          59
+      52: aload_0
+      53: instanceof    #697                // class java/lang/Byte
+      56: ifeq          61
+      59: iconst_1
+      60: ireturn
+      61: iconst_3
+      62: ireturn
+
+  private void throwIfStatementForbidden(io.requery.android.database.sqlite.SQLiteConnection$PreparedStatement);
+    Code:
+       0: aload_0
+       1: getfield      #387                // Field mOnlyAllowReadOnlyOperations:Z
+       4: ifeq          25
+       7: aload_1
+       8: getfield      #421                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mReadOnly:Z
+      11: ifne          25
+      14: new           #98                 // class android/database/sqlite/SQLiteException
+      17: dup
+      18: ldc_w         #699                // String Cannot execute this statement because it might modify the database but the connection is read-only.
+      21: invokespecial #385                // Method android/database/sqlite/SQLiteException."<init>":(Ljava/lang/String;)V
+      24: athrow
+      25: return
+
+  private static boolean isCacheable(int);
+    Code:
+       0: iload_0
+       1: iconst_2
+       2: if_icmpeq     10
+       5: iload_0
+       6: iconst_1
+       7: if_icmpne     14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: ireturn
+
+  private void applyBlockGuardPolicy(io.requery.android.database.sqlite.SQLiteConnection$PreparedStatement);
+    Code:
+       0: aload_0
+       1: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+       4: invokevirtual #220                // Method io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.isInMemoryDb:()Z
+       7: ifne          55
+      10: getstatic     #701                // Field io/requery/android/database/sqlite/SQLiteDebug.DEBUG_SQL_LOG:Z
+      13: ifeq          55
+      16: invokestatic  #704                // Method android/os/Looper.myLooper:()Landroid/os/Looper;
+      19: invokestatic  #710                // Method android/os/Looper.getMainLooper:()Landroid/os/Looper;
+      22: if_acmpne     55
+      25: aload_1
+      26: getfield      #421                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mReadOnly:Z
+      29: ifeq          45
+      32: ldc_w         #336                // String SQLiteConnection
+      35: ldc_w         #713                // String Reading from disk on main thread
+      38: invokestatic  #346                // Method android/util/Log.w:(Ljava/lang/String;Ljava/lang/String;)I
+      41: pop
+      42: goto          55
+      45: ldc_w         #336                // String SQLiteConnection
+      48: ldc_w         #715                // String Writing to disk on main thread
+      51: invokestatic  #346                // Method android/util/Log.w:(Ljava/lang/String;Ljava/lang/String;)I
+      54: pop
+      55: return
+
+  public void dump(android.util.Printer, boolean);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iload_2
+       3: invokevirtual #717                // Method dumpUnsafe:(Landroid/util/Printer;Z)V
+       6: return
+
+  void dumpUnsafe(android.util.Printer, boolean);
+    Code:
+       0: aload_1
+       1: new           #234                // class java/lang/StringBuilder
+       4: dup
+       5: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+       8: ldc_w         #721                // String Connection #
+      11: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      14: aload_0
+      15: getfield      #43                 // Field mConnectionId:I
+      18: invokevirtual #507                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      21: ldc_w         #723                // String :
+      24: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      27: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      30: invokeinterface #725,  2          // InterfaceMethod android/util/Printer.println:(Ljava/lang/String;)V
+      35: iload_2
+      36: ifeq          71
+      39: aload_1
+      40: new           #234                // class java/lang/StringBuilder
+      43: dup
+      44: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+      47: ldc_w         #730                // String   connectionPtr: 0x
+      50: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      53: aload_0
+      54: getfield      #77                 // Field mConnectionPtr:J
+      57: invokestatic  #732                // Method java/lang/Long.toHexString:(J)Ljava/lang/String;
+      60: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      63: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      66: invokeinterface #725,  2          // InterfaceMethod android/util/Printer.println:(Ljava/lang/String;)V
+      71: aload_1
+      72: new           #234                // class java/lang/StringBuilder
+      75: dup
+      76: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+      79: ldc_w         #736                // String   isPrimaryConnection:
+      82: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      85: aload_0
+      86: getfield      #47                 // Field mIsPrimaryConnection:Z
+      89: invokevirtual #738                // Method java/lang/StringBuilder.append:(Z)Ljava/lang/StringBuilder;
+      92: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      95: invokeinterface #725,  2          // InterfaceMethod android/util/Printer.println:(Ljava/lang/String;)V
+     100: aload_1
+     101: new           #234                // class java/lang/StringBuilder
+     104: dup
+     105: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+     108: ldc_w         #741                // String   onlyAllowReadOnlyOperations:
+     111: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     114: aload_0
+     115: getfield      #387                // Field mOnlyAllowReadOnlyOperations:Z
+     118: invokevirtual #738                // Method java/lang/StringBuilder.append:(Z)Ljava/lang/StringBuilder;
+     121: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     124: invokeinterface #725,  2          // InterfaceMethod android/util/Printer.println:(Ljava/lang/String;)V
+     129: aload_0
+     130: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+     133: aload_1
+     134: iload_2
+     135: invokevirtual #743                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.dump:(Landroid/util/Printer;Z)V
+     138: iload_2
+     139: ifeq          150
+     142: aload_0
+     143: getfield      #67                 // Field mPreparedStatementCache:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache;
+     146: aload_1
+     147: invokevirtual #746                // Method io/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache.dump:(Landroid/util/Printer;)V
+     150: return
+
+  java.lang.String describeCurrentOperationUnsafe();
+    Code:
+       0: aload_0
+       1: getfield      #26                 // Field mRecentOperations:Lio/requery/android/database/sqlite/SQLiteConnection$OperationLog;
+       4: invokevirtual #749                // Method io/requery/android/database/sqlite/SQLiteConnection$OperationLog.describeCurrentOperation:()Ljava/lang/String;
+       7: areturn
+
+  void collectDbStats(java.util.ArrayList<io.requery.android.database.sqlite.SQLiteDebug$DbStats>);
+    Code:
+       0: aload_0
+       1: getfield      #77                 // Field mConnectionPtr:J
+       4: invokestatic  #752                // Method nativeGetDbLookaside:(J)I
+       7: istore_2
+       8: lconst_0
+       9: lstore_3
+      10: lconst_0
+      11: lstore        5
+      13: aload_0
+      14: ldc_w         #756                // String PRAGMA page_count;
+      17: aconst_null
+      18: aconst_null
+      19: invokevirtual #230                // Method executeForLong:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)J
+      22: lstore_3
+      23: aload_0
+      24: ldc_w         #758                // String PRAGMA page_size;
+      27: aconst_null
+      28: aconst_null
+      29: invokevirtual #230                // Method executeForLong:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)J
+      32: lstore        5
+      34: goto          39
+      37: astore        7
+      39: aload_1
+      40: aload_0
+      41: iload_2
+      42: lload_3
+      43: lload         5
+      45: invokevirtual #760                // Method getMainDbStatsUnsafe:(IJJ)Lio/requery/android/database/sqlite/SQLiteDebug$DbStats;
+      48: invokevirtual #764                // Method java/util/ArrayList.add:(Ljava/lang/Object;)Z
+      51: pop
+      52: new           #522                // class io/requery/android/database/CursorWindow
+      55: dup
+      56: ldc_w         #769                // String collectDbStats
+      59: invokespecial #771                // Method io/requery/android/database/CursorWindow."<init>":(Ljava/lang/String;)V
+      62: astore        7
+      64: aload_0
+      65: ldc_w         #772                // String PRAGMA database_list;
+      68: aconst_null
+      69: aload         7
+      71: iconst_0
+      72: iconst_0
+      73: iconst_0
+      74: aconst_null
+      75: invokevirtual #774                // Method executeForCursorWindow:(Ljava/lang/String;[Ljava/lang/Object;Lio/requery/android/database/CursorWindow;IIZLandroidx/core/os/CancellationSignal;)I
+      78: pop
+      79: iconst_1
+      80: istore        8
+      82: iload         8
+      84: aload         7
+      86: invokevirtual #535                // Method io/requery/android/database/CursorWindow.getNumRows:()I
+      89: if_icmpge     277
+      92: aload         7
+      94: iload         8
+      96: iconst_1
+      97: invokevirtual #777                // Method io/requery/android/database/CursorWindow.getString:(II)Ljava/lang/String;
+     100: astore        9
+     102: aload         7
+     104: iload         8
+     106: iconst_2
+     107: invokevirtual #777                // Method io/requery/android/database/CursorWindow.getString:(II)Ljava/lang/String;
+     110: astore        10
+     112: lconst_0
+     113: lstore_3
+     114: lconst_0
+     115: lstore        5
+     117: aload_0
+     118: new           #234                // class java/lang/StringBuilder
+     121: dup
+     122: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+     125: ldc_w         #781                // String PRAGMA
+     128: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     131: aload         9
+     133: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     136: ldc_w         #783                // String .page_count;
+     139: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     142: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     145: aconst_null
+     146: aconst_null
+     147: invokevirtual #230                // Method executeForLong:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)J
+     150: lstore_3
+     151: aload_0
+     152: new           #234                // class java/lang/StringBuilder
+     155: dup
+     156: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+     159: ldc_w         #781                // String PRAGMA
+     162: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     165: aload         9
+     167: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     170: ldc_w         #785                // String .page_size;
+     173: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     176: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     179: aconst_null
+     180: aconst_null
+     181: invokevirtual #230                // Method executeForLong:(Ljava/lang/String;[Ljava/lang/Object;Landroidx/core/os/CancellationSignal;)J
+     184: lstore        5
+     186: goto          191
+     189: astore        11
+     191: new           #234                // class java/lang/StringBuilder
+     194: dup
+     195: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+     198: ldc_w         #787                // String   (attached)
+     201: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     204: aload         9
+     206: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     209: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     212: astore        11
+     214: aload         10
+     216: invokevirtual #789                // Method java/lang/String.isEmpty:()Z
+     219: ifne          250
+     222: new           #234                // class java/lang/StringBuilder
+     225: dup
+     226: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+     229: aload         11
+     231: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     234: ldc_w         #792                // String :
+     237: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     240: aload         10
+     242: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     245: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     248: astore        11
+     250: aload_1
+     251: new           #794                // class io/requery/android/database/sqlite/SQLiteDebug$DbStats
+     254: dup
+     255: aload         11
+     257: lload_3
+     258: lload         5
+     260: iconst_0
+     261: iconst_0
+     262: iconst_0
+     263: iconst_0
+     264: invokespecial #796                // Method io/requery/android/database/sqlite/SQLiteDebug$DbStats."<init>":(Ljava/lang/String;JJIIII)V
+     267: invokevirtual #764                // Method java/util/ArrayList.add:(Ljava/lang/Object;)Z
+     270: pop
+     271: iinc          8, 1
+     274: goto          82
+     277: aload         7
+     279: invokevirtual #799                // Method io/requery/android/database/CursorWindow.close:()V
+     282: goto          305
+     285: astore        8
+     287: aload         7
+     289: invokevirtual #799                // Method io/requery/android/database/CursorWindow.close:()V
+     292: goto          305
+     295: astore        12
+     297: aload         7
+     299: invokevirtual #799                // Method io/requery/android/database/CursorWindow.close:()V
+     302: aload         12
+     304: athrow
+     305: return
+    Exception table:
+       from    to  target type
+          13    34    37   Class android/database/sqlite/SQLiteException
+         117   186   189   Class android/database/sqlite/SQLiteException
+          64   277   285   Class android/database/sqlite/SQLiteException
+          64   277   295   any
+         285   287   295   any
+         295   297   295   any
+
+  void collectDbStatsUnsafe(java.util.ArrayList<io.requery.android.database.sqlite.SQLiteDebug$DbStats>);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: iconst_0
+       3: lconst_0
+       4: lconst_0
+       5: invokevirtual #760                // Method getMainDbStatsUnsafe:(IJJ)Lio/requery/android/database/sqlite/SQLiteDebug$DbStats;
+       8: invokevirtual #764                // Method java/util/ArrayList.add:(Ljava/lang/Object;)Z
+      11: pop
+      12: return
+
+  private io.requery.android.database.sqlite.SQLiteDebug$DbStats getMainDbStatsUnsafe(int, long, long);
+    Code:
+       0: aload_0
+       1: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+       4: getfield      #100                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.path:Ljava/lang/String;
+       7: astore        6
+       9: aload_0
+      10: getfield      #47                 // Field mIsPrimaryConnection:Z
+      13: ifne          52
+      16: new           #234                // class java/lang/StringBuilder
+      19: dup
+      20: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+      23: aload         6
+      25: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      28: ldc_w         #800                // String  (
+      31: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      34: aload_0
+      35: getfield      #43                 // Field mConnectionId:I
+      38: invokevirtual #507                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      41: ldc_w         #802                // String )
+      44: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      47: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      50: astore        6
+      52: new           #794                // class io/requery/android/database/sqlite/SQLiteDebug$DbStats
+      55: dup
+      56: aload         6
+      58: lload_2
+      59: lload         4
+      61: iload_1
+      62: aload_0
+      63: getfield      #67                 // Field mPreparedStatementCache:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache;
+      66: invokevirtual #804                // Method io/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache.hitCount:()I
+      69: aload_0
+      70: getfield      #67                 // Field mPreparedStatementCache:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache;
+      73: invokevirtual #807                // Method io/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache.missCount:()I
+      76: aload_0
+      77: getfield      #67                 // Field mPreparedStatementCache:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache;
+      80: invokevirtual #810                // Method io/requery/android/database/sqlite/SQLiteConnection$PreparedStatementCache.size:()I
+      83: invokespecial #796                // Method io/requery/android/database/sqlite/SQLiteDebug$DbStats."<init>":(Ljava/lang/String;JJIIII)V
+      86: areturn
+
+  public java.lang.String toString();
+    Code:
+       0: new           #234                // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #236                // Method java/lang/StringBuilder."<init>":()V
+       7: ldc_w         #811                // String SQLiteConnection:
+      10: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      13: aload_0
+      14: getfield      #39                 // Field mConfiguration:Lio/requery/android/database/sqlite/SQLiteDatabaseConfiguration;
+      17: getfield      #100                // Field io/requery/android/database/sqlite/SQLiteDatabaseConfiguration.path:Ljava/lang/String;
+      20: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      23: ldc_w         #800                // String  (
+      26: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      29: aload_0
+      30: getfield      #43                 // Field mConnectionId:I
+      33: invokevirtual #507                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      36: ldc_w         #802                // String )
+      39: invokevirtual #239                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      42: invokevirtual #246                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      45: areturn
+
+  private io.requery.android.database.sqlite.SQLiteConnection$PreparedStatement obtainPreparedStatement(java.lang.String, long, int, int, boolean);
+    Code:
+       0: aload_0
+       1: getfield      #813                // Field mPreparedStatementPool:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;
+       4: astore        7
+       6: aload         7
+       8: ifnull        35
+      11: aload_0
+      12: aload         7
+      14: getfield      #817                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mPoolNext:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;
+      17: putfield      #813                // Field mPreparedStatementPool:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;
+      20: aload         7
+      22: aconst_null
+      23: putfield      #817                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mPoolNext:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;
+      26: aload         7
+      28: iconst_0
+      29: putfield      #588                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mInCache:Z
+      32: goto          44
+      35: new           #412                // class io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement
+      38: dup
+      39: invokespecial #820                // Method io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement."<init>":()V
+      42: astore        7
+      44: aload         7
+      46: aload_1
+      47: putfield      #597                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mSql:Ljava/lang/String;
+      50: aload         7
+      52: lload_2
+      53: putfield      #427                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mStatementPtr:J
+      56: aload         7
+      58: iload         4
+      60: putfield      #411                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mNumParameters:I
+      63: aload         7
+      65: iload         5
+      67: putfield      #821                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mType:I
+      70: aload         7
+      72: iload         6
+      74: putfield      #421                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mReadOnly:Z
+      77: aload         7
+      79: areturn
+
+  private void recyclePreparedStatement(io.requery.android.database.sqlite.SQLiteConnection$PreparedStatement);
+    Code:
+       0: aload_1
+       1: aconst_null
+       2: putfield      #597                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mSql:Ljava/lang/String;
+       5: aload_1
+       6: aload_0
+       7: getfield      #813                // Field mPreparedStatementPool:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;
+      10: putfield      #817                // Field io/requery/android/database/sqlite/SQLiteConnection$PreparedStatement.mPoolNext:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;
+      13: aload_0
+      14: aload_1
+      15: putfield      #813                // Field mPreparedStatementPool:Lio/requery/android/database/sqlite/SQLiteConnection$PreparedStatement;
+      18: return
+
+  private static java.lang.String trimSqlForDisplay(java.lang.String);
+    Code:
+       0: getstatic     #824                // Field TRIM_SQL_PATTERN:Ljava/util/regex/Pattern;
+       3: aload_0
+       4: invokevirtual #828                // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+       7: ldc_w         #834                // String
+      10: invokevirtual #836                // Method java/util/regex/Matcher.replaceAll:(Ljava/lang/String;)Ljava/lang/String;
+      13: areturn
+
+  static {};
+    Code:
+       0: ldc           #1                  // class io/requery/android/database/sqlite/SQLiteConnection
+       2: invokevirtual #841                // Method java/lang/Class.desiredAssertionStatus:()Z
+       5: ifne          12
+       8: iconst_1
+       9: goto          13
+      12: iconst_0
+      13: putstatic     #625                // Field $assertionsDisabled:Z
+      16: iconst_0
+      17: anewarray     #304                // class java/lang/String
+      20: putstatic     #434                // Field EMPTY_STRING_ARRAY:[Ljava/lang/String;
+      23: iconst_0
+      24: newarray       byte
+      26: putstatic     #846                // Field EMPTY_BYTE_ARRAY:[B
+      29: ldc_w         #849                // String [\\s]*\\n+[\\s]*
+      32: invokestatic  #851                // Method java/util/regex/Pattern.compile:(Ljava/lang/String;)Ljava/util/regex/Pattern;
+      35: putstatic     #824                // Field TRIM_SQL_PATTERN:Ljava/util/regex/Pattern;
+      38: return
+}

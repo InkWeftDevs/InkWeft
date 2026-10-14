@@ -1,0 +1,14 @@
+{
+  "scope": "LOCAL_GIT_READ_ONLY_NOT_NATIVE",
+  "verification": {
+    "active": "ac63ce66ed4aaec0372c56b39be97e3335966c31",
+    "prep": "818493a1e8a4d2121e125d5ba39c4219f1977720",
+    "readiness": "a69c173c16bd8a434cc1eab9ef8ff2ad56070c19",
+    "source": "94379190b9ad0e1034f136ea9887fb0ac12e7ea7",
+    "readiness_files_verified": 8,
+    "reviewed_source_files_verified": 6,
+    "control_files_verified": 7,
+    "network": false,
+    "git_operations": "read-only"
+  }
+}

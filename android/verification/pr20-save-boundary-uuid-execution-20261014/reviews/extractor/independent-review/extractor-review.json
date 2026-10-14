@@ -1,0 +1,55 @@
+{
+  "status": "PASS_NO_REMAINING_FAILURE_CONSUMER_REVIEW_FINDING",
+  "scope": "LOCAL_READ_ONLY_GIT_AND_PURE_SYNTHETIC_NO_NATIVE",
+  "extractor_manifest_sha256": "f4036ab0b5907a043d42f31ffdcc824ce2eddeb725a47443c12060830cf939b0",
+  "extractor_files_sha256": {
+    "analyze_logs.py": "726f2332835eb09903972ca1916954459fc2a7cc804bf8b67505128552adee7c",
+    "frozen_markers.py": "d27e19a7ae5b090436b8e70d5a2d914119e343eeb40e01352359d27f30215857",
+    "test_analyzer.py": "45389b913faf31aab2a303c91b0fe60bd2d49ab2742fb65bb844c3a727401d43",
+    "binding.template.json": "a7da7a0f02cd1e7e09096950d5e51cb6e759ab7ab7df366b3040ae63b8a3edd5",
+    "local-git-binding.json": "ff8705aad224e37dcf56e7c6bbba5da5cdffd9ac50afabde13a7f4ab2678655c",
+    "README.md": "46bd3ba2552e3aba0a3eae5784f35a6bf54c3107b6a079d77d604eb4bdec49ef",
+    "check-03/selftest-results.json": "d65e62ea3f83037d626106464af7d978f3fd8e84c369b4547e9315e067869b6b",
+    "check-03/synthetic-independent-diagnostic.json": "62a0a2e7d47815b02b4fc78ba5d26813f2c96abff3492c74eb6c6b8a65e54b7c"
+  },
+  "source_chain": {
+    "source_commit": "94379190b9ad0e1034f136ea9887fb0ac12e7ea7",
+    "readiness_git": "a69c173c16bd8a434cc1eab9ef8ff2ad56070c19",
+    "prep_sha": "818493a1e8a4d2121e125d5ba39c4219f1977720",
+    "workflow_sha": "ac63ce66ed4aaec0372c56b39be97e3335966c31"
+  },
+  "local_git_verification": {
+    "active": "ac63ce66ed4aaec0372c56b39be97e3335966c31",
+    "prep": "818493a1e8a4d2121e125d5ba39c4219f1977720",
+    "readiness": "a69c173c16bd8a434cc1eab9ef8ff2ad56070c19",
+    "source": "94379190b9ad0e1034f136ea9887fb0ac12e7ea7",
+    "readiness_files_verified": 8,
+    "reviewed_source_files_verified": 6,
+    "control_files_verified": 7,
+    "network": false,
+    "git_operations": "read-only"
+  },
+  "secret_regex_ast_matches_producer_and_packager": true,
+  "owner_tests": {
+    "synthetic_cases": 120,
+    "reviewer_reran": false,
+    "receipt_sha256": "d65e62ea3f83037d626106464af7d978f3fd8e84c369b4547e9315e067869b6b"
+  },
+  "independent_checks": {
+    "synthetic_cases": 19,
+    "status": "PASS_LOCAL_BINDING_AND_SYNTHETIC_PRODUCER_CONSUMER",
+    "path": "/workspace/scratch/pr20-save-boundary-uuid-log-analysis-20261014/independent-review/independent-checks.json",
+    "sha256": "3ce3f3ed41517d65e58e8d808b35f1ef12c898825464c6b301d01800032e2fe8",
+    "checker_sha256": "3aa44b6e1a4d201806f4d9c3c5b51f109327ba42f214fe40294aa2ca9df9c291",
+    "producer_run_sha256": "3b1ebc563743231bde81a51cad0fb549ed707063f3dd4ad04e308f9c60227577"
+  },
+  "actual_new_run_data_read": false,
+  "report_sha256": "c07aefced51efcaf9b662517c4bfab8438d756700f61358193e645ad0a3adb2e",
+  "remaining_findings": [],
+  "limits": [
+    "Failure evidence can be partial; matched_method_receipt is required to claim its following METHOD matches.",
+    "First-failure stop does not validate later FINAL or duplicates and never establishes whole-run completion.",
+    "New actual run needs independent terminal metadata/log review supplied by root.",
+    "No native measurement, build, CI, network, artifact route, old-run retry or frozen-file mutation."
+  ]
+}

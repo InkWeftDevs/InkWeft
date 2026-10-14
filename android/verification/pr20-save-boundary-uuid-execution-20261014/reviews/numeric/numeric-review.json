@@ -1,0 +1,877 @@
+{
+  "status": "PASS_INDEPENDENT_ACTUAL_NUMERIC_REVIEW",
+  "run": 38543698114,
+  "job": 115784421756,
+  "attempt": 1,
+  "source": "94379190b9ad0e1034f136ea9887fb0ac12e7ea7",
+  "readiness": "a69c173c16bd8a434cc1eab9ef8ff2ad56070c19",
+  "prep": "818493a1e8a4d2121e125d5ba39c4219f1977720",
+  "active": "ac63ce66ed4aaec0372c56b39be97e3335966c31",
+  "scope": "Independent local arithmetic and interpretation review of already completed, one-seed, instrumented native trace. No new native run.",
+  "inputs": {
+    "official_job_log": {
+      "path": "/workspace/scratch/pr20-save-boundary-uuid-execution-20261014/official-job.log",
+      "sha256": "45d6579ec88cdff12dbd94393121a04684dce7595713947e6663af0e6b45d68c",
+      "bytes": 1037054
+    },
+    "frozen_numeric_analyzer": {
+      "path": "/workspace/scratch/pr20-save-boundary-analysis-20261014/analyze.py",
+      "sha256": "fd1c22004bb91e7e6673a6ac59eb0f2c2413c9f8ef454a00b2950c0581bbd1b7",
+      "bytes": 22935
+    },
+    "numeric_analysis": {
+      "path": "/workspace/scratch/pr20-save-boundary-uuid-execution-20261014/numeric-analysis/analysis.json",
+      "sha256": "05f728fae9fff2df0fc217ff6e3cb77a6cc69d0edae9bfa07853b7dc1c91f265",
+      "bytes": 5538252
+    },
+    "derived_arithmetic": {
+      "path": "/workspace/scratch/pr20-save-boundary-uuid-execution-20261014/numeric-analysis/derive.py",
+      "sha256": "a338b96817372a96a59d8b9900dee98f3ce278c1aabf3123ebae4007436ac2fb",
+      "bytes": 13442
+    },
+    "derived_json": {
+      "path": "/workspace/scratch/pr20-save-boundary-uuid-execution-20261014/numeric-analysis/derived.json",
+      "sha256": "6e703793fcf44a5a6685dd55f8b02ea45c44ff6386c433d34bb71b6f2dabc1ce",
+      "bytes": 1555258
+    },
+    "verified_records": {
+      "path": "/workspace/scratch/pr20-save-boundary-uuid-log-analysis-20261014/independent-actual-review/actual-reviewed-output/method-10-C1-records.json",
+      "sha256": "61eb1e524e001498e9a3ceaa59a85529439610f590e329052bc0b75846da716d",
+      "bytes": 839586
+    },
+    "verified_marker_text": {
+      "path": "/workspace/scratch/pr20-save-boundary-uuid-log-analysis-20261014/independent-actual-review/actual-reviewed-output/method-10-C1-markers.log",
+      "sha256": "0ef0092547196143cb9a28e185052d29e63d5e2e25ea0ab5aaab60cffc702e22",
+      "bytes": 838444
+    },
+    "whole_run_review": {
+      "path": "/workspace/scratch/pr20-save-boundary-uuid-log-analysis-20261014/independent-actual-review/actual-review.json",
+      "sha256": "3cd93eb66371c5092ff0d7ed3fdd1d3b744214df96237a6d980c937416dca2f5",
+      "bytes": 5396
+    }
+  },
+  "checks": {
+    "raw_marker_record_identity_and_order": true,
+    "all_90_saves_recomputed": true,
+    "all_1080_segment_wall_durations_recomputed": true,
+    "same_thread_cpu_deltas_recomputed": 900,
+    "cross_thread_cpu_deltas_required_null": 180,
+    "all_per_sample_duration_conservation": true,
+    "all_36_segment_wall_distributions_and_3_save_distributions": true,
+    "all_outlier_rank_orders": true,
+    "all_90_read_snapshot_index_queue_overlap_sets": true,
+    "all_complete_and_censored_read_phases_and_cpu_statistics": true,
+    "window_union_independent_signed_endpoint_sweep": true,
+    "raw_event_arrays_not_sorted": true,
+    "source_analysis_or_derivation_imported_by_checkers": false,
+    "writer_run_exit_after_caller_return_not_used_as_caller_endpoint": 30
+  },
+  "save_ms": {
+    "IDLE": {
+      "quantiles": {
+        "p50": 2.035774,
+        "p95": 4.737515,
+        "max": 5.314565
+      },
+      "sample_indices": {
+        "p50": 18,
+        "p95": 20,
+        "max": 0
+      }
+    },
+    "DIRECT": {
+      "quantiles": {
+        "p50": 2.26876,
+        "p95": 9.392518,
+        "max": 9.446588
+      },
+      "sample_indices": {
+        "p50": 10,
+        "p95": 8,
+        "max": 25
+      }
+    },
+    "OBSERVE": {
+      "quantiles": {
+        "p50": 6.324345,
+        "p95": 11.146675,
+        "max": 23.839401
+      },
+      "sample_indices": {
+        "p50": 20,
+        "p95": 4,
+        "max": 17
+      }
+    }
+  },
+  "read_window_ms": {
+    "IDLE": {
+      "window": 68.360126,
+      "io_union": 0.0,
+      "snapshot_union": 0.0,
+      "index_run_union": 0.0,
+      "index_queue_exposed_samples": []
+    },
+    "DIRECT": {
+      "window": 105.442867,
+      "io_union": 105.442867,
+      "snapshot_union": 105.442867,
+      "index_run_union": 0.0,
+      "index_queue_exposed_samples": []
+    },
+    "OBSERVE": {
+      "window": 218.188628,
+      "io_union": 195.717059,
+      "snapshot_union": 174.399279,
+      "index_run_union": 21.54356,
+      "index_queue_exposed_samples": [
+        17
+      ]
+    }
+  },
+  "focused_samples": {
+    "OBSERVE_20": {
+      "save": {
+        "sample": 20,
+        "elapsed_ms": 6.324345,
+        "writer_task": 228,
+        "worker_thread": 44,
+        "room_transaction": 229,
+        "sqlite_transaction": 230,
+        "inside_request_return_ms": 6.278266,
+        "outside_request_before_ms": 0.042463,
+        "outside_return_after_ms": 0.003616,
+        "segments": {
+          "request_to_submit": {
+            "wall_ms": 0.019879,
+            "thread_cpu_ms": 0.019829,
+            "begin_thread": 48,
+            "end_thread": 48
+          },
+          "submit_to_worker": {
+            "wall_ms": 0.099858,
+            "thread_cpu_ms": null,
+            "begin_thread": 48,
+            "end_thread": 44
+          },
+          "worker_to_room_begin": {
+            "wall_ms": 0.064105,
+            "thread_cpu_ms": 0.064105,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "room_pre_sqlite_begin": {
+            "wall_ms": 0.082101,
+            "thread_cpu_ms": 0.082222,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "sqlite_begin": {
+            "wall_ms": 0.02699,
+            "thread_cpu_ms": 0.02688,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "sqlite_begin_to_room_begin_return": {
+            "wall_ms": 0.003556,
+            "thread_cpu_ms": 0.003525,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "room_begin_to_body": {
+            "wall_ms": 0.005988,
+            "thread_cpu_ms": 0.005999,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "body_to_room_success": {
+            "wall_ms": 0.887475,
+            "thread_cpu_ms": 0.887474,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "success_and_end_prologue": {
+            "wall_ms": 0.018847,
+            "thread_cpu_ms": 0.018838,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "sqlite_end_commit_or_rollback_and_release": {
+            "wall_ms": 4.924512,
+            "thread_cpu_ms": 0.119026,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "room_post_sqlite_end": {
+            "wall_ms": 0.057685,
+            "thread_cpu_ms": 0.057285,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "room_end_to_caller_return": {
+            "wall_ms": 0.08727,
+            "thread_cpu_ms": null,
+            "begin_thread": 44,
+            "end_thread": 47
+          }
+        }
+      },
+      "overlap": {
+        "sample": 20,
+        "readIoUnionOverlapMs": 6.324345,
+        "snapshotUnionOverlapMs": 6.324345,
+        "indexWriterRunUnionOverlapMs": 0.0,
+        "queueIndexWriterRunOverlapMs": 0.0,
+        "overlappingReadIds": [
+          20
+        ]
+      }
+    },
+    "OBSERVE_4": {
+      "save": {
+        "sample": 4,
+        "elapsed_ms": 11.146675,
+        "writer_task": 161,
+        "worker_thread": 44,
+        "room_transaction": 162,
+        "sqlite_transaction": 163,
+        "inside_request_return_ms": 11.077022,
+        "outside_request_before_ms": 0.066408,
+        "outside_return_after_ms": 0.003245,
+        "segments": {
+          "request_to_submit": {
+            "wall_ms": 0.079237,
+            "thread_cpu_ms": 0.078937,
+            "begin_thread": 54,
+            "end_thread": 54
+          },
+          "submit_to_worker": {
+            "wall_ms": 0.051707,
+            "thread_cpu_ms": null,
+            "begin_thread": 54,
+            "end_thread": 44
+          },
+          "worker_to_room_begin": {
+            "wall_ms": 0.137033,
+            "thread_cpu_ms": 0.137514,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "room_pre_sqlite_begin": {
+            "wall_ms": 0.138996,
+            "thread_cpu_ms": 0.138745,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "sqlite_begin": {
+            "wall_ms": 0.039969,
+            "thread_cpu_ms": 0.039499,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "sqlite_begin_to_room_begin_return": {
+            "wall_ms": 0.00679,
+            "thread_cpu_ms": 0.006509,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "room_begin_to_body": {
+            "wall_ms": 0.006409,
+            "thread_cpu_ms": 0.00641,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "body_to_room_success": {
+            "wall_ms": 4.86255,
+            "thread_cpu_ms": 1.126807,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "success_and_end_prologue": {
+            "wall_ms": 0.019629,
+            "thread_cpu_ms": 0.019609,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "sqlite_end_commit_or_rollback_and_release": {
+            "wall_ms": 2.493974,
+            "thread_cpu_ms": 0.096283,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "room_post_sqlite_end": {
+            "wall_ms": 1.242369,
+            "thread_cpu_ms": 0.076884,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "room_end_to_caller_return": {
+            "wall_ms": 1.998359,
+            "thread_cpu_ms": null,
+            "begin_thread": 44,
+            "end_thread": 48
+          }
+        }
+      },
+      "overlap": {
+        "sample": 4,
+        "readIoUnionOverlapMs": 10.579184,
+        "snapshotUnionOverlapMs": 8.470251,
+        "indexWriterRunUnionOverlapMs": 0.0,
+        "queueIndexWriterRunOverlapMs": 0.0,
+        "overlappingReadIds": [
+          4,
+          5
+        ]
+      }
+    },
+    "OBSERVE_17": {
+      "save": {
+        "sample": 17,
+        "elapsed_ms": 23.839401,
+        "writer_task": 214,
+        "worker_thread": 44,
+        "room_transaction": 218,
+        "sqlite_transaction": 219,
+        "inside_request_return_ms": 23.807743,
+        "outside_request_before_ms": 0.028593,
+        "outside_return_after_ms": 0.003065,
+        "segments": {
+          "request_to_submit": {
+            "wall_ms": 0.016604,
+            "thread_cpu_ms": 0.016265,
+            "begin_thread": 49,
+            "end_thread": 49
+          },
+          "submit_to_worker": {
+            "wall_ms": 21.55633,
+            "thread_cpu_ms": null,
+            "begin_thread": 49,
+            "end_thread": 44
+          },
+          "worker_to_room_begin": {
+            "wall_ms": 0.075963,
+            "thread_cpu_ms": 0.075912,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "room_pre_sqlite_begin": {
+            "wall_ms": 0.119677,
+            "thread_cpu_ms": 0.119857,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "sqlite_begin": {
+            "wall_ms": 0.027521,
+            "thread_cpu_ms": 0.027331,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "sqlite_begin_to_room_begin_return": {
+            "wall_ms": 0.003605,
+            "thread_cpu_ms": 0.003575,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "room_begin_to_body": {
+            "wall_ms": 0.009224,
+            "thread_cpu_ms": 0.009274,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "body_to_room_success": {
+            "wall_ms": 0.963046,
+            "thread_cpu_ms": 0.963016,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "success_and_end_prologue": {
+            "wall_ms": 0.020039,
+            "thread_cpu_ms": 0.02003,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "sqlite_end_commit_or_rollback_and_release": {
+            "wall_ms": 0.87775,
+            "thread_cpu_ms": 0.109231,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "room_post_sqlite_end": {
+            "wall_ms": 0.062523,
+            "thread_cpu_ms": 0.062082,
+            "begin_thread": 44,
+            "end_thread": 44
+          },
+          "room_end_to_caller_return": {
+            "wall_ms": 0.075461,
+            "thread_cpu_ms": null,
+            "begin_thread": 44,
+            "end_thread": 49
+          }
+        }
+      },
+      "overlap": {
+        "sample": 17,
+        "readIoUnionOverlapMs": 23.550693,
+        "snapshotUnionOverlapMs": 22.973968,
+        "indexWriterRunUnionOverlapMs": 21.54356,
+        "queueIndexWriterRunOverlapMs": 21.523241,
+        "overlappingReadIds": [
+          17,
+          18
+        ]
+      }
+    },
+    "DIRECT_8": {
+      "save": {
+        "sample": 8,
+        "elapsed_ms": 9.392518,
+        "writer_task": 46,
+        "worker_thread": 45,
+        "room_transaction": 47,
+        "sqlite_transaction": 48,
+        "inside_request_return_ms": 9.356034,
+        "outside_request_before_ms": 0.030224,
+        "outside_return_after_ms": 0.00626,
+        "segments": {
+          "request_to_submit": {
+            "wall_ms": 0.022584,
+            "thread_cpu_ms": 0.022503,
+            "begin_thread": 48,
+            "end_thread": 48
+          },
+          "submit_to_worker": {
+            "wall_ms": 0.069613,
+            "thread_cpu_ms": null,
+            "begin_thread": 48,
+            "end_thread": 45
+          },
+          "worker_to_room_begin": {
+            "wall_ms": 0.072828,
+            "thread_cpu_ms": 0.072718,
+            "begin_thread": 45,
+            "end_thread": 45
+          },
+          "room_pre_sqlite_begin": {
+            "wall_ms": 0.085396,
+            "thread_cpu_ms": 0.085286,
+            "begin_thread": 45,
+            "end_thread": 45
+          },
+          "sqlite_begin": {
+            "wall_ms": 0.032508,
+            "thread_cpu_ms": 0.032489,
+            "begin_thread": 45,
+            "end_thread": 45
+          },
+          "sqlite_begin_to_room_begin_return": {
+            "wall_ms": 0.003265,
+            "thread_cpu_ms": 0.003234,
+            "begin_thread": 45,
+            "end_thread": 45
+          },
+          "room_begin_to_body": {
+            "wall_ms": 0.005909,
+            "thread_cpu_ms": 0.005929,
+            "begin_thread": 45,
+            "end_thread": 45
+          },
+          "body_to_room_success": {
+            "wall_ms": 0.982224,
+            "thread_cpu_ms": 0.982225,
+            "begin_thread": 45,
+            "end_thread": 45
+          },
+          "success_and_end_prologue": {
+            "wall_ms": 0.017897,
+            "thread_cpu_ms": 0.017886,
+            "begin_thread": 45,
+            "end_thread": 45
+          },
+          "sqlite_end_commit_or_rollback_and_release": {
+            "wall_ms": 7.674103,
+            "thread_cpu_ms": 0.12179,
+            "begin_thread": 45,
+            "end_thread": 45
+          },
+          "room_post_sqlite_end": {
+            "wall_ms": 0.288107,
+            "thread_cpu_ms": 0.04837,
+            "begin_thread": 45,
+            "end_thread": 45
+          },
+          "room_end_to_caller_return": {
+            "wall_ms": 0.1016,
+            "thread_cpu_ms": null,
+            "begin_thread": 45,
+            "end_thread": 52
+          }
+        }
+      },
+      "overlap": {
+        "sample": 8,
+        "readIoUnionOverlapMs": 9.392518,
+        "snapshotUnionOverlapMs": 9.392518,
+        "indexWriterRunUnionOverlapMs": 0.0,
+        "queueIndexWriterRunOverlapMs": 0.0,
+        "overlappingReadIds": [
+          1
+        ]
+      }
+    },
+    "DIRECT_25": {
+      "save": {
+        "sample": 25,
+        "elapsed_ms": 9.446588,
+        "writer_task": 115,
+        "worker_thread": 43,
+        "room_transaction": 116,
+        "sqlite_transaction": 117,
+        "inside_request_return_ms": 9.375052,
+        "outside_request_before_ms": 0.066048,
+        "outside_return_after_ms": 0.005488,
+        "segments": {
+          "request_to_submit": {
+            "wall_ms": 0.028272,
+            "thread_cpu_ms": 0.028352,
+            "begin_thread": 52,
+            "end_thread": 52
+          },
+          "submit_to_worker": {
+            "wall_ms": 0.110223,
+            "thread_cpu_ms": null,
+            "begin_thread": 52,
+            "end_thread": 43
+          },
+          "worker_to_room_begin": {
+            "wall_ms": 0.176762,
+            "thread_cpu_ms": 0.115171,
+            "begin_thread": 43,
+            "end_thread": 43
+          },
+          "room_pre_sqlite_begin": {
+            "wall_ms": 0.095712,
+            "thread_cpu_ms": 0.095561,
+            "begin_thread": 43,
+            "end_thread": 43
+          },
+          "sqlite_begin": {
+            "wall_ms": 0.028522,
+            "thread_cpu_ms": 0.028432,
+            "begin_thread": 43,
+            "end_thread": 43
+          },
+          "sqlite_begin_to_room_begin_return": {
+            "wall_ms": 0.003846,
+            "thread_cpu_ms": 0.003816,
+            "begin_thread": 43,
+            "end_thread": 43
+          },
+          "room_begin_to_body": {
+            "wall_ms": 0.010325,
+            "thread_cpu_ms": 0.010435,
+            "begin_thread": 43,
+            "end_thread": 43
+          },
+          "body_to_room_success": {
+            "wall_ms": 2.899373,
+            "thread_cpu_ms": 1.336239,
+            "begin_thread": 43,
+            "end_thread": 43
+          },
+          "success_and_end_prologue": {
+            "wall_ms": 0.024767,
+            "thread_cpu_ms": 0.024747,
+            "begin_thread": 43,
+            "end_thread": 43
+          },
+          "sqlite_end_commit_or_rollback_and_release": {
+            "wall_ms": 5.59175,
+            "thread_cpu_ms": 0.115301,
+            "begin_thread": 43,
+            "end_thread": 43
+          },
+          "room_post_sqlite_end": {
+            "wall_ms": 0.313514,
+            "thread_cpu_ms": 0.061601,
+            "begin_thread": 43,
+            "end_thread": 43
+          },
+          "room_end_to_caller_return": {
+            "wall_ms": 0.091986,
+            "thread_cpu_ms": null,
+            "begin_thread": 43,
+            "end_thread": 48
+          }
+        }
+      },
+      "overlap": {
+        "sample": 25,
+        "readIoUnionOverlapMs": 9.446588,
+        "snapshotUnionOverlapMs": 9.446588,
+        "indexWriterRunUnionOverlapMs": 0.0,
+        "queueIndexWriterRunOverlapMs": 0.0,
+        "overlappingReadIds": [
+          1
+        ]
+      }
+    }
+  },
+  "blocking_findings": [],
+  "unresolved_interpretation": [
+    "The long SQLite END boundary is located; these clocks do not identify fsync, checkpoint, locking, storage, or descheduling as its cause.",
+    "Index writer task 213 overlaps sample 17 queue on the serial worker; that narrow exposure does not explain OBSERVE p50/p95.",
+    "Read and snapshot overlap measures temporal exposure, not additive CPU cost or causal save delay.",
+    "No production fix or speedup follows from this one-seed probe; observer-off overhead remains unmeasured."
+  ],
+  "performance_acceptance": "NOT_EVALUATED; original four-pair signals remain open",
+  "method_limits": [
+    "Nearest rank for n=30 uses zero-based indices 14/28/29, not an interpolated median.",
+    "Twelve disjoint segments cover save-request to save-returned; the test timer adds its before-request and after-return portions.",
+    "Component quantiles cannot be summed and mode medians cannot be subtracted to infer causal costs.",
+    "IDLE has an independent database/clock origin; DIRECT and OBSERVE retain their continuous sequence.",
+    "Same-thread CPU includes intervening work; all cross-thread CPU deltas are null.",
+    "Incomplete read phases stay censored; cancellation/snapshot close never substitutes for missing query completion.",
+    "Whole-run log review verifies bound compact claims, not separate raw APK, native, JUnit-stack, or ACL-file inspection."
+  ],
+  "actions": "Only scratch review scripts and evidence written. No repository, source, controller, frozen analyzer, official raw, network, CI, build, push, or native action.",
+  "reproduce": [
+    "python3 -B check_numeric.py",
+    "python3 -B check_read_overlap.py"
+  ],
+  "observe_sample17_previous_task": {
+    "total_ms": 23.839401,
+    "queue_wall_ms": 21.55633,
+    "queue_cpu_ms": null,
+    "caller_thread": 49,
+    "worker_thread": 44,
+    "writer_task": 214,
+    "previous_task": 213,
+    "previous_task_sample": -1,
+    "previous_task_wall_ms": 21.54356,
+    "previous_task_same_thread_cpu_ms": 16.93659,
+    "queue_overlap_previous_task_ms": 21.523241,
+    "previous_task_exit_to_author_start_ms": 0.033089,
+    "index_owner_worker_events": [
+      {
+        "owner": "index",
+        "stage": "writer-acquired",
+        "read": 0,
+        "count": -1,
+        "wallNs": 4967614235,
+        "threadCpuNs": 3896589703,
+        "threadId": 44
+      },
+      {
+        "owner": "index",
+        "stage": "first-source-checked",
+        "read": 0,
+        "count": -1,
+        "wallNs": 4967895993,
+        "threadCpuNs": 3896801126,
+        "threadId": 44
+      },
+      {
+        "owner": "index",
+        "stage": "first-fts-written",
+        "read": 0,
+        "count": -1,
+        "wallNs": 4968121957,
+        "threadCpuNs": 3896989324,
+        "threadId": 44
+      },
+      {
+        "owner": "index",
+        "stage": "batch-written",
+        "read": 0,
+        "count": -1,
+        "wallNs": 4987822739,
+        "threadCpuNs": 3912698567,
+        "threadId": 44
+      }
+    ],
+    "task_events": [
+      {
+        "stage": "writer-submit",
+        "sample": -1,
+        "task": 213,
+        "transaction": 0,
+        "depth": 0,
+        "successRequested": false,
+        "outcome": "entered",
+        "wallNs": 4966858736,
+        "threadCpuNs": 790773453,
+        "threadId": 49
+      },
+      {
+        "stage": "writer-run-enter",
+        "sample": -1,
+        "task": 213,
+        "transaction": 0,
+        "depth": 0,
+        "successRequested": false,
+        "outcome": "entered",
+        "wallNs": 4967450433,
+        "threadCpuNs": 3896426060,
+        "threadId": 44
+      },
+      {
+        "stage": "room-begin-enter",
+        "sample": -1,
+        "task": 213,
+        "transaction": 215,
+        "depth": 1,
+        "successRequested": false,
+        "outcome": "entered",
+        "wallNs": 4967506416,
+        "threadCpuNs": 3896481833,
+        "threadId": 44
+      },
+      {
+        "stage": "sqlite-begin-enter",
+        "sample": -1,
+        "task": 213,
+        "transaction": 216,
+        "depth": 1,
+        "successRequested": false,
+        "outcome": "entered",
+        "wallNs": 4967580415,
+        "threadCpuNs": 3896555833,
+        "threadId": 44
+      },
+      {
+        "stage": "sqlite-begin-exit",
+        "sample": -1,
+        "task": 213,
+        "transaction": 216,
+        "depth": 1,
+        "successRequested": false,
+        "outcome": "returned",
+        "wallNs": 4967605893,
+        "threadCpuNs": 3896581300,
+        "threadId": 44
+      },
+      {
+        "stage": "room-begin-exit",
+        "sample": -1,
+        "task": 213,
+        "transaction": 215,
+        "depth": 1,
+        "successRequested": false,
+        "outcome": "returned",
+        "wallNs": 4967609428,
+        "threadCpuNs": 3896584816,
+        "threadId": 44
+      },
+      {
+        "stage": "room-success-enter",
+        "sample": -1,
+        "task": 213,
+        "transaction": 215,
+        "depth": 1,
+        "successRequested": false,
+        "outcome": "entered",
+        "wallNs": 4987847656,
+        "threadCpuNs": 3912722182,
+        "threadId": 44
+      },
+      {
+        "stage": "sqlite-success-enter",
+        "sample": -1,
+        "task": 213,
+        "transaction": 216,
+        "depth": 1,
+        "successRequested": false,
+        "outcome": "entered",
+        "wallNs": 4987861016,
+        "threadCpuNs": 3912735482,
+        "threadId": 44
+      },
+      {
+        "stage": "sqlite-success-exit",
+        "sample": -1,
+        "task": 213,
+        "transaction": 216,
+        "depth": 1,
+        "successRequested": true,
+        "outcome": "returned",
+        "wallNs": 4987866173,
+        "threadCpuNs": 3912740639,
+        "threadId": 44
+      },
+      {
+        "stage": "room-success-exit",
+        "sample": -1,
+        "task": 213,
+        "transaction": 215,
+        "depth": 1,
+        "successRequested": true,
+        "outcome": "returned",
+        "wallNs": 4987869608,
+        "threadCpuNs": 3912744064,
+        "threadId": 44
+      },
+      {
+        "stage": "room-end-enter",
+        "sample": -1,
+        "task": 213,
+        "transaction": 215,
+        "depth": 1,
+        "successRequested": true,
+        "outcome": "entered",
+        "wallNs": 4987875207,
+        "threadCpuNs": 3912749673,
+        "threadId": 44
+      },
+      {
+        "stage": "sqlite-end-enter",
+        "sample": -1,
+        "task": 213,
+        "transaction": 216,
+        "depth": 1,
+        "successRequested": true,
+        "outcome": "entered",
+        "wallNs": 4987880885,
+        "threadCpuNs": 3912755351,
+        "threadId": 44
+      },
+      {
+        "stage": "sqlite-end-exit",
+        "sample": -1,
+        "task": 213,
+        "transaction": 216,
+        "depth": 1,
+        "successRequested": true,
+        "outcome": "returned",
+        "wallNs": 4988794318,
+        "threadCpuNs": 3913163375,
+        "threadId": 44
+      },
+      {
+        "stage": "room-end-exit",
+        "sample": -1,
+        "task": 213,
+        "transaction": 215,
+        "depth": 1,
+        "successRequested": true,
+        "outcome": "returned",
+        "wallNs": 4988901005,
+        "threadCpuNs": 3913269612,
+        "threadId": 44
+      },
+      {
+        "stage": "writer-run-exit",
+        "sample": -1,
+        "task": 213,
+        "transaction": 0,
+        "depth": 0,
+        "successRequested": false,
+        "outcome": "returned",
+        "wallNs": 4988993993,
+        "threadCpuNs": 3913362650,
+        "threadId": 44
+      }
+    ]
+  }
+}

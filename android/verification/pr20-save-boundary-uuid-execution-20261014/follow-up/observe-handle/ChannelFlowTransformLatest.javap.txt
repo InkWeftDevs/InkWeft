@@ -1,0 +1,98 @@
+Compiled from "Merge.kt"
+public final class kotlinx.coroutines.flow.internal.ChannelFlowTransformLatest<T, R> extends kotlinx.coroutines.flow.internal.ChannelFlowOperator<T, R> {
+  private final kotlin.jvm.functions.Function3<kotlinx.coroutines.flow.FlowCollector<? super R>, T, kotlin.coroutines.Continuation<? super kotlin.Unit>, java.lang.Object> transform;
+
+  public kotlinx.coroutines.flow.internal.ChannelFlowTransformLatest(kotlin.jvm.functions.Function3<? super kotlinx.coroutines.flow.FlowCollector<? super R>, ? super T, ? super kotlin.coroutines.Continuation<? super kotlin.Unit>, ? extends java.lang.Object>, kotlinx.coroutines.flow.Flow<? extends T>, kotlin.coroutines.CoroutineContext, int, kotlinx.coroutines.channels.BufferOverflow);
+    Code:
+       0: aload_0
+       1: aload_2
+       2: aload_3
+       3: iload         4
+       5: aload         5
+       7: invokespecial #12                 // Method kotlinx/coroutines/flow/internal/ChannelFlowOperator."<init>":(Lkotlinx/coroutines/flow/Flow;Lkotlin/coroutines/CoroutineContext;ILkotlinx/coroutines/channels/BufferOverflow;)V
+      10: aload_0
+      11: aload_1
+      12: putfield      #16                 // Field transform:Lkotlin/jvm/functions/Function3;
+      15: return
+
+  public kotlinx.coroutines.flow.internal.ChannelFlowTransformLatest(kotlin.jvm.functions.Function3, kotlinx.coroutines.flow.Flow, kotlin.coroutines.CoroutineContext, int, kotlinx.coroutines.channels.BufferOverflow, int, kotlin.jvm.internal.DefaultConstructorMarker);
+    Code:
+       0: iload         6
+       2: iconst_4
+       3: iand
+       4: ifeq          14
+       7: getstatic     #33                 // Field kotlin/coroutines/EmptyCoroutineContext.INSTANCE:Lkotlin/coroutines/EmptyCoroutineContext;
+      10: checkcast     #35                 // class kotlin/coroutines/CoroutineContext
+      13: astore_3
+      14: iload         6
+      16: bipush        8
+      18: iand
+      19: ifeq          26
+      22: bipush        -2
+      24: istore        4
+      26: iload         6
+      28: bipush        16
+      30: iand
+      31: ifeq          39
+      34: getstatic     #40                 // Field kotlinx/coroutines/channels/BufferOverflow.SUSPEND:Lkotlinx/coroutines/channels/BufferOverflow;
+      37: astore        5
+      39: aload_0
+      40: aload_1
+      41: aload_2
+      42: aload_3
+      43: iload         4
+      45: aload         5
+      47: invokespecial #42                 // Method "<init>":(Lkotlin/jvm/functions/Function3;Lkotlinx/coroutines/flow/Flow;Lkotlin/coroutines/CoroutineContext;ILkotlinx/coroutines/channels/BufferOverflow;)V
+      50: return
+
+  protected kotlinx.coroutines.flow.internal.ChannelFlow<R> create(kotlin.coroutines.CoroutineContext, int, kotlinx.coroutines.channels.BufferOverflow);
+    Code:
+       0: new           #2                  // class kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest
+       3: dup
+       4: aload_0
+       5: getfield      #16                 // Field transform:Lkotlin/jvm/functions/Function3;
+       8: aload_0
+       9: getfield      #47                 // Field flow:Lkotlinx/coroutines/flow/Flow;
+      12: aload_1
+      13: iload_2
+      14: aload_3
+      15: invokespecial #42                 // Method "<init>":(Lkotlin/jvm/functions/Function3;Lkotlinx/coroutines/flow/Flow;Lkotlin/coroutines/CoroutineContext;ILkotlinx/coroutines/channels/BufferOverflow;)V
+      18: checkcast     #49                 // class kotlinx/coroutines/flow/internal/ChannelFlow
+      21: areturn
+
+  protected java.lang.Object flowCollect(kotlinx.coroutines.flow.FlowCollector<? super R>, kotlin.coroutines.Continuation<? super kotlin.Unit>);
+    Code:
+       0: invokestatic  #59                 // Method kotlinx/coroutines/DebugKt.getASSERTIONS_ENABLED:()Z
+       3: ifeq          23
+       6: iconst_0
+       7: istore_3
+       8: aload_1
+       9: instanceof    #61                 // class kotlinx/coroutines/flow/internal/SendingCollector
+      12: ifne          23
+      15: new           #63                 // class java/lang/AssertionError
+      18: dup
+      19: invokespecial #66                 // Method java/lang/AssertionError."<init>":()V
+      22: athrow
+      23: new           #68                 // class kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3
+      26: dup
+      27: aload_0
+      28: aload_1
+      29: aconst_null
+      30: invokespecial #71                 // Method kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3."<init>":(Lkotlinx/coroutines/flow/internal/ChannelFlowTransformLatest;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)V
+      33: checkcast     #73                 // class kotlin/jvm/functions/Function2
+      36: aload_2
+      37: invokestatic  #79                 // Method kotlinx/coroutines/CoroutineScopeKt.coroutineScope:(Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+      40: dup
+      41: invokestatic  #85                 // Method kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+      44: if_acmpne     48
+      47: areturn
+      48: pop
+      49: getstatic     #90                 // Field kotlin/Unit.INSTANCE:Lkotlin/Unit;
+      52: areturn
+
+  public static final kotlin.jvm.functions.Function3 access$getTransform$p(kotlinx.coroutines.flow.internal.ChannelFlowTransformLatest);
+    Code:
+       0: aload_0
+       1: getfield      #16                 // Field transform:Lkotlin/jvm/functions/Function3;
+       4: areturn
+}

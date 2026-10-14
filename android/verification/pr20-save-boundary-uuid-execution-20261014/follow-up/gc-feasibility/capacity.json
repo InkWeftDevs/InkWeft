@@ -1,0 +1,137 @@
+{
+  "status": "BLOCKED_CONSERVATIVE_CAPACITY_GUARANTEE",
+  "execution": "OFFLINE_JSON_ARITHMETIC_ONLY_NO_NATIVE",
+  "source_commit": "4c4a2d67a27b56f351b3433d4f99deb7ce3e2591",
+  "test_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest.kt",
+  "test_sha256": "98b69ea1d09e0bce21646d79f50f9b7dd9396c9e73bb1a9baea647de7cdf6b72",
+  "native_guard_source_commit": "94379190b9ad0e1034f136ea9887fb0ac12e7ea7",
+  "unchanged_production_paths": [
+    "android/core-domain",
+    "android/data-local/src/main",
+    "android/gradle",
+    "android/data-local/build.gradle.kts",
+    "android/settings.gradle.kts",
+    "android/build.gradle.kts"
+  ],
+  "production_diff_name_status": "",
+  "input_plan_sha256": "78e5df63e8810323819c6c18e9f2f842b3511c12ef700aa62dcfbc73f860451e",
+  "limit_bytes": 20971520,
+  "trials": 60,
+  "database_windows": 90,
+  "capacities": {
+    "boundary_per_database": 512,
+    "batch_per_trial": 64,
+    "phase_per_trial": 32
+  },
+  "counts": {
+    "boundary_events": 46080,
+    "EVENTS_markers": 990,
+    "TRIAL_markers": 60,
+    "SUMMARY_markers": 2,
+    "batch_events": 3840,
+    "phases": 1920
+  },
+  "full_width_event_witness": {
+    "stage": "sqlite-success-enter",
+    "ownerToken": 89,
+    "task": 9223372036854775807,
+    "transaction": 9223372036854775807,
+    "depth": 2147483647,
+    "successRequested": false,
+    "outcome": "returned",
+    "atNs": 9223372036854775807,
+    "cpuNs": 9223372036854775807,
+    "thread": 9223372036854775807
+  },
+  "full_width_event_sizes": {
+    "event_bytes": 258,
+    "event_body_bytes": 11888640,
+    "raw_marker_lines_bytes": 12054930,
+    "records_json_bytes": 12074734,
+    "forwarded_RECORD_lines_bytes": 13376360,
+    "forwarded_END_lines_bytes": 159430,
+    "raw_plus_records_bytes": 24129664,
+    "raw_records_forward_and_END_bytes": 37665454,
+    "details": [
+      {
+        "connection": "same-room",
+        "database_windows": 30,
+        "boundary_events": 15360,
+        "EVENTS_markers": 330
+      },
+      {
+        "connection": "separate-room",
+        "database_windows": 60,
+        "boundary_events": 30720,
+        "EVENTS_markers": 660
+      }
+    ]
+  },
+  "small_event_witness": {
+    "stage": "room-end-exit",
+    "ownerToken": 0,
+    "task": 1,
+    "transaction": 1,
+    "depth": 1,
+    "successRequested": true,
+    "outcome": "threw",
+    "atNs": 1,
+    "cpuNs": 1,
+    "thread": 1
+  },
+  "small_event_sizes": {
+    "event_bytes": 147,
+    "event_body_bytes": 6773760,
+    "raw_marker_lines_bytes": 6940050,
+    "records_json_bytes": 6959854,
+    "forwarded_RECORD_lines_bytes": 8260580,
+    "forwarded_END_lines_bytes": 158530,
+    "raw_plus_records_bytes": 13899904,
+    "raw_records_forward_and_END_bytes": 22319014,
+    "details": [
+      {
+        "connection": "same-room",
+        "database_windows": 30,
+        "boundary_events": 15360,
+        "EVENTS_markers": 330
+      },
+      {
+        "connection": "separate-room",
+        "database_windows": 60,
+        "boundary_events": 30720,
+        "EVENTS_markers": 660
+      }
+    ]
+  },
+  "batch_phase_array_accounting": {
+    "batch_object_bytes": 362,
+    "phase_object_bytes": 58,
+    "batch_arrays_one_copy_bytes": 1393980,
+    "phase_arrays_one_copy_bytes": 113340,
+    "raw_records_array_bodies_bytes": 3014640,
+    "forwarded_escaped_array_bodies_bytes": 1611240
+  },
+  "failure_reserve": {
+    "raw_bytes": 262144,
+    "escaped_envelope_bytes": 1581056,
+    "other_text_reserve_bytes": 3145728,
+    "at_most_one_failure": true
+  },
+  "combined_accounted_capacity_subtotal_bytes": 47280262,
+  "subtotal_excess_bytes": 26308742,
+  "excluded_nonnegative_items": [
+    "TRIAL wrapper/scalars/author segments/delete intervals/covered times",
+    "SUMMARY and distribution payloads",
+    "normal instrumentation framing",
+    "normal forwarding metadata for TRIAL/SUMMARY",
+    "extra raw failure bytes beyond forwardable cap"
+  ],
+  "limitations": [
+    "Capacity-shaped JSON witnesses are not valid success traces, native samples, or reachability proofs.",
+    "Exceeding this conservative model proves no budget guarantee here, not actual inevitable overflow.",
+    "The subtotal is not a complete worst-case upper bound; omitted items only add bytes.",
+    "Arbitrary failure class strings and raw instrumentation logs have no complete source-side byte bound.",
+    "Failure forwarding above 256KiB must REFUSE explicitly, preserving failure and local raw; it cannot truncate or upgrade PASS.",
+    "No capacity, sample, fixture, timeout, event or evidence representation was changed."
+  ]
+}

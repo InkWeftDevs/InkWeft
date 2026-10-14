@@ -1,0 +1,154 @@
+Compiled from "Merge.kt"
+final class kotlinx.coroutines.flow.internal.ChannelFlowTransformLatest$flowCollect$3$1<T> implements kotlinx.coroutines.flow.FlowCollector {
+  final kotlin.jvm.internal.Ref$ObjectRef<kotlinx.coroutines.Job> $previousFlow;
+
+  final kotlinx.coroutines.CoroutineScope $$this$coroutineScope;
+
+  final kotlinx.coroutines.flow.internal.ChannelFlowTransformLatest<T, R> this$0;
+
+  final kotlinx.coroutines.flow.FlowCollector<R> $collector;
+
+  kotlinx.coroutines.flow.internal.ChannelFlowTransformLatest$flowCollect$3$1(kotlin.jvm.internal.Ref$ObjectRef<kotlinx.coroutines.Job>, kotlinx.coroutines.CoroutineScope, kotlinx.coroutines.flow.internal.ChannelFlowTransformLatest<T, R>, kotlinx.coroutines.flow.FlowCollector<? super R>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #14                 // Field $previousFlow:Lkotlin/jvm/internal/Ref$ObjectRef;
+       5: aload_0
+       6: aload_2
+       7: putfield      #18                 // Field $$this$coroutineScope:Lkotlinx/coroutines/CoroutineScope;
+      10: aload_0
+      11: aload_3
+      12: putfield      #22                 // Field this$0:Lkotlinx/coroutines/flow/internal/ChannelFlowTransformLatest;
+      15: aload_0
+      16: aload         4
+      18: putfield      #26                 // Field $collector:Lkotlinx/coroutines/flow/FlowCollector;
+      21: aload_0
+      22: invokespecial #29                 // Method java/lang/Object."<init>":()V
+      25: return
+
+  public final java.lang.Object emit(T, kotlin.coroutines.Continuation<? super kotlin.Unit>);
+    Code:
+       0: aload_2
+       1: instanceof    #37                 // class kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$emit$1
+       4: ifeq          39
+       7: aload_2
+       8: checkcast     #37                 // class kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$emit$1
+      11: astore        7
+      13: aload         7
+      15: getfield      #41                 // Field kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$emit$1.label:I
+      18: ldc           #42                 // int -2147483648
+      20: iand
+      21: ifeq          39
+      24: aload         7
+      26: dup
+      27: getfield      #41                 // Field kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$emit$1.label:I
+      30: ldc           #42                 // int -2147483648
+      32: isub
+      33: putfield      #41                 // Field kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$emit$1.label:I
+      36: goto          50
+      39: new           #37                 // class kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$emit$1
+      42: dup
+      43: aload_0
+      44: aload_2
+      45: invokespecial #45                 // Method kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$emit$1."<init>":(Lkotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1;Lkotlin/coroutines/Continuation;)V
+      48: astore        7
+      50: aload         7
+      52: getfield      #49                 // Field kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$emit$1.result:Ljava/lang/Object;
+      55: astore        6
+      57: invokestatic  #55                 // Method kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+      60: astore        8
+      62: aload         7
+      64: getfield      #41                 // Field kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$emit$1.label:I
+      67: tableswitch   { // 0 to 1
+                     0: 88
+                     1: 173
+               default: 258
+          }
+      88: aload         6
+      90: invokestatic  #61                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+      93: aload_0
+      94: getfield      #14                 // Field $previousFlow:Lkotlin/jvm/internal/Ref$ObjectRef;
+      97: getfield      #66                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+     100: checkcast     #68                 // class kotlinx/coroutines/Job
+     103: dup
+     104: ifnull        212
+     107: astore_3
+     108: aload_3
+     109: astore        4
+     111: iconst_0
+     112: istore        5
+     114: aload         4
+     116: new           #70                 // class kotlinx/coroutines/flow/internal/ChildCancelledException
+     119: dup
+     120: invokespecial #71                 // Method kotlinx/coroutines/flow/internal/ChildCancelledException."<init>":()V
+     123: checkcast     #73                 // class java/util/concurrent/CancellationException
+     126: invokeinterface #77,  2           // InterfaceMethod kotlinx/coroutines/Job.cancel:(Ljava/util/concurrent/CancellationException;)V
+     131: aload         4
+     133: aload         7
+     135: aload         7
+     137: aload_0
+     138: putfield      #80                 // Field kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$emit$1.L$0:Ljava/lang/Object;
+     141: aload         7
+     143: aload_1
+     144: putfield      #83                 // Field kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$emit$1.L$1:Ljava/lang/Object;
+     147: aload         7
+     149: aload_3
+     150: putfield      #86                 // Field kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$emit$1.L$2:Ljava/lang/Object;
+     153: aload         7
+     155: iconst_1
+     156: putfield      #41                 // Field kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$emit$1.label:I
+     159: invokeinterface #90,  2           // InterfaceMethod kotlinx/coroutines/Job.join:(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+     164: dup
+     165: aload         8
+     167: if_acmpne     207
+     170: aload         8
+     172: areturn
+     173: iconst_0
+     174: istore        5
+     176: aload         7
+     178: getfield      #86                 // Field kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$emit$1.L$2:Ljava/lang/Object;
+     181: checkcast     #68                 // class kotlinx/coroutines/Job
+     184: astore_3
+     185: aload         7
+     187: getfield      #83                 // Field kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$emit$1.L$1:Ljava/lang/Object;
+     190: astore_1
+     191: aload         7
+     193: getfield      #80                 // Field kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$emit$1.L$0:Ljava/lang/Object;
+     196: checkcast     #2                  // class kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1
+     199: astore_0
+     200: aload         6
+     202: invokestatic  #61                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     205: aload         6
+     207: pop
+     208: nop
+     209: goto          214
+     212: pop
+     213: nop
+     214: aload_0
+     215: getfield      #14                 // Field $previousFlow:Lkotlin/jvm/internal/Ref$ObjectRef;
+     218: aload_0
+     219: getfield      #18                 // Field $$this$coroutineScope:Lkotlinx/coroutines/CoroutineScope;
+     222: aconst_null
+     223: getstatic     #96                 // Field kotlinx/coroutines/CoroutineStart.UNDISPATCHED:Lkotlinx/coroutines/CoroutineStart;
+     226: new           #98                 // class kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$2
+     229: dup
+     230: aload_0
+     231: getfield      #22                 // Field this$0:Lkotlinx/coroutines/flow/internal/ChannelFlowTransformLatest;
+     234: aload_0
+     235: getfield      #26                 // Field $collector:Lkotlinx/coroutines/flow/FlowCollector;
+     238: aload_1
+     239: aconst_null
+     240: invokespecial #101                // Method kotlinx/coroutines/flow/internal/ChannelFlowTransformLatest$flowCollect$3$1$2."<init>":(Lkotlinx/coroutines/flow/internal/ChannelFlowTransformLatest;Lkotlinx/coroutines/flow/FlowCollector;Ljava/lang/Object;Lkotlin/coroutines/Continuation;)V
+     243: checkcast     #103                // class kotlin/jvm/functions/Function2
+     246: iconst_1
+     247: aconst_null
+     248: invokestatic  #109                // Method kotlinx/coroutines/BuildersKt.launch$default:(Lkotlinx/coroutines/CoroutineScope;Lkotlin/coroutines/CoroutineContext;Lkotlinx/coroutines/CoroutineStart;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lkotlinx/coroutines/Job;
+     251: putfield      #66                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+     254: getstatic     #115                // Field kotlin/Unit.INSTANCE:Lkotlin/Unit;
+     257: areturn
+     258: new           #117                // class java/lang/IllegalStateException
+     261: dup
+     262: ldc           #119                // String call to \'resume\' before \'invoke\' with coroutine
+     264: invokespecial #122                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     267: athrow
+}

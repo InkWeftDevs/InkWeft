@@ -1,0 +1,28 @@
+GC boundary：最小原生执行与报告设计（只读提案，未触发CI）
+
+绑定：4c4a2d67a27b56f351b3433d4f99deb7ce3e2591；HistoryDeletionBoundaryDiagnosticsTest.kt SHA256=98b69ea1d09e0bce21646d79f50f9b7dd9396c9e73bb1a9baea647de7cdf6b72。已复核当前文件仍相同。这里没有修改源码/控制器、构建、设备运行或网络操作。
+
+开跑前置条件
+1. 先等正在运行的 source943 保存诊断两项guard取得可核实的原生PASS：boundariesPreserveCommitRollbackReplayAndRecovery、observerFailureOverflowAndDelegateFailureDoNotChangeSaveOutcome。必须有原JUnit、完整失败/成功记录、source/APK/环境绑定和自然退出/清理证据；当前未过前hook保持未验证。90条保存trace是同一依赖运行的独立结果，不计入GC样本。若后续GC source中的hook/Room/SQLite依赖或相关生产代码与已通过版本不同，不能直接继承该PASS。
+2. GC独立运行建议先执行5项现有安全guard：HistoryCollectionTest 的 sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot、separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot、interruptedBatchRollsBackAndReopenedCollectionResumes、malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion、missingRoomGuardLogAbortsWithoutDeletingCandidates。它们覆盖两连接活根、批次回滚/重开、损坏根及缺失guard；原确定性pause属于这些正确性guard，绝不算性能样本或移入测量。无需重跑已完成62方法或条件到达30/30来补分母。oneScanSurvivesRoomObserverRefreshAcrossSevenBatches可继续引用既有源码绑定证据；若GC生产/Room版本变化，则应重新审查完整GC安全集，而非默认本提案已覆盖。
+3. 同一个真实data-local test APK、同一标准API35 AOSP ATD x86_64/KVM环境、一个安装组；Room2.8.5/requery3.49.0及原writer PRAGMA不改。复用既有来源/APK/native库/安装字节校验、自然进程退出、55分钟停工/60分钟job及ACL恢复限制；只有合成DB，不涉及app/MuPDF或Docker。前置guard失败即停止后续测量且保留原失败，不重试。
+
+两个方法及预算（规划估计，非原生实测）
+- sameRoomNaturalArrivalBoundaries：固定30夹具，预计30–90秒，建议单方法外层诊断预算180秒。
+- separateRoomNaturalArrivalBoundaries：固定30夹具，预计30–90秒，建议单方法外层诊断预算180秒。
+- 两者都只加 -e historyGcBoundaryDiagnostics true；夹具仍1281来源/1280垃圾，after-scan非阻塞通知，一次原rename，原5秒保存watchdog及内部等待不变。外层180秒是运行预算，不是延迟验收门槛。
+- 新增7个调用合计预计2–5分钟设备阶段；可预留10分钟阶段预算，仍服从已有全局硬截止。冷构建/系统镜像准备另计，不能用host107.791秒编译推算设备时长。历史run38520196523的方法56→57官方完成记录间隔9.068840秒，仅是旧探针加转发/退出等的间隔；方法55→56为12.853662秒且跨安装组，更不能当新方法纯执行时间。
+- 冻结前必须离线检查完整事件/JUnit/原始日志与重复序列化后的总量满足20MiB文本上限。每DB512条边界、64批事件、32phase是记录容量，不等于已证明工件预算；不以截断、删慢值或删失败栈满足预算。此处未新增/修改任何控制器。
+
+报告应分开的三类结果
+A. 功能/完整性：每模式独立30/30，原序sample0..29、Committed/未知/失败、revision与内容/保留snapshot、guard分量、真实提交批数、首轮defer、首轮与收尾各自扫描/删除/耗时。检查全部事件分块和计数、零drop/invalid、每个submit恰一terminal、workersExited/helpersClosed/fixtureDeleted。任一缺失或失败只给部分证据，不升级完整分位数。
+B. 请求→返回：11个相邻wall区间为 requestToSubmit、writerQueue、workerToSqliteBegin、sqliteBeginCall、sqliteBeginToRoomBegin、roomBeginToReceipt、receiptToSqliteEnd、sqliteEndCall、sqliteEndToRoomEnd、roomEndToRenameReturn、renameReturnToCallEnd。逐条校验端点和纳秒和等于该次调用总耗时；分别给完整30条的p50/p95/max和原序数组，再按总耗时最大的原始sample展开分段。不能把各段p95相加成总p95。CPU仅同线程BEGIN/END配对；跨线程原始入队顺序不当全局时间排序。
+C. 暴露：三个定义、计数/原序索引与子集分布分别报告：原 before-batch-commit 时点落在save调用内；save与before-delete→after-delete观测窗口正长度交叠；save实际开始于该窗口。DELETE窗口含回调/取消检查开销，transaction-returned也可能对应guard不符的零删除事务，必须结合before/after-delete、guard、批次report验证。保存后的收尾不算竞争。
+
+0/30仍然是有效结果
+若30次功能与取证完整，0/30应报告“本固定after-scan到达模型未观察到符合该定义的删除暴露”，functionalStatus=PASS，exposureStatus=INSUFFICIENT_EXPOSURE，latencyAcceptance=NOT_EVALUATED。完整30条的整体保存分布可以展示，但绝不标成DELETE竞争分布。暴露子集少于20时p50/p95=null；0条max也为null，1条只保留原观测值/max。不得为凑20扩大垃圾、暂停、改变通知点、重试或并入旧条件到达数据。观察到0也不能证明所有用户保存永远不阻塞。
+
+因果解释的上限
+writerQueue衡量Room串行队列等待与调度；SQLite BEGIN调用含连接获取、锁竞争可能性、native执行和线程调度。BEGIN wall减thread CPU仍不能分离锁等待、调度或I/O；pureSqliteLockWaitMs始终null。END包含提交/回滚/释放，不等于单独fsync。可描述作者请求是否跨越多批真实DELETE、耗时集中在哪些观测段，不能据此单独认定SQLite busy backoff/饥饿或引入缩批/优先级修复。
+
+这是候选单端的定位运行，不是B→C性能配对，也不估计真实用户随机到达概率。原自然0/30与1/30、历史条件到达30/30、历史纯GC17→1扫描各保留自己的来源与结论。正式前后竞争比较仍需要等价baseline探针/同设备；不能将优化后的HistoryStorage覆盖进旧baseline来适配接口。没有得到新证据前不调整生产策略。

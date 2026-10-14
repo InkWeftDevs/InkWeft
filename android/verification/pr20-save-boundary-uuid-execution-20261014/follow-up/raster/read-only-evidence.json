@@ -1,0 +1,23 @@
+{
+  "status": "DESIGN_ONLY_NOT_IMPLEMENTED_NOT_RUN",
+  "read_head": "a69c173c16bd8a434cc1eab9ef8ff2ad56070c19",
+  "inputs": {
+    "android/app/src/androidTest/java/org/inkweft/app/RasterCausalDiagnosticsTest.kt": "f7a1424cfec939344584c86a1c11005d9f5d70447d31651bc9764907938cccc1",
+    "android/app/src/main/java/org/inkweft/app/RasterFrameDiagnostics.kt": "24f139a486d6603ea5bc62616f05f0d55d2a4fd90a3e5dd67b87b883c6689232",
+    "android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt": "c27b9f9d3326a625a9063b8fa8a446cc68296406b527a8254d8993dd41f44731",
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt": "e7241f4329ece5148f8d1e6f740e102f8326bd4ef0db7f0a6f0a2871e12c9950",
+    "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLocalAppendPairProbe.kt": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+    "android/verification/pr20-causal-results-20261014/official/jobs-terminal.json": "9cd751dbc21147883641e5bd97ed6053173751045e9ac09e0ef2b86e9cb92228",
+    "android/verification/pr20-match-execution-20261014/official/jobs-terminal.json": "781eb27f30fc750004fdbbec353aaadfe13f58809b9e70293b8eee7f6fd5cd91"
+  },
+  "historical_seed4101_diagnostic_common_fixture_equal": true,
+  "fixture_hashes": {
+    "1": "e42134ad686969604696eca0c8b1e509642eb8cb0f394806f4463a7a0c51b4f5",
+    "4": "ce90b22b09e96ba9c39c605ab6789cf87d488152388a36d473416cdbd9b4c241",
+    "8": "0df59d18c4c4dea150455471d713e6110524e93bbb78b82d0389c1ea29e36990"
+  },
+  "production_changes": 0,
+  "new_ci_runs": 0,
+  "new_controllers": 0,
+  "plan_sha256": "5fba8eb5c6600f483de80d3cd837d81eabf915c864bb81f59bbb2dfefbbbf17a"
+}

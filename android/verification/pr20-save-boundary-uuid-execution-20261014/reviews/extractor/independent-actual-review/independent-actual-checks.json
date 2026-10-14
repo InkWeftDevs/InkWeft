@@ -1,0 +1,125 @@
+{
+  "status": "PASS_ACTUAL_LOCAL_LOG_CLOSURE",
+  "scope": "EXISTING_OFFICIAL_RUN_REVIEW_NO_NEW_NATIVE_EXECUTION",
+  "run_id": 38543698114,
+  "job_id": 115784421756,
+  "attempt": 1,
+  "official_job_seconds": 372,
+  "source_chain": {
+    "source_commit": "94379190b9ad0e1034f136ea9887fb0ac12e7ea7",
+    "readiness_git": "a69c173c16bd8a434cc1eab9ef8ff2ad56070c19",
+    "prep_sha": "818493a1e8a4d2121e125d5ba39c4219f1977720",
+    "workflow_sha": "ac63ce66ed4aaec0372c56b39be97e3335966c31"
+  },
+  "official_log_sha256": "45d6579ec88cdff12dbd94393121a04684dce7595713947e6663af0e6b45d68c",
+  "official_log_bytes": 1037054,
+  "receipt_counts": {
+    "CLOCK": 1,
+    "CONTEXT": 10,
+    "END": 10,
+    "METHOD": 10,
+    "RECORD": 57,
+    "FINAL": 1
+  },
+  "final_line": 452,
+  "methods_pass": 10,
+  "failure_envelopes": 0,
+  "committed_save_count": 90,
+  "arms": {
+    "IDLE": {
+      "committed_saves": 30,
+      "start_revision": 1,
+      "end_revision": 31,
+      "readiness": "fixture-ready",
+      "recordedEvents": 1386,
+      "recordedReadEvents": 0,
+      "dropped_events": 0,
+      "dropped_read_events": 0
+    },
+    "DIRECT": {
+      "committed_saves": 30,
+      "start_revision": 1,
+      "end_revision": 31,
+      "readiness": "first-source-check",
+      "recordedEvents": 1386,
+      "recordedReadEvents": 23,
+      "dropped_events": 0,
+      "dropped_read_events": 0
+    },
+    "OBSERVE": {
+      "committed_saves": 30,
+      "start_revision": 32,
+      "end_revision": 62,
+      "readiness": "first-index-commit",
+      "recordedEvents": 1434,
+      "recordedReadEvents": 393,
+      "dropped_events": 0,
+      "dropped_read_events": 0
+    }
+  },
+  "cleanup_bound_claims": {
+    "trap": {
+      "emulator": "STOPPED_CONFIRMED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "RESTORED_EXACT",
+      "error_count": 0,
+      "before_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "after_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "exact_match": true
+    },
+    "always": {
+      "emulator": "STOPPED_CONFIRMED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "RESTORED_EXACT",
+      "error_count": 0,
+      "before_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "after_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "exact_match": true
+    }
+  },
+  "phase_times": [
+    {
+      "name": "Freeze/reconstruct one source and install fixed SDK",
+      "phase": "setup",
+      "start_epoch": 1791970655.0,
+      "end_epoch": 1791970694.0,
+      "seconds": 39.0
+    },
+    {
+      "name": "Build only C1 data test APK; verify signature, manifest and SQLite native identities",
+      "phase": "setup",
+      "start_epoch": 1791970694.0,
+      "end_epoch": 1791970961.0,
+      "seconds": 267.0
+    },
+    {
+      "name": "\u6700\u5c0f\u4e34\u65f6ACL\u4e0e\u540c\u4e00KVM\u6a21\u62df\u5668",
+      "phase": "setup",
+      "start_epoch": 1791970961.0,
+      "end_epoch": 1791970990.0,
+      "seconds": 29.0
+    },
+    {
+      "name": "Seven existing guards, two opt-in boundary guards, one three-arm diagnostic; failure stops the run",
+      "phase": "data",
+      "start_epoch": 1791970990.0,
+      "end_epoch": 1791971009.0,
+      "seconds": 19.0
+    }
+  ],
+  "final_missing_files": [],
+  "packaging_complete_claim": true,
+  "payload_hashes_and_original_marker_export_independently_rebuilt": true,
+  "owner_method10_records_and_markers_byte_identical": true,
+  "method10_records_sha256": "61eb1e524e001498e9a3ceaa59a85529439610f590e329052bc0b75846da716d",
+  "method10_markers_sha256": "0ef0092547196143cb9a28e185052d29e63d5e2e25ea0ab5aaab60cffc702e22",
+  "extractor_receipt_sha256": "6977fc048ad3d68efffff2276992b7901cf0cdbdc4d39fc20bdd9a36a697ba88",
+  "review_checker_sha256": "fe140036394d4ce40388d747050380c1e8ea7df2d697dbe6d145e81b09624aa7",
+  "performance_acceptance": "NOT_EVALUATED",
+  "limits": [
+    "Compact receipts do not independently inspect APK/native/ACL/artifact or original raw JUnit files.",
+    "Official metadata/log authenticity supplied by root; no online lookup performed.",
+    "No new run, retry, build, network or artifact route used.",
+    "Numerical interpretation and public performance gate remain separate."
+  ]
+}

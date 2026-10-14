@@ -1,0 +1,66 @@
+{
+  "scope": "OFFICIAL_LOG_COMPLETENESS_ONLY_NO_PERFORMANCE_INTERPRETATION",
+  "status": "COMPLETE_SCOPED_SAVE_BOUNDARY_LOG_EVIDENCE",
+  "exit_code": 0,
+  "run_id": "38543698114",
+  "job_id": "115784421756",
+  "official_job_span_seconds": 372.0,
+  "methods": 10,
+  "all_method_pass": true,
+  "all_extracted_whole_run_complete": true,
+  "failure_envelopes": 0,
+  "install_groups": {
+    "C1-data-diagnostics": {
+      "identity": "C1",
+      "status": "PASS"
+    }
+  },
+  "selected_apks": 1,
+  "marker_counts": {
+    "LIBRARY_SAVE_BOUNDARY_RESULT": 3,
+    "LIBRARY_SAVE_BOUNDARY_EVENTS": 45,
+    "LIBRARY_SAVE_BOUNDARY_END": 3,
+    "LIBRARY_SAVE_BOUNDARY_READS": 6
+  },
+  "arm_save_counts": {
+    "IDLE": 30,
+    "DIRECT": 30,
+    "OBSERVE": 30
+  },
+  "cleanup": {
+    "trap": {
+      "emulator": "STOPPED_CONFIRMED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "RESTORED_EXACT",
+      "error_count": 0,
+      "before_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "after_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "exact_match": true
+    },
+    "always": {
+      "emulator": "STOPPED_CONFIRMED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "RESTORED_EXACT",
+      "error_count": 0,
+      "before_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "after_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "exact_match": true
+    }
+  },
+  "packaging_complete": true,
+  "missing_files": [],
+  "issues": [],
+  "output_sha256": {
+    "analysis.json": "1a63da107911072f3d9aca220df961b8661fae016543a8214e3094cbfdcd1140",
+    "method-10-C1-records.json": "61eb1e524e001498e9a3ceaa59a85529439610f590e329052bc0b75846da716d",
+    "method-10-C1-original-payloads.json": "42d0cb7d08587d8fafd69a583f9b8233c8660ee06b093eaf6a6f03bbdbb190cc",
+    "method-10-C1-markers.log": "0ef0092547196143cb9a28e185052d29e63d5e2e25ea0ab5aaab60cffc702e22"
+  },
+  "limits": [
+    "Official run/job metadata and decoded-log provenance are supplied externally; no online authenticity check.",
+    "Compact receipts do not independently audit APK binaries, raw JUnit files, native libraries, installed bytes or ACL files.",
+    "records_sha256 is reconstructed exactly; raw_log_sha256 is only linked between CONTEXT and FINAL.",
+    "Group post-environment equality is a bound-controller PASS claim; only its before environment hash is directly forwarded.",
+    "All diagnostics are instrumented observations. No formal gate, product speedup, pure lock-wait or additive causal attribution is claimed."
+  ]
+}

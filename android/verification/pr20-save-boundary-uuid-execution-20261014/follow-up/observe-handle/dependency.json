@@ -1,0 +1,7 @@
+{
+  "aar": "/workspace/.setup/gradle/caches/modules-2/files-2.1/com.github.requery/sqlite-android/3.49.0/8293ee1b39f4eef2abb818d030a0e5e156afde39/sqlite-android-3.49.0.aar",
+  "version": "3.49.0",
+  "aar_sha256": "2a746d7d9d68f4393d80bbca4e2af07643bc963e22ef737a7fa035d70e07aa70",
+  "classes_jar_sha256": "b9f6a7901d3cdc90649542ee116460067e75fe62709a84288e58f53346355580",
+  "scope": "READ_ONLY_BYTECODE_INSPECTION_NOT_NATIVE_EXECUTION"
+}

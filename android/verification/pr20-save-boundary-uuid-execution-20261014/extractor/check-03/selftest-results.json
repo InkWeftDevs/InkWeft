@@ -1,0 +1,1002 @@
+{
+  "status": "PASS",
+  "scope": "OFFLINE_SYNTHETIC_NOT_NATIVE",
+  "cases": [
+    {
+      "name": "synthetic complete 10 methods / 1 APK / 1 group",
+      "status": "PASS",
+      "parser_status": "COMPLETE_SCOPED_SAVE_BOUNDARY_LOG_EVIDENCE",
+      "issues": []
+    },
+    {
+      "name": "missing final",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Missing/unfinished receipt set"
+      ]
+    },
+    {
+      "name": "duplicate final",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Receipt after FINAL"
+      ]
+    },
+    {
+      "name": "wrong run",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Expected official binding differs: run_id"
+      ]
+    },
+    {
+      "name": "extra official job",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Expected exactly one official job"
+      ]
+    },
+    {
+      "name": "wrong event",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official event/branch/workflow path differs"
+      ]
+    },
+    {
+      "name": "wrong branch",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official event/branch/workflow path differs"
+      ]
+    },
+    {
+      "name": "wrong workflow path",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official event/branch/workflow path differs"
+      ]
+    },
+    {
+      "name": "wrong job",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Missing/duplicate official job"
+      ]
+    },
+    {
+      "name": "wrong workflow",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Actual run identity differs"
+      ]
+    },
+    {
+      "name": "wrong source",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: CONTEXT source differs"
+      ]
+    },
+    {
+      "name": "wrong test hash",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: CONTEXT test hash differs"
+      ]
+    },
+    {
+      "name": "wrong args",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: CONTEXT plan mapping differs"
+      ]
+    },
+    {
+      "name": "installed mismatch",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Selected/installed APK mismatch"
+      ]
+    },
+    {
+      "name": "wrong APK package",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: APK package group differs"
+      ]
+    },
+    {
+      "name": "different signer",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Within-group installation/source changed"
+      ]
+    },
+    {
+      "name": "payload hash",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Original payload size/hash differs"
+      ]
+    },
+    {
+      "name": "payload length",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Original payload size/hash differs"
+      ]
+    },
+    {
+      "name": "unknown marker",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Unexpected record marker"
+      ]
+    },
+    {
+      "name": "record order",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Record order/identity differs"
+      ]
+    },
+    {
+      "name": "footer hash",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Ordered payload footer differs"
+      ]
+    },
+    {
+      "name": "records hash",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Complete parsed records hash differs"
+      ]
+    },
+    {
+      "name": "missing END",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Missing complete method block"
+      ]
+    },
+    {
+      "name": "host FAIL",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Non-PASS method has no failure envelope"
+      ]
+    },
+    {
+      "name": "JUnit skipped",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "adb nonzero",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "helper cleanup not allowed",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "group incomplete",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL install groups differ"
+      ]
+    },
+    {
+      "name": "environment changed",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Device environment changed"
+      ]
+    },
+    {
+      "name": "cleanup error",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Cleanup claim not successful"
+      ]
+    },
+    {
+      "name": "cleanup ACL mismatch",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: ACL hashes differ"
+      ]
+    },
+    {
+      "name": "missing raw file",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL incomplete execution/evidence/cleanup"
+      ]
+    },
+    {
+      "name": "packaging incomplete",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL incomplete execution/evidence/cleanup"
+      ]
+    },
+    {
+      "name": "official failure",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only"
+      ]
+    },
+    {
+      "name": "late setup metadata",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official phase exceeds clock budget or sequence"
+      ]
+    },
+    {
+      "name": "method outside actual phase",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Method block outside its official phase step"
+      ]
+    },
+    {
+      "name": "phase order reversed",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official phase exceeds clock budget or sequence"
+      ]
+    },
+    {
+      "name": "first context outside data step",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Method block outside its official phase step"
+      ]
+    },
+    {
+      "name": "FINAL boolean masquerading as exit code",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD/FINAL differ"
+      ]
+    },
+    {
+      "name": "wrong clock cutoffs",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Clock cutoff differs"
+      ]
+    },
+    {
+      "name": "job >60min",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official job hard 60min budget exceeded"
+      ]
+    },
+    {
+      "name": "official run attempt bool",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Actual run identity differs"
+      ]
+    },
+    {
+      "name": "official job attempt bool",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Actual job identity differs"
+      ]
+    },
+    {
+      "name": "official job count bool",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Expected exactly one official job"
+      ]
+    },
+    {
+      "name": "phase outside actual job span",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official phase outside actual job span"
+      ]
+    },
+    {
+      "name": "wrong prep binding",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Expected official binding differs: prep_sha"
+      ]
+    },
+    {
+      "name": "wrong readiness binding",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Expected official binding differs: readiness_git"
+      ]
+    },
+    {
+      "name": "END ordinal bool",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: END count differs"
+      ]
+    },
+    {
+      "name": "cleanup bool error count",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Cleanup claim not successful"
+      ]
+    },
+    {
+      "name": "cleanup trap pending",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Cleanup claim not successful"
+      ]
+    },
+    {
+      "name": "cleanup origins differ",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: ACL origins differ"
+      ]
+    },
+    {
+      "name": "duplicate CLOCK",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Duplicate/late CLOCK"
+      ]
+    },
+    {
+      "name": "duplicate CONTEXT",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Nested/duplicate CONTEXT"
+      ]
+    },
+    {
+      "name": "duplicate RECORD",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Record order/identity differs"
+      ]
+    },
+    {
+      "name": "duplicate END",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Missing/duplicate END"
+      ]
+    },
+    {
+      "name": "duplicate METHOD",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD order differs"
+      ]
+    },
+    {
+      "name": "rehashed footer bool sequence",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Invalid footer types"
+      ]
+    },
+    {
+      "name": "truncated",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "JSONDecodeError: Expecting value: line 1 column 11 (char 10)"
+      ]
+    },
+    {
+      "name": "array",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "AssertionError: "
+      ]
+    },
+    {
+      "name": "duplicate key",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Duplicate JSON key"
+      ]
+    },
+    {
+      "name": "nonfinite",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Non-finite JSON"
+      ]
+    },
+    {
+      "name": "unknown key",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "AssertionError: Unknown/missing object key"
+      ]
+    },
+    {
+      "name": "failure-only exact original UTF8 retained",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "failure-only reject status PASS",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "AssertionError: Field status: Enum mismatch"
+      ]
+    },
+    {
+      "name": "failure-only reject run_id 900003",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure run/source identity differs"
+      ]
+    },
+    {
+      "name": "failure-only reject run_attempt 2",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "AssertionError: Field run_attempt: Constant mismatch"
+      ]
+    },
+    {
+      "name": "failure-only reject workflow_sha cccccccccccccccccccccccccccccccccccccccc",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure run/source identity differs"
+      ]
+    },
+    {
+      "name": "failure-only reject source_commit cccccccccccccccccccccccccccccccccccccccc",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure run/source identity differs"
+      ]
+    },
+    {
+      "name": "failure-only reject source_spec_sha256 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure frozen inputs differ"
+      ]
+    },
+    {
+      "name": "failure-only reject method_plan_sha256 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure frozen inputs differ"
+      ]
+    },
+    {
+      "name": "failure-only reject test_source_sha256 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure test source differs"
+      ]
+    },
+    {
+      "name": "failure-only reject ordinal 9",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure method identity differs"
+      ]
+    },
+    {
+      "name": "failure-only reject ordinal True",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "AssertionError: Field ordinal: "
+      ]
+    },
+    {
+      "name": "failure-only reject identity B",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "AssertionError: Field identity: Constant mismatch"
+      ]
+    },
+    {
+      "name": "failure-only reject selection org.inkweft.data.LibrarySaveBoundaryDiagnosticsTest#observerFailureOverflowAndDelegateFailureDoNotChangeSaveOutcome",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure method identity differs"
+      ]
+    },
+    {
+      "name": "failure-only reject raw_bytes False",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "AssertionError: Field raw_bytes: "
+      ]
+    },
+    {
+      "name": "failure-only reject raw_bytes 1",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure original byte budget differs"
+      ]
+    },
+    {
+      "name": "failure-only reject raw_log_sha256 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure original hash differs"
+      ]
+    },
+    {
+      "name": "failure-only reject original_utf8 None",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure original content missing/refused"
+      ]
+    },
+    {
+      "name": "failure-only reject refusal_reason SENSITIVE",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure original content missing/refused"
+      ]
+    },
+    {
+      "name": "failure-only multibyte oversized",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure original byte budget differs"
+      ]
+    },
+    {
+      "name": "failure-only sensitive",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure original rejected by fixed secret pattern"
+      ]
+    },
+    {
+      "name": "failure-only unpaired surrogate rejects invalid UTF8",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "UnicodeEncodeError: 'utf-8' codec can't encode character '\\ud800' in position 0: surrogates not allowed"
+      ]
+    },
+    {
+      "name": "failure-only missing",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Non-PASS method has no failure envelope"
+      ]
+    },
+    {
+      "name": "failure-only duplicate",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Duplicate failure envelope"
+      ]
+    },
+    {
+      "name": "failure-only METHOD mismatch",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure envelope/METHOD differ"
+      ]
+    },
+    {
+      "name": "failure-only cannot restore PASS with official success",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Failure envelope/METHOD differ"
+      ]
+    },
+    {
+      "name": "failure-only refusal reason retained",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "failure-only refusal cannot contain original",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Refused failure contains original content or lacks reason"
+      ]
+    },
+    {
+      "name": "failure-only refusal requires reason",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Refused failure contains original content or lacks reason"
+      ]
+    },
+    {
+      "name": "failure-only oversize refusal must be oversized",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Oversize refusal lacks oversized length"
+      ]
+    },
+    {
+      "name": "failure-only exact 256KiB worst escaping",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "failure-only late failure remains partial within actual job span",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "failure-only outside actual job span rejected",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Official receipt timestamp reversed"
+      ]
+    },
+    {
+      "name": "failure-only unknown envelope key",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "AssertionError: Unknown/missing object key"
+      ]
+    },
+    {
+      "name": "failure-only METHOD array remains incomplete",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Envelope keys differ"
+      ]
+    },
+    {
+      "name": "failure-only truncated envelope",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "JSONDecodeError: Unterminated string starting at: line 1 column 21 (char 20)"
+      ]
+    },
+    {
+      "name": "failure-only duplicate JSON key",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Duplicate JSON key"
+      ]
+    },
+    {
+      "name": "failure after complete markers cannot promote method or whole run",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "partial METHOD failure retained",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Missing complete method block"
+      ]
+    },
+    {
+      "name": "actual shape method9 failure retains first eight closures",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Non-PASS method has no failure envelope"
+      ]
+    },
+    {
+      "name": "synthetic-full-cli",
+      "status": "PASS",
+      "parser_status": "COMPLETE_SCOPED_SAVE_BOUNDARY_LOG_EVIDENCE",
+      "issues": []
+    },
+    {
+      "name": "synthetic-bom-cli",
+      "status": "PASS",
+      "parser_status": "COMPLETE_SCOPED_SAVE_BOUNDARY_LOG_EVIDENCE",
+      "issues": []
+    },
+    {
+      "name": "truncated-final-cli",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "JSONDecodeError: Unterminated string starting at: line 1 column 5184 (char 5183)"
+      ]
+    },
+    {
+      "name": "wrong-cli-workflow-sha",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Reviewed source/readiness/prep/active chain differs"
+      ]
+    },
+    {
+      "name": "wrong-cli-prep-sha",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Reviewed source/readiness/prep/active chain differs"
+      ]
+    },
+    {
+      "name": "wrong-cli-readiness-git",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Reviewed source/readiness/prep/active chain differs"
+      ]
+    },
+    {
+      "name": "wrong-cli-source-commit",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Reviewed source/readiness/prep/active chain differs"
+      ]
+    },
+    {
+      "name": "wrong-cli-run-id",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Expected official binding differs: run_id"
+      ]
+    },
+    {
+      "name": "wrong-cli-job-id",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Expected official binding differs: job_id"
+      ]
+    },
+    {
+      "name": "original payload bytes and semantic records preserved separately",
+      "status": "PASS",
+      "parser_status": "COMPLETE_SCOPED_SAVE_BOUNDARY_LOG_EVIDENCE"
+    },
+    {
+      "name": "local HEAD mismatch",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Local active HEAD differs"
+      ]
+    },
+    {
+      "name": "active wrong exact parent",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Active commit must have exactly the reviewed prep parent"
+      ]
+    },
+    {
+      "name": "prep wrong exact parent",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Prep commit must have exactly the reviewed readiness parent"
+      ]
+    },
+    {
+      "name": "source tree mismatch",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Actual source Git tree differs"
+      ]
+    },
+    {
+      "name": "reviewed source Git blob mismatch",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Reviewed source Git blob differs: android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt"
+      ]
+    },
+    {
+      "name": "active control Git blob mismatch",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Active control Git blob differs: ci/pr20-save-boundary-uuid/run.py"
+      ]
+    },
+    {
+      "name": "readiness Git blob mismatch",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Readiness Git blob differs: PLAN.md"
+      ]
+    },
+    {
+      "name": "local control byte mismatch",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Control file hash differs: ci/pr20-save-boundary-uuid/run.py"
+      ]
+    },
+    {
+      "name": "post-analysis input read failure downgrades COMPLETE",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE"
+    }
+  ],
+  "analyzer_sha256": "726f2332835eb09903972ca1916954459fc2a7cc804bf8b67505128552adee7c",
+  "validator_sha256": "d27e19a7ae5b090436b8e70d5a2d914119e343eeb40e01352359d27f30215857",
+  "checker_sha256": "45389b913faf31aab2a303c91b0fe60bd2d49ab2742fb65bb844c3a727401d43",
+  "frozen_input_hashes": {
+    "approved_plan_sha256": "bd4da8e0d92fd1c90a524c2a7234ea416a0cbebe5b4f27867264dffa47a5d44c",
+    "source_spec_sha256": "d09bcba6e4d726cb233170213177f39d6e2bf49f94f40284283c7da32cdfe2c6",
+    "method_plan_sha256": "cf5800f39b55524ccded154d72ab94421323b34861b8dea3d03e454c3d07117a",
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "marker_contract_sha256": "a5b97b1f50633b88275aeeaad3cde686cda8022d385953a3e2020a471abcf0e9",
+    "prepare_sources_sha256": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516"
+  }
+}

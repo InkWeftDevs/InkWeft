@@ -1,0 +1,214 @@
+{
+  "status": "PASS_LOCAL_BINDING_AND_SYNTHETIC_PRODUCER_CONSUMER",
+  "scope": "SYNTHETIC_NO_NEW_NATIVE_NO_NETWORK",
+  "manifest_sha256": "f4036ab0b5907a043d42f31ffdcc824ce2eddeb725a47443c12060830cf939b0",
+  "source_chain": {
+    "source_commit": "94379190b9ad0e1034f136ea9887fb0ac12e7ea7",
+    "readiness_git": "a69c173c16bd8a434cc1eab9ef8ff2ad56070c19",
+    "prep_sha": "818493a1e8a4d2121e125d5ba39c4219f1977720",
+    "workflow_sha": "ac63ce66ed4aaec0372c56b39be97e3335966c31"
+  },
+  "read_only_local_git": {
+    "active": "ac63ce66ed4aaec0372c56b39be97e3335966c31",
+    "prep": "818493a1e8a4d2121e125d5ba39c4219f1977720",
+    "readiness": "a69c173c16bd8a434cc1eab9ef8ff2ad56070c19",
+    "source": "94379190b9ad0e1034f136ea9887fb0ac12e7ea7",
+    "readiness_files_verified": 8,
+    "reviewed_source_files_verified": 6,
+    "control_files_verified": 7,
+    "network": false,
+    "git_operations": "read-only"
+  },
+  "secret_regex_ast_matches_producer_and_packager": true,
+  "synthetic_case_count": 19,
+  "cases": [
+    {
+      "name": "Unchanged complete synthetic success",
+      "analysis_status": "COMPLETE_SCOPED_SAVE_BOUNDARY_LOG_EVIDENCE",
+      "retained_failure_count": 0,
+      "matched_method_receipt": null,
+      "issues": []
+    },
+    {
+      "name": "Production helper output accepted only as matched failure",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 1,
+      "matched_method_receipt": true,
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "Missing METHOD retains only explicitly unmatched partial",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 1,
+      "matched_method_receipt": false,
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Missing/unfinished receipt set"
+      ]
+    },
+    {
+      "name": "Duplicate failure is incomplete",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 1,
+      "matched_method_receipt": false,
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Duplicate failure envelope"
+      ]
+    },
+    {
+      "name": "Mismatched following METHOD never matches",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 1,
+      "matched_method_receipt": false,
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure envelope/METHOD differ"
+      ]
+    },
+    {
+      "name": "Official success cannot rescue failure",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 1,
+      "matched_method_receipt": true,
+      "issues": [
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "Following PASS cannot rescue failure",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 1,
+      "matched_method_receipt": false,
+      "issues": [
+        "ValueError: Failure envelope/METHOD differ"
+      ]
+    },
+    {
+      "name": "Reject failure field run_id",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 0,
+      "matched_method_receipt": null,
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure run/source identity differs"
+      ]
+    },
+    {
+      "name": "Reject failure field source_commit",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 0,
+      "matched_method_receipt": null,
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure run/source identity differs"
+      ]
+    },
+    {
+      "name": "Reject failure field raw_log_sha256",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 0,
+      "matched_method_receipt": null,
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure original hash differs"
+      ]
+    },
+    {
+      "name": "Reject failure field status",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 0,
+      "matched_method_receipt": null,
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "AssertionError: Field status: Enum mismatch"
+      ]
+    },
+    {
+      "name": "Reject failure field original_utf8",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 0,
+      "matched_method_receipt": null,
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "UnicodeEncodeError: 'utf-8' codec can't encode character '\\ud800' in position 0: surrogates not allowed"
+      ]
+    },
+    {
+      "name": "Reject rehashed secret content",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 0,
+      "matched_method_receipt": null,
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure original rejected by fixed secret pattern"
+      ]
+    },
+    {
+      "name": "Valid refusal has no original",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 1,
+      "matched_method_receipt": true,
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "Refusal containing text is rejected",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 0,
+      "matched_method_receipt": null,
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Refused failure contains original content or lacks reason"
+      ]
+    },
+    {
+      "name": "Post-phase failure retained inside real job span",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 1,
+      "matched_method_receipt": true,
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "Ordered failure beyond end plus one second rejected",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 0,
+      "matched_method_receipt": null,
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Receipt outside official job span"
+      ]
+    },
+    {
+      "name": "Late success remains rejected by original phase cutoff",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 0,
+      "matched_method_receipt": null,
+      "issues": [
+        "ValueError: Method receipt after phase/work deadline"
+      ]
+    },
+    {
+      "name": "Completed success marker block followed by failure stays incomplete",
+      "analysis_status": "INCOMPLETE",
+      "retained_failure_count": 1,
+      "matched_method_receipt": true,
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    }
+  ],
+  "producer_run_sha256": "3b1ebc563743231bde81a51cad0fb549ed707063f3dd4ad04e308f9c60227577",
+  "consumer_sha256": "726f2332835eb09903972ca1916954459fc2a7cc804bf8b67505128552adee7c",
+  "checker_sha256": "3aa44b6e1a4d201806f4d9c3c5b51f109327ba42f214fe40294aa2ca9df9c291",
+  "actual_run_data_read": false
+}

@@ -1,0 +1,20 @@
+{
+  "status": "READ_ONLY_FEASIBILITY_REVIEW_NOT_IMPLEMENTED_NOT_NATIVE_TESTED",
+  "source_hashes": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt": "50089cb11edae66be4339a7258b96c7ac6b866b440255d48220aea7bf2fdb963",
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchObservation.kt": "dc1f3749fa85d62104156a17ae55413762dc5de590a654da272af907c3e246cf",
+    "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt": "052467625c685a79f72337379b2d4e70718440c6717e91c6d18677c9c1982581",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt": "b05c4c93f2c0ed36204bb548c20f8d95c0dca5a35238e05361ac3655f6f9a061",
+    "android/app/src/main/java/org/inkweft/app/InkWeftApplication.kt": "29831b20e0aaa518d344745b10fde972cb15b0eeabf8088ef54fe43f3dfb8b55",
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibraryBackupRepository.kt": "0824c6502e5187484310437c6a8be71739bf86db55a509d91e51a57a284aa4dd"
+  },
+  "review_sha256": "7bcc0e961175b4dbb1aa7d02c0a8244335bb3c3425de47638714bf100339df47",
+  "bytecode_files": {
+    "ChannelFlowTransformLatest$flowCollect$3$1.javap.txt": "da4a5c1491a06588f2475357aa3a9545df188ca93328ec9fa755e5f9b15b7da8",
+    "ChannelFlowTransformLatest.javap.txt": "9016d6a0b0eec8ea3b2bcc355d367fcf4ac2c73d6c3a3b70e3ecd36f2173f727",
+    "SQLiteConnection.javap.txt": "1609c6e5ae50cc94c522700ece463019cf5e6a3a2ad5f6185c415e0308726521",
+    "SQLiteConnectionPool.javap.txt": "005aea0b52c0e9acb8363846319b17a1513dbfb8a98026e4bf974b6af61f2ba2",
+    "SQLiteDatabase.javap.txt": "3b43b691914d7fa5e8ca384258a749525d75a5196fbace405243cba1a4a1e8bb",
+    "SQLiteFunction.javap.txt": "06e1fa9771af89110489054efe8ccf60e063afd2460ce70203d4e5426c8cce38"
+  }
+}

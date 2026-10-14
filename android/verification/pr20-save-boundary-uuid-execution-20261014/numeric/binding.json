@@ -1,0 +1,70 @@
+{
+  "run": 38543698114,
+  "job": 115784421756,
+  "scope": "actual-native diagnostic only; no B-to-C1 comparison",
+  "expected": {
+    "run_id": "38543698114",
+    "job_id": "115784421756",
+    "workflow_sha": "ac63ce66ed4aaec0372c56b39be97e3335966c31",
+    "source_commit": "94379190b9ad0e1034f136ea9887fb0ac12e7ea7",
+    "readiness_git": "a69c173c16bd8a434cc1eab9ef8ff2ad56070c19",
+    "prep_sha": "818493a1e8a4d2121e125d5ba39c4219f1977720"
+  },
+  "files": {
+    "frozen_analyzer": {
+      "path": "/workspace/scratch/pr20-save-boundary-analysis-20261014/analyze.py",
+      "bytes": 22935,
+      "sha256": "fd1c22004bb91e7e6673a6ac59eb0f2c2413c9f8ef454a00b2950c0581bbd1b7"
+    },
+    "marker_stream": {
+      "path": "/workspace/scratch/pr20-save-boundary-uuid-log-analysis-20261014/actual-output/method-10-C1-markers.log",
+      "bytes": 838444,
+      "sha256": "0ef0092547196143cb9a28e185052d29e63d5e2e25ea0ab5aaab60cffc702e22"
+    },
+    "whole_run_extraction": {
+      "path": "/workspace/scratch/pr20-save-boundary-uuid-log-analysis-20261014/actual-output/analysis.json",
+      "bytes": 74972,
+      "sha256": "1a63da107911072f3d9aca220df961b8661fae016543a8214e3094cbfdcd1140"
+    },
+    "guard_source": {
+      "path": "/workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveBoundaryDiagnosticsTest.kt",
+      "bytes": 27605,
+      "sha256": "cd1b0ba9e112a19e16fdea36b1b867183c890a4addb8c6ebfdfe7986f4a73038"
+    },
+    "analysis.json": {
+      "path": "/workspace/scratch/pr20-save-boundary-uuid-execution-20261014/numeric-analysis/analysis.json",
+      "bytes": 5538252,
+      "sha256": "05f728fae9fff2df0fc217ff6e3cb77a6cc69d0edae9bfa07853b7dc1c91f265"
+    },
+    "analyzer.log": {
+      "path": "/workspace/scratch/pr20-save-boundary-uuid-execution-20261014/numeric-analysis/analyzer.log",
+      "bytes": 201,
+      "sha256": "ab0894e977955c6d7c3a016dd76e94c529ca5a6a49a76abfd371c3ea6b447ab2"
+    },
+    "derive.py": {
+      "path": "/workspace/scratch/pr20-save-boundary-uuid-execution-20261014/numeric-analysis/derive.py",
+      "bytes": 13442,
+      "sha256": "a338b96817372a96a59d8b9900dee98f3ce278c1aabf3123ebae4007436ac2fb"
+    },
+    "derived.json": {
+      "path": "/workspace/scratch/pr20-save-boundary-uuid-execution-20261014/numeric-analysis/derived.json",
+      "bytes": 1555258,
+      "sha256": "6e703793fcf44a5a6685dd55f8b02ea45c44ff6386c433d34bb71b6f2dabc1ce"
+    },
+    "report.md": {
+      "path": "/workspace/scratch/pr20-save-boundary-uuid-execution-20261014/numeric-analysis/report.md",
+      "bytes": 23318,
+      "sha256": "f25528fa8712a9382ca66cb2e735ad281754b6860c1b87bff51c83cb7adbef81"
+    },
+    "segment-statistics.csv": {
+      "path": "/workspace/scratch/pr20-save-boundary-uuid-execution-20261014/numeric-analysis/segment-statistics.csv",
+      "bytes": 3121,
+      "sha256": "ddfdd658423d473ea2b6e8648f79ffc63a416c31d1585f34f862f868126549cf"
+    },
+    "save-overlaps.csv": {
+      "path": "/workspace/scratch/pr20-save-boundary-uuid-execution-20261014/numeric-analysis/save-overlaps.csv",
+      "bytes": 5514,
+      "sha256": "42fa422b493f75e50aef8793739bcf1db025dd1a345b736f75a8ae48d15af599"
+    }
+  }
+}

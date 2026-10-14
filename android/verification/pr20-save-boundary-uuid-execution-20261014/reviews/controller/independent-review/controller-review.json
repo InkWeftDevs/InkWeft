@@ -1,0 +1,74 @@
+{
+  "status": "PASS_NO_REMAINING_UNBOUND_DELTA_REVIEW_FINDING",
+  "scope": "LOCAL_READ_ONLY_AND_PURE_SYNTHETIC_NO_NATIVE",
+  "controller_manifest_sha256": "a09787d105551a10cea5627d8de377cfc0ab00c60e19da0dab5e21029d631e09",
+  "controller_files_sha256": {
+    "PLAN.template.md": "fc55e0d5517b9c39e0f975f8d9efc7fe08a023fcd64c4bfaf3b9f991476a8989",
+    "README.md": "aaf5ba80a6053b60d5739a70e9f30a99f4139cfc7d6f84bb17f636555ae1a8f9",
+    "authorization.json": "addd994a3d4790359f80303368dfd5d385499c5d55be8cf0ea1e48a98eb3d577",
+    "bind_control.py": "4a3fa98c8be38a896a05ea7851881fd7230862cdc9a242bfb627d68dfcfca4e6",
+    "check_offline.py": "789aeb5b7ea147a2fc5a08fd52db81a8b4c795b405c1e020cac91382aebe3890",
+    "cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "freeze_readiness.py": "a04055c0eb5c4a6ae2b01d3a9459d1f905f28a6293b859cec6d6b4afcad1f2e5",
+    "marker-contract.template.json": "69a340af04d9910da27db39ca973fa4da02c35dbe04b82e24ac587c0152e8f12",
+    "markers.py": "d27e19a7ae5b090436b8e70d5a2d914119e343eeb40e01352359d27f30215857",
+    "method-plan.template.json": "df8b176df3fcae60fae4d0ec8fb0a106eb04413d061cd98804a85338e9a7993d",
+    "original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "package.py": "c4794bf3a689b8fc7351f8e70efe5823cb70953f358d0b39ae2f6e42890324dc",
+    "prepare_sources.py": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516",
+    "run.py": "b6537de9ecb1787b899a0e4129b0a8db3fd76563fcc9162b35c5f98987febf15",
+    "size_bounds.py": "4eff72f52f9ae5ba5becadeb109ae425fdc196ed3316b7c902fb540a2cf01014",
+    "workflow.proposed.yml": "ad384526953c3751c221c6121843fed86dec545c4fda868485862b9cf5fb321c"
+  },
+  "source_candidate": "94379190b9ad0e1034f136ea9887fb0ac12e7ea7",
+  "source_git_blobs_verified": 6,
+  "test_sha256": "cd1b0ba9e112a19e16fdea36b1b867183c890a4addb8c6ebfdfe7986f4a73038",
+  "offline_preflight": {
+    "path": "/workspace/scratch/pr20-save-boundary-uuid-ci-20261014/offline-check-01/preflight.json",
+    "sha256": "0ae9b3912a513497075db30f021d073f911a36d840961dba34b2fb510bdc25b5",
+    "groups": 14,
+    "status": "PASS",
+    "scope": "OFFLINE_ONLY_NO_NEW_NATIVE_NO_NETWORK_NO_BUILD",
+    "reviewer_reran_whole_checker": false
+  },
+  "independent_checks": {
+    "path": "/workspace/scratch/pr20-save-boundary-uuid-ci-20261014/independent-review/independent-checks.json",
+    "sha256": "8a4e85f7de7d54f5c5a898614cab1dad8f25be6ac907feec81cbd16d13192cc7",
+    "synthetic_cases": 14,
+    "status": "PASS_LOCAL_DELTA_AND_SYNTHETIC_FORWARDING",
+    "script_sha256": "3bc3a84dc7e23aeb28184cda8a0f99ddfc2217928d1b731446a16e7f8a4764b7"
+  },
+  "byte_identical_files": [
+    "authorization.json",
+    "cleanup.py",
+    "freeze_readiness.py",
+    "markers.py",
+    "method-plan.template.json",
+    "original-protocol.json",
+    "prepare_sources.py"
+  ],
+  "run_ast_delta": "scope strings plus forward_failure_log and finally non-PASS call",
+  "packager_secret_regex_ast_identical": true,
+  "conservative_combined_bytes": 19036122,
+  "artifact_limit_bytes": 20971520,
+  "budget_minutes": [
+    30,
+    45,
+    55,
+    60
+  ],
+  "inactive_state": {
+    "authorization_approved": false,
+    "status": "UNBOUND",
+    "source_hash": "UNBOUND",
+    "prep_guard": "0000000000000000000000000000000000000000"
+  },
+  "report_sha256": "34d4d7933a55f82ff99905fdc6059c5450515051f32628ee886c8a77744b9d66",
+  "remaining_findings": [],
+  "limits": [
+    "Later bound/prep/active output needs exact identity review.",
+    "Separate failure consumer must validate envelope semantics and never upgrade failure.",
+    "Synthetic and static size evidence do not establish native guard success or performance acceptance.",
+    "Old failed original JUnit stack was not recovered."
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "scope": "ARCHIVE_OFFLINE_RECOMPUTATION_NOT_NATIVE",
+  "exit_code": 0,
+  "saveCount": 90,
+  "comparison": "Byte-exact complete analysis.json reproduced from archived marker bytes and frozen analyzer",
+  "original_source_name": "method-10-C1-markers.log",
+  "recomputed_source_name": "method-10-C1-markers.log",
+  "marker_sha256": "0ef0092547196143cb9a28e185052d29e63d5e2e25ea0ab5aaab60cffc702e22",
+  "analyzer_sha256": "fd1c22004bb91e7e6673a6ac59eb0f2c2413c9f8ef454a00b2950c0581bbd1b7",
+  "output_sha256": "05f728fae9fff2df0fc217ff6e3cb77a6cc69d0edae9bfa07853b7dc1c91f265",
+  "output_bytes": 5538252
+}

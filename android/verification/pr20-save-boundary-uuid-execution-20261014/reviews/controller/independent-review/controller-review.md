@@ -1,0 +1,25 @@
+# Independent UUID-scope controller delta review
+
+**PASS: no remaining static or reproduced blocker in this UNBOUND controller.** Review binds manifest `a09787d105551a10cea5627d8de377cfc0ab00c60e19da0dab5e21029d631e09`, source candidate `94379190b9ad0e1034f136ea9887fb0ac12e7ea7`, and test SHA `cd1b0ba9e112a19e16fdea36b1b867183c890a4addb8c6ebfdfe7986f4a73038`. All sixteen current controller files match the manifest and the recorded fourteen-group offline preflight. All six reviewed source blobs were independently checked against the actual candidate Git commit.
+
+## Minimal delta
+
+Seven files are byte-identical to the prior reviewed inactive controller: authorization, cleanup, freeze_readiness, markers, method-plan, original-protocol and prepare_sources. The binder, packager and proposed workflow differ only by the new scope path/name. Normalizing scope strings and removing the one new helper and its non-PASS finally call makes the complete run.py AST identical to the prior version. The contract changes only the reviewed test hash in methods 8/9/10 and the six-file source list, plus the separate failure envelope definition. The public protocol, ten exact calls, seed 4101, original initial fixture digest, diagnostic lifecycle, watchdogs, real native dependency/APK checks and existing PASS-marker schemas are unchanged.
+
+Authorization remains false/UNBOUND, run/package source hashes remain UNBOUND, and the proposed workflow has the zero prep-parent guard. No readiness was frozen or controller activated by this reviewer. Source/readiness/prep/active identities still need binding and final byte review by root.
+
+## Failure-only original evidence
+
+`run.py:540–590` accepts only the exact method instrumentation path, matching ordinal/identity/selection from the frozen plan; rejects symlinks/missing files; bounds stat/read to 256 KiB plus a one-byte overflow witness; verifies exact raw SHA; applies the packager's identical secret-regex AST; and strictly decodes UTF-8. Invalid, sensitive, mismatched or oversized content is refused with no original text. Nothing is truncated. Unicode, CRLF, NUL and marker-like lines preserve exact original bytes after JSON decoding. ASCII JSON keeps the envelope to one physical line and prevents an embedded marker-looking line from becoming a new receipt.
+
+The envelope binds run/attempt/workflow/source/spec/method-plan/test hash and original log hash; its schema allows only FAIL or INCOMPLETE host status. The early PASS guard emits nothing. The helper neither calls successful marker forwarding nor sets PASS. `method` invokes it only for a non-PASS status in the existing finally path (`run.py:633–638`) and catches forwarding exceptions without replacing the original exception. First failure still propagates out and stops later methods, so no retry or additional diagnostic invocation is introduced. A prior partial marker block, if one exists before a later host failure, still needs its original METHOD PASS and complete run evidence; a FAILURE_LOG envelope cannot provide that closure.
+
+The schema is separate from existing boundary markers. The old frozen extractor intentionally remains unchanged and rejects unfamiliar causal prefixes; any future failure-envelope consumer must independently validate identity/hash/refusal semantics and retain whole-run failure. This review covers the producer only.
+
+## Evidence, size and limits
+
+The owner's fourteen offline groups were read and their input hashes checked. This reviewer separately ran **fourteen pure synthetic cases** against AST-extracted helper/method functions, with no runner setup: Unicode/control-line preservation; exact cap with sixfold escaping; oversize, invalid UTF-8, hash mismatch, five secret-pattern classes and wrong-path refusal; PASS silence; and identical original exception preservation with normal or throwing forwarding. The prior raw-JUnit parser and existing execution functions are unchanged; the owner's new group additionally verifies adb-exit0/JUnitFAIL, missing/symlink refusal and retained failure status.
+
+The conservative combined estimate is **19,036,122 bytes**, below the unchanged **20,971,520-byte** limit by **1,935,398 bytes**. It includes prior raw/records, official envelopes, one 256 KiB failure log, one 1,581,056-byte worst-escaping envelope and 3 MiB other text reserve. This is a static estimate, not actual native output. Oversized raw logs may cause the unchanged actual packager to reject the artifact; it never truncates or raises the allowance. The real package limit, three-day retention, cleanup, minimal UID ACL restoration and setup 30/data 45/work 55/job 60 budgets remain unchanged.
+
+No network, build, native execution, Git mutation, source edit, readiness freeze, push or activation was performed. Old controller/readiness/failed-run evidence was not changed. No performance gate is closed. The unavailable old JUnit stack remains unavailable; the separately reviewed UUID fixture defect is static evidence, not a recovered native stack.
