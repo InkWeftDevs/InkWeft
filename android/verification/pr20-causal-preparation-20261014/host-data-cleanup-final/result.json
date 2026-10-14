@@ -1,0 +1,69 @@
+{
+  "scope": "data",
+  "screen": "search",
+  "gradleTasks": [
+    ":data-local:testDebugUnitTest",
+    "--tests",
+    "org.inkweft.data.LibrarySearchTermsTest",
+    "--tests",
+    "org.inkweft.data.LibrarySearchObservationTest",
+    ":data-local:compileDebugAndroidTestKotlin"
+  ],
+  "jvmTests": [
+    "org.inkweft.data.LibrarySearchTermsTest",
+    "org.inkweft.data.LibrarySearchObservationTest"
+  ],
+  "deviceTests": [],
+  "deviceSerial": null,
+  "performanceRequested": false,
+  "formalAcceptance": false,
+  "evidenceKind": "SCREENING_ONLY",
+  "expectedDeviceMethods": [],
+  "startedUtc": "20261014T044527Z",
+  "commands": [
+    {
+      "args": [
+        "/workspace/.setup/tools/gradle-9.4.1/bin/gradle",
+        ":data-local:testDebugUnitTest",
+        "--tests",
+        "org.inkweft.data.LibrarySearchTermsTest",
+        "--tests",
+        "org.inkweft.data.LibrarySearchObservationTest",
+        ":data-local:compileDebugAndroidTestKotlin",
+        "--daemon",
+        "--max-workers=1",
+        "--console=plain",
+        "-Dorg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "--init-script",
+        "/workspace/scratch/pr20-causal-20261014/host-data-cleanup-final/application-id.init.gradle",
+        "--offline"
+      ],
+      "exitCode": 0,
+      "seconds": 61.444,
+      "log": "gradle.log"
+    }
+  ],
+  "status": "PASS",
+  "artifacts": [],
+  "nativeCorrectness": "NOT_RUN",
+  "nativePerformance": "NOT_RUN",
+  "jvmSuites": [
+    {
+      "class": "org.inkweft.data.LibrarySearchObservationTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "org.inkweft.data.LibrarySearchTermsTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "jvmTaskOutcome": "UP-TO-DATE",
+  "seconds": 61.452
+}

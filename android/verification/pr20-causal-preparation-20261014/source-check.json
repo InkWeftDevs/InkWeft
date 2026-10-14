@@ -1,0 +1,26 @@
+{
+  "scope": "PREPARATION_ONLY_NOT_NATIVE",
+  "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+  "starting_pr_commit": "607c891efe6afd70b4c3fd7db0e95d0e2ccabd8c",
+  "source_branch_head": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+  "main_head": "aa43d43bb7841b04b8a8df091b98c47b66d86be3",
+  "changed_sources": {
+    "android/app/src/androidTest/java/org/inkweft/app/RasterCausalDiagnosticsTest.kt": "f7a1424cfec939344584c86a1c11005d9f5d70447d31651bc9764907938cccc1",
+    "android/app/src/main/java/org/inkweft/app/RasterFrameDiagnostics.kt": "24f139a486d6603ea5bc62616f05f0d55d2a4fd90a3e5dd67b87b883c6689232",
+    "android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt": "feab7a6d9c4eec09feb870f25b82fbc96f0ba915e2fdf4a5720f5d89943efa8e",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionCausalTest.kt": "4f80b8ce32e1aa2bae1d919b96c06b1897e7a8500c748822efd05119ba87ec4a",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveCausalTest.kt": "f2faf22c8eff0c5f37c981c389917e17214d86edc38535e68dd9b0ab69a1eb8e",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchCausalTest.kt": "8bbf97dc7d31ed93dedbd66a1758973c53df34a2226984f9fa59562bf0b89ebe",
+    "android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt": "b96890478129bbb7b0bbb538c3cf8d5f2e97f2b8b5e2e34d8057c855c9ec6ca9",
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt": "5c4c003c181fe40d2d75620b3e6163e92e6ced70403b6dcc285c25e4d56d1973",
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibraryTextIndex.kt": "34fac20efe18b5c8c88039b9303114569ca17e1b0f2c88be2b45fd201494b50b",
+    "android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt": "e1570c26f61ba352f7a636d934e7acbff6f0b3250985f1e9caf0a55046432c9a"
+  },
+  "nativeCorrectness": "NOT_RUN",
+  "nativePerformance": "NOT_RUN",
+  "executed_jvm_tests": 69,
+  "cached_jvm_tests_not_recounted": 12,
+  "initial_compile_failure_retained": "host-data",
+  "final_data_test_compile": "host-data-cleanup-final",
+  "final_app_test_compile": "host-app"
+}

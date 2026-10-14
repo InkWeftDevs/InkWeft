@@ -1,0 +1,12 @@
+{
+  "scope": "STATIC_ONLY_NOT_NATIVE_VALIDATED",
+  "sourceSha256": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt": "5c4c003c181fe40d2d75620b3e6163e92e6ced70403b6dcc285c25e4d56d1973",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchCausalTest.kt": "8bbf97dc7d31ed93dedbd66a1758973c53df34a2226984f9fa59562bf0b89ebe"
+  },
+  "defaultWarmPageSqlEqualsD66": true,
+  "productionPageSqlSha256": "53828eb83f35c4ea3721a97bd48a5dc5aae451df5617416c904e5d2d4e89dbde",
+  "instrumentedPageSqlSha256": "0713c3829d858864f5f05299947650cc7a439e4676f6c9ff81228bcc8dc91096",
+  "publicProbeModifiedByThisTask": false,
+  "toolchainExecutedByThisAgent": false
+}

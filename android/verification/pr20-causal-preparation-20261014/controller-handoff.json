@@ -1,0 +1,155 @@
+{
+  "status": "READY_UNBOUND_OFFLINE_ONLY",
+  "source_candidate": "78a5babeaeb92292026423222d5e08635989198b",
+  "scope": "13 methods / 1 source / 3 APK / 2 groups; no new native run",
+  "controller_directory": "/workspace/InkWeft/ci/pr20-causal",
+  "preflight": {
+    "path": "/workspace/scratch/pr20-causal-20261014/offline-check-final/preflight.json",
+    "sha256": "6d4398e7f754c0a01a11d6dbe1041922e6e9ed80432fa6af0df2b583a0a61adc",
+    "groups_passed": 12
+  },
+  "files": {
+    "PLAN.template.md": "0dd59e718b72e42d74fc2027d773bf935cee33dfca5ed4c0043f7536f88aa757",
+    "README.md": "1b3bd899696d80240403a46ed662b38a89f592dd656f1ee79ade39c4e4a0af7b",
+    "authorization.json": "f05be96b57aa10ce6c2252ec12197ce1f0f03fbd130009d195b204252c2df7ab",
+    "bind_control.py": "19629c16f2ee62b86a9420f830bdb01c781e031a933d1f414bf83bc2c8c04f97",
+    "check_offline.py": "76e359263a6af7e7e3d68bfc8a6fdb6ff4c88570da2b4355736b13917cb3df82",
+    "cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "freeze_readiness.py": "46fe8a72df580399fb60051e8eaac4bc29880f487555f3825ac48fcd06a4994a",
+    "marker-contract.template.json": "ad83592ef4c9b805a6c6d89f5cafec328cbc16f7c494cb55ced66ff5215b797c",
+    "markers.py": "3514d2bca1f7b91efe7886ea42763b37eca873c8914938e8ad3dfeb03eaa1592",
+    "method-plan.template.json": "bade9c4d2eecdc6e4c32f92d772dee3a478a9692aaaade5140568085917b0c42",
+    "original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "package.py": "7bbb06ca67b24bc06b78b1bdb258a9de552c33cdf6ec1dfb50f81c455d06bbd6",
+    "prepare_sources.py": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516",
+    "run.py": "a361a8c0457e095b1ccc7fc34f7e57d48b6e7eca8425171cc1dceecd4ecb515a",
+    "save-marker-schemas.json": "6384d58153399c9c743dad8dd5c9d80927da4a70aa737eef38ab1261e41f05c8",
+    "size_bounds.py": "3eca77783dcbffb707f69e2e5e41600d286157c7db57cba882a773fe0282e10a",
+    "workflow.proposed.yml": "01be6b6f2e06d1e858bc5c633ef6b3b3a82588c213dfd20a459a5cbf0222bfb3"
+  },
+  "capacity": {
+    "kind": "STATIC_SCHEMA_WORST_SHAPE_NOT_NATIVE",
+    "methods": [
+      {
+        "ordinal": 1,
+        "per_marker_upper_bytes": {},
+        "raw_framed_upper_bytes": 16384,
+        "compact_records_upper_bytes": 3,
+        "forwarded_official_log_upper_bytes": 0
+      },
+      {
+        "ordinal": 2,
+        "per_marker_upper_bytes": {},
+        "raw_framed_upper_bytes": 16384,
+        "compact_records_upper_bytes": 3,
+        "forwarded_official_log_upper_bytes": 0
+      },
+      {
+        "ordinal": 3,
+        "per_marker_upper_bytes": {},
+        "raw_framed_upper_bytes": 16384,
+        "compact_records_upper_bytes": 3,
+        "forwarded_official_log_upper_bytes": 0
+      },
+      {
+        "ordinal": 4,
+        "per_marker_upper_bytes": {},
+        "raw_framed_upper_bytes": 16384,
+        "compact_records_upper_bytes": 3,
+        "forwarded_official_log_upper_bytes": 0
+      },
+      {
+        "ordinal": 5,
+        "per_marker_upper_bytes": {},
+        "raw_framed_upper_bytes": 16384,
+        "compact_records_upper_bytes": 3,
+        "forwarded_official_log_upper_bytes": 0
+      },
+      {
+        "ordinal": 6,
+        "per_marker_upper_bytes": {},
+        "raw_framed_upper_bytes": 16384,
+        "compact_records_upper_bytes": 3,
+        "forwarded_official_log_upper_bytes": 0
+      },
+      {
+        "ordinal": 7,
+        "per_marker_upper_bytes": {},
+        "raw_framed_upper_bytes": 16384,
+        "compact_records_upper_bytes": 3,
+        "forwarded_official_log_upper_bytes": 0
+      },
+      {
+        "ordinal": 8,
+        "per_marker_upper_bytes": {
+          "LIBRARY_CAUSAL_UNICODE": 122
+        },
+        "raw_framed_upper_bytes": 16688,
+        "compact_records_upper_bytes": 168,
+        "forwarded_official_log_upper_bytes": 457
+      },
+      {
+        "ordinal": 9,
+        "per_marker_upper_bytes": {
+          "LIBRARY_CAUSAL_WARM": 208206
+        },
+        "raw_framed_upper_bytes": 224769,
+        "compact_records_upper_bytes": 208249,
+        "forwarded_official_log_upper_bytes": 406351
+      },
+      {
+        "ordinal": 10,
+        "per_marker_upper_bytes": {
+          "LIBRARY_SAVE_CAUSAL_RESULT": 8839,
+          "LIBRARY_SAVE_CAUSAL_STAGES": 21570,
+          "LIBRARY_SAVE_CAUSAL_END": 191
+        },
+        "raw_framed_upper_bytes": 4306324,
+        "compact_records_upper_bytes": 4260134,
+        "forwarded_official_log_upper_bytes": 4724184
+      },
+      {
+        "ordinal": 11,
+        "per_marker_upper_bytes": {
+          "HISTORY_GC_CAUSAL_TRIAL": 58485,
+          "HISTORY_GC_CAUSAL_SUMMARY": 2477
+        },
+        "raw_framed_upper_bytes": 1779086,
+        "compact_records_upper_bytes": 1758426,
+        "forwarded_official_log_upper_bytes": 2838712
+      },
+      {
+        "ordinal": 12,
+        "per_marker_upper_bytes": {
+          "HISTORY_GC_CAUSAL_TRIAL": 58485,
+          "HISTORY_GC_CAUSAL_SUMMARY": 2477
+        },
+        "raw_framed_upper_bytes": 1779086,
+        "compact_records_upper_bytes": 1758426,
+        "forwarded_official_log_upper_bytes": 2838712
+      },
+      {
+        "ordinal": 13,
+        "per_marker_upper_bytes": {
+          "RASTER_CAUSAL_DIAGNOSTIC": 153701
+        },
+        "raw_framed_upper_bytes": 478039,
+        "compact_records_upper_bytes": 461243,
+        "forwarded_official_log_upper_bytes": 495234
+      }
+    ],
+    "raw_plus_records_bytes": 17145347,
+    "official_record_stream_bytes": 11303650,
+    "total_artifact_limit_bytes": 20971520,
+    "note": "Only bounded diagnostic payloads are estimated. Build/dependency/source/host/cleanup text needs separate reserve; packager always checks real total and never truncates."
+  },
+  "remaining": [
+    "Root source readiness freeze and real Git identity binding",
+    "Root independent final bound preflight/review",
+    "Root alone prepares exact prep-parent one-attempt activation; no active workflow created"
+  ],
+  "historical_checks": [
+    "offline-check-01/02 parser adaptation failures retained",
+    "offline-check-03/04/05 intermediate PASS receipts retained"
+  ]
+}

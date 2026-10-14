@@ -1,0 +1,268 @@
+{
+  "status": "PASS",
+  "scope": "OFFLINE_ONLY_NO_NEW_NATIVE_NO_NETWORK_NO_BUILD",
+  "groups": [
+    {
+      "name": "unbound isolation and exact scope",
+      "status": "PASS",
+      "details": {
+        "methods": 13,
+        "groups": 2,
+        "source_identities": 1,
+        "apk_count": 3,
+        "execution_binding": "UNBOUND_REFUSED",
+        "copied_functions": [
+          "write_json",
+          "save",
+          "seconds",
+          "digest",
+          "owned",
+          "run",
+          "capture",
+          "shell",
+          "phase",
+          "host",
+          "environment",
+          "source_manifest",
+          "junit"
+        ],
+        "cleanup_byte_identical": true
+      }
+    },
+    {
+      "name": "workflow syntax and isolated real first-step clock",
+      "status": "PASS",
+      "details": {
+        "actionlint": 0,
+        "phase_wrappers": 5,
+        "actual_clock_lines": 9,
+        "second_clock_rejected": true
+      }
+    },
+    {
+      "name": "phase/work absolute deadline boundaries",
+      "status": "PASS",
+      "details": {
+        "phase_boundaries": 12
+      }
+    },
+    {
+      "name": "strict original JUnit parser and skipped/fault cases",
+      "status": "PASS",
+      "details": {
+        "prior_raw_junit": 58,
+        "failure_or_skipped_variants": 10,
+        "new_native": 0
+      }
+    },
+    {
+      "name": "closed causal marker schemas and whole-block fault refusal",
+      "status": "PASS",
+      "details": {
+        "synthetic_complete_blocks": 13,
+        "malformed_unknown_duplicate_nonfinite_missing_extra_negatives": 12,
+        "closed_object_schemas": 8,
+        "query_plan_positive": 2,
+        "query_plan_negative": 2
+      }
+    },
+    {
+      "name": "actual fixture writer page and FULL event constant coverage",
+      "status": "PASS",
+      "details": {
+        "explicit_source_fixture_pages": 20001,
+        "pages20000_refused": true,
+        "real_full_observe_stage_literals": [
+          "card-hits-end",
+          "card-hits-start",
+          "connection-closed",
+          "connection-open",
+          "drafts-ready",
+          "hits-ready",
+          "index-build-completed",
+          "metadata-end",
+          "metadata-start",
+          "observe-debounce-cancel",
+          "observe-debounce-end",
+          "observe-debounce-start",
+          "observe-index-completed",
+          "observe-index-initial",
+          "observe-invalidation",
+          "observe-read-cancel",
+          "observe-read-end",
+          "observe-read-error",
+          "observe-read-start",
+          "observe-request",
+          "observe-scheduled",
+          "page-end",
+          "page-hits-end",
+          "page-hits-start",
+          "page-start",
+          "pending-end",
+          "pending-start",
+          "read-cancel",
+          "read-end",
+          "read-error",
+          "read-requested",
+          "read-start",
+          "scope-end",
+          "scope-start",
+          "snapshot-closed",
+          "snapshot-open"
+        ]
+      }
+    },
+    {
+      "name": "all-three package natural isolation and no cleanup fallback",
+      "status": "PASS",
+      "details": [
+        "gone",
+        "app_alive",
+        "test_alive",
+        "transport"
+      ]
+    },
+    {
+      "name": "instrumentation manifest uses xmltree and exact target package",
+      "status": "PASS",
+      "details": {
+        "prior_actual_data_manifest": 1,
+        "synthetic_app_target": 1,
+        "mismatches": 4
+      }
+    },
+    {
+      "name": "both install groups bind exact installed APK bytes; wrong path/hash stop",
+      "status": "PASS",
+      "details": [
+        {
+          "group": "C1-data-diagnostics",
+          "case": "match",
+          "commands": 3
+        },
+        {
+          "group": "C1-data-diagnostics",
+          "case": "wrong_hash",
+          "commands": 3
+        },
+        {
+          "group": "C1-data-diagnostics",
+          "case": "wrong_path",
+          "commands": 2
+        },
+        {
+          "group": "C1-raster-diagnostics",
+          "case": "match",
+          "commands": 6
+        },
+        {
+          "group": "C1-raster-diagnostics",
+          "case": "wrong_hash",
+          "commands": 3
+        },
+        {
+          "group": "C1-raster-diagnostics",
+          "case": "wrong_path",
+          "commands": 2
+        }
+      ]
+    },
+    {
+      "name": "malformed extra marker preserves raw JUnit PASS but host INCOMPLETE",
+      "status": "PASS",
+      "details": {
+        "junit": "PASS",
+        "host": "INCOMPLETE",
+        "unvalidated_payload_forwarded": false,
+        "raw_preserved": true
+      }
+    },
+    {
+      "name": "actual new packager: partial, missing raw, failure, limits and privacy",
+      "status": "PASS",
+      "details": [
+        {
+          "case": "running",
+          "exit": 0
+        },
+        {
+          "case": "installed",
+          "exit": 0
+        },
+        {
+          "case": "between_steps",
+          "exit": 0
+        },
+        {
+          "case": "pass_preserved",
+          "exit": 0
+        },
+        {
+          "case": "fail_preserved",
+          "exit": 0
+        },
+        {
+          "case": "notrun_preserved",
+          "exit": 0
+        },
+        {
+          "case": "cleanup_failure",
+          "exit": 0
+        },
+        {
+          "case": "all13_complete",
+          "exit": 0
+        },
+        {
+          "case": "all13_missing_raw",
+          "exit": 0
+        },
+        {
+          "case": "oversize",
+          "exit": 1
+        },
+        {
+          "case": "secret",
+          "exit": 1
+        },
+        {
+          "case": "excluded_binary",
+          "exit": 0
+        },
+        {
+          "case": "no_summary",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "name": "bounded maximum shapes plus three MiB other text reserve",
+      "status": "PASS",
+      "details": {
+        "raw_plus_records_upper_bytes": 17145347,
+        "other_text_reserved_bytes": 3145728,
+        "final_real_total_checked_by_packager": true
+      }
+    }
+  ],
+  "inputs": {
+    "/workspace/InkWeft/ci/pr20-causal/PLAN.template.md": "0dd59e718b72e42d74fc2027d773bf935cee33dfca5ed4c0043f7536f88aa757",
+    "/workspace/InkWeft/ci/pr20-causal/README.md": "1b3bd899696d80240403a46ed662b38a89f592dd656f1ee79ade39c4e4a0af7b",
+    "/workspace/InkWeft/ci/pr20-causal/authorization.json": "f05be96b57aa10ce6c2252ec12197ce1f0f03fbd130009d195b204252c2df7ab",
+    "/workspace/InkWeft/ci/pr20-causal/bind_control.py": "19629c16f2ee62b86a9420f830bdb01c781e031a933d1f414bf83bc2c8c04f97",
+    "/workspace/InkWeft/ci/pr20-causal/check_offline.py": "76e359263a6af7e7e3d68bfc8a6fdb6ff4c88570da2b4355736b13917cb3df82",
+    "/workspace/InkWeft/ci/pr20-causal/cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "/workspace/InkWeft/ci/pr20-causal/freeze_readiness.py": "46fe8a72df580399fb60051e8eaac4bc29880f487555f3825ac48fcd06a4994a",
+    "/workspace/InkWeft/ci/pr20-causal/marker-contract.template.json": "ad83592ef4c9b805a6c6d89f5cafec328cbc16f7c494cb55ced66ff5215b797c",
+    "/workspace/InkWeft/ci/pr20-causal/markers.py": "3514d2bca1f7b91efe7886ea42763b37eca873c8914938e8ad3dfeb03eaa1592",
+    "/workspace/InkWeft/ci/pr20-causal/method-plan.template.json": "bade9c4d2eecdc6e4c32f92d772dee3a478a9692aaaade5140568085917b0c42",
+    "/workspace/InkWeft/ci/pr20-causal/original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "/workspace/InkWeft/ci/pr20-causal/package.py": "7bbb06ca67b24bc06b78b1bdb258a9de552c33cdf6ec1dfb50f81c455d06bbd6",
+    "/workspace/InkWeft/ci/pr20-causal/prepare_sources.py": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516",
+    "/workspace/InkWeft/ci/pr20-causal/run.py": "a361a8c0457e095b1ccc7fc34f7e57d48b6e7eca8425171cc1dceecd4ecb515a",
+    "/workspace/InkWeft/ci/pr20-causal/save-marker-schemas.json": "6384d58153399c9c743dad8dd5c9d80927da4a70aa737eef38ab1261e41f05c8",
+    "/workspace/InkWeft/ci/pr20-causal/size_bounds.py": "3eca77783dcbffb707f69e2e5e41600d286157c7db57cba882a773fe0282e10a",
+    "/workspace/InkWeft/ci/pr20-causal/workflow.proposed.yml": "01be6b6f2e06d1e858bc5c633ef6b3b3a82588c213dfd20a459a5cbf0222bfb3"
+  },
+  "checker_sha256": "76e359263a6af7e7e3d68bfc8a6fdb6ff4c88570da2b4355736b13917cb3df82"
+}

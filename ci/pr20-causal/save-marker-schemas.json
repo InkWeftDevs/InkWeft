@@ -1,0 +1,420 @@
+{
+  "LIBRARY_SAVE_CAUSAL_RESULT": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "schema",
+      "diagnosticOnly",
+      "mode",
+      "block",
+      "seed",
+      "readiness",
+      "fixture",
+      "sourceChecks",
+      "indexRowsAfterSaves",
+      "saves"
+    ],
+    "properties": {
+      "schema": {
+        "type": "integer",
+        "const": 1
+      },
+      "diagnosticOnly": {
+        "type": "boolean",
+        "const": true
+      },
+      "mode": {
+        "type": "string",
+        "enum": [
+          "IDLE",
+          "TRACKER",
+          "INDEX_ONLY",
+          "INDEX_TRACKER",
+          "READS_ONLY",
+          "FULL"
+        ],
+        "maxLength": 13
+      },
+      "block": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "seed": {
+        "type": "integer",
+        "minimum": 4101,
+        "maximum": 4102
+      },
+      "readiness": {
+        "type": "string",
+        "enum": [
+          "first-index-commit",
+          "first-source-check",
+          "tracker-registered",
+          "fixture-ready"
+        ],
+        "maxLength": 18
+      },
+      "fixture": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rowCounts",
+          "logicalSha256"
+        ],
+        "properties": {
+          "rowCounts": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "notes",
+              "note_revisions",
+              "notebook_workspace",
+              "notebook_pages",
+              "page_search_text",
+              "library_search_pending"
+            ],
+            "properties": {
+              "notes": {
+                "type": "integer",
+                "const": 501
+              },
+              "note_revisions": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 20000
+              },
+              "notebook_workspace": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 20000
+              },
+              "notebook_pages": {
+                "type": "integer",
+                "const": 20001
+              },
+              "page_search_text": {
+                "type": "integer",
+                "const": 20000
+              },
+              "library_search_pending": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 20000
+              }
+            }
+          },
+          "logicalSha256": {
+            "type": "string",
+            "pattern": "[0-9a-f]{64}",
+            "maxLength": 64
+          }
+        }
+      },
+      "sourceChecks": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9223372036854775807
+      },
+      "indexRowsAfterSaves": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 20000
+      },
+      "saves": {
+        "type": "array",
+        "minItems": 30,
+        "maxItems": 30,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sample",
+            "startNs",
+            "endNs",
+            "elapsedMs",
+            "committed",
+            "revision",
+            "indexRowsStart",
+            "indexRowsEnd",
+            "sourceChecksStart",
+            "sourceChecksEnd"
+          ],
+          "properties": {
+            "sample": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 29
+            },
+            "startNs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "endNs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "elapsedMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000000000.0
+            },
+            "committed": {
+              "type": "boolean",
+              "const": true
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "indexRowsStart": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20000
+            },
+            "indexRowsEnd": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20000
+            },
+            "sourceChecksStart": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "sourceChecksEnd": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        }
+      }
+    }
+  },
+  "LIBRARY_SAVE_CAUSAL_STAGES": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "schema",
+      "mode",
+      "block",
+      "part",
+      "events"
+    ],
+    "properties": {
+      "schema": {
+        "type": "integer",
+        "const": 1
+      },
+      "mode": {
+        "type": "string",
+        "enum": [
+          "IDLE",
+          "TRACKER",
+          "INDEX_ONLY",
+          "INDEX_TRACKER",
+          "READS_ONLY",
+          "FULL"
+        ],
+        "maxLength": 13
+      },
+      "block": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "part": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 15
+      },
+      "events": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 128,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "owner",
+            "stage",
+            "sample",
+            "wallNs",
+            "threadCpuNs",
+            "threadId"
+          ],
+          "properties": {
+            "owner": {
+              "type": "string",
+              "enum": [
+                "save",
+                "read",
+                "index",
+                "tracker",
+                "control"
+              ],
+              "maxLength": 7
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "batch-committed",
+                "batch-precomputed",
+                "batch-written",
+                "card-hits-end",
+                "card-hits-start",
+                "committed-rows",
+                "connection-closed",
+                "connection-open",
+                "drafts-ready",
+                "first-fts-written",
+                "first-source-checked",
+                "first-source-read",
+                "first-tokenized",
+                "first-tokenizing",
+                "head-read",
+                "head-written",
+                "hits-ready",
+                "index-build-completed",
+                "metadata-end",
+                "metadata-start",
+                "notes-invalidation",
+                "observe-debounce-cancel",
+                "observe-debounce-end",
+                "observe-debounce-start",
+                "observe-index-completed",
+                "observe-index-initial",
+                "observe-invalidation",
+                "observe-read-cancel",
+                "observe-read-end",
+                "observe-read-error",
+                "observe-read-start",
+                "observe-request",
+                "observe-scheduled",
+                "page-end",
+                "page-hits-end",
+                "page-hits-start",
+                "page-start",
+                "pending-end",
+                "pending-start",
+                "preparing-batch",
+                "read-cancel",
+                "read-end",
+                "read-error",
+                "read-requested",
+                "read-start",
+                "receipt-written",
+                "revision-written",
+                "saves-end",
+                "saves-start",
+                "scope-end",
+                "scope-start",
+                "snapshot-closed",
+                "snapshot-open",
+                "transaction-returned",
+                "waiting-writer",
+                "writer-acquired"
+              ],
+              "maxLength": 23
+            },
+            "sample": {
+              "type": "integer",
+              "minimum": -1,
+              "maximum": 2147483647
+            },
+            "wallNs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "threadCpuNs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "threadId": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        }
+      }
+    }
+  },
+  "LIBRARY_SAVE_CAUSAL_END": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "schema",
+      "mode",
+      "block",
+      "completed",
+      "savesStarted",
+      "committedSaves",
+      "lastAttemptedSample",
+      "failureOutcome",
+      "recordedEvents",
+      "droppedEvents"
+    ],
+    "properties": {
+      "schema": {
+        "type": "integer",
+        "const": 1
+      },
+      "mode": {
+        "type": "string",
+        "enum": [
+          "IDLE",
+          "TRACKER",
+          "INDEX_ONLY",
+          "INDEX_TRACKER",
+          "READS_ONLY",
+          "FULL"
+        ],
+        "maxLength": 13
+      },
+      "block": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "completed": {
+        "type": "boolean",
+        "const": true
+      },
+      "savesStarted": {
+        "type": "boolean",
+        "const": true
+      },
+      "committedSaves": {
+        "type": "integer",
+        "const": 30
+      },
+      "lastAttemptedSample": {
+        "type": "integer",
+        "const": 29
+      },
+      "failureOutcome": {
+        "type": "string",
+        "enum": [
+          "none"
+        ],
+        "maxLength": 4
+      },
+      "recordedEvents": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 2048
+      },
+      "droppedEvents": {
+        "type": "integer",
+        "const": 0
+      }
+    }
+  }
+}

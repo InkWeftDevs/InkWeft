@@ -1,0 +1,13 @@
+{
+  "status": "SOURCE_READY_NATIVE_NOT_RUN",
+  "source_sha256": {
+    "android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt": "feab7a6d9c4eec09feb870f25b82fbc96f0ba915e2fdf4a5720f5d89943efa8e",
+    "android/app/src/main/java/org/inkweft/app/RasterFrameDiagnostics.kt": "24f139a486d6603ea5bc62616f05f0d55d2a4fd90a3e5dd67b87b883c6689232",
+    "android/app/src/androidTest/java/org/inkweft/app/RasterCausalDiagnosticsTest.kt": "f7a1424cfec939344584c86a1c11005d9f5d70447d31651bc9764907938cccc1"
+  },
+  "public_probe_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+  "copied_common_assertion_and_timeout_fragments": 18,
+  "copied_fragments_missing": [],
+  "build_or_native_executed": false,
+  "comparison_note": "Compared assertion and original timeout fragments, not full lines: ready invocations now also pass a diagnostic phase label. An initial whole-line checker rejected that intentionally labelled line, then was corrected to check the unchanged assertion/timeout statements."
+}

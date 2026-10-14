@@ -1,0 +1,2912 @@
+{
+  "status": "UNBOUND",
+  "scope": "DIAGNOSTIC_ONLY",
+  "methods": {
+    "1": {
+      "selection": "org.inkweft.data.NoteRepositoryTest#sameCommandReturnsSameCommittedRevision",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/NoteRepositoryTest.kt",
+      "test_source_sha256": "46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a"
+    },
+    "2": {
+      "selection": "org.inkweft.data.NoteRepositoryTest#staleEditorCannotOverwriteNewHead",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/NoteRepositoryTest.kt",
+      "test_source_sha256": "46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a"
+    },
+    "3": {
+      "selection": "org.inkweft.data.NoteRepositoryTest#blankTextAndHistorySurviveReopen",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/NoteRepositoryTest.kt",
+      "test_source_sha256": "46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a"
+    },
+    "4": {
+      "selection": "org.inkweft.data.NoteRepositoryTest#oldReceiptIsNotReplacedWithCurrentHead",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/NoteRepositoryTest.kt",
+      "test_source_sha256": "46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a"
+    },
+    "5": {
+      "selection": "org.inkweft.data.LibraryTextIndexPreparationTest#cancelledFtsWriteRollsBackBeforeClearingPending",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryTextIndexPreparationTest.kt",
+      "test_source_sha256": "2b0bf878258086f80e349bf6360b833dd3b4c652aa8f5c7fcf6cce6ec892badb"
+    },
+    "6": {
+      "selection": "org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt",
+      "test_source_sha256": "b05c4c93f2c0ed36204bb548c20f8d95c0dca5a35238e05361ac3655f6f9a061"
+    },
+    "7": {
+      "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt",
+      "test_source_sha256": "b05c4c93f2c0ed36204bb548c20f8d95c0dca5a35238e05361ac3655f6f9a061"
+    },
+    "8": {
+      "selection": "org.inkweft.data.LibrarySearchCausalTest#profiledContainsPreservesUnicodeAndSourceResults",
+      "marker_policy": "required",
+      "kind": "unicode",
+      "markers": {
+        "LIBRARY_CAUSAL_UNICODE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 32768
+        }
+      },
+      "method_payload_max_bytes": 32768,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchCausalTest.kt",
+      "test_source_sha256": "8bbf97dc7d31ed93dedbd66a1758973c53df34a2226984f9fa59562bf0b89ebe"
+    },
+    "9": {
+      "selection": "org.inkweft.data.LibrarySearchCausalTest#warmUdfCostsAndQueryPlanAgainstInMemoryReference",
+      "marker_policy": "required",
+      "kind": "warm",
+      "markers": {
+        "LIBRARY_CAUSAL_WARM": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 32768
+        }
+      },
+      "method_payload_max_bytes": 32768,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchCausalTest.kt",
+      "test_source_sha256": "8bbf97dc7d31ed93dedbd66a1758973c53df34a2226984f9fa59562bf0b89ebe"
+    },
+    "10": {
+      "selection": "org.inkweft.data.LibrarySaveCausalTest#separateTrackerReaderAndIndexContention",
+      "marker_policy": "required",
+      "kind": "save",
+      "markers": {
+        "LIBRARY_SAVE_CAUSAL_RESULT": {
+          "min_count": 12,
+          "max_count": 12,
+          "payload_max_bytes": 32768
+        },
+        "LIBRARY_SAVE_CAUSAL_STAGES": {
+          "min_count": 12,
+          "max_count": 192,
+          "payload_max_bytes": 32768
+        },
+        "LIBRARY_SAVE_CAUSAL_END": {
+          "min_count": 12,
+          "max_count": 12,
+          "payload_max_bytes": 4096
+        }
+      },
+      "method_payload_max_bytes": 5242880,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveCausalTest.kt",
+      "test_source_sha256": "f2faf22c8eff0c5f37c981c389917e17214d86edc38535e68dd9b0ab69a1eb8e"
+    },
+    "11": {
+      "selection": "org.inkweft.data.HistoryDeletionCausalTest#sameRoomWriterConditionalDeleteArrival",
+      "marker_policy": "required",
+      "kind": "history",
+      "markers": {
+        "HISTORY_GC_CAUSAL_TRIAL": {
+          "min_count": 30,
+          "max_count": 30,
+          "payload_max_bytes": 65536
+        },
+        "HISTORY_GC_CAUSAL_SUMMARY": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 2097152,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionCausalTest.kt",
+      "test_source_sha256": "4f80b8ce32e1aa2bae1d919b96c06b1897e7a8500c748822efd05119ba87ec4a",
+      "connection": "same-room"
+    },
+    "12": {
+      "selection": "org.inkweft.data.HistoryDeletionCausalTest#separateRoomWriterConditionalDeleteArrival",
+      "marker_policy": "required",
+      "kind": "history",
+      "markers": {
+        "HISTORY_GC_CAUSAL_TRIAL": {
+          "min_count": 30,
+          "max_count": 30,
+          "payload_max_bytes": 65536
+        },
+        "HISTORY_GC_CAUSAL_SUMMARY": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 2097152,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionCausalTest.kt",
+      "test_source_sha256": "4f80b8ce32e1aa2bae1d919b96c06b1897e7a8500c748822efd05119ba87ec4a",
+      "connection": "separate-room"
+    },
+    "13": {
+      "selection": "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+      "marker_policy": "required",
+      "kind": "raster",
+      "markers": {
+        "RASTER_CAUSAL_DIAGNOSTIC": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 262144
+        }
+      },
+      "method_payload_max_bytes": 786432,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/RasterCausalDiagnosticsTest.kt",
+      "test_source_sha256": "f7a1424cfec939344584c86a1c11005d9f5d70447d31651bc9764907938cccc1"
+    }
+  },
+  "schemas": {
+    "LIBRARY_SAVE_CAUSAL_RESULT": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "diagnosticOnly",
+        "mode",
+        "block",
+        "seed",
+        "readiness",
+        "fixture",
+        "sourceChecks",
+        "indexRowsAfterSaves",
+        "saves"
+      ],
+      "properties": {
+        "schema": {
+          "type": "integer",
+          "const": 1
+        },
+        "diagnosticOnly": {
+          "type": "boolean",
+          "const": true
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "IDLE",
+            "TRACKER",
+            "INDEX_ONLY",
+            "INDEX_TRACKER",
+            "READS_ONLY",
+            "FULL"
+          ],
+          "maxLength": 13
+        },
+        "block": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 4101,
+          "maximum": 4102
+        },
+        "readiness": {
+          "type": "string",
+          "enum": [
+            "first-index-commit",
+            "first-source-check",
+            "tracker-registered",
+            "fixture-ready"
+          ],
+          "maxLength": 18
+        },
+        "fixture": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rowCounts",
+            "logicalSha256"
+          ],
+          "properties": {
+            "rowCounts": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "notes",
+                "note_revisions",
+                "notebook_workspace",
+                "notebook_pages",
+                "page_search_text",
+                "library_search_pending"
+              ],
+              "properties": {
+                "notes": {
+                  "type": "integer",
+                  "const": 501
+                },
+                "note_revisions": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 20000
+                },
+                "notebook_workspace": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 20000
+                },
+                "notebook_pages": {
+                  "type": "integer",
+                  "const": 20001
+                },
+                "page_search_text": {
+                  "type": "integer",
+                  "const": 20000
+                },
+                "library_search_pending": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 20000
+                }
+              }
+            },
+            "logicalSha256": {
+              "type": "string",
+              "pattern": "[0-9a-f]{64}",
+              "maxLength": 64
+            }
+          }
+        },
+        "sourceChecks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "indexRowsAfterSaves": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20000
+        },
+        "saves": {
+          "type": "array",
+          "minItems": 30,
+          "maxItems": 30,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sample",
+              "startNs",
+              "endNs",
+              "elapsedMs",
+              "committed",
+              "revision",
+              "indexRowsStart",
+              "indexRowsEnd",
+              "sourceChecksStart",
+              "sourceChecksEnd"
+            ],
+            "properties": {
+              "sample": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 29
+              },
+              "startNs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "endNs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "elapsedMs": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1000000000000.0
+              },
+              "committed": {
+                "type": "boolean",
+                "const": true
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "indexRowsStart": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 20000
+              },
+              "indexRowsEnd": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 20000
+              },
+              "sourceChecksStart": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "sourceChecksEnd": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              }
+            }
+          }
+        }
+      }
+    },
+    "LIBRARY_SAVE_CAUSAL_STAGES": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "mode",
+        "block",
+        "part",
+        "events"
+      ],
+      "properties": {
+        "schema": {
+          "type": "integer",
+          "const": 1
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "IDLE",
+            "TRACKER",
+            "INDEX_ONLY",
+            "INDEX_TRACKER",
+            "READS_ONLY",
+            "FULL"
+          ],
+          "maxLength": 13
+        },
+        "block": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "part": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 15
+        },
+        "events": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "owner",
+              "stage",
+              "sample",
+              "wallNs",
+              "threadCpuNs",
+              "threadId"
+            ],
+            "properties": {
+              "owner": {
+                "type": "string",
+                "enum": [
+                  "save",
+                  "read",
+                  "index",
+                  "tracker",
+                  "control"
+                ],
+                "maxLength": 7
+              },
+              "stage": {
+                "type": "string",
+                "enum": [
+                  "batch-committed",
+                  "batch-precomputed",
+                  "batch-written",
+                  "card-hits-end",
+                  "card-hits-start",
+                  "committed-rows",
+                  "connection-closed",
+                  "connection-open",
+                  "drafts-ready",
+                  "first-fts-written",
+                  "first-source-checked",
+                  "first-source-read",
+                  "first-tokenized",
+                  "first-tokenizing",
+                  "head-read",
+                  "head-written",
+                  "hits-ready",
+                  "index-build-completed",
+                  "metadata-end",
+                  "metadata-start",
+                  "notes-invalidation",
+                  "observe-debounce-cancel",
+                  "observe-debounce-end",
+                  "observe-debounce-start",
+                  "observe-index-completed",
+                  "observe-index-initial",
+                  "observe-invalidation",
+                  "observe-read-cancel",
+                  "observe-read-end",
+                  "observe-read-error",
+                  "observe-read-start",
+                  "observe-request",
+                  "observe-scheduled",
+                  "page-end",
+                  "page-hits-end",
+                  "page-hits-start",
+                  "page-start",
+                  "pending-end",
+                  "pending-start",
+                  "preparing-batch",
+                  "read-cancel",
+                  "read-end",
+                  "read-error",
+                  "read-requested",
+                  "read-start",
+                  "receipt-written",
+                  "revision-written",
+                  "saves-end",
+                  "saves-start",
+                  "scope-end",
+                  "scope-start",
+                  "snapshot-closed",
+                  "snapshot-open",
+                  "transaction-returned",
+                  "waiting-writer",
+                  "writer-acquired"
+                ],
+                "maxLength": 23
+              },
+              "sample": {
+                "type": "integer",
+                "minimum": -1,
+                "maximum": 2147483647
+              },
+              "wallNs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "threadCpuNs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "threadId": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              }
+            }
+          }
+        }
+      }
+    },
+    "LIBRARY_SAVE_CAUSAL_END": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "mode",
+        "block",
+        "completed",
+        "savesStarted",
+        "committedSaves",
+        "lastAttemptedSample",
+        "failureOutcome",
+        "recordedEvents",
+        "droppedEvents"
+      ],
+      "properties": {
+        "schema": {
+          "type": "integer",
+          "const": 1
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "IDLE",
+            "TRACKER",
+            "INDEX_ONLY",
+            "INDEX_TRACKER",
+            "READS_ONLY",
+            "FULL"
+          ],
+          "maxLength": 13
+        },
+        "block": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "completed": {
+          "type": "boolean",
+          "const": true
+        },
+        "savesStarted": {
+          "type": "boolean",
+          "const": true
+        },
+        "committedSaves": {
+          "type": "integer",
+          "const": 30
+        },
+        "lastAttemptedSample": {
+          "type": "integer",
+          "const": 29
+        },
+        "failureOutcome": {
+          "type": "string",
+          "enum": [
+            "none"
+          ],
+          "maxLength": 4
+        },
+        "recordedEvents": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2048
+        },
+        "droppedEvents": {
+          "type": "integer",
+          "const": 0
+        }
+      }
+    },
+    "LIBRARY_CAUSAL_WARM": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "enum": [
+            1
+          ]
+        },
+        "scope": {
+          "enum": [
+            "CAUSAL_ONLY"
+          ]
+        },
+        "query": {
+          "enum": [
+            "target-only"
+          ]
+        },
+        "fixture": {
+          "type": "object",
+          "properties": {
+            "books": {
+              "enum": [
+                500
+              ]
+            },
+            "authorBooks": {
+              "enum": [
+                1
+              ]
+            },
+            "pages": {
+              "enum": [
+                20000
+              ]
+            },
+            "noteBodyUtf16": {
+              "enum": [
+                20020
+              ]
+            },
+            "writerRevision": {
+              "enum": [
+                62
+              ]
+            },
+            "indexedRows": {
+              "enum": [
+                20000
+              ]
+            },
+            "pending": {
+              "enum": [
+                0
+              ]
+            }
+          },
+          "required": [
+            "books",
+            "authorBooks",
+            "pages",
+            "noteBodyUtf16",
+            "writerRevision",
+            "indexedRows",
+            "pending"
+          ],
+          "additionalProperties": false
+        },
+        "productionBefore": {
+          "type": "object",
+          "properties": {
+            "wallNs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 86400000000000
+            },
+            "udfEnabled": {
+              "enum": [
+                false
+              ]
+            },
+            "includesExplain": {
+              "enum": [
+                true
+              ]
+            },
+            "pageQuery": {
+              "enum": [
+                "WITH shelf AS (\n    SELECT n.id,COALESCE(d.revision,n.revision) revision,COALESCE(d.title,n.title) title,\n        n.updatedAt,0 draftPosition,\n        COALESCE(w.world,0) world,COALESCE(w.paper,1) paper,COALESCE(w.folder,'') folder,COALESCE(w.tags,'') tags,\n        COALESCE(w.favorite,0) favorite,w.trashedAt,COALESCE(w.pinned,0) pinned,\n        COALESCE(w.revision,0) workspaceRevision,COALESCE(w.coverKey,'auto') coverKey,\n        COALESCE(w.selectedPageId,'') selectedPageId,COALESCE(w.centerX,500.0) centerX,COALESCE(w.centerY,707.0) centerY,COALESCE(w.zoom,0.0) zoom\n    FROM notes n LEFT JOIN library_drafts d ON d.id=n.id LEFT JOIN notebook_workspace w ON w.noteId=n.id\n    UNION ALL\n    SELECT d.id,d.revision,d.title,-9223372036854775808,d.position,\n        0,1,'','',0,NULL,0,0,'auto','',500.0,707.0,0.0\n    FROM library_drafts d WHERE NOT EXISTS(SELECT 1 FROM notes n WHERE n.id=d.id)\n), page AS MATERIALIZED (\n            SELECT * FROM shelf WHERE id IN (SELECT id FROM library_scope) AND (library_contains(title)=1 OR library_contains(COALESCE((SELECT d.text FROM library_drafts d WHERE d.id=shelf.id),(SELECT n.text FROM notes n WHERE n.id=shelf.id)))=1 OR library_contains(tags)=1\n            OR EXISTS(SELECT 1 FROM library_page_hits h WHERE h.notebookId=shelf.id)\n            OR EXISTS(SELECT 1 FROM library_card_hits h WHERE h.notebookId=shelf.id))\n            ORDER BY pinned DESC,updatedAt DESC,draftPosition,id LIMIT ? OFFSET ?\n            ) SELECT page.id,page.revision,page.title,substr(COALESCE(d.text,n.text,''),1,600),world,paper,folder,tags,favorite,trashedAt,pinned,\n            workspaceRevision,coverKey,selectedPageId,\n            (SELECT id FROM library_page_hits h WHERE h.notebookId=page.id ORDER BY position,id LIMIT 1),\n            EXISTS(SELECT 1 FROM library_card_hits h WHERE h.notebookId=page.id),page.centerX,page.centerY,page.zoom\n            FROM page LEFT JOIN notes n ON n.id=page.id LEFT JOIN library_drafts d ON d.id=page.id\n            ORDER BY page.pinned DESC,page.updatedAt DESC,page.draftPosition,page.id"
+              ]
+            },
+            "queryPlan": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 128,
+              "items": {
+                "type": "string",
+                "maxLength": 256,
+                "pattern": "^(?:MATERIALIZE (?:page|shelf)|CO-ROUTINE (?:page|shelf)|COMPOUND QUERY|LEFT-MOST SUBQUERY|UNION ALL|SCAN CONSTANT ROW|(?:CORRELATED SCALAR|SCALAR|LIST|REUSE LIST) SUBQUERY [0-9]{1,3}|SCAN (?:page|shelf|n|d|w|h|library_scope|library_drafts)(?: USING (?:COVERING )?INDEX (?:library_page_hit_order|sqlite_autoindex_(?:notes|notebook_workspace|library_drafts|library_scope|library_card_hits)_1))?(?: LEFT-JOIN)?|SEARCH (?:page|shelf|n|d|w|h|library_scope|library_drafts) USING (?:(?:COVERING )?INDEX (?:library_page_hit_order|sqlite_autoindex_(?:notes|notebook_workspace|library_drafts|library_scope|library_card_hits)_1)|AUTOMATIC (?:PARTIAL )?COVERING INDEX|INTEGER PRIMARY KEY) \\((?:id|noteId|notebookId|rowid)=\\?(?: AND (?:id|noteId|notebookId|rowid)=\\?)*\\)(?: LEFT-JOIN)?|USING INDEX (?:library_page_hit_order|sqlite_autoindex_(?:notes|notebook_workspace|library_drafts|library_scope|library_card_hits)_1) FOR IN-OPERATOR|BLOOM FILTER ON (?:page|shelf|n|d|w|h|library_scope|library_drafts) \\((?:id|noteId|notebookId|rowid)=\\?(?: AND (?:id|noteId|notebookId|rowid)=\\?)*\\)|CREATE BLOOM FILTER|USE TEMP B-TREE FOR (?:ORDER BY|RIGHT PART OF ORDER BY|LAST [0-9]{1,2} TERMS OF ORDER BY|GROUP BY|DISTINCT))$"
+              }
+            }
+          },
+          "required": [
+            "wallNs",
+            "udfEnabled",
+            "includesExplain",
+            "pageQuery",
+            "queryPlan"
+          ],
+          "additionalProperties": false
+        },
+        "instrumentedPlan": {
+          "type": "object",
+          "properties": {
+            "wallNs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 86400000000000
+            },
+            "udfEnabled": {
+              "enum": [
+                true
+              ]
+            },
+            "includesExplain": {
+              "enum": [
+                true
+              ]
+            },
+            "pageQuery": {
+              "enum": [
+                "WITH shelf AS (\n    SELECT n.id,COALESCE(d.revision,n.revision) revision,COALESCE(d.title,n.title) title,\n        n.updatedAt,0 draftPosition,\n        COALESCE(w.world,0) world,COALESCE(w.paper,1) paper,COALESCE(w.folder,'') folder,COALESCE(w.tags,'') tags,\n        COALESCE(w.favorite,0) favorite,w.trashedAt,COALESCE(w.pinned,0) pinned,\n        COALESCE(w.revision,0) workspaceRevision,COALESCE(w.coverKey,'auto') coverKey,\n        COALESCE(w.selectedPageId,'') selectedPageId,COALESCE(w.centerX,500.0) centerX,COALESCE(w.centerY,707.0) centerY,COALESCE(w.zoom,0.0) zoom\n    FROM notes n LEFT JOIN library_drafts d ON d.id=n.id LEFT JOIN notebook_workspace w ON w.noteId=n.id\n    UNION ALL\n    SELECT d.id,d.revision,d.title,-9223372036854775808,d.position,\n        0,1,'','',0,NULL,0,0,'auto','',500.0,707.0,0.0\n    FROM library_drafts d WHERE NOT EXISTS(SELECT 1 FROM notes n WHERE n.id=d.id)\n), page AS MATERIALIZED (\n            SELECT * FROM shelf WHERE id IN (SELECT id FROM library_scope) AND (library_contains_title(title)=1 OR library_contains_body(COALESCE((SELECT d.text FROM library_drafts d WHERE d.id=shelf.id),(SELECT n.text FROM notes n WHERE n.id=shelf.id)))=1 OR library_contains_tags(tags)=1\n            OR EXISTS(SELECT 1 FROM library_page_hits h WHERE h.notebookId=shelf.id)\n            OR EXISTS(SELECT 1 FROM library_card_hits h WHERE h.notebookId=shelf.id))\n            ORDER BY pinned DESC,updatedAt DESC,draftPosition,id LIMIT ? OFFSET ?\n            ) SELECT page.id,page.revision,page.title,substr(COALESCE(d.text,n.text,''),1,600),world,paper,folder,tags,favorite,trashedAt,pinned,\n            workspaceRevision,coverKey,selectedPageId,\n            (SELECT id FROM library_page_hits h WHERE h.notebookId=page.id ORDER BY position,id LIMIT 1),\n            EXISTS(SELECT 1 FROM library_card_hits h WHERE h.notebookId=page.id),page.centerX,page.centerY,page.zoom\n            FROM page LEFT JOIN notes n ON n.id=page.id LEFT JOIN library_drafts d ON d.id=page.id\n            ORDER BY page.pinned DESC,page.updatedAt DESC,page.draftPosition,page.id"
+              ]
+            },
+            "queryPlan": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 128,
+              "items": {
+                "type": "string",
+                "maxLength": 256,
+                "pattern": "^(?:MATERIALIZE (?:page|shelf)|CO-ROUTINE (?:page|shelf)|COMPOUND QUERY|LEFT-MOST SUBQUERY|UNION ALL|SCAN CONSTANT ROW|(?:CORRELATED SCALAR|SCALAR|LIST|REUSE LIST) SUBQUERY [0-9]{1,3}|SCAN (?:page|shelf|n|d|w|h|library_scope|library_drafts)(?: USING (?:COVERING )?INDEX (?:library_page_hit_order|sqlite_autoindex_(?:notes|notebook_workspace|library_drafts|library_scope|library_card_hits)_1))?(?: LEFT-JOIN)?|SEARCH (?:page|shelf|n|d|w|h|library_scope|library_drafts) USING (?:(?:COVERING )?INDEX (?:library_page_hit_order|sqlite_autoindex_(?:notes|notebook_workspace|library_drafts|library_scope|library_card_hits)_1)|AUTOMATIC (?:PARTIAL )?COVERING INDEX|INTEGER PRIMARY KEY) \\((?:id|noteId|notebookId|rowid)=\\?(?: AND (?:id|noteId|notebookId|rowid)=\\?)*\\)(?: LEFT-JOIN)?|USING INDEX (?:library_page_hit_order|sqlite_autoindex_(?:notes|notebook_workspace|library_drafts|library_scope|library_card_hits)_1) FOR IN-OPERATOR|BLOOM FILTER ON (?:page|shelf|n|d|w|h|library_scope|library_drafts) \\((?:id|noteId|notebookId|rowid)=\\?(?: AND (?:id|noteId|notebookId|rowid)=\\?)*\\)|CREATE BLOOM FILTER|USE TEMP B-TREE FOR (?:ORDER BY|RIGHT PART OF ORDER BY|LAST [0-9]{1,2} TERMS OF ORDER BY|GROUP BY|DISTINCT))$"
+              }
+            }
+          },
+          "required": [
+            "wallNs",
+            "udfEnabled",
+            "includesExplain",
+            "pageQuery",
+            "queryPlan"
+          ],
+          "additionalProperties": false
+        },
+        "profiledReads": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sample": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2
+              },
+              "wallNs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 86400000000000
+              },
+              "pageWallNs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 86400000000000
+              },
+              "pageCpuNs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 86400000000000
+              },
+              "pageTimingValid": {
+                "type": "boolean"
+              },
+              "completed": {
+                "enum": [
+                  true
+                ]
+              },
+              "fields": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "object",
+                    "properties": {
+                      "calls": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000000
+                      },
+                      "utf16Chars": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000000
+                      },
+                      "matches": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000000
+                      },
+                      "timingValid": {
+                        "type": "boolean"
+                      },
+                      "conversionWallNs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 86400000000000
+                      },
+                      "conversionCpuNs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 86400000000000
+                      },
+                      "containsWallNs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 86400000000000
+                      },
+                      "containsCpuNs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 86400000000000
+                      }
+                    },
+                    "required": [
+                      "calls",
+                      "utf16Chars",
+                      "matches",
+                      "timingValid",
+                      "conversionWallNs",
+                      "conversionCpuNs",
+                      "containsWallNs",
+                      "containsCpuNs"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "body": {
+                    "type": "object",
+                    "properties": {
+                      "calls": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000000
+                      },
+                      "utf16Chars": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000000
+                      },
+                      "matches": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000000
+                      },
+                      "timingValid": {
+                        "type": "boolean"
+                      },
+                      "conversionWallNs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 86400000000000
+                      },
+                      "conversionCpuNs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 86400000000000
+                      },
+                      "containsWallNs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 86400000000000
+                      },
+                      "containsCpuNs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 86400000000000
+                      }
+                    },
+                    "required": [
+                      "calls",
+                      "utf16Chars",
+                      "matches",
+                      "timingValid",
+                      "conversionWallNs",
+                      "conversionCpuNs",
+                      "containsWallNs",
+                      "containsCpuNs"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "tags": {
+                    "type": "object",
+                    "properties": {
+                      "calls": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000000
+                      },
+                      "utf16Chars": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000000
+                      },
+                      "matches": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000000
+                      },
+                      "timingValid": {
+                        "type": "boolean"
+                      },
+                      "conversionWallNs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 86400000000000
+                      },
+                      "conversionCpuNs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 86400000000000
+                      },
+                      "containsWallNs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 86400000000000
+                      },
+                      "containsCpuNs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 86400000000000
+                      }
+                    },
+                    "required": [
+                      "calls",
+                      "utf16Chars",
+                      "matches",
+                      "timingValid",
+                      "conversionWallNs",
+                      "conversionCpuNs",
+                      "containsWallNs",
+                      "containsCpuNs"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "source": {
+                    "type": "object",
+                    "properties": {
+                      "calls": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000000
+                      },
+                      "utf16Chars": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000000
+                      },
+                      "matches": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000000
+                      },
+                      "timingValid": {
+                        "type": "boolean"
+                      },
+                      "conversionWallNs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 86400000000000
+                      },
+                      "conversionCpuNs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 86400000000000
+                      },
+                      "containsWallNs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 86400000000000
+                      },
+                      "containsCpuNs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 86400000000000
+                      }
+                    },
+                    "required": [
+                      "calls",
+                      "utf16Chars",
+                      "matches",
+                      "timingValid",
+                      "conversionWallNs",
+                      "conversionCpuNs",
+                      "containsWallNs",
+                      "containsCpuNs"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "title",
+                  "body",
+                  "tags",
+                  "source"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "sample",
+              "wallNs",
+              "pageWallNs",
+              "pageCpuNs",
+              "pageTimingValid",
+              "completed",
+              "fields"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "productionAfter": {
+          "type": "object",
+          "properties": {
+            "wallNs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 86400000000000
+            },
+            "udfEnabled": {
+              "enum": [
+                false
+              ]
+            },
+            "includesExplain": {
+              "enum": [
+                true
+              ]
+            },
+            "pageQuery": {
+              "enum": [
+                "WITH shelf AS (\n    SELECT n.id,COALESCE(d.revision,n.revision) revision,COALESCE(d.title,n.title) title,\n        n.updatedAt,0 draftPosition,\n        COALESCE(w.world,0) world,COALESCE(w.paper,1) paper,COALESCE(w.folder,'') folder,COALESCE(w.tags,'') tags,\n        COALESCE(w.favorite,0) favorite,w.trashedAt,COALESCE(w.pinned,0) pinned,\n        COALESCE(w.revision,0) workspaceRevision,COALESCE(w.coverKey,'auto') coverKey,\n        COALESCE(w.selectedPageId,'') selectedPageId,COALESCE(w.centerX,500.0) centerX,COALESCE(w.centerY,707.0) centerY,COALESCE(w.zoom,0.0) zoom\n    FROM notes n LEFT JOIN library_drafts d ON d.id=n.id LEFT JOIN notebook_workspace w ON w.noteId=n.id\n    UNION ALL\n    SELECT d.id,d.revision,d.title,-9223372036854775808,d.position,\n        0,1,'','',0,NULL,0,0,'auto','',500.0,707.0,0.0\n    FROM library_drafts d WHERE NOT EXISTS(SELECT 1 FROM notes n WHERE n.id=d.id)\n), page AS MATERIALIZED (\n            SELECT * FROM shelf WHERE id IN (SELECT id FROM library_scope) AND (library_contains(title)=1 OR library_contains(COALESCE((SELECT d.text FROM library_drafts d WHERE d.id=shelf.id),(SELECT n.text FROM notes n WHERE n.id=shelf.id)))=1 OR library_contains(tags)=1\n            OR EXISTS(SELECT 1 FROM library_page_hits h WHERE h.notebookId=shelf.id)\n            OR EXISTS(SELECT 1 FROM library_card_hits h WHERE h.notebookId=shelf.id))\n            ORDER BY pinned DESC,updatedAt DESC,draftPosition,id LIMIT ? OFFSET ?\n            ) SELECT page.id,page.revision,page.title,substr(COALESCE(d.text,n.text,''),1,600),world,paper,folder,tags,favorite,trashedAt,pinned,\n            workspaceRevision,coverKey,selectedPageId,\n            (SELECT id FROM library_page_hits h WHERE h.notebookId=page.id ORDER BY position,id LIMIT 1),\n            EXISTS(SELECT 1 FROM library_card_hits h WHERE h.notebookId=page.id),page.centerX,page.centerY,page.zoom\n            FROM page LEFT JOIN notes n ON n.id=page.id LEFT JOIN library_drafts d ON d.id=page.id\n            ORDER BY page.pinned DESC,page.updatedAt DESC,page.draftPosition,page.id"
+              ]
+            },
+            "queryPlan": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 128,
+              "items": {
+                "type": "string",
+                "maxLength": 256,
+                "pattern": "^(?:MATERIALIZE (?:page|shelf)|CO-ROUTINE (?:page|shelf)|COMPOUND QUERY|LEFT-MOST SUBQUERY|UNION ALL|SCAN CONSTANT ROW|(?:CORRELATED SCALAR|SCALAR|LIST|REUSE LIST) SUBQUERY [0-9]{1,3}|SCAN (?:page|shelf|n|d|w|h|library_scope|library_drafts)(?: USING (?:COVERING )?INDEX (?:library_page_hit_order|sqlite_autoindex_(?:notes|notebook_workspace|library_drafts|library_scope|library_card_hits)_1))?(?: LEFT-JOIN)?|SEARCH (?:page|shelf|n|d|w|h|library_scope|library_drafts) USING (?:(?:COVERING )?INDEX (?:library_page_hit_order|sqlite_autoindex_(?:notes|notebook_workspace|library_drafts|library_scope|library_card_hits)_1)|AUTOMATIC (?:PARTIAL )?COVERING INDEX|INTEGER PRIMARY KEY) \\((?:id|noteId|notebookId|rowid)=\\?(?: AND (?:id|noteId|notebookId|rowid)=\\?)*\\)(?: LEFT-JOIN)?|USING INDEX (?:library_page_hit_order|sqlite_autoindex_(?:notes|notebook_workspace|library_drafts|library_scope|library_card_hits)_1) FOR IN-OPERATOR|BLOOM FILTER ON (?:page|shelf|n|d|w|h|library_scope|library_drafts) \\((?:id|noteId|notebookId|rowid)=\\?(?: AND (?:id|noteId|notebookId|rowid)=\\?)*\\)|CREATE BLOOM FILTER|USE TEMP B-TREE FOR (?:ORDER BY|RIGHT PART OF ORDER BY|LAST [0-9]{1,2} TERMS OF ORDER BY|GROUP BY|DISTINCT))$"
+              }
+            }
+          },
+          "required": [
+            "wallNs",
+            "udfEnabled",
+            "includesExplain",
+            "pageQuery",
+            "queryPlan"
+          ],
+          "additionalProperties": false
+        },
+        "reference": {
+          "type": "object",
+          "properties": {
+            "preloadWallNs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 86400000000000
+            },
+            "notes": {
+              "enum": [
+                501
+              ]
+            },
+            "bodyUtf16": {
+              "enum": [
+                10010025
+              ]
+            },
+            "knownPageHitBooks": {
+              "enum": [
+                1
+              ]
+            },
+            "knownCardHitBooks": {
+              "enum": [
+                0
+              ]
+            },
+            "reads": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "sample": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2
+                  },
+                  "wallNs": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 86400000000000
+                  },
+                  "cpuNs": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 86400000000000
+                  },
+                  "timingValid": {
+                    "type": "boolean"
+                  },
+                  "matchCount": {
+                    "enum": [
+                      1
+                    ]
+                  }
+                },
+                "required": [
+                  "sample",
+                  "wallNs",
+                  "cpuNs",
+                  "timingValid",
+                  "matchCount"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 3,
+              "maxItems": 3
+            }
+          },
+          "required": [
+            "preloadWallNs",
+            "notes",
+            "bodyUtf16",
+            "knownPageHitBooks",
+            "knownCardHitBooks",
+            "reads"
+          ],
+          "additionalProperties": false
+        },
+        "matchedBookIndex": {
+          "enum": [
+            499
+          ]
+        },
+        "matchedPagePosition": {
+          "enum": [
+            39
+          ]
+        },
+        "resultEquality": {
+          "enum": [
+            true
+          ]
+        },
+        "sqlDifferenceOnlyDiagnosticFunctionNames": {
+          "type": "boolean"
+        },
+        "planEquality": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "scope",
+        "query",
+        "fixture",
+        "productionBefore",
+        "instrumentedPlan",
+        "profiledReads",
+        "productionAfter",
+        "reference",
+        "matchedBookIndex",
+        "matchedPagePosition",
+        "resultEquality",
+        "sqlDifferenceOnlyDiagnosticFunctionNames",
+        "planEquality"
+      ],
+      "additionalProperties": false
+    },
+    "LIBRARY_CAUSAL_UNICODE": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "enum": [
+            1
+          ]
+        },
+        "scope": {
+          "enum": [
+            "CORRECTNESS_ONLY"
+          ]
+        },
+        "queries": {
+          "enum": [
+            8
+          ]
+        },
+        "comparisons": {
+          "enum": [
+            16
+          ]
+        },
+        "pendingAndIndexed": {
+          "enum": [
+            true
+          ]
+        },
+        "resultEquality": {
+          "enum": [
+            true
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "scope",
+        "queries",
+        "comparisons",
+        "pendingAndIndexed",
+        "resultEquality"
+      ],
+      "additionalProperties": false
+    },
+    "RASTER_CAUSAL_DIAGNOSTIC": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scope": {
+          "type": "string",
+          "enum": [
+            "DIAGNOSTIC_ONLY"
+          ],
+          "maxLength": 15
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 4101,
+          "maximum": 4101
+        },
+        "fixture": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string",
+              "enum": [
+                "raster-1-before",
+                "raster-4-before",
+                "raster-8-before"
+              ],
+              "maxLength": 15
+            },
+            "seed": {
+              "type": "integer",
+              "minimum": 4101,
+              "maximum": 4101
+            },
+            "logicalSha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "maxLength": 64
+            },
+            "rowCounts": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "notes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "note_revisions": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "notebook_workspace": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "notebook_pages": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "ink_pages": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "ink_strokes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "canvas_authoring": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "page_layer_memberships": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                }
+              },
+              "required": [
+                "notes",
+                "note_revisions",
+                "notebook_workspace",
+                "notebook_pages",
+                "ink_pages",
+                "ink_strokes",
+                "canvas_authoring",
+                "page_layer_memberships"
+              ]
+            },
+            "writerSqlite": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "page_size": {
+                  "type": "integer",
+                  "minimum": 1024,
+                  "maximum": 1024
+                },
+                "auto_vacuum": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                },
+                "journal_mode": {
+                  "type": "string",
+                  "enum": [
+                    "wal"
+                  ],
+                  "maxLength": 3
+                },
+                "synchronous": {
+                  "type": "integer",
+                  "minimum": 2,
+                  "maximum": 2
+                }
+              },
+              "required": [
+                "page_size",
+                "auto_vacuum",
+                "journal_mode",
+                "synchronous"
+              ]
+            }
+          },
+          "required": [
+            "label",
+            "seed",
+            "logicalSha256",
+            "rowCounts",
+            "writerSqlite"
+          ]
+        },
+        "result": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "layers": {
+              "type": "integer",
+              "enum": [
+                1,
+                4,
+                8
+              ]
+            },
+            "initialStrokes": {
+              "type": "integer",
+              "minimum": 320,
+              "maximum": 320
+            },
+            "finalStrokes": {
+              "type": "integer",
+              "minimum": 321,
+              "maximum": 321
+            },
+            "firstCompleteMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000000000.0
+            },
+            "appendCompleteMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000000000.0
+            },
+            "forcedFullCompleteMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000000000.0
+            },
+            "localDecoded": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 320
+            },
+            "fullDecoded": {
+              "type": "integer",
+              "minimum": 321,
+              "maximum": 321
+            },
+            "localRebuiltTiles": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 512
+            },
+            "fullRebuiltTiles": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 4096
+            },
+            "metadataMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000000000.0
+            },
+            "rasterMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000000000.0
+            },
+            "publicationMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000000000.0
+            },
+            "pixelsEqual": {
+              "type": "boolean",
+              "const": true
+            },
+            "bitmapBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "nativeStrokeBuilds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 321
+            }
+          },
+          "required": [
+            "layers",
+            "initialStrokes",
+            "finalStrokes",
+            "firstCompleteMs",
+            "appendCompleteMs",
+            "forcedFullCompleteMs",
+            "localDecoded",
+            "fullDecoded",
+            "localRebuiltTiles",
+            "fullRebuiltTiles",
+            "metadataMs",
+            "rasterMs",
+            "publicationMs",
+            "pixelsEqual",
+            "bitmapBytes",
+            "nativeStrokeBuilds"
+          ]
+        },
+        "frames": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "phase": {
+                "type": "string",
+                "enum": [
+                  "first",
+                  "local",
+                  "full",
+                  "hidden-local",
+                  "hidden-full"
+                ],
+                "maxLength": 12
+              },
+              "generation": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 3
+              },
+              "timesNanos": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "REQUEST": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "WORKER_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "METADATA_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "RASTER_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "PREPARE_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "PREPARE_END": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "PUBLICATION_ENTER": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "PUBLISHED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "NOTIFY_ENQUEUE": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "NOTIFY_CALLBACK": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "READY_DRAW_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "READY_DRAW_END": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "WORKER_FINALLY": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "CLEAR_REQUESTED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "SUPERSEDED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "CANCELLED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "FAILED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "BUDGET_BUSY": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  }
+                },
+                "required": [
+                  "REQUEST",
+                  "WORKER_START",
+                  "METADATA_START",
+                  "RASTER_START",
+                  "PREPARE_START",
+                  "PREPARE_END",
+                  "PUBLICATION_ENTER",
+                  "PUBLISHED",
+                  "READY_DRAW_START",
+                  "READY_DRAW_END",
+                  "WORKER_FINALLY"
+                ]
+              },
+              "threadIds": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "REQUEST": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "WORKER_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "METADATA_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "RASTER_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "PREPARE_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "PREPARE_END": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "PUBLICATION_ENTER": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "PUBLISHED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "NOTIFY_ENQUEUE": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "NOTIFY_CALLBACK": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "READY_DRAW_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "READY_DRAW_END": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "WORKER_FINALLY": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "CLEAR_REQUESTED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "SUPERSEDED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "CANCELLED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "FAILED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "BUDGET_BUSY": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  }
+                },
+                "required": [
+                  "REQUEST",
+                  "WORKER_START",
+                  "METADATA_START",
+                  "RASTER_START",
+                  "PREPARE_START",
+                  "PREPARE_END",
+                  "PUBLICATION_ENTER",
+                  "PUBLISHED",
+                  "READY_DRAW_START",
+                  "READY_DRAW_END",
+                  "WORKER_FINALLY"
+                ]
+              },
+              "notificationRequests": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
+              },
+              "notificationCallbacks": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
+              },
+              "notificationsSuperseded": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
+              },
+              "nativeAttempts": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 321
+              },
+              "nativeCompleted": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 321
+              },
+              "nativePreparationAndBuildWallNanos": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "nativePreparationAndBuildThreadCpuNanos": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "active",
+                  "full"
+                ],
+                "maxLength": 6
+              },
+              "layer": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 7
+              }
+            },
+            "required": [
+              "phase",
+              "generation",
+              "revision",
+              "timesNanos",
+              "threadIds",
+              "notificationRequests",
+              "notificationCallbacks",
+              "notificationsSuperseded",
+              "nativeAttempts",
+              "nativeCompleted",
+              "nativePreparationAndBuildWallNanos",
+              "nativePreparationAndBuildThreadCpuNanos",
+              "role",
+              "layer"
+            ]
+          },
+          "minItems": 5,
+          "maxItems": 40
+        },
+        "metadata": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "phase": {
+                "type": "string",
+                "enum": [
+                  "first",
+                  "local",
+                  "full",
+                  "hidden-local",
+                  "hidden-full"
+                ],
+                "maxLength": 12
+              },
+              "layer": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 7
+              },
+              "regions": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 512
+              },
+              "preparationBatches": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "preparationRows": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "queryBatches": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "metadataRows": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "admissionAndPreparationNanos": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "queryAndDigestNanos": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "queryAndDigestThreadCpuNanos": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "hexAndResultNanos": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "hexAndResultThreadCpuNanos": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "queryStartThreadId": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              "hexStartThreadId": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              "hexEndThreadId": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              }
+            },
+            "required": [
+              "phase",
+              "layer",
+              "regions",
+              "preparationBatches",
+              "preparationRows",
+              "queryBatches",
+              "metadataRows",
+              "admissionAndPreparationNanos",
+              "queryAndDigestNanos",
+              "queryAndDigestThreadCpuNanos",
+              "hexAndResultNanos",
+              "hexAndResultThreadCpuNanos",
+              "queryStartThreadId",
+              "hexStartThreadId",
+              "hexEndThreadId"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 128
+        },
+        "reads": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "phase": {
+                "type": "string",
+                "enum": [
+                  "first",
+                  "local",
+                  "full",
+                  "hidden-local",
+                  "hidden-full"
+                ],
+                "maxLength": 12
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "INK"
+                ],
+                "maxLength": 3
+              },
+              "freezeNanos": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "decodeNanos": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "entries": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 321
+              },
+              "payloadBytes": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "decodedPoints": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 642
+              },
+              "candidateRows": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              }
+            },
+            "required": [
+              "phase",
+              "kind",
+              "freezeNanos",
+              "decodeNanos",
+              "entries",
+              "payloadBytes",
+              "decodedPoints",
+              "candidateRows"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 128
+        },
+        "joined": {
+          "type": "boolean",
+          "const": true
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "totalBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "budgetBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "peakTrackedBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "inFlightJobs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "cancelledJobs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "cacheBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "in_flightBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "activeBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "live_inkBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "geometryReservationBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          },
+          "required": [
+            "totalBytes",
+            "budgetBytes",
+            "peakTrackedBytes",
+            "inFlightJobs",
+            "cancelledJobs",
+            "cacheBytes",
+            "in_flightBytes",
+            "activeBytes",
+            "live_inkBytes",
+            "geometryReservationBytes"
+          ]
+        }
+      },
+      "required": [
+        "scope",
+        "seed",
+        "fixture",
+        "result",
+        "frames",
+        "metadata",
+        "reads",
+        "joined",
+        "resources"
+      ]
+    },
+    "HISTORY_GC_CAUSAL_TRIAL": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sample": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 29
+        },
+        "scenario": {
+          "const": "CONDITIONAL_DELETE_ARRIVAL",
+          "type": "string"
+        },
+        "replacesNaturalAcceptance": {
+          "const": false,
+          "type": "boolean"
+        },
+        "connection": {
+          "type": "string",
+          "enum": [
+            "same-room",
+            "separate-room"
+          ]
+        },
+        "fixtureSourceVersions": {
+          "const": 1281,
+          "type": "integer"
+        },
+        "fixtureDetachedSources": {
+          "const": 1280,
+          "type": "integer"
+        },
+        "fixtureExplicitRoots": {
+          "const": 0,
+          "type": "integer"
+        },
+        "fixtureLatestRetained": {
+          "const": 1,
+          "type": "integer"
+        },
+        "batchLimit": {
+          "const": 256,
+          "type": "integer"
+        },
+        "artificialGates": {
+          "const": false,
+          "type": "boolean"
+        },
+        "committed": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "saveOutcome": {
+          "type": "string",
+          "enum": [
+            "NOT_STARTED",
+            "THREW",
+            "COMMITTED",
+            "Conflict",
+            "ReusedCommandId",
+            "OutcomeUnknown"
+          ]
+        },
+        "saveWatchdogMs": {
+          "const": 5000,
+          "type": "integer"
+        },
+        "eventCapacity": {
+          "const": 64,
+          "type": "integer"
+        },
+        "phaseCapacity": {
+          "const": 32,
+          "type": "integer"
+        },
+        "writerEntryNs": {
+          "type": "null"
+        },
+        "pureSqliteLockWaitMs": {
+          "type": "null"
+        },
+        "initialRevision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "writerSqlite": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "page_size": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            },
+            "auto_vacuum": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2
+            },
+            "journal_mode": {
+              "type": "string",
+              "enum": [
+                "delete",
+                "truncate",
+                "persist",
+                "memory",
+                "wal",
+                "off"
+              ]
+            },
+            "synchronous": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3
+            }
+          },
+          "required": [
+            "page_size",
+            "auto_vacuum",
+            "journal_mode",
+            "synchronous"
+          ]
+        },
+        "authorWriterSqlite": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "page_size": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            },
+            "auto_vacuum": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2
+            },
+            "journal_mode": {
+              "type": "string",
+              "enum": [
+                "delete",
+                "truncate",
+                "persist",
+                "memory",
+                "wal",
+                "off"
+              ]
+            },
+            "synchronous": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3
+            }
+          },
+          "required": [
+            "page_size",
+            "auto_vacuum",
+            "journal_mode",
+            "synchronous"
+          ]
+        },
+        "savedRevision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "finalRevision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "contentVerified": {
+          "const": true,
+          "type": "boolean"
+        },
+        "retainedRevisions": {
+          "type": "array",
+          "items": {
+            "const": 1281,
+            "type": "integer"
+          },
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "open-fixture",
+            "create-fixture",
+            "await-author-ready",
+            "collect-and-author",
+            "finish-collection",
+            "verify",
+            "complete"
+          ]
+        },
+        "authorStage": {
+          "type": "string",
+          "enum": [
+            "not-started",
+            "waiting-for-delete",
+            "rename",
+            "complete"
+          ]
+        },
+        "failureClass": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Za-z0-9_$]*$",
+          "maxLength": 256
+        },
+        "suppressedFailureClasses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_$]*$",
+            "maxLength": 256
+          },
+          "minItems": 0,
+          "maxItems": 64
+        },
+        "collectorFailureClass": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Za-z0-9_$]*$",
+          "maxLength": 256
+        },
+        "authorReadyNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "notificationNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "collectorStartNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "collectorEndNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "saveStartNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "saveEndNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "saveMs": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 9.223372036854776e+18
+        },
+        "beforeRenameReceiptNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "afterRenameTransactionNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "firstDeleted": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1280
+        },
+        "firstDeferred": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "firstRootScans": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "firstCommittedBatches": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "finishStartNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "finishEndNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "finishDeleted": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1280
+        },
+        "finishDeferred": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "finishRootScans": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "deletionTransactionExposed": {
+          "type": "boolean"
+        },
+        "coveredBeforeBatchCommitNs": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -9223372036854775808,
+            "maximum": 9223372036854775807
+          },
+          "minItems": 0,
+          "maxItems": 5
+        },
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "phase": {
+                "type": "string",
+                "enum": [
+                  "after-roots",
+                  "after-stats",
+                  "after-scan",
+                  "before-batch-commit",
+                  "after-batch"
+                ]
+              },
+              "atNs": {
+                "type": "integer",
+                "minimum": -9223372036854775808,
+                "maximum": 9223372036854775807
+              }
+            },
+            "required": [
+              "phase",
+              "atNs"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 32
+        },
+        "batchEvents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "phase": {
+                "type": "string",
+                "enum": [
+                  "guard-checked",
+                  "before-delete",
+                  "after-delete",
+                  "transaction-returned"
+                ]
+              },
+              "atNs": {
+                "type": "integer",
+                "minimum": -9223372036854775808,
+                "maximum": 9223372036854775807
+              },
+              "callbackNs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "afterSequence": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1280
+              },
+              "candidates": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 256
+              },
+              "expectedDataVersion": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "expectedChanges": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "observedDataVersion": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "observedChanges": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "guardMatched": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "phase",
+              "atNs",
+              "callbackNs",
+              "afterSequence",
+              "candidates",
+              "expectedDataVersion",
+              "expectedChanges",
+              "observedDataVersion",
+              "observedChanges",
+              "guardMatched"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 64
+        },
+        "deleteIntervals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "afterSequence": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1024
+              },
+              "candidates": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 256
+              },
+              "deleteStartNs": {
+                "type": "integer",
+                "minimum": -9223372036854775808,
+                "maximum": 9223372036854775807
+              },
+              "deleteEndNs": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": -9223372036854775808,
+                "maximum": 9223372036854775807
+              },
+              "transactionReturnedNs": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": -9223372036854775808,
+                "maximum": 9223372036854775807
+              },
+              "saveStartedDuringDelete": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "afterSequence",
+              "candidates",
+              "deleteStartNs",
+              "deleteEndNs",
+              "transactionReturnedNs",
+              "saveStartedDuringDelete"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 5
+        }
+      },
+      "required": [
+        "sample",
+        "scenario",
+        "replacesNaturalAcceptance",
+        "connection",
+        "fixtureSourceVersions",
+        "fixtureDetachedSources",
+        "fixtureExplicitRoots",
+        "fixtureLatestRetained",
+        "batchLimit",
+        "artificialGates",
+        "committed",
+        "saveOutcome",
+        "saveWatchdogMs",
+        "eventCapacity",
+        "phaseCapacity",
+        "writerEntryNs",
+        "pureSqliteLockWaitMs",
+        "status",
+        "stage",
+        "authorStage",
+        "failureClass",
+        "suppressedFailureClasses",
+        "collectorFailureClass",
+        "authorReadyNs",
+        "notificationNs",
+        "collectorStartNs",
+        "collectorEndNs",
+        "saveStartNs",
+        "saveEndNs",
+        "saveMs",
+        "beforeRenameReceiptNs",
+        "afterRenameTransactionNs",
+        "firstDeleted",
+        "firstDeferred",
+        "firstRootScans",
+        "firstCommittedBatches",
+        "finishStartNs",
+        "finishEndNs",
+        "finishDeleted",
+        "finishDeferred",
+        "finishRootScans",
+        "deletionTransactionExposed",
+        "coveredBeforeBatchCommitNs",
+        "phases",
+        "batchEvents",
+        "deleteIntervals"
+      ]
+    },
+    "HISTORY_GC_CAUSAL_SUMMARY": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scenario": {
+          "const": "CONDITIONAL_DELETE_ARRIVAL",
+          "type": "string"
+        },
+        "replacesNaturalAcceptance": {
+          "const": false,
+          "type": "boolean"
+        },
+        "connection": {
+          "type": "string",
+          "enum": [
+            "same-room",
+            "separate-room"
+          ]
+        },
+        "plannedTrials": {
+          "const": 30,
+          "type": "integer"
+        },
+        "recordedTrials": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "passedTrials": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "committedSaves": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "failedTrials": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "unknownCommitOutcomes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "notStartedSaves": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "functionalStatus": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "FAILED_INCOMPLETE"
+          ]
+        },
+        "exposureStatus": {
+          "type": "string",
+          "enum": [
+            "RUN_INCOMPLETE",
+            "INSUFFICIENT_EXPOSURE",
+            "SUFFICIENT_EXPOSURE"
+          ]
+        },
+        "minimumExposedSamplesForQuantiles": {
+          "const": 20,
+          "type": "integer"
+        },
+        "latencyAcceptance": {
+          "const": "NOT_EVALUATED",
+          "type": "string"
+        },
+        "saveWatchdogMs": {
+          "const": 5000,
+          "type": "integer"
+        },
+        "watchdogIsLatencyAcceptance": {
+          "const": false,
+          "type": "boolean"
+        },
+        "quantileDefinition": {
+          "const": "nearest rank: ceil(p*n)-1, zero based; n=30 p50=14 p95=28",
+          "type": "string"
+        },
+        "allSaves": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 30
+            },
+            "sampleIndices": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 29
+              },
+              "minItems": 0,
+              "maxItems": 30
+            },
+            "saveSamplesMs": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9.223372036854776e+18
+              },
+              "minItems": 0,
+              "maxItems": 30
+            },
+            "maxMs": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9.223372036854776e+18
+            },
+            "p50Ms": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9.223372036854776e+18
+            },
+            "p95Ms": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9.223372036854776e+18
+            }
+          },
+          "required": [
+            "count",
+            "sampleIndices",
+            "saveSamplesMs",
+            "maxMs",
+            "p50Ms",
+            "p95Ms"
+          ]
+        },
+        "exposedSaves": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 30
+            },
+            "sampleIndices": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 29
+              },
+              "minItems": 0,
+              "maxItems": 30
+            },
+            "saveSamplesMs": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9.223372036854776e+18
+              },
+              "minItems": 0,
+              "maxItems": 30
+            },
+            "maxMs": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9.223372036854776e+18
+            },
+            "p50Ms": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9.223372036854776e+18
+            },
+            "p95Ms": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9.223372036854776e+18
+            }
+          },
+          "required": [
+            "count",
+            "sampleIndices",
+            "saveSamplesMs",
+            "maxMs",
+            "p50Ms",
+            "p95Ms"
+          ]
+        }
+      },
+      "required": [
+        "scenario",
+        "replacesNaturalAcceptance",
+        "connection",
+        "plannedTrials",
+        "recordedTrials",
+        "passedTrials",
+        "committedSaves",
+        "failedTrials",
+        "unknownCommitOutcomes",
+        "notStartedSaves",
+        "functionalStatus",
+        "exposureStatus",
+        "minimumExposedSamplesForQuantiles",
+        "latencyAcceptance",
+        "saveWatchdogMs",
+        "watchdogIsLatencyAcceptance",
+        "quantileDefinition",
+        "allSaves",
+        "exposedSaves"
+      ]
+    }
+  },
+  "source_schema_provenance": {
+    "warm-marker-schema.json": "805c1f9ea767e01c90650b1a2cd8b3267f95cf70e22e8c949b2302a62fbfda2d",
+    "unicode-marker-schema.json": "4d5d9f4b5ed3319e2681367313c721a6d82637e76b5e357e367325bdcfcecdda",
+    "raster-marker-schema.json": "6a461f0cd96433232ef19e5fa88f32dac8a8def465624a06389638b8f4391c64",
+    "history-marker-schemas.json": "d0e000115bdccb617e0a44af8eaa2789a02d4f49a8c95100febb844cba28e901"
+  }
+}

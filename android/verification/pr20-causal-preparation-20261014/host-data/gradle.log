@@ -1,0 +1,35 @@
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/.setup/java-home -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+> Task :core-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core-domain:compileKotlin UP-TO-DATE
+> Task :core-domain:compileJava NO-SOURCE
+> Task :core-domain:processResources NO-SOURCE
+> Task :core-domain:classes UP-TO-DATE
+> Task :core-domain:jar UP-TO-DATE
+> Task :data-local:preBuild UP-TO-DATE
+> Task :data-local:preDebugBuild UP-TO-DATE
+> Task :data-local:generateDebugResources UP-TO-DATE
+> Task :data-local:packageDebugResources UP-TO-DATE
+> Task :data-local:processDebugNavigationResources UP-TO-DATE
+> Task :data-local:parseDebugLocalResources UP-TO-DATE
+> Task :data-local:generateDebugRFile UP-TO-DATE
+> Task :data-local:kspDebugKotlin
+
+> Task :data-local:compileDebugKotlin FAILED
+e: file:///workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/LibraryTextIndex.kt:45:65 Argument type mismatch: actual type is 'Function1<String, Unit?>?', but 'Function1<String, Unit>?' was expected.
+e: file:///workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/LibraryTextIndex.kt:52:64 Argument type mismatch: actual type is 'Function1<String, Unit?>?', but 'Function1<String, Unit>?' was expected.
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':data-local:compileDebugKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 36s
+9 actionable tasks: 2 executed, 7 up-to-date

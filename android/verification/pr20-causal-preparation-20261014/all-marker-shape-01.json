@@ -1,0 +1,116 @@
+{
+  "kind": "STATIC_SCHEMA_WORST_SHAPE_NOT_NATIVE",
+  "methods": [
+    {
+      "ordinal": 1,
+      "per_marker_upper_bytes": {},
+      "raw_framed_upper_bytes": 16384,
+      "compact_records_upper_bytes": 3,
+      "forwarded_official_log_upper_bytes": 0
+    },
+    {
+      "ordinal": 2,
+      "per_marker_upper_bytes": {},
+      "raw_framed_upper_bytes": 16384,
+      "compact_records_upper_bytes": 3,
+      "forwarded_official_log_upper_bytes": 0
+    },
+    {
+      "ordinal": 3,
+      "per_marker_upper_bytes": {},
+      "raw_framed_upper_bytes": 16384,
+      "compact_records_upper_bytes": 3,
+      "forwarded_official_log_upper_bytes": 0
+    },
+    {
+      "ordinal": 4,
+      "per_marker_upper_bytes": {},
+      "raw_framed_upper_bytes": 16384,
+      "compact_records_upper_bytes": 3,
+      "forwarded_official_log_upper_bytes": 0
+    },
+    {
+      "ordinal": 5,
+      "per_marker_upper_bytes": {},
+      "raw_framed_upper_bytes": 16384,
+      "compact_records_upper_bytes": 3,
+      "forwarded_official_log_upper_bytes": 0
+    },
+    {
+      "ordinal": 6,
+      "per_marker_upper_bytes": {},
+      "raw_framed_upper_bytes": 16384,
+      "compact_records_upper_bytes": 3,
+      "forwarded_official_log_upper_bytes": 0
+    },
+    {
+      "ordinal": 7,
+      "per_marker_upper_bytes": {},
+      "raw_framed_upper_bytes": 16384,
+      "compact_records_upper_bytes": 3,
+      "forwarded_official_log_upper_bytes": 0
+    },
+    {
+      "ordinal": 8,
+      "per_marker_upper_bytes": {
+        "LIBRARY_CAUSAL_UNICODE": 122
+      },
+      "raw_framed_upper_bytes": 16688,
+      "compact_records_upper_bytes": 168,
+      "forwarded_official_log_upper_bytes": 457
+    },
+    {
+      "ordinal": 9,
+      "per_marker_upper_bytes": {
+        "LIBRARY_CAUSAL_WARM": 208206
+      },
+      "raw_framed_upper_bytes": 224769,
+      "compact_records_upper_bytes": 208249,
+      "forwarded_official_log_upper_bytes": 406351
+    },
+    {
+      "ordinal": 10,
+      "per_marker_upper_bytes": {
+        "LIBRARY_SAVE_CAUSAL_RESULT": 8839,
+        "LIBRARY_SAVE_CAUSAL_STAGES": 21186,
+        "LIBRARY_SAVE_CAUSAL_END": 191
+      },
+      "raw_framed_upper_bytes": 4232596,
+      "compact_records_upper_bytes": 4186406,
+      "forwarded_official_log_upper_bytes": 4650456
+    },
+    {
+      "ordinal": 11,
+      "per_marker_upper_bytes": {
+        "HISTORY_GC_CAUSAL_TRIAL": 58485,
+        "HISTORY_GC_CAUSAL_SUMMARY": 2477
+      },
+      "raw_framed_upper_bytes": 1779086,
+      "compact_records_upper_bytes": 1758426,
+      "forwarded_official_log_upper_bytes": 2838712
+    },
+    {
+      "ordinal": 12,
+      "per_marker_upper_bytes": {
+        "HISTORY_GC_CAUSAL_TRIAL": 58485,
+        "HISTORY_GC_CAUSAL_SUMMARY": 2477
+      },
+      "raw_framed_upper_bytes": 1779086,
+      "compact_records_upper_bytes": 1758426,
+      "forwarded_official_log_upper_bytes": 2838712
+    },
+    {
+      "ordinal": 13,
+      "per_marker_upper_bytes": {
+        "RASTER_CAUSAL_DIAGNOSTIC": 153701
+      },
+      "raw_framed_upper_bytes": 478039,
+      "compact_records_upper_bytes": 461243,
+      "forwarded_official_log_upper_bytes": 495234
+    }
+  ],
+  "raw_plus_records_bytes": 16997891,
+  "official_record_stream_bytes": 11229922,
+  "total_artifact_limit_bytes": 20971520,
+  "note": "Only bounded diagnostic payloads are estimated. Build/dependency/source/host/cleanup text needs separate reserve; packager always checks real total and never truncates."
+}

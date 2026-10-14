@@ -1,0 +1,171 @@
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/.setup/java-home -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+> Task :core-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core-domain:compileKotlin UP-TO-DATE
+> Task :core-domain:compileJava NO-SOURCE
+> Task :core-domain:processResources NO-SOURCE
+> Task :core-domain:classes UP-TO-DATE
+> Task :core-domain:jar UP-TO-DATE
+> Task :core-domain:compileTestKotlin
+w: file:///workspace/InkWeft/android/core-domain/src/test/kotlin/org/inkweft/core/NoteDraftTest.kt:72:34 Unnecessary non-null assertion (!!) on a non-null receiver of type 'SaveNote'.
+w: file:///workspace/InkWeft/android/core-domain/src/test/kotlin/org/inkweft/core/PageAuthoringTest.kt:107:37 Unnecessary non-null assertion (!!) on a non-null receiver of type 'PageAuthoring'.
+w: file:///workspace/InkWeft/android/core-domain/src/test/kotlin/org/inkweft/core/ReadingHandwritingTest.kt:43:79 Unnecessary non-null assertion (!!) on a non-null receiver of type 'PdfPageSource'.
+w: file:///workspace/InkWeft/android/core-domain/src/test/kotlin/org/inkweft/core/StreamedStorageTest.kt:42:73 No cast needed.
+
+> Task :core-domain:compileTestJava NO-SOURCE
+> Task :core-domain:processTestResources NO-SOURCE
+> Task :core-domain:testClasses UP-TO-DATE
+
+> Task :core-domain:test
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/.setup/java-home -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugBuildConfig
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :data-local:preBuild UP-TO-DATE
+> Task :data-local:preDebugBuild UP-TO-DATE
+> Task :data-local:processDebugNavigationResources UP-TO-DATE
+> Task :app:processDebugNavigationResources
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :data-local:generateDebugResources UP-TO-DATE
+> Task :data-local:packageDebugResources UP-TO-DATE
+> Task :data-local:parseDebugLocalResources UP-TO-DATE
+> Task :data-local:generateDebugRFile UP-TO-DATE
+> Task :data-local:kspDebugKotlin UP-TO-DATE
+> Task :data-local:compileDebugKotlin UP-TO-DATE
+> Task :data-local:javaPreCompileDebug UP-TO-DATE
+> Task :data-local:compileDebugJavaWithJavac NO-SOURCE
+> Task :data-local:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:compileDebugKotlin
+w: file:///workspace/InkWeft/android/app/src/debug/java/org/inkweft/app/EditorDesignReviewActivity.kt:162:51 'fun rememberTooltipPositionProvider(spacingBetweenTooltipAndAnchor: Dp = ...): PopupPositionProvider' is deprecated. Deprecated in favor of rememberTooltipPositionProvider API that takes a preferred positioning. Please use rememberTooltipPositionProvider with TooltipAnchorPosition.Above if this same behavior is desired.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/AutomaticBeauty.kt:38:222 Unnecessary non-null assertion (!!) on a non-null receiver of type 'TextRun'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/AutomaticBeauty.kt:45:192 Unnecessary non-null assertion (!!) on a non-null receiver of type 'TextRun'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/EditorControls.kt:50:55 'fun rememberTooltipPositionProvider(spacingBetweenTooltipAndAnchor: Dp = ...): PopupPositionProvider' is deprecated. Deprecated in favor of rememberTooltipPositionProvider API that takes a preferred positioning. Please use rememberTooltipPositionProvider with TooltipAnchorPosition.Above if this same behavior is desired.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/EditorControls.kt:118:40 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'anchorBounds'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/EditorControls.kt:118:50 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'windowSize'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/EditorControls.kt:118:60 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'layoutDirection'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/EditorControls.kt:118:78 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'popupContentSize'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/ImageRendering.kt:141:41 'static fun newInstance(p0: String, p1: Boolean): BitmapRegionDecoder' is deprecated. Deprecated in Java.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/InkCanvasView.kt:374:116 'val matrix: Matrix' is deprecated. Deprecated in Java.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/InkScreen.kt:550:72 Condition is always 'false'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/InkScreen.kt:564:18 Condition is always 'true'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/InkScreen.kt:602:357 Condition is always 'true'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/InkWeftApplication.kt:44:114 'static field TRIM_MEMORY_RUNNING_LOW: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/KnowledgeRelationEditor.kt:72:48 Unnecessary non-null assertion (!!) on a non-null receiver of type 'KnowledgeRow'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/MapScenePainter.kt:125:42 Unnecessary safe call on a non-null receiver of type 'MapSourceFrame'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/MindMapView.kt:280:49 Redundant call of conversion method.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/MindMapView.kt:280:79 Redundant call of conversion method.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/MindMapView.kt:281:50 Redundant call of conversion method.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/MindMapView.kt:281:79 Redundant call of conversion method.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/NodeActions.kt:35:32 'fun rememberPlainTooltipPositionProvider(spacingBetweenTooltipAndAnchor: Dp = ...): PopupPositionProvider' is deprecated. Deprecated in favor of rememberTooltipPositionProvider API.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/OverviewCollections.kt:69:41 The corresponding parameter in the supertype 'Factory' is named 'modelClass'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/PageAuthoringViewModel.kt:59:58 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/PenWidthSettings.kt:120:154 'fun quadraticBezierTo(x1: Float, y1: Float, x2: Float, y2: Float): Unit' is deprecated. Use quadraticTo() for consistency with cubicTo().
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/RecallStudyViewModel.kt:80:38 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JSONObject'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/RecallStudyViewModel.kt:81:51 Unnecessary non-null assertion (!!) on a non-null receiver of type 'JSONObject'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/ReviewSourceDialog.kt:29:111 'val id: Long' is deprecated. Deprecated in Java.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/StudySession.kt:223:119 The corresponding parameter in the supertype 'Factory' is named 'modelClass'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:329:123 Condition is always 'true'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:340:27 Elvis operator (?:) always returns the left operand of non-nullable type 'StudyGraphSnapshot'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:436:27 Elvis operator (?:) always returns the left operand of non-nullable type 'StudyGraphSnapshot'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:667:81 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:922:74 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:927:74 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:980:49 Condition is always 'true'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:984:1791 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:1202:38 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/StudyWorkspace.kt:1490:50 Unnecessary safe call on a non-null receiver of type 'StudyGraphSnapshot'.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/TapeSettingsCard.kt:22:34 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'anchorBounds'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/TapeSettingsCard.kt:22:44 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'windowSize'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/TapeSettingsCard.kt:22:54 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'layoutDirection'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/InkWeft/android/app/src/main/java/org/inkweft/app/TapeSettingsCard.kt:22:72 The corresponding parameter in the supertype 'PopupPositionProvider' is named 'popupContentSize'. This may cause problems when calling this function with named arguments.
+
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac
+> Task :data-local:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :data-local:extractDeepLinksDebug UP-TO-DATE
+> Task :data-local:processDebugManifest UP-TO-DATE
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :data-local:mapDebugSourceSetPaths UP-TO-DATE
+> Task :data-local:compileDebugLibraryResources UP-TO-DATE
+> Task :app:processDebugResources
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:processDebugAndroidTestManifest
+> Task :app:generateDebugAndroidTestBuildConfig
+> Task :app:generateDebugAndroidTestResources UP-TO-DATE
+> Task :app:packageDebugAndroidTestResources UP-TO-DATE
+> Task :app:processDebugAndroidTestNavigationResources
+> Task :app:parseDebugAndroidTestLocalResources UP-TO-DATE
+> Task :app:generateDebugAndroidTestRFile UP-TO-DATE
+> Task :app:compileDebugAndroidTestKotlin
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/AndroidTemporarySpaceProbe.kt:72:49 Unnecessary non-null assertion (!!) on a non-null receiver of type 'LibraryBackupRepository.Snapshot'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/AndroidTemporarySpaceProbe.kt:73:101 Unnecessary non-null assertion (!!) on a non-null receiver of type 'LibraryBackupRepository.Snapshot'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/AndroidTemporarySpaceProbe.kt:88:81 Unnecessary non-null assertion (!!) on a non-null receiver of type 'LibraryBackupRepository.Snapshot'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/BeautyNativeReplayTest.kt:126:33 Unnecessary non-null assertion (!!) on a non-null receiver of type 'BeautyDiagnostics.Trace'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/BeautyReviewUiTest.kt:30:92 The corresponding parameter in the supertype 'Factory' is named 'modelClass'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/CardPresentationUiTest.kt:39:24 'static fun getWindowInsetsController(p0: View): WindowInsetsControllerCompat?' is deprecated. Deprecated in Java.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/CollectionReviewUiTest.kt:450:71 This class is not recommended for use in Kotlin. Use 'kotlin.collections.Collection' instead.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/ComputePerformanceProbe.kt:43:300 Unnecessary non-null assertion (!!) on a non-null receiver of type 'MindMapView'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/ComputePerformanceProbe.kt:72:97 Unnecessary non-null assertion (!!) on a non-null receiver of type 'MindMapView'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/ConcurrentWritingTest.kt:63:85 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Job'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/ConcurrentWritingTest.kt:76:111 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Job'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/EditorFramePerformanceProbe.kt:145:27 Unnecessary safe call on a non-null receiver of type 'Deferred<Unit>'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/EditorTestNavigation.kt:211:24 'static fun getWindowInsetsController(p0: View): WindowInsetsControllerCompat?' is deprecated. Deprecated in Java.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/EditorWritingIntegrationUiTest.kt:180:142 Redundant call of conversion method.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/EditorWritingIntegrationUiTest.kt:180:184 Redundant call of conversion method.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/LibraryBackupUiTest.kt:63:64 Unnecessary non-null assertion (!!) on a non-null receiver of type 'LibraryBackupRepository.Snapshot'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/LibrarySourceNavigationUiTest.kt:513:51 This class is not recommended for use in Kotlin. Use 'kotlin.collections.Collection' instead.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/NotebookNavigationUiTest.kt:136:51 Unnecessary safe call on a non-null receiver of type 'Region'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/PrivacyExitProbe.kt:102:49 Unnecessary non-null assertion (!!) on a non-null receiver of type 'LibraryBackupRepository.Snapshot'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/PrivacyExitProbe.kt:113:63 Unnecessary non-null assertion (!!) on a non-null receiver of type 'LibraryBackupRepository.Snapshot'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/PrivacyExitProbe.kt:128:56 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Uri'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/QuestionMaintenanceUiTest.kt:306:42 'static fun getWindowInsetsController(p0: View): WindowInsetsControllerCompat?' is deprecated. Deprecated in Java.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:98:33 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:98:65 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:99:33 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:100:26 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:101:19 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:101:65 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:103:19 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:103:62 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:103:96 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:105:33 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:106:35 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:106:99 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:107:72 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:109:19 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:109:50 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:138:33 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:139:35 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:139:67 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallDurableRecoveryTest.kt:140:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallStudyViewModel'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallOriginalSourceUiTest.kt:86:20 Check for instance is always 'true'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallOriginalSourceUiTest.kt:146:57 'val id: Long' is deprecated. Deprecated in Java.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallOriginalSourceUiTest.kt:170:108 'static fun getWindowInsetsController(p0: View): WindowInsetsControllerCompat?' is deprecated. Deprecated in Java.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/RecallQuestionEditorUiTest.kt:96:85 'static fun getWindowInsetsController(p0: View): WindowInsetsControllerCompat?' is deprecated. Deprecated in Java.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/ReviewStateUiTest.kt:488:71 This class is not recommended for use in Kotlin. Use 'kotlin.collections.Collection' instead.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/StarNoteInteractionsUiTest.kt:111:84 'static fun getWindowInsetsController(p0: View): WindowInsetsControllerCompat?' is deprecated. Deprecated in Java.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt:43:119 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StreamedInkRaster'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt:46:66 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StreamedInkRaster'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt:46:98 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StreamedInkRaster'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt:126:136 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StreamedInkRaster'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt:130:171 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StreamedInkRaster'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt:139:85 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StreamedInkRaster'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt:139:127 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StreamedInkRaster'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt:150:24 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StreamedInkRaster'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt:151:31 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StreamedInkRaster'.
+w: file:///workspace/InkWeft/android/app/src/androidTest/java/org/inkweft/app/StudyCapacityUiTest.kt:170:24 'static fun getWindowInsetsController(p0: View): WindowInsetsControllerCompat?' is deprecated. Deprecated in Java.
+
+BUILD SUCCESSFUL in 4m 16s
+46 actionable tasks: 17 executed, 29 up-to-date

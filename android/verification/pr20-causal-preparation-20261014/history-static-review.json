@@ -1,0 +1,71 @@
+{
+  "status": "STATIC_REVIEW_PASS",
+  "notNativeEvidence": true,
+  "checks": {
+    "two_test_methods": true,
+    "fixed_30_trials": true,
+    "explicit_opt_in": true,
+    "fixed_save_watchdog": true,
+    "original_20_quantile_gate": true,
+    "no_sleep_or_blocking_latch": true,
+    "conditional_holder_only": true,
+    "no_captured_diagnostic_var": true,
+    "natural_unchanged": true,
+    "correctness_unchanged": true,
+    "schema_matches_source": true,
+    "tracked_diff_whitespace": true,
+    "new_test_trailing_whitespace": true,
+    "summary_preserves_primary_failure": true,
+    "trial_export_preserves_primary_failure": true
+  },
+  "files": {
+    "production": {
+      "path": "/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt",
+      "bytes": 14910,
+      "sha256": "b96890478129bbb7b0bbb538c3cf8d5f2e97f2b8b5e2e34d8057c855c9ec6ca9"
+    },
+    "diagnostic": {
+      "path": "/workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionCausalTest.kt",
+      "bytes": 18607,
+      "sha256": "4f80b8ce32e1aa2bae1d919b96c06b1897e7a8500c748822efd05119ba87ec4a"
+    },
+    "natural": {
+      "path": "/workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionExposureTest.kt",
+      "bytes": 12930,
+      "sha256": "7e98a67eec4f9242fc4c18e6bf662ec1d86c346796ebc28ab0971be1a9f0224f"
+    },
+    "correctness": {
+      "path": "/workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt",
+      "bytes": 14734,
+      "sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5"
+    },
+    "schema": {
+      "path": "/workspace/scratch/pr20-causal-20261014/history-marker-schemas.json",
+      "bytes": 22765,
+      "sha256": "d0e000115bdccb617e0a44af8eaa2789a02d4f49a8c95100febb844cba28e901"
+    },
+    "design": {
+      "path": "/workspace/scratch/pr20-causal-20261014/gc-closure.md",
+      "bytes": 15212,
+      "sha256": "5c391bc099f015d00d6e24fdee06ddf11589c42249415610286b5dcbd4ff8a4b"
+    },
+    "handoff": {
+      "path": "/workspace/scratch/pr20-causal-20261014/gc-diagnostic-implementation.md",
+      "bytes": 9716,
+      "sha256": "61148ac1211d2a81f96ba6da211649d3ebcd5c2e193011ce0bf1ae37c0f77d15"
+    }
+  },
+  "notRun": [
+    "Gradle",
+    "Kotlin compilation",
+    "ADB",
+    "instrumentation",
+    "CI",
+    "GitHub actions"
+  ],
+  "limitations": [
+    "Source-string and whitespace checks do not validate Kotlin types, Room behavior, event timing, exposure rate or latency.",
+    "No new performance values are produced; baseline/native acceptance remains separate."
+  ],
+  "revisionNote": "Post-independent-review test-only export failure handling: preserve primary failure; export errors suppressed. Parent reported predecessor host compile PASS; final revised source not compiled by this subagent."
+}
