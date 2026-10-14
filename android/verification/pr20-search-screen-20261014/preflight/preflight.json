@@ -1,0 +1,272 @@
+{
+  "status": "PASS",
+  "scope": "OFFLINE_SYNTHETIC_AND_PRIOR_RAW_ONLY_NO_NEW_NATIVE",
+  "checks": [
+    {
+      "name": "static scope and inherited functions",
+      "status": "PASS",
+      "details": {
+        "copied_functions": [
+          "write_json",
+          "save",
+          "seconds",
+          "digest",
+          "owned",
+          "run",
+          "capture",
+          "shell",
+          "phase",
+          "host",
+          "environment",
+          "source_manifest",
+          "junit"
+        ],
+        "methods": 18,
+        "groups": 9,
+        "cleanup_byte_identical": true
+      }
+    },
+    {
+      "name": "workflow syntax and actual isolated first-step clock",
+      "status": "PASS",
+      "details": {
+        "actionlint_exit": 0,
+        "phase_wrappers": 6,
+        "clock_export_lines": 9,
+        "second_clock_refused": true
+      }
+    },
+    {
+      "name": "phase/work budget exact boundaries",
+      "status": "PASS",
+      "details": {
+        "phase_boundaries": 12
+      }
+    },
+    {
+      "name": "strict original raw JUnit and invalid variants",
+      "status": "PASS",
+      "details": {
+        "prior_actual_raw_pass": 58,
+        "negative_variants": 13
+      }
+    },
+    {
+      "name": "marker closed schemas, exact cardinalities and malformed-prefix negatives",
+      "status": "PASS",
+      "details": {
+        "prior_actual_complete_marker_blocks": 8,
+        "negative_variants": [
+          "truncated_known",
+          "array_known",
+          "extra_valid",
+          "missing_payload",
+          "unknown_marker",
+          "duplicate_key",
+          "nonfinite",
+          "wrong_seed",
+          "unknown_key",
+          "oversized"
+        ]
+      }
+    },
+    {
+      "name": "local APK instrumentation element and target binding",
+      "status": "PASS",
+      "details": {
+        "local_actual_manifest": 1,
+        "negative_cases": 4
+      }
+    },
+    {
+      "name": "data-only natural exit; no helper/force-stop fallback",
+      "status": "PASS",
+      "details": [
+        {
+          "case": "absent",
+          "calls": 1
+        },
+        {
+          "case": "lingering",
+          "calls": 25
+        },
+        {
+          "case": "transport",
+          "calls": 1
+        }
+      ]
+    },
+    {
+      "name": "malformed marker preserves raw PASS but host INCOMPLETE",
+      "status": "PASS",
+      "details": {
+        "host": "INCOMPLETE",
+        "raw_junit": "PASS",
+        "arbitrary_payload_forwarded": false
+      }
+    },
+    {
+      "name": "post-install real byte hash contract with mismatch refusal",
+      "status": "PASS",
+      "details": [
+        {
+          "case": "match",
+          "captured_commands": [
+            [
+              "adb",
+              "-s",
+              "emulator-5554",
+              "install",
+              "-t",
+              "/workspace/scratch/pr20-search-screen-native-20261014/offline-check-final/install-match/sources/C0/android/test.apk"
+            ],
+            [
+              "adb",
+              "-s",
+              "emulator-5554",
+              "shell",
+              "pm",
+              "path",
+              "org.inkweft.data.test"
+            ],
+            [
+              "adb",
+              "-s",
+              "emulator-5554",
+              "shell",
+              "sha256sum",
+              "/data/app/abc/base.apk"
+            ]
+          ]
+        },
+        {
+          "case": "wrong_hash",
+          "captured_commands": [
+            [
+              "adb",
+              "-s",
+              "emulator-5554",
+              "install",
+              "-t",
+              "/workspace/scratch/pr20-search-screen-native-20261014/offline-check-final/install-wrong_hash/sources/C0/android/test.apk"
+            ],
+            [
+              "adb",
+              "-s",
+              "emulator-5554",
+              "shell",
+              "pm",
+              "path",
+              "org.inkweft.data.test"
+            ],
+            [
+              "adb",
+              "-s",
+              "emulator-5554",
+              "shell",
+              "sha256sum",
+              "/data/app/abc/base.apk"
+            ]
+          ]
+        },
+        {
+          "case": "wrong_path",
+          "captured_commands": [
+            [
+              "adb",
+              "-s",
+              "emulator-5554",
+              "install",
+              "-t",
+              "/workspace/scratch/pr20-search-screen-native-20261014/offline-check-final/install-wrong_path/sources/C0/android/test.apk"
+            ],
+            [
+              "adb",
+              "-s",
+              "emulator-5554",
+              "shell",
+              "pm",
+              "path",
+              "org.inkweft.data.test"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "actual new packager: interruption, preservation, cleanup, bounded whitelist",
+      "status": "PASS",
+      "details": [
+        {
+          "case": "running",
+          "exit": 0
+        },
+        {
+          "case": "installed",
+          "exit": 0
+        },
+        {
+          "case": "between_steps",
+          "exit": 0
+        },
+        {
+          "case": "pass_preserved",
+          "exit": 0
+        },
+        {
+          "case": "fail_preserved",
+          "exit": 0
+        },
+        {
+          "case": "notrun_preserved",
+          "exit": 0
+        },
+        {
+          "case": "cleanup_failure",
+          "exit": 0
+        },
+        {
+          "case": "all18_complete",
+          "exit": 0
+        },
+        {
+          "case": "all18_missing_raw",
+          "exit": 0
+        },
+        {
+          "case": "oversize",
+          "exit": 1
+        },
+        {
+          "case": "secret",
+          "exit": 1
+        },
+        {
+          "case": "excluded_binary",
+          "exit": 0
+        },
+        {
+          "case": "no_summary",
+          "exit": 0
+        }
+      ]
+    }
+  ],
+  "inputs": {
+    "/workspace/scratch/pr20-search-screen-native-20261014/bound-control-final/authorization.json": "acdcce3b571a891ddbee3189d2ae241f6769bb2691403c201c7c1243b8cc2b3a",
+    "/workspace/scratch/pr20-search-screen-native-20261014/bound-control-final/cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "/workspace/scratch/pr20-search-screen-native-20261014/bound-control-final/package.py": "6662193ae687c097df6d4e748c348d7a83a3e702b8c44ca1ce79b86ee27d449a",
+    "/workspace/scratch/pr20-search-screen-native-20261014/bound-control-final/run.py": "3b88cda9aabda1eb261a4d1c860cde11ce73fd4d3b22223bac34676aa21febec",
+    "/workspace/scratch/pr20-search-screen-native-20261014/bound-control-final/workflow.proposed.yml": "26fa7448371fdb56b6874091f95a78f9e196f8d726382fd9ef104f8a3bd5dd91",
+    "/workspace/scratch/pr20-search-screen-native-20261014/frozen-readiness/C0-source-manifest.json": "e0874e09a471c8157d9d3e0c72f05c9cf42dbd5ca3721679f63be94e5c5fba5b",
+    "/workspace/scratch/pr20-search-screen-native-20261014/frozen-readiness/C1-source-manifest.json": "befb5ccec0a8863af5a1709c523470d6d5c7e9e827f2b5e804b0468f98232533",
+    "/workspace/scratch/pr20-search-screen-native-20261014/frozen-readiness/PLAN.md": "64921517343ba2dfddf3cba3f319b15b61757501744c87f43d4217bd37d4a08a",
+    "/workspace/scratch/pr20-search-screen-native-20261014/frozen-readiness/candidate-source-delta.json": "ae950bc8967a26dac56a0253604e1b0705d3f2fecbfdc0e84fd7a48d0c572c55",
+    "/workspace/scratch/pr20-search-screen-native-20261014/frozen-readiness/marker-contract.json": "3f3bc2a6bc5b0a663a4e03a54be65c2193a8ed868ba31014e344a95595d6aa4d",
+    "/workspace/scratch/pr20-search-screen-native-20261014/frozen-readiness/method-plan.json": "7dd485f678aa16d89fc0a1ef3e69421a376b4054cc31918f2b393c8212033284",
+    "/workspace/scratch/pr20-search-screen-native-20261014/frozen-readiness/original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "/workspace/scratch/pr20-search-screen-native-20261014/frozen-readiness/prepare_sources.py": "7e42199cd01da917a0a141982a963fd6db51f6411c7516c85ea27406a0744ce5",
+    "/workspace/scratch/pr20-search-screen-native-20261014/frozen-readiness/source-spec.json": "e57296ec73cea28ba22c5ee5871d77a0e5b22f0d0503c2bd453b987653ed6499"
+  },
+  "checker_sha256": "a2a3812f5923a2d9932b01edf9e11a164856e20974517790061d8c3e101240b5"
+}

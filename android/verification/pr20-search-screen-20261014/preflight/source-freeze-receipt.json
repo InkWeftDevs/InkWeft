@@ -1,0 +1,31 @@
+{
+  "status": "SOURCE_ONLY_NOT_BUILT_NOT_RUN",
+  "out": "/workspace/scratch/pr20-search-screen-native-20261014/frozen-readiness",
+  "identities": {
+    "C0": {
+      "git": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+      "tree": "e773d660abbc15fd727000eb60631d3b72a19a92",
+      "production_overrides": [],
+      "canonical_manifest_sha256": "b5fa8f491f26db3dd4a5ab6870991b0e56c2c10b0f5c944bb3b8afae90ded66e",
+      "file_count": 963
+    },
+    "C1": {
+      "git": "a9ccf2cc727a7957e8fb00115f0060d80b287de1",
+      "tree": "acb62d93940c14f2e66122bee37d318c63b604f6",
+      "production_overrides": [],
+      "canonical_manifest_sha256": "d04176437afb992804f3925162248bae43b30d397df64bcf36ac93114c6f4100",
+      "file_count": 967
+    }
+  },
+  "source_spec_sha256": "e57296ec73cea28ba22c5ee5871d77a0e5b22f0d0503c2bd453b987653ed6499",
+  "method_plan_sha256": "7dd485f678aa16d89fc0a1ef3e69421a376b4054cc31918f2b393c8212033284",
+  "changed_paths": [
+    "android/VERIFY-SCREENING.md",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt",
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt",
+    "android/verify.py",
+    "ci/pr20_build_cache.init.gradle",
+    "ci/test_android_screen.py",
+    "ci/test_pr20_build_cache.py"
+  ]
+}

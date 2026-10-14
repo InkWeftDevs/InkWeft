@@ -1,0 +1,102 @@
+name: PR20 focused two-version search screen
+'on':
+  push:
+    branches:
+    - codex/kvm-pr20-search-screen-20261014
+    paths:
+    - .github/workflows/pr20-search-screen.yml
+permissions:
+  contents: read
+concurrency:
+  group: pr20-search-screen-20261014
+  cancel-in-progress: false
+jobs:
+  screen:
+    name: SCREENING_ONLY two data APKs / 18 methods
+    if: github.event_name == 'push' && github.ref == 'refs/heads/codex/kvm-pr20-search-screen-20261014' && github.event.created == false && github.event.before
+      == '0000000000000000000000000000000000000000' && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+    - name: Fix one local first-step screening clock; no network clock API
+      timeout-minutes: 1
+      run: "set -euo pipefail\nexport KVM_ONCE=\"$RUNNER_TEMP/pr20-search-screen\"\nexport ANDROID_AVD_HOME=\"$KVM_ONCE/avd\"\nexport ANDROID_USER_HOME=\"\
+        $KVM_ONCE/android-user\"\nexport ANDROID_EMULATOR_HOME=\"$KVM_ONCE/android-user\"\npython3 - <<'PYCODE'\nimport json,os,pathlib,time\n\
+        observed=time.time();start=int(observed)\nroot=pathlib.Path(os.environ['KVM_ONCE'])\nassert not root.exists(),'Owned screen directory\
+        \ must be new; do not reuse state or clock'\n(root/'evidence').mkdir(parents=True)\ncutoffs={k:start+v*60 for k,v in [('setup',30),('correctness',35),('common',50),('work',55)]}\n\
+        values={'KVM_BUDGET_ANCHOR':start,'KVM_SETUP_CUTOFF':cutoffs['setup'],'KVM_CORRECTNESS_CUTOFF':cutoffs['correctness'],'KVM_COMMON_CUTOFF':cutoffs['common'],'KVM_WORK_DEADLINE':cutoffs['work']}\n\
+        clock={'status':'PASS','scope':'SCREENING_ONLY','anchor_kind':'runner_first_step','budget_anchor_epoch':start,'first_step_observed_epoch':observed,'actual_job_started_epoch':None,'deadlines_minutes':[30,35,50,55,60],'deadline_epochs':cutoffs}\n\
+        with (root/'evidence/clock.json').open('x') as f:f.write(json.dumps(clock,indent=2)+'\\n')\nwith open(os.environ['GITHUB_ENV'],'a') as\
+        \ f:\n    for k in ['KVM_ONCE','ANDROID_AVD_HOME','ANDROID_USER_HOME','ANDROID_EMULATOR_HOME']:f.write(k+'='+os.environ[k]+'\\n')\n  \
+        \  for k,v in values.items():f.write(k+'='+str(v)+'\\n')\nprint('INKWEFT_SEARCH_SCREEN_CLOCK '+json.dumps(clock,separators=(',',':')))\n\
+        PYCODE\n"
+    - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      timeout-minutes: 3
+      with:
+        persist-credentials: false
+        path: control
+    - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+      timeout-minutes: 3
+      with:
+        distribution: temurin
+        java-version: '17'
+    - name: Freeze/reconstruct two sources and SDK (SCREENING_ONLY)
+      shell: bash
+      run: "set -euo pipefail\ncleanup_on_failure() {\n  code=$?\n  trap - EXIT INT TERM\n  if test \"$code\" -ne 0; then\n    timeout --signal=TERM\
+        \ --kill-after=2 45s python3 control/ci/pr20-search-screen/cleanup.py trap || code=1\n  fi\n  exit \"$code\"\n}\ntrap cleanup_on_failure\
+        \ EXIT\ntrap 'exit 130' INT\ntrap 'exit 143' TERM\nremaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))\ntest \"$remaining\" -gt 0\ntimeout\
+        \ --signal=TERM --kill-after=2 \"${remaining}s\" python3 control/ci/pr20-search-screen/run.py setup\n"
+    - name: Build C0 data AndroidTest APK only
+      shell: bash
+      run: "set -euo pipefail\ncleanup_on_failure() {\n  code=$?\n  trap - EXIT INT TERM\n  if test \"$code\" -ne 0; then\n    timeout --signal=TERM\
+        \ --kill-after=2 45s python3 control/ci/pr20-search-screen/cleanup.py trap || code=1\n  fi\n  exit \"$code\"\n}\ntrap cleanup_on_failure\
+        \ EXIT\ntrap 'exit 130' INT\ntrap 'exit 143' TERM\nremaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))\ntest \"$remaining\" -gt 0\ntimeout\
+        \ --signal=TERM --kill-after=2 \"${remaining}s\" python3 control/ci/pr20-search-screen/run.py build C0\n"
+    - name: Build C1 data AndroidTest APK only
+      shell: bash
+      run: "set -euo pipefail\ncleanup_on_failure() {\n  code=$?\n  trap - EXIT INT TERM\n  if test \"$code\" -ne 0; then\n    timeout --signal=TERM\
+        \ --kill-after=2 45s python3 control/ci/pr20-search-screen/cleanup.py trap || code=1\n  fi\n  exit \"$code\"\n}\ntrap cleanup_on_failure\
+        \ EXIT\ntrap 'exit 130' INT\ntrap 'exit 143' TERM\nremaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))\ntest \"$remaining\" -gt 0\ntimeout\
+        \ --signal=TERM --kill-after=2 \"${remaining}s\" python3 control/ci/pr20-search-screen/run.py build C1\n"
+    - name: 最小临时ACL与同一KVM模拟器
+      shell: bash
+      run: "set -euo pipefail\ncleanup_on_failure() {\n  code=$?\n  trap - EXIT INT TERM\n  if test \"$code\" -ne 0; then\n    timeout --signal=TERM\
+        \ --kill-after=2 45s python3 control/ci/pr20-search-screen/cleanup.py trap || code=1\n  fi\n  exit \"$code\"\n}\ntrap cleanup_on_failure\
+        \ EXIT\ntrap 'exit 130' INT\ntrap 'exit 143' TERM\nremaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))\ntest \"$remaining\" -gt 0\ntimeout\
+        \ --signal=TERM --kill-after=2 \"${remaining}s\" python3 control/ci/pr20-search-screen/run.py emulator\n"
+    - name: C1 ten related Room correctness methods; stop on failure
+      shell: bash
+      run: "set -euo pipefail\ncleanup_on_failure() {\n  code=$?\n  trap - EXIT INT TERM\n  if test \"$code\" -ne 0; then\n    timeout --signal=TERM\
+        \ --kill-after=2 45s python3 control/ci/pr20-search-screen/cleanup.py trap || code=1\n  fi\n  exit \"$code\"\n}\ntrap cleanup_on_failure\
+        \ EXIT\ntrap 'exit 130' INT\ntrap 'exit 143' TERM\nremaining=$((KVM_CORRECTNESS_CUTOFF - $(date +%s) - 2))\ntest \"$remaining\" -gt 0\n\
+        timeout --signal=TERM --kill-after=2 \"${remaining}s\" python3 control/ci/pr20-search-screen/run.py methods correctness\n"
+    - name: Four fixed library seeds / two versions / eight calls
+      shell: bash
+      run: "set -euo pipefail\ncleanup_on_failure() {\n  code=$?\n  trap - EXIT INT TERM\n  if test \"$code\" -ne 0; then\n    timeout --signal=TERM\
+        \ --kill-after=2 45s python3 control/ci/pr20-search-screen/cleanup.py trap || code=1\n  fi\n  exit \"$code\"\n}\ntrap cleanup_on_failure\
+        \ EXIT\ntrap 'exit 130' INT\ntrap 'exit 143' TERM\nremaining=$((KVM_COMMON_CUTOFF - $(date +%s) - 2))\ntest \"$remaining\" -gt 0\ntimeout\
+        \ --signal=TERM --kill-after=2 \"${remaining}s\" python3 control/ci/pr20-search-screen/run.py methods common\n"
+    - name: 成功路径停止拥有进程并精确恢复ACL
+      timeout-minutes: 1
+      run: timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-search-screen/cleanup.py trap
+    - name: always再次核验进程与ACL恢复
+      if: always()
+      timeout-minutes: 1
+      run: "if test -f control/ci/pr20-search-screen/cleanup.py; then\n  timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-search-screen/cleanup.py\
+        \ always\nelse\n  mkdir -p \"$KVM_ONCE/evidence\"\n  echo '{\"emulator\":\"NOT_STARTED\",\"command_groups\":\"NOT_STARTED\",\"acl\":\"\
+        NOT_TOUCHED\",\"errors\":[]}' > \"$KVM_ONCE/evidence/cleanup-always.json\"\nfi\n"
+    - name: 只打包白名单原始文本，最大20MiB
+      if: always()
+      timeout-minutes: 1
+      run: "if test -f control/ci/pr20-search-screen/package.py; then\n  timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-search-screen/package.py\n\
+        else\n  mkdir -p \"$KVM_ONCE/upload\"\n  if test -f \"$KVM_ONCE/evidence/clock.json\"; then cp \"$KVM_ONCE/evidence/clock.json\" \"$KVM_ONCE/upload/clock.json\"\
+        ; fi\n  echo '{\"status\":\"SETUP_BLOCKED_BEFORE_SOURCE_CHECKOUT\",\"tests\":\"NOT_RUN\",\"kvm\":\"NOT_TOUCHED\"}' > \"$KVM_ONCE/upload/setup-failure.json\"\
+        \nfi\n"
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      if: always()
+      timeout-minutes: 2
+      with:
+        name: pr20-search-screen-${{ github.run_id }}
+        retention-days: 3
+        if-no-files-found: error
+        path: ${{ runner.temp }}/pr20-search-screen/upload/*

@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "scope": "Local APK manifest only; no build/install/native execution",
+  "command": [
+    "/workspace/.setup/tools/android-sdk/build-tools/36.0.0/aapt",
+    "dump",
+    "xmltree",
+    "/workspace/InkWeft/android/data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk",
+    "AndroidManifest.xml"
+  ],
+  "exit": 0,
+  "xmltree_sha256": "22faf8d422bf1760cbd6090a3e1410133dc7f04fdecbe954da9549122a6646b1",
+  "validation": {
+    "name": "androidx.test.runner.AndroidJUnitRunner",
+    "targetPackage": "org.inkweft.data.test"
+  }
+}
