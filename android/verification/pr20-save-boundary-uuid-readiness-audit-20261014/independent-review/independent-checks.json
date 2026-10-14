@@ -1,0 +1,103 @@
+{
+  "status": "PASS_LOCAL_DELTA_AND_SYNTHETIC_FORWARDING",
+  "scope": "NO_NETWORK_NO_NATIVE_NO_SOURCE_MUTATION",
+  "manifest_sha256": "a09787d105551a10cea5627d8de377cfc0ab00c60e19da0dab5e21029d631e09",
+  "source_git": "94379190b9ad0e1034f136ea9887fb0ac12e7ea7",
+  "source_reviewed_blobs_verified": 6,
+  "unchanged_files": [
+    "authorization.json",
+    "cleanup.py",
+    "freeze_readiness.py",
+    "markers.py",
+    "method-plan.template.json",
+    "original-protocol.json",
+    "prepare_sources.py"
+  ],
+  "run_ast_only_delta": "scope strings plus forward_failure_log and finally non-PASS call",
+  "packager_secret_regex_ast_identical": true,
+  "offline_14_groups_hash_bound": true,
+  "independent_synthetic_case_count": 14,
+  "cases": [
+    {
+      "name": "UTF8 CRLF NUL and marker-like line preserve bytes",
+      "forwarding_status": "FORWARDED",
+      "reason": null,
+      "envelope_bytes": 918
+    },
+    {
+      "name": "Exact 256KiB sixfold escaping",
+      "forwarding_status": "FORWARDED",
+      "reason": null,
+      "envelope_bytes": 1573736
+    },
+    {
+      "name": "Oversize refusal with no partial content",
+      "forwarding_status": "REFUSED",
+      "reason": "OVERSIZE",
+      "envelope_bytes": 878
+    },
+    {
+      "name": "Invalid UTF8 refusal",
+      "forwarding_status": "REFUSED",
+      "reason": "INVALID_UTF8",
+      "envelope_bytes": 877
+    },
+    {
+      "name": "Hash mismatch refusal",
+      "forwarding_status": "REFUSED",
+      "reason": "HASH_MISMATCH",
+      "envelope_bytes": 878
+    },
+    {
+      "name": "Synthetic secret pattern 0",
+      "forwarding_status": "REFUSED",
+      "reason": "SENSITIVE",
+      "envelope_bytes": 875
+    },
+    {
+      "name": "Synthetic secret pattern 1",
+      "forwarding_status": "REFUSED",
+      "reason": "SENSITIVE",
+      "envelope_bytes": 875
+    },
+    {
+      "name": "Synthetic secret pattern 2",
+      "forwarding_status": "REFUSED",
+      "reason": "SENSITIVE",
+      "envelope_bytes": 875
+    },
+    {
+      "name": "Synthetic secret pattern 3",
+      "forwarding_status": "REFUSED",
+      "reason": "SENSITIVE",
+      "envelope_bytes": 875
+    },
+    {
+      "name": "Synthetic secret pattern 4",
+      "forwarding_status": "REFUSED",
+      "reason": "SENSITIVE",
+      "envelope_bytes": 875
+    },
+    {
+      "name": "Wrong path refusal",
+      "forwarding_status": "REFUSED",
+      "reason": "UNSAFE_PATH_OR_METHOD",
+      "envelope_bytes": 889
+    },
+    {
+      "name": "PASS helper is silent",
+      "status": "PASS"
+    },
+    {
+      "name": "Original method exception identity preserved",
+      "status": "PASS"
+    },
+    {
+      "name": "Original method exception identity preserved with forwarding fault",
+      "status": "PASS"
+    }
+  ],
+  "conservative_combined_bytes": 19036122,
+  "actual_package_limit_bytes": 20971520,
+  "script_sha256": "3bc3a84dc7e23aeb28184cda8a0f99ddfc2217928d1b731446a16e7f8a4764b7"
+}

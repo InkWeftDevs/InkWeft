@@ -1,0 +1,14 @@
+{
+  "status": "FROZEN",
+  "scope": "DIAGNOSTIC_ONLY",
+  "identities": {
+    "C1": {
+      "alias": "causal_diagnostic_candidate",
+      "git": "94379190b9ad0e1034f136ea9887fb0ac12e7ea7",
+      "tree": "cf3d70d1fdf1ed54956e15e75f38bcfc92701e4f",
+      "canonical_manifest_sha256": "cff1c9b79b4af51e4f9d70426ce4ad4524e3d7fa6827c58aeb9f9177597335d7",
+      "production_overrides": []
+    }
+  },
+  "common_probes": []
+}

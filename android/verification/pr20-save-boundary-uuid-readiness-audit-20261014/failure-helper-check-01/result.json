@@ -1,0 +1,63 @@
+{
+  "scope": "SYNTHETIC_NO_NATIVE",
+  "status": "PASS",
+  "checks": {
+    "synthetic_cases": [
+      {
+        "case": "unicode/newlines/control injection exact bytes",
+        "status": "FORWARDED",
+        "reason": null,
+        "original_bytes": 57,
+        "envelope_bytes": 937
+      },
+      {
+        "case": "exact 256KiB cap worst sixfold JSON",
+        "status": "FORWARDED",
+        "reason": null,
+        "original_bytes": 262144,
+        "envelope_bytes": 1573736
+      },
+      {
+        "case": "oversize refused without truncation",
+        "status": "REFUSED",
+        "reason": "OVERSIZE",
+        "original_bytes": 262145,
+        "envelope_bytes": 878
+      },
+      {
+        "case": "invalid UTF8 refused",
+        "status": "REFUSED",
+        "reason": "INVALID_UTF8",
+        "original_bytes": 2,
+        "envelope_bytes": 877
+      },
+      {
+        "case": "hash mismatch refused",
+        "status": "REFUSED",
+        "reason": "HASH_MISMATCH",
+        "original_bytes": 9,
+        "envelope_bytes": 878
+      },
+      {
+        "case": "sensitive refused",
+        "status": "REFUSED",
+        "reason": "SENSITIVE",
+        "original_bytes": 34,
+        "envelope_bytes": 875
+      },
+      {
+        "case": "wrong file refused",
+        "status": "REFUSED",
+        "reason": "UNSAFE_PATH_OR_METHOD",
+        "original_bytes": 9,
+        "envelope_bytes": 889
+      }
+    ],
+    "allowlisted_path_symlink_refused": true,
+    "missing_refused": true,
+    "pass_emits_nothing": true,
+    "original_exception_identity_preserved": true,
+    "forwarding_exception_does_not_mask_original": true,
+    "packager_secret_regex_ast_identical": true
+  }
+}
