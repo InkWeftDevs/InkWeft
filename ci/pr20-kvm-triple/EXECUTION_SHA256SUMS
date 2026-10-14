@@ -1,3 +1,4 @@
+807b8520913966fda9a204947d792025407a7e7abf7c6b3ead6363aa71a05891  .github/workflows/pr20-kvm-triple.yml
 be5884313087a81f8f3c067f32605c6688c6cff01daa09cf8547aaa242d88739  ci/pr20-kvm-triple/authorization.json
 bae817ca2220c5e473e6206b105d9c184b5c73b86b2dd1f2a978f4ef3bb03050  ci/pr20-kvm-triple/binding-selftest.json
 be2006587f7e7feb9397310345ef3f8e73a5d35282d536916b5ac4c08db6d144  ci/pr20-kvm-triple/budget-revision.json
@@ -9,4 +10,4 @@ b64b0ac49ae3f5de3784cf1fa4ab3151312d5faf59cc3f770d2514a705888314  ci/pr20-kvm-tr
 e9b0fcfa55549dfc71e1737f07b7eaf7a598e09f961145be509d0c0945b6e24a  ci/pr20-kvm-triple/package.py
 a199bd8ce6905af02b31708e4538ef771e261f0feb964381fa8ef5daa6ad1076  ci/pr20-kvm-triple/preflight.json
 4a3fc95304dfe0dfeeeecfda85a67f9f7ffc288fb904b9608262be5b04d97466  ci/pr20-kvm-triple/run.py
-add3e107c74ae3c28907847d8296d2420281e3d19d7e04fd408424c7c511345d  ci/pr20-kvm-triple/workflow.proposed.yml
+807b8520913966fda9a204947d792025407a7e7abf7c6b3ead6363aa71a05891  ci/pr20-kvm-triple/workflow.proposed.yml
