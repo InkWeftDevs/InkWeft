@@ -1,0 +1,95 @@
+{
+  "status": "READ_ONLY_ACTUAL_FAILURE_REVIEW_CONCURS",
+  "reviewer": "gc_followup",
+  "native_reruns": 0,
+  "new_test_cases": 0,
+  "source_or_controller_edits": 0,
+  "official_job_seconds": 408,
+  "first_method": {
+    "receipt": {
+      "ordinal": 1,
+      "phase": "data-diagnostics",
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "status": "INCOMPLETE",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": "Probe evidence could not be validated; preserve raw JUnit separately"
+    },
+    "line": 318,
+    "epoch": 1791975764.015622,
+    "failure_text_audited": true
+  },
+  "terminal_audit": {
+    "status": "FAILED_TERMINAL_AUDITED_NOT_PASS",
+    "passed_prefix": 0,
+    "first_failed_ordinal": 1,
+    "successors_not_run": 7,
+    "dual_cleanup_exact": true,
+    "failure_text_audited": true,
+    "packaging_complete": false,
+    "missing_files": [
+      "device-after.json",
+      "install-C1-data-diagnostics-environment-after.json",
+      "install-C1-data-diagnostics-host-after.json",
+      "method-02-C1-instrumentation.log",
+      "method-02-C1-junit.xml",
+      "method-02-C1-log-forwarding.json",
+      "method-03-C1-instrumentation.log",
+      "method-03-C1-junit.xml",
+      "method-03-C1-log-forwarding.json",
+      "method-04-C1-instrumentation.log",
+      "method-04-C1-junit.xml",
+      "method-04-C1-log-forwarding.json",
+      "method-05-C1-instrumentation.log",
+      "method-05-C1-junit.xml",
+      "method-05-C1-log-forwarding.json",
+      "method-06-C1-instrumentation.log",
+      "method-06-C1-junit.xml",
+      "method-06-C1-log-forwarding.json",
+      "method-07-C1-instrumentation.log",
+      "method-07-C1-junit.xml",
+      "method-07-C1-log-forwarding.json",
+      "method-08-C1-instrumentation.log",
+      "method-08-C1-junit.xml",
+      "method-08-C1-log-forwarding.json"
+    ],
+    "phase_times": [
+      {
+        "name": "Freeze/reconstruct one source and install fixed SDK",
+        "phase": "setup",
+        "start_epoch": 1791975375.0,
+        "end_epoch": 1791975404.0,
+        "within_success_deadline": true
+      },
+      {
+        "name": "Build only C1 data test APK; verify signature, manifest and SQLite native identities",
+        "phase": "setup",
+        "start_epoch": 1791975404.0,
+        "end_epoch": 1791975728.0,
+        "within_success_deadline": true
+      },
+      {
+        "name": "\u6700\u5c0f\u4e34\u65f6ACL\u4e0e\u540c\u4e00KVM\u6a21\u62df\u5668",
+        "phase": "setup",
+        "start_epoch": 1791975728.0,
+        "end_epoch": 1791975761.0,
+        "within_success_deadline": true
+      },
+      {
+        "name": "Five GC guards, two GC diagnostics, one snapshot-control diagnostic; failure stops the run",
+        "phase": "data",
+        "start_epoch": 1791975761.0,
+        "end_epoch": 1791975766.0,
+        "within_success_deadline": true
+      }
+    ]
+  },
+  "new_gc_diagnostic_samples": 0,
+  "new_snapshot_control_samples": 0,
+  "cause": "Existing HISTORY_DELETE_WRITER_CORRECTNESS output conflicts with frozen method-1 none/empty marker contract; unchanged-validator replay of existing text rejects Unknown/malformed marker.",
+  "failure_raw_sha256": "f1ee6adafc9195b66a3e5f9abbc84086ce8118e2339951846aebd05cfdc38204",
+  "inner_assertion_stack_in_official_log": false,
+  "pause_status": "PAUSED_BY_USER"
+}

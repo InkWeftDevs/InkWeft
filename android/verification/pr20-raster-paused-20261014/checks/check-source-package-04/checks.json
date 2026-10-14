@@ -1,0 +1,131 @@
+{
+  "status": "OFFLINE_SOURCE_AND_SYNTHETIC_PACKAGE_PASS_NOT_NATIVE",
+  "checks": [
+    {
+      "name": "real source reconstruction binds all files",
+      "status": "PASS",
+      "detail": {
+        "C1": 1044,
+        "C2": 1044
+      }
+    },
+    {
+      "name": "source refusal same-source",
+      "status": "PASS",
+      "detail": {
+        "exit": 1
+      }
+    },
+    {
+      "name": "source refusal override",
+      "status": "PASS",
+      "detail": {
+        "exit": 1
+      }
+    },
+    {
+      "name": "uncommitted readiness binder refusal",
+      "status": "PASS",
+      "detail": {
+        "exit": 1
+      }
+    },
+    {
+      "name": "missing evidence cannot claim completion",
+      "status": "PASS",
+      "detail": {
+        "missing": 98,
+        "status": "EVIDENCE_INCOMPLETE"
+      }
+    },
+    {
+      "name": "complete synthetic package retains every byte and enforces joint cap",
+      "status": "PASS",
+      "detail": {
+        "files": 119,
+        "bytes": 555983,
+        "omitted": 0,
+        "truncated": 0,
+        "joint_bytes_upper": 18006514,
+        "shared_bytes": 737194
+      }
+    },
+    {
+      "name": "package refusal oversize",
+      "status": "PASS",
+      "detail": {
+        "exit": 1,
+        "original_bytes": {
+          "method-12-C1-instrumentation.log": 20971520
+        }
+      }
+    },
+    {
+      "name": "package refusal shared-oversize",
+      "status": "PASS",
+      "detail": {
+        "exit": 1,
+        "original_bytes": {
+          "build-C2.log": 3145728
+        }
+      }
+    },
+    {
+      "name": "package refusal secret",
+      "status": "PASS",
+      "detail": {
+        "exit": 1,
+        "original_bytes": {
+          "build-C2.log": 28
+        }
+      }
+    },
+    {
+      "name": "package refusal invalid-utf8",
+      "status": "PASS",
+      "detail": {
+        "exit": 1,
+        "original_bytes": {
+          "build-C2.log": 1
+        }
+      }
+    },
+    {
+      "name": "package symlink refusal",
+      "status": "PASS",
+      "detail": {
+        "exit": 1
+      }
+    }
+  ],
+  "frozen_sha256": {
+    "PLAN.md": "75ca008899f79eb45697e6c6709be4371a5f73d3864891863d53a12153a1bd42",
+    "C2-source-manifest.json": "6381b8513e5eab9296a87f2e7e1a6b67e4e3921097c37b47e65a8e1aab442064",
+    "source-spec.json": "e529db1cf083c3f726f8b9e9b7836c03967334dbab9e50fd5213aea216fea16d",
+    "prepare_sources.py": "0911bab24186c0c34b2734544c02eb3ac53c2b464fe04dbb0a99fd8274dd00fa",
+    "C1-source-manifest.json": "2ea3b24ce0511cdd45c3de817fb7ced3f4418b7d7e8f3790931e50f42d0eb1e7",
+    "SHA256SUMS": "570bb57d7433f7993d0325089ad353f121ec8b1f79cafaf82042ea15d13a1624",
+    "original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "method-plan.json": "271fb884be2629a7c1d2d7c135443617ced4a8c8b7bacd9974c9a40b8990d448",
+    "marker-contract.json": "d56ff2d21eca8effa9632ea2d29c296ee815ccaab185dfedacc2dbee531bee64"
+  },
+  "controller_sha256": {
+    "workflow.proposed.yml": "bc9548f3e6b339c048d9225c6cdefe7e415397d765a1b8cbb0c62615af37dd92",
+    "marker-contract.template.json": "a70e7d3b790d1a9117910847606186f42d8ea628fc8ca09c8a768c161bb259d5",
+    "failure_text.py": "7a096a8c730c9a9a8efaf24f7c6363948a686df0ba001d50d13a297b849036e6",
+    "run.py": "5ba57d828a02581a1bbfc21df982abc085fb4f39c39dc481735cfafe46319f60",
+    "prepare_sources.py": "0911bab24186c0c34b2734544c02eb3ac53c2b464fe04dbb0a99fd8274dd00fa",
+    "package.py": "9e7cdd2b90079d5262707c360ee2611d42d71802170a4123404fca90c10c4900",
+    "method-plan.template.json": "001f8af1cfabf7cdd2fdc32097654ded12dc0395399009e0a39e8633a088506a",
+    "authorization.json": "fe722aa43af61cf579d2e951f334ea02cc44a1e8fd299aad1708f676a0ab851e",
+    "markers.py": "b6cddc15b85d9b58fb687a054e383bfb847766ca76b044e58c45244a127196dd",
+    "size_bounds.py": "82e1d347d341242d7054a090c6b0b4e2364a9ae69854e41e816e16e3e908e1a5",
+    "bind_control.py": "3ac263b06de4680b3263e1188cf99f8e8171fdd13c8036b50b9aa89c89b57bec",
+    "check_offline.py": "4f2c13f199e6fe25c5539d7fb59828883eb973a530136b518c72e92767641441",
+    "freeze_readiness.py": "6c5bd193dcd20899d8da2b498072d1530eaef7406a733191fcb1ba581db49b37",
+    "source-scope.template.json": "58cd8eaabb17a514d27481da5531bc988306ec51c6fcd8dae4ade928a82832b4",
+    "cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "PLAN.template.md": "14e7a682a289dd678235a4830480ebd489a2303ee477e8bf1580c488d86b04b9",
+    "original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+  }
+}

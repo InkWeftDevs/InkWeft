@@ -1,0 +1,9 @@
+90634cbc31d5af8fe21fc4d4fda422ce0cd77313e78b36ffd8896b9f1bc34e10  ci/pr20-raster-screen/authorization.json
+49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576  ci/pr20-raster-screen/cleanup.py
+7a096a8c730c9a9a8efaf24f7c6363948a686df0ba001d50d13a297b849036e6  ci/pr20-raster-screen/failure_text.py
+b6cddc15b85d9b58fb687a054e383bfb847766ca76b044e58c45244a127196dd  ci/pr20-raster-screen/markers.py
+35888c3c01f07c887059d1b3711d466c12dc40c0adb286dbc02d0cd66aebb7b0  ci/pr20-raster-screen/package.py
+8d6a839f8a08b9d2ede9b57cf9940650b20426d584e2c62dc63a188e94016e2b  ci/pr20-raster-screen/run.py
+82e1d347d341242d7054a090c6b0b4e2364a9ae69854e41e816e16e3e908e1a5  ci/pr20-raster-screen/size_bounds.py
+878a0e209325e4c5b31c1a4beb25a04564d189df9dc522fbb093d6d2530c82a5  ci/pr20-raster-screen/workflow.proposed.yml
+878a0e209325e4c5b31c1a4beb25a04564d189df9dc522fbb093d6d2530c82a5  .github/workflows/pr20-raster-screen.yml

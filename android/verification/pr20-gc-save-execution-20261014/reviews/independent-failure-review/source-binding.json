@@ -1,0 +1,16 @@
+{
+  "candidate": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353",
+  "scope": "Read-only source hash binding, no native run",
+  "files": {
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySnapshotHoldDiagnosticsTest.kt": {
+      "committed_sha256": "7a62c5263d94730884b038bc150d9e6f495a08b5500caadaa846954ec927e9df",
+      "working_sha256": "7a62c5263d94730884b038bc150d9e6f495a08b5500caadaa846954ec927e9df",
+      "matches_budget": true
+    },
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest.kt": {
+      "committed_sha256": "597bed443289598870d063af99731a60db48ca0e38d8e3576b24fcd995cf4055",
+      "working_sha256": "597bed443289598870d063af99731a60db48ca0e38d8e3576b24fcd995cf4055",
+      "matches_budget": true
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "control_path": "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt",
+  "control_sha256": "e7241f4329ece5148f8d1e6f740e102f8326bd4ef0db7f0a6f0a2871e12c9950",
+  "candidate_sha256": "115cb7ea6f3d429d1637ca1be05bbe09ab3a68d2fac5ce617c4cf3519362b52f",
+  "common_tests": {
+    "android/app/src/androidTest/java/org/inkweft/app/OwnedRasterJobs.kt": "00c38f1f951ad4572e23fb3e7d9a412bd723275d52c68298d4723134e5d51d18",
+    "android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt": "ea3f320d3189e053a1e316dc399eece4afb4792ace36cf0b16087330027beb98",
+    "android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt": "38fd3638d88ed3b21b23442a3759c61a0a3733af7c1619dbbf0bafaac419aa5f",
+    "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt": "6b61b7bbe518729ffc65195f72bfb4a4fe7e84139fbf896e5b687fbe29f756e5",
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt": "385e5618cdb95d91084054da9724f012b57f63e4e77a33d97bf1588681ba792a",
+    "android/app/src/androidTest/java/org/inkweft/app/RasterCausalDiagnosticsTest.kt": "9625877ead48ded748ab600587f92738f8711ff1fefdcd825e0bbb6b35ece561",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/RasterReadCacheTest.kt": "2467d9dffb61e6d987654ad37d83d4dfc74d3ee0c3d3cad92d8feacdae7ea1dd"
+  },
+  "identities": {
+    "C1": "207bc654e0c922bb58b599d0ca619aff85eeebeb",
+    "C2": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353"
+  },
+  "control_file_origin_git": "28104e1334c79e68b4f9713cbb2aa2e3a0fa9993"
+}

@@ -1,0 +1,35 @@
+{
+  "status": "ROOT_REVIEW_PASS_LOCAL_NOT_YET_PUSHED_NOT_NATIVE",
+  "source": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353",
+  "readiness": "fbc502eb49c15018bb1ab2694dc256b7a0f9fc25",
+  "prep": "083a892133d818cf364865d3ee3edc1fdb6413c0",
+  "active": "c3483b74e5db7cb7928d26445bd37af51700284c",
+  "checks": [
+    "Independent17-group offline suite passed before final metadata-only READY flag and missing-file exit correction; final author17 and independent27 verify those corrections.",
+    "Read source/runtime/accounting/path/normal-failure exclusion and fixed five buckets; complete failure wire persisted before first print.",
+    "Frozen 1044-file committed source reconstructed exactly; canonical b4f90800e0abfda5e30bbb7a1af7fb7ce84729e72b8f8d9973ae0351347feba6.",
+    "Actual workflow actionlint passes; one-use exact prep parent, attempt1, standard runner, unchanged30/45/55/60 deadlines.",
+    "Other repository workflows do not trigger on this isolated execution branch; main and user-source refs unchanged."
+  ],
+  "native_status": "NOT_RUN",
+  "production_overrides": [],
+  "controller_sha256": {
+    "workflow.proposed.yml": "a4164742f83a3e986971ec261f01b4d82ec41826996b30a1951a787bc4143e71",
+    "README.md": "245a5921a1294386d53e535efa8cd51c9a0b842eeeed0ca08df8cfbf22bf02d0",
+    "marker-contract.template.json": "4d01759b5fa9f5e4aa1b05b75f2b4498f45cc3cdd4cc6a3727da4a7349881eef",
+    "run.py": "506561ce1c03013ef2043855f82fd8a659b9601bfb8696c4d76a0b297af62fb1",
+    "prepare_sources.py": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516",
+    "package.py": "ed6e966941c3cbdbba620d2a85ec7ac4b5c77da5642bbcf6478ff3c9cd4c3f46",
+    "method-plan.template.json": "0eddccf4a4579b895d5bf3a2b794bb7171c660be4f7e7f1ff5dcfd1a720557d4",
+    "authorization.json": "bf2dab6bf7fe3a8f7c4f6d76d285ba0b9b17ae6e47988f8244c4b5635eb6b8e8",
+    "markers.py": "850707164f4c89ae1920c1f9c99ad9e1a68be7f71b8c456b437671ddada96bda",
+    "size_bounds.py": "d0b71455dbc4d1ef2dcdbc927f4b9cca7799ae6e98bd8dfc64e0f6f0fcdbe2be",
+    "bind_control.py": "877574ed331a1f3726646b3a807054d0c48a5e8a28cbe4c11a5ec0f85debe421",
+    "check_offline.py": "fc595f935cbd1f59c8ed70bd4c2559b1704ee572064a1b98ed3710cfe7eaf536",
+    "freeze_readiness.py": "004ef4bf3af8a6e7af6ea68ea5739e312b1324d60173d04ad7212c35aa46cc16",
+    "cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "PLAN.template.md": "eabf0cb0713af118dcea285ff64ebb1d51fa223cdfc45203479d022a3b75303e",
+    "original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+  },
+  "actual_workflow_sha256": "5ebb88e2998315bbb021772b986d14baff95f23fe9a2284177400ebf56c1ab57"
+}

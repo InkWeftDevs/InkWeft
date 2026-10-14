@@ -1,0 +1,10 @@
+{
+  "exit": 0,
+  "seconds": 374.62612685600106,
+  "inputs_unchanged": true,
+  "changed_inputs": [],
+  "logSha256": "7014bac6f1d46bbddff884584d8fac3e5479e5a0104165830b545805a36120da",
+  "scope": "host Kotlin compilation only; not Android execution or native performance",
+  "source_inputs_count": 761,
+  "result_path": "/workspace/scratch/pr20-save-snapshot-control-20261014/host/compile1-result.json"
+}

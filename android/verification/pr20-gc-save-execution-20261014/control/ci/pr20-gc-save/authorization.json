@@ -1,0 +1,22 @@
+{
+  "approved": true,
+  "scope": "DIAGNOSTIC_ONLY",
+  "plan_git": "fbc502eb49c15018bb1ab2694dc256b7a0f9fc25",
+  "approved_plan_sha256": "488458e80500bffb52e6a5d8896711b3df2c880ae47f73022bcaf14102b645bf",
+  "source_spec_sha256": "bf6fe840b3113784315e7b7d575a7ce6d17ded867d87359b04cdfdeee67d0f95",
+  "method_plan_sha256": "f9f80f29e083824fd82df6714df622963a15b5ad0f1c1a030ada7fd56a123643",
+  "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+  "marker_contract_sha256": "a0682c82d713cb9d2932f0a6c4cc93d5b1d37b33f2ca8580789241c92854084c",
+  "prepare_sources_sha256": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516",
+  "phase_cutoff_minutes": {
+    "setup": 30,
+    "data": 45,
+    "work": 55
+  },
+  "job_timeout_minutes": 60,
+  "task_build_cache": false,
+  "new_permissions": false,
+  "automatic_retry": false,
+  "authorization_scope": "INACTIVE data-only GC7 plus save1 draft; no activation authorized by this file.",
+  "status": "FROZEN"
+}

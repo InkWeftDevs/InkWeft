@@ -1,0 +1,131 @@
+{
+  "status": "PASS_SELECTED_OFFLINE_RUNTIME_CHECKS_NOT_NATIVE",
+  "cases": 27,
+  "details": [
+    {
+      "name": "embedded-producer-byte-equivalent-AST",
+      "status": "PASS"
+    },
+    {
+      "name": "failure-precharge-and-interruption-None",
+      "status": "PASS",
+      "emitted_lines": 6
+    },
+    {
+      "name": "failure-precharge-and-interruption-0",
+      "status": "PASS",
+      "emitted_lines": 0
+    },
+    {
+      "name": "failure-precharge-and-interruption-2",
+      "status": "PASS",
+      "emitted_lines": 2
+    },
+    {
+      "name": "failure-precharge-and-interruption-4",
+      "status": "PASS",
+      "emitted_lines": 4
+    },
+    {
+      "name": "failure-precharge-and-interruption-save",
+      "status": "PASS",
+      "emitted_lines": 0
+    },
+    {
+      "name": "exact-runtime-binding-wrong-path",
+      "status": "PASS"
+    },
+    {
+      "name": "exact-runtime-binding-symlink",
+      "status": "PASS"
+    },
+    {
+      "name": "exact-runtime-binding-wrong-selection",
+      "status": "PASS"
+    },
+    {
+      "name": "exact-runtime-binding-wrong-hash",
+      "status": "PASS"
+    },
+    {
+      "name": "exact-runtime-binding-normal-started",
+      "status": "PASS"
+    },
+    {
+      "name": "primary-JUnit-preserved-and-no-retry-False",
+      "status": "PASS"
+    },
+    {
+      "name": "primary-JUnit-preserved-and-no-retry-True",
+      "status": "PASS"
+    },
+    {
+      "name": "actual-main-count-8",
+      "status": "PASS"
+    },
+    {
+      "name": "actual-main-count-7",
+      "status": "PASS"
+    },
+    {
+      "name": "actual-main-count-9",
+      "status": "PASS"
+    },
+    {
+      "name": "actual-main-count-10",
+      "status": "PASS"
+    },
+    {
+      "name": "actual-method-loop-global-first-failure-stop",
+      "status": "PASS"
+    },
+    {
+      "name": "actual-fixed-bucket-reject-source_frozen_protocol_controller_and_manifest_text",
+      "status": "PASS"
+    },
+    {
+      "name": "actual-fixed-bucket-reject-build_and_sdk_source_setup_logs",
+      "status": "PASS"
+    },
+    {
+      "name": "actual-fixed-bucket-reject-dependencies_apk_install_host_device_receipts",
+      "status": "PASS"
+    },
+    {
+      "name": "actual-fixed-bucket-reject-forwarding_inventory_context_method_final_and_summary_copies",
+      "status": "PASS"
+    },
+    {
+      "name": "actual-fixed-bucket-reject-guard_raw_junit_cleanup_acl_packaging_and_manifest",
+      "status": "PASS"
+    },
+    {
+      "name": "actual-accounting-full-shared-buckets-plus-largest-exclusive-case",
+      "status": "PASS",
+      "bytes": 19675060
+    },
+    {
+      "name": "actual-accounting-rejects-two-full-streams",
+      "status": "PASS"
+    },
+    {
+      "name": "actual-accounting-rejects-successor-after-failure",
+      "status": "PASS"
+    },
+    {
+      "name": "actual-accounting-rejects-combined-total-overflow",
+      "status": "PASS"
+    }
+  ],
+  "input_sha256": {
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/run.py": "506561ce1c03013ef2043855f82fd8a659b9601bfb8696c4d76a0b297af62fb1",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/package.py": "ed6e966941c3cbdbba620d2a85ec7ac4b5c77da5642bbcf6478ff3c9cd4c3f46",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/method-plan.template.json": "0eddccf4a4579b895d5bf3a2b794bb7171c660be4f7e7f1ff5dcfd1a720557d4",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/marker-contract.template.json": "bc008c13348638a97da1263d9c86719bc1d35e1f322f81326c8a38049b2dd779"
+  },
+  "limits": [
+    "No functions with real command, network, Android, Gradle or permission side effects were invoked.",
+    "Actual functions extracted by AST; main side effects are inert stubs.",
+    "Packaging full suite is separately reviewed/bound; this script covers focused failure integration."
+  ]
+}

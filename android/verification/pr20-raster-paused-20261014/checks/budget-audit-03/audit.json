@@ -1,0 +1,1005 @@
+{
+  "status": "HOST_OFFLINE_BUDGET_AUDIT_PASS_NOT_NATIVE",
+  "checks": [
+    {
+      "name": "independent normal/failure/interrupted-normal arithmetic",
+      "status": "PASS",
+      "detail": {
+        "normal": 17795072,
+        "late_failure": {
+          "ordinal": 12,
+          "prior_complete": 11449856,
+          "failure_raw": 1048576,
+          "failure_parsed_and_framing": 2162688,
+          "failure_wire": 1439104,
+          "shared_once": 3145728,
+          "total": 19245952
+        },
+        "late_interrupted_normal": 17803264,
+        "headroom": 1725568
+      }
+    },
+    {
+      "name": "closed mutually exclusive fixed file inventory",
+      "status": "PASS",
+      "detail": {
+        "runtime_files": 102,
+        "raw_and_parsed_files": 24,
+        "fixed_counts": {
+          "frozen_control": 0,
+          "build_dependency": 9,
+          "source_install_environment": 34,
+          "summary": 2,
+          "cleanup_emulator": 9,
+          "method_receipts": 24,
+          "packaging": 0,
+          "official_fixed": 0
+        },
+        "optional_summary_tmp": 1
+      }
+    },
+    {
+      "name": "84 exact wire state cases including interrupted failure",
+      "status": "PASS",
+      "detail": {
+        "cases": 84,
+        "failed_normal_adds_refusal_only": true
+      }
+    },
+    {
+      "name": "actual package totals including FINAL/cleanup/manifest",
+      "status": "PASS",
+      "detail": {
+        "status": "PASS",
+        "artifact_bytes_upper": 629215,
+        "budget_receipt_allowance": 16384,
+        "official_evidence_wire_upper": 7368704,
+        "joint_bytes_upper": 7997919,
+        "shared_bytes": 760215,
+        "shared_buckets": {
+          "frozen_control": {
+            "bytes_upper": 554991,
+            "limit": 786432
+          },
+          "build_dependency": {
+            "bytes_upper": 27,
+            "limit": 1048576
+          },
+          "source_install_environment": {
+            "bytes_upper": 102,
+            "limit": 262144
+          },
+          "summary": {
+            "bytes_upper": 23519,
+            "limit": 524288
+          },
+          "cleanup_emulator": {
+            "bytes_upper": 213,
+            "limit": 131072
+          },
+          "method_receipts": {
+            "bytes_upper": 72,
+            "limit": 163840
+          },
+          "packaging": {
+            "bytes_upper": 50219,
+            "limit": 98304
+          },
+          "official_fixed": {
+            "bytes_upper": 131072,
+            "limit": 131072
+          }
+        },
+        "bucket_violations": [],
+        "wire_rows": [
+          {
+            "ordinal": 1,
+            "bytes_upper": 16384,
+            "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+          },
+          {
+            "ordinal": 2,
+            "bytes_upper": 16384,
+            "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+          },
+          {
+            "ordinal": 3,
+            "bytes_upper": 53248,
+            "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+          },
+          {
+            "ordinal": 4,
+            "bytes_upper": 162816,
+            "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+          },
+          {
+            "ordinal": 5,
+            "bytes_upper": 284672,
+            "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+          },
+          {
+            "ordinal": 6,
+            "bytes_upper": 284672,
+            "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+          },
+          {
+            "ordinal": 7,
+            "bytes_upper": 16384,
+            "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+          },
+          {
+            "ordinal": 8,
+            "bytes_upper": 33792,
+            "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+          },
+          {
+            "ordinal": 9,
+            "bytes_upper": 1592320,
+            "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+          },
+          {
+            "ordinal": 10,
+            "bytes_upper": 1592320,
+            "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+          },
+          {
+            "ordinal": 11,
+            "bytes_upper": 1592320,
+            "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+          },
+          {
+            "ordinal": 12,
+            "bytes_upper": 1592320,
+            "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+          }
+        ],
+        "limit": 20971520,
+        "actual_FINAL_bytes": 5514
+      }
+    },
+    {
+      "name": "killed-failure-before-save",
+      "status": "PASS",
+      "detail": {
+        "last_method_wire": 1439104,
+        "joint_bytes_upper": 7844501,
+        "artifact_complete": false
+      }
+    },
+    {
+      "name": "killed-normal-after-start",
+      "status": "PASS",
+      "detail": {
+        "last_method_wire": 1600512,
+        "joint_bytes_upper": 8005979,
+        "artifact_complete": false
+      }
+    },
+    {
+      "name": "summary.tmp retained and charged once",
+      "status": "PASS",
+      "detail": {
+        "bytes": 32768
+      }
+    },
+    {
+      "name": "refuse existing-upload",
+      "status": "PASS",
+      "detail": {
+        "exit": 1
+      }
+    },
+    {
+      "name": "refuse unknown-evidence",
+      "status": "PASS",
+      "detail": {
+        "exit": 1
+      }
+    },
+    {
+      "name": "actual bucket refusal build_dependency",
+      "status": "PASS",
+      "detail": {
+        "limit": 1048576,
+        "refusal_artifact_bytes": 37639,
+        "no_truncation": true
+      }
+    },
+    {
+      "name": "actual bucket refusal source_install_environment",
+      "status": "PASS",
+      "detail": {
+        "limit": 262144,
+        "refusal_artifact_bytes": 37644,
+        "no_truncation": true
+      }
+    },
+    {
+      "name": "actual bucket refusal summary",
+      "status": "PASS",
+      "detail": {
+        "limit": 524288,
+        "refusal_artifact_bytes": 37616,
+        "no_truncation": true
+      }
+    },
+    {
+      "name": "actual bucket refusal cleanup_emulator",
+      "status": "PASS",
+      "detail": {
+        "limit": 131072,
+        "refusal_artifact_bytes": 37633,
+        "no_truncation": true
+      }
+    },
+    {
+      "name": "actual bucket refusal method_receipts",
+      "status": "PASS",
+      "detail": {
+        "limit": 163840,
+        "refusal_artifact_bytes": 37633,
+        "no_truncation": true
+      }
+    },
+    {
+      "name": "actual bucket refusal frozen_control",
+      "status": "PASS",
+      "detail": {
+        "limit": 786432,
+        "no_truncation": true
+      }
+    },
+    {
+      "name": "closed packaging bucket maximum with optional residual",
+      "status": "PASS",
+      "detail": {
+        "manifest": 46040,
+        "packaging_metadata": 7781,
+        "budget_receipt_cap": 16384,
+        "sum": 70205,
+        "limit": 98304
+      }
+    }
+  ],
+  "normal_rows": [
+    {
+      "ordinal": 1,
+      "payload": 0,
+      "records": 0,
+      "artifact_raw": 16384,
+      "artifact_parsed": 16384,
+      "official_normal": 16384
+    },
+    {
+      "ordinal": 2,
+      "payload": 0,
+      "records": 0,
+      "artifact_raw": 16384,
+      "artifact_parsed": 16384,
+      "official_normal": 16384
+    },
+    {
+      "ordinal": 3,
+      "payload": 16384,
+      "records": 4,
+      "artifact_raw": 34816,
+      "artifact_parsed": 32768,
+      "official_normal": 53248
+    },
+    {
+      "ordinal": 4,
+      "payload": 65536,
+      "records": 15,
+      "artifact_raw": 89600,
+      "artifact_parsed": 81920,
+      "official_normal": 162816
+    },
+    {
+      "ordinal": 5,
+      "payload": 131072,
+      "records": 6,
+      "artifact_raw": 150528,
+      "artifact_parsed": 147456,
+      "official_normal": 284672
+    },
+    {
+      "ordinal": 6,
+      "payload": 131072,
+      "records": 6,
+      "artifact_raw": 150528,
+      "artifact_parsed": 147456,
+      "official_normal": 284672
+    },
+    {
+      "ordinal": 7,
+      "payload": 0,
+      "records": 0,
+      "artifact_raw": 16384,
+      "artifact_parsed": 16384,
+      "official_normal": 16384
+    },
+    {
+      "ordinal": 8,
+      "payload": 8192,
+      "records": 1,
+      "artifact_raw": 25088,
+      "artifact_parsed": 24576,
+      "official_normal": 33792
+    },
+    {
+      "ordinal": 9,
+      "payload": 786432,
+      "records": 3,
+      "artifact_raw": 804352,
+      "artifact_parsed": 802816,
+      "official_normal": 1592320
+    },
+    {
+      "ordinal": 10,
+      "payload": 786432,
+      "records": 3,
+      "artifact_raw": 804352,
+      "artifact_parsed": 802816,
+      "official_normal": 1592320
+    },
+    {
+      "ordinal": 11,
+      "payload": 786432,
+      "records": 3,
+      "artifact_raw": 804352,
+      "artifact_parsed": 802816,
+      "official_normal": 1592320
+    },
+    {
+      "ordinal": 12,
+      "payload": 786432,
+      "records": 3,
+      "artifact_raw": 804352,
+      "artifact_parsed": 802816,
+      "official_normal": 1592320
+    }
+  ],
+  "failure_paths": [
+    {
+      "ordinal": 1,
+      "prior_complete": 0,
+      "failure_raw": 1048576,
+      "failure_parsed_and_framing": 2162688,
+      "failure_wire": 1439104,
+      "shared_once": 3145728,
+      "total": 7796096
+    },
+    {
+      "ordinal": 2,
+      "prior_complete": 49152,
+      "failure_raw": 1048576,
+      "failure_parsed_and_framing": 2162688,
+      "failure_wire": 1439104,
+      "shared_once": 3145728,
+      "total": 7845248
+    },
+    {
+      "ordinal": 3,
+      "prior_complete": 98304,
+      "failure_raw": 1048576,
+      "failure_parsed_and_framing": 2162688,
+      "failure_wire": 1439104,
+      "shared_once": 3145728,
+      "total": 7894400
+    },
+    {
+      "ordinal": 4,
+      "prior_complete": 219136,
+      "failure_raw": 1048576,
+      "failure_parsed_and_framing": 2162688,
+      "failure_wire": 1439104,
+      "shared_once": 3145728,
+      "total": 8015232
+    },
+    {
+      "ordinal": 5,
+      "prior_complete": 553472,
+      "failure_raw": 1048576,
+      "failure_parsed_and_framing": 2162688,
+      "failure_wire": 1439104,
+      "shared_once": 3145728,
+      "total": 8349568
+    },
+    {
+      "ordinal": 6,
+      "prior_complete": 1136128,
+      "failure_raw": 1048576,
+      "failure_parsed_and_framing": 2162688,
+      "failure_wire": 1439104,
+      "shared_once": 3145728,
+      "total": 8932224
+    },
+    {
+      "ordinal": 7,
+      "prior_complete": 1718784,
+      "failure_raw": 1048576,
+      "failure_parsed_and_framing": 2162688,
+      "failure_wire": 1439104,
+      "shared_once": 3145728,
+      "total": 9514880
+    },
+    {
+      "ordinal": 8,
+      "prior_complete": 1767936,
+      "failure_raw": 1048576,
+      "failure_parsed_and_framing": 2162688,
+      "failure_wire": 1439104,
+      "shared_once": 3145728,
+      "total": 9564032
+    },
+    {
+      "ordinal": 9,
+      "prior_complete": 1851392,
+      "failure_raw": 1048576,
+      "failure_parsed_and_framing": 2162688,
+      "failure_wire": 1439104,
+      "shared_once": 3145728,
+      "total": 9647488
+    },
+    {
+      "ordinal": 10,
+      "prior_complete": 5050880,
+      "failure_raw": 1048576,
+      "failure_parsed_and_framing": 2162688,
+      "failure_wire": 1439104,
+      "shared_once": 3145728,
+      "total": 12846976
+    },
+    {
+      "ordinal": 11,
+      "prior_complete": 8250368,
+      "failure_raw": 1048576,
+      "failure_parsed_and_framing": 2162688,
+      "failure_wire": 1439104,
+      "shared_once": 3145728,
+      "total": 16046464
+    },
+    {
+      "ordinal": 12,
+      "prior_complete": 11449856,
+      "failure_raw": 1048576,
+      "failure_parsed_and_framing": 2162688,
+      "failure_wire": 1439104,
+      "shared_once": 3145728,
+      "total": 19245952
+    }
+  ],
+  "shared_bucket_limits": {
+    "frozen_control": 786432,
+    "build_dependency": 1048576,
+    "source_install_environment": 262144,
+    "summary": 524288,
+    "cleanup_emulator": 131072,
+    "method_receipts": 163840,
+    "packaging": 98304,
+    "official_fixed": 131072
+  },
+  "known_frozen_control_bytes": 554991,
+  "fixed_official_reserve": {
+    "model": {
+      "clock": 1024,
+      "method_receipts_11_pass_1_failure": 19456,
+      "fatal_controller_receipt": 8192,
+      "cleanup_two_stdout_receipts": 16384,
+      "FINAL_enforced": 32768,
+      "package_receipt": 2048,
+      "bounded_controller_tracebacks": 16384
+    },
+    "sum": 96256,
+    "reserve": 131072,
+    "headroom": 34816,
+    "note": "Only FINAL is length-checked directly. Other values are conservative fixed-source runner/error framing allowances, not a bound for arbitrary external output. Non-protocol platform action logs are outside evidence publication scope."
+  },
+  "wire_state_cases": [
+    {
+      "ordinal": 1,
+      "state": "not-run",
+      "wire": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 1,
+      "state": "pass",
+      "wire": 16384,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 1,
+      "state": "killed-failure",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 1,
+      "state": "missing-final-receipt",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 1,
+      "state": "raw-without-summary",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 1,
+      "state": "killed-normal",
+      "wire": 24576,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 1,
+      "state": "late-normal-failure",
+      "wire": 24576,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 2,
+      "state": "not-run",
+      "wire": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 2,
+      "state": "pass",
+      "wire": 16384,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 2,
+      "state": "killed-failure",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 2,
+      "state": "missing-final-receipt",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 2,
+      "state": "raw-without-summary",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 2,
+      "state": "killed-normal",
+      "wire": 24576,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 2,
+      "state": "late-normal-failure",
+      "wire": 24576,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 3,
+      "state": "not-run",
+      "wire": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 3,
+      "state": "pass",
+      "wire": 53248,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 3,
+      "state": "killed-failure",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 3,
+      "state": "missing-final-receipt",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 3,
+      "state": "raw-without-summary",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 3,
+      "state": "killed-normal",
+      "wire": 61440,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 3,
+      "state": "late-normal-failure",
+      "wire": 61440,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 4,
+      "state": "not-run",
+      "wire": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 4,
+      "state": "pass",
+      "wire": 162816,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 4,
+      "state": "killed-failure",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 4,
+      "state": "missing-final-receipt",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 4,
+      "state": "raw-without-summary",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 4,
+      "state": "killed-normal",
+      "wire": 171008,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 4,
+      "state": "late-normal-failure",
+      "wire": 171008,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 5,
+      "state": "not-run",
+      "wire": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 5,
+      "state": "pass",
+      "wire": 284672,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 5,
+      "state": "killed-failure",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 5,
+      "state": "missing-final-receipt",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 5,
+      "state": "raw-without-summary",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 5,
+      "state": "killed-normal",
+      "wire": 292864,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 5,
+      "state": "late-normal-failure",
+      "wire": 292864,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 6,
+      "state": "not-run",
+      "wire": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 6,
+      "state": "pass",
+      "wire": 284672,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 6,
+      "state": "killed-failure",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 6,
+      "state": "missing-final-receipt",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 6,
+      "state": "raw-without-summary",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 6,
+      "state": "killed-normal",
+      "wire": 292864,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 6,
+      "state": "late-normal-failure",
+      "wire": 292864,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 7,
+      "state": "not-run",
+      "wire": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 7,
+      "state": "pass",
+      "wire": 16384,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 7,
+      "state": "killed-failure",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 7,
+      "state": "missing-final-receipt",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 7,
+      "state": "raw-without-summary",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 7,
+      "state": "killed-normal",
+      "wire": 24576,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 7,
+      "state": "late-normal-failure",
+      "wire": 24576,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 8,
+      "state": "not-run",
+      "wire": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 8,
+      "state": "pass",
+      "wire": 33792,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 8,
+      "state": "killed-failure",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 8,
+      "state": "missing-final-receipt",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 8,
+      "state": "raw-without-summary",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 8,
+      "state": "killed-normal",
+      "wire": 41984,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 8,
+      "state": "late-normal-failure",
+      "wire": 41984,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 9,
+      "state": "not-run",
+      "wire": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 9,
+      "state": "pass",
+      "wire": 1592320,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 9,
+      "state": "killed-failure",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 9,
+      "state": "missing-final-receipt",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 9,
+      "state": "raw-without-summary",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 9,
+      "state": "killed-normal",
+      "wire": 1600512,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 9,
+      "state": "late-normal-failure",
+      "wire": 1600512,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 10,
+      "state": "not-run",
+      "wire": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 10,
+      "state": "pass",
+      "wire": 1592320,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 10,
+      "state": "killed-failure",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 10,
+      "state": "missing-final-receipt",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 10,
+      "state": "raw-without-summary",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 10,
+      "state": "killed-normal",
+      "wire": 1600512,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 10,
+      "state": "late-normal-failure",
+      "wire": 1600512,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 11,
+      "state": "not-run",
+      "wire": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 11,
+      "state": "pass",
+      "wire": 1592320,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 11,
+      "state": "killed-failure",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 11,
+      "state": "missing-final-receipt",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 11,
+      "state": "raw-without-summary",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 11,
+      "state": "killed-normal",
+      "wire": 1600512,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 11,
+      "state": "late-normal-failure",
+      "wire": 1600512,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 12,
+      "state": "not-run",
+      "wire": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 12,
+      "state": "pass",
+      "wire": 1592320,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 12,
+      "state": "killed-failure",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 12,
+      "state": "missing-final-receipt",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 12,
+      "state": "raw-without-summary",
+      "wire": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 12,
+      "state": "killed-normal",
+      "wire": 1600512,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 12,
+      "state": "late-normal-failure",
+      "wire": 1600512,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    }
+  ],
+  "model_limits": "Closed source marker/frame/count contract and bounded failure raw text. Arbitrary malformed output is subject to actual bucket/joint refusal, not guaranteed publishable. No native performance evidence."
+}

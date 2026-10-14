@@ -1,0 +1,27 @@
+{
+  "scope": "SYNTHETIC_ONLY_NOT_NATIVE",
+  "producer": {
+    "path": "/workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest.kt",
+    "sha256": "597bed443289598870d063af99731a60db48ca0e38d8e3576b24fcd995cf4055"
+  },
+  "productionReadForContract": {
+    "/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/SaveBoundaryDiagnostics.kt": "392bf0e25e6f62d77f915eec628eac16f3f374e0de5287fb02435d29c0cecab9",
+    "/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt": "b96890478129bbb7b0bbb538c3cf8d5f2e97f2b8b5e2e34d8057c855c9ec6ca9",
+    "/workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt": "a9351355ca45af5f6f5db34109fa68d6bf10505d3117ed60a7c68cc000b05e89"
+  },
+  "analyzerSha256": "d27991af251dd3031245d0db6ccf9b70e3b25f9eec3dc807e94d5244e67c59d2",
+  "testSha256": "81968aec6876f88b70e13f8ab3cb95e63343f382b55e491a5a07770b8e04370d",
+  "selftestCases": 94,
+  "selftestStatus": "PASS",
+  "syntheticMarkerSha256": "3d2c94cd915ecdf6b8a6b6c3bfd4ece9b8b69e9cc566a705c74085e1456c3c5d",
+  "syntheticAnalysisSha256": "10860be07d7c0432e887e790ddc13f62578df60a0441574705695ba22db8a213",
+  "newNativeRuns": 0,
+  "sourceEdits": 0,
+  "networkCalls": 0,
+  "priorVersion": {
+    "path": "/workspace/scratch/pr20-gc-author-only-analysis-v2-20261014",
+    "manifestSha256": "95c630ea90ff23f59b3f325922613b412ce5d743aa133000296523754f5a565c",
+    "change": "Strict scalar types for DELETE interval/retained/covered values and boundary counts/flags;7 new invalid fixtures."
+  },
+  "sourceReadOnlyChecks": "Producer and3 production dependencies still match prior source binding."
+}

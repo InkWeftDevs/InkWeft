@@ -1,0 +1,11 @@
+{
+  "active": "c3483b74e5db7cb7928d26445bd37af51700284c",
+  "prep": "083a892133d818cf364865d3ee3edc1fdb6413c0",
+  "readiness": "fbc502eb49c15018bb1ab2694dc256b7a0f9fc25",
+  "source": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353",
+  "readiness_files_verified": 8,
+  "reviewed_source_files_verified": 10,
+  "control_files_verified": 8,
+  "network": false,
+  "git_operations": "read-only"
+}

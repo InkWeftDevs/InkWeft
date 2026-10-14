@@ -1,0 +1,539 @@
+{
+  "status": "PASS",
+  "scope": "READ_ONLY_GC_CONTRACT_REVIEW_SYNTHETIC_ONLY",
+  "checks": [
+    {
+      "check": "GC v2 pure AST identity",
+      "status": "PASS",
+      "detail": {
+        "nodes": 23,
+        "analyzerSha256": "7d26b088f0ead4b10646f9d794d1783ef88bc9850073054d886a9de5bb31dd12"
+      }
+    },
+    {
+      "check": "GC source contract and schema notes hashes exact",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "legal same-room",
+      "status": "PASS",
+      "detail": {
+        "accepted": true,
+        "syntheticOnly": true,
+        "reason": null
+      }
+    },
+    {
+      "check": "legal separate-room",
+      "status": "PASS",
+      "detail": {
+        "accepted": true,
+        "syntheticOnly": true,
+        "reason": null
+      }
+    },
+    {
+      "check": "prelude and nested transactions with multiple shards",
+      "status": "PASS",
+      "detail": {
+        "accepted": true,
+        "syntheticOnly": true,
+        "reason": null
+      }
+    },
+    {
+      "check": "all1280 deleted then empty guard mismatched valid",
+      "status": "PASS",
+      "detail": {
+        "accepted": true,
+        "syntheticOnly": true,
+        "reason": null
+      }
+    },
+    {
+      "check": "empty guard mismatch cannot declare nondeferred",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "gc_Invalid: terminal guard/defer mismatch"
+      }
+    },
+    {
+      "check": "empty guard match cannot declare deferred",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "gc_Invalid: terminal guard/defer mismatch"
+      }
+    },
+    {
+      "check": "wrong outer mode",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "wrong event database",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "wrong columns",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "wrong schema",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "missing event shard",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Marker count"
+      }
+    },
+    {
+      "check": "duplicated event shard",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "missing trial",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Marker count"
+      }
+    },
+    {
+      "check": "duplicate trial",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Marker count"
+      }
+    },
+    {
+      "check": "missing summary",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Marker count"
+      }
+    },
+    {
+      "check": "duplicate summary",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Marker count"
+      }
+    },
+    {
+      "check": "trial before events",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "sample skipped",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "part out of order",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "part total not closed",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "part boolean",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "unknown event key",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "row column missing",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "non-author owner",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "gc_Invalid: non-author event"
+      }
+    },
+    {
+      "check": "boundary count mismatch",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Boundary counts/types"
+      }
+    },
+    {
+      "check": "boundary float count",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Boundary counts/types"
+      }
+    },
+    {
+      "check": "boundary boolean drop",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Boundary counts/types"
+      }
+    },
+    {
+      "check": "boundary integer invalid",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Boundary counts/types"
+      }
+    },
+    {
+      "check": "boundary extra key",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Boundary counts/types"
+      }
+    },
+    {
+      "check": "interval sequence boolean",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "interval candidate float",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "retained revision float",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "covered timestamp float",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "missing after-stats",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "gc_Invalid: scan phase chain"
+      }
+    },
+    {
+      "check": "missing terminal guard",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "gc_Invalid: missing/extra GC sequence group"
+      }
+    },
+    {
+      "check": "first failure retained not success",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "gc_Invalid: nonPASS trial"
+      }
+    },
+    {
+      "check": "writer CPU backwards",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "gc_Invalid: per-thread clock order"
+      }
+    },
+    {
+      "check": "cross-thread writer identity",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "gc_Invalid: worker thread mismatch"
+      }
+    },
+    {
+      "check": "missing author stage recounted",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "gc_Invalid: transaction depth"
+      }
+    },
+    {
+      "check": "conditional quantiles below20",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "gc_Invalid: low exposure quantile fabricated"
+      }
+    },
+    {
+      "check": "fabricated pure lock wait",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "gc_Invalid: pureSqliteLockWaitMs"
+      }
+    },
+    {
+      "check": "separate collector must remain zero author events",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Boundary counts/types"
+      }
+    },
+    {
+      "check": "method6 cannot accept method7 outer stream",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "UNBOUND cannot parse for execution",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Unbound marker contract"
+      }
+    },
+    {
+      "check": "wrong selection rejected",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "wrong marker policy rejected",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: "
+      }
+    },
+    {
+      "check": "unknown marker refused",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Unknown/malformed marker"
+      }
+    },
+    {
+      "check": "truncated marker refused",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+      }
+    },
+    {
+      "check": "duplicate JSON keys refused",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Duplicate JSON key"
+      }
+    },
+    {
+      "check": "nonfinite JSON refused",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Non-finite JSON constant"
+      }
+    },
+    {
+      "check": "per-payload byte cap enforced",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Marker byte limit"
+      }
+    },
+    {
+      "check": "whole-method payload byte cap enforced",
+      "status": "PASS",
+      "detail": {
+        "accepted": false,
+        "syntheticOnly": true,
+        "reason": "AssertionError: Method byte limit"
+      }
+    },
+    {
+      "check": "source Git blobs /8 exact method selections /GC mode and counts",
+      "status": "PASS",
+      "detail": {
+        "source": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353",
+        "blobs": {
+          "android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt": "c904a8ebc9b2aed64266a82d24b8f1395621314a9087fd6f0de6298b8865fb47",
+          "android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt": "a9351355ca45af5f6f5db34109fa68d6bf10505d3117ed60a7c68cc000b05e89",
+          "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt": "052467625c685a79f72337379b2d4e70718440c6717e91c6d18677c9c1982581",
+          "android/data-local/src/main/kotlin/org/inkweft/data/SaveBoundaryDiagnostics.kt": "392bf0e25e6f62d77f915eec628eac16f3f374e0de5287fb02435d29c0cecab9",
+          "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveBoundaryDiagnosticsTest.kt": "cd1b0ba9e112a19e16fdea36b1b867183c890a4addb8c6ebfdfe7986f4a73038",
+          "android/data-local/src/test/kotlin/org/inkweft/data/SaveBoundaryDiagnosticsTest.kt": "d1bd148f6f787bf636d005d5f0932b4e4e02c65c0953ece313eb0e7bbd789dc6",
+          "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5",
+          "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest.kt": "597bed443289598870d063af99731a60db48ca0e38d8e3576b24fcd995cf4055",
+          "android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt": "b96890478129bbb7b0bbb538c3cf8d5f2e97f2b8b5e2e34d8057c855c9ec6ca9",
+          "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySnapshotHoldDiagnosticsTest.kt": "7a62c5263d94730884b038bc150d9e6f495a08b5500caadaa846954ec927e9df"
+        }
+      }
+    },
+    {
+      "check": "inactive authorization/zero guard/source-spec remain UNBOUND",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "checkCount": 56,
+  "controllerInputSha256": {
+    "workflow.proposed.yml": "a4164742f83a3e986971ec261f01b4d82ec41826996b30a1951a787bc4143e71",
+    "README.md": "245a5921a1294386d53e535efa8cd51c9a0b842eeeed0ca08df8cfbf22bf02d0",
+    "marker-contract.template.json": "4d01759b5fa9f5e4aa1b05b75f2b4498f45cc3cdd4cc6a3727da4a7349881eef",
+    "run.py": "506561ce1c03013ef2043855f82fd8a659b9601bfb8696c4d76a0b297af62fb1",
+    "prepare_sources.py": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516",
+    "package.py": "ed6e966941c3cbdbba620d2a85ec7ac4b5c77da5642bbcf6478ff3c9cd4c3f46",
+    "method-plan.template.json": "0eddccf4a4579b895d5bf3a2b794bb7171c660be4f7e7f1ff5dcfd1a720557d4",
+    "authorization.json": "bf2dab6bf7fe3a8f7c4f6d76d285ba0b9b17ae6e47988f8244c4b5635eb6b8e8",
+    "markers.py": "850707164f4c89ae1920c1f9c99ad9e1a68be7f71b8c456b437671ddada96bda",
+    "size_bounds.py": "d0b71455dbc4d1ef2dcdbc927f4b9cca7799ae6e98bd8dfc64e0f6f0fcdbe2be",
+    "bind_control.py": "877574ed331a1f3726646b3a807054d0c48a5e8a28cbe4c11a5ec0f85debe421",
+    "check_offline.py": "fc595f935cbd1f59c8ed70bd4c2559b1704ee572064a1b98ed3710cfe7eaf536",
+    "freeze_readiness.py": "004ef4bf3af8a6e7af6ea68ea5739e312b1324d60173d04ad7212c35aa46cc16",
+    "cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "PLAN.template.md": "eabf0cb0713af118dcea285ff64ebb1d51fa223cdfc45203479d022a3b75303e",
+    "original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+  },
+  "analyzerSha256": "7d26b088f0ead4b10646f9d794d1783ef88bc9850073054d886a9de5bb31dd12",
+  "nativeExecutions": 0,
+  "networkCalls": 0,
+  "sourceEdits": 0,
+  "limitations": [
+    "No runtime activation, native performance or combined artifact budget acceptance.",
+    "Controller GC core copies v2 semantics; added strict wrapper rejects scalar type coercions.",
+    "Full failure transport and joint budget are assigned to a separate reviewer."
+  ]
+}

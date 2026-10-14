@@ -1,0 +1,29 @@
+{
+  "status": "PAUSED_BY_USER",
+  "reason": "User requested pause after this round.",
+  "current_run": {
+    "id": 38553018139,
+    "job_id": 115815277181,
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "active_commit": "c3483b74e5db7cb7928d26445bd37af51700284c",
+    "pushed_branch": "codex/kvm-pr20-gc-save-20261014",
+    "cleanup": "dual STOPPED_CONFIRMED / RESTORED_EXACT, zero errors"
+  },
+  "candidate_source": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353",
+  "raster": {
+    "status": "NOT_RUN_NOT_PUSHED",
+    "local_branch": "codex/kvm-pr20-raster-screen-20261014",
+    "local_head": "3533eb2f6f490ecaf04f7e94b3492e3f94568de2",
+    "control_source": "207bc654e0c922bb58b599d0ca619aff85eeebeb"
+  },
+  "remote_user_source": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+  "remote_main": "aa43d43bb7841b04b8a8df091b98c47b66d86be3",
+  "evidence_checkpoint_pushed": false,
+  "final_delivery_complete": false,
+  "merged_to_main": false,
+  "deployed": false,
+  "scheduled_followups": false,
+  "resume_requires": "Explicit user instruction; first review guard-output contract and then current source/scope. No automatic retry."
+}

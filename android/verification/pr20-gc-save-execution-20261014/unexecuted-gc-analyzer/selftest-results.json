@@ -1,0 +1,730 @@
+{
+  "scope": "SYNTHETIC_ONLY_NOT_NATIVE",
+  "status": "PASS",
+  "cases": 94,
+  "analyzerSha256": "d27991af251dd3031245d0db6ccf9b70e3b25f9eec3dc807e94d5244e67c59d2",
+  "testSha256": "81968aec6876f88b70e13f8ab3cb95e63343f382b55e491a5a07770b8e04370d",
+  "results": [
+    {
+      "case": "legal20_and19",
+      "expected": "ACCEPT_SYNTHETIC_ONLY",
+      "passed": true,
+      "issues": []
+    },
+    {
+      "case": "exposure_(0, 0)",
+      "expected": "ACCEPT_SYNTHETIC_ONLY",
+      "passed": true,
+      "issues": []
+    },
+    {
+      "case": "exposure_(19, 19)",
+      "expected": "ACCEPT_SYNTHETIC_ONLY",
+      "passed": true,
+      "issues": []
+    },
+    {
+      "case": "exposure_(20, 20)",
+      "expected": "ACCEPT_SYNTHETIC_ONLY",
+      "passed": true,
+      "issues": []
+    },
+    {
+      "case": "exposure_(30, 30)",
+      "expected": "ACCEPT_SYNTHETIC_ONLY",
+      "passed": true,
+      "issues": []
+    },
+    {
+      "case": "actual_pre_sqlite_transaction_selection",
+      "expected": "ACCEPT_SYNTHETIC_ONLY",
+      "passed": true,
+      "issues": []
+    },
+    {
+      "case": "nested_room_sqlite_transactions",
+      "expected": "ACCEPT_SYNTHETIC_ONLY",
+      "passed": true,
+      "issues": []
+    },
+    {
+      "case": "prelude_plus_three_nested_and_two_shards",
+      "expected": "ACCEPT_SYNTHETIC_ONLY",
+      "passed": true,
+      "issues": []
+    },
+    {
+      "case": "inclusive_start_at_delete_end_but_no_positive_overlap",
+      "expected": "ACCEPT_SYNTHETIC_ONLY",
+      "passed": true,
+      "issues": []
+    },
+    {
+      "case": "full_delete_empty_guard_changed_after_author_commit",
+      "expected": "ACCEPT_SYNTHETIC_ONLY",
+      "passed": true,
+      "issues": []
+    },
+    {
+      "case": "changed_empty_guard_false_defer",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "terminal guard/defer mismatch"
+      ]
+    },
+    {
+      "case": "matched_empty_guard_true_defer",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "terminal guard/defer mismatch"
+      ]
+    },
+    {
+      "case": "matched_nonempty_terminal_guard",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "matched nonempty terminal guard"
+      ]
+    },
+    {
+      "case": "delete_stage_0_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "unique writer-submit {}: 0"
+      ]
+    },
+    {
+      "case": "duplicate_stage_0_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "unique writer-submit {}: 2"
+      ]
+    },
+    {
+      "case": "delete_stage_1_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "unique writer-run-enter {}: 0"
+      ]
+    },
+    {
+      "case": "duplicate_stage_1_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "unique writer-run-enter {}: 2"
+      ]
+    },
+    {
+      "case": "delete_stage_2_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "exit without entry"
+      ]
+    },
+    {
+      "case": "duplicate_stage_2_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "unclosed transaction operations"
+      ]
+    },
+    {
+      "case": "delete_stage_3_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "exit without entry"
+      ]
+    },
+    {
+      "case": "duplicate_stage_3_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "unclosed transaction operations"
+      ]
+    },
+    {
+      "case": "delete_stage_4_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "transaction depth"
+      ]
+    },
+    {
+      "case": "duplicate_stage_4_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "exit without entry"
+      ]
+    },
+    {
+      "case": "delete_stage_5_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "transaction depth"
+      ]
+    },
+    {
+      "case": "duplicate_stage_5_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "exit without entry"
+      ]
+    },
+    {
+      "case": "delete_stage_6_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "exit without entry"
+      ]
+    },
+    {
+      "case": "duplicate_stage_6_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "unclosed transaction operations"
+      ]
+    },
+    {
+      "case": "delete_stage_7_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "exit without entry"
+      ]
+    },
+    {
+      "case": "duplicate_stage_7_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "unclosed transaction operations"
+      ]
+    },
+    {
+      "case": "delete_stage_8_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "success flag before operation"
+      ]
+    },
+    {
+      "case": "duplicate_stage_8_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "exit without entry"
+      ]
+    },
+    {
+      "case": "delete_stage_9_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "success flag before operation"
+      ]
+    },
+    {
+      "case": "duplicate_stage_9_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "exit without entry"
+      ]
+    },
+    {
+      "case": "delete_stage_10_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "exit without entry"
+      ]
+    },
+    {
+      "case": "duplicate_stage_10_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "unclosed transaction operations"
+      ]
+    },
+    {
+      "case": "delete_stage_11_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "exit without entry"
+      ]
+    },
+    {
+      "case": "duplicate_stage_11_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "unclosed transaction operations"
+      ]
+    },
+    {
+      "case": "delete_stage_12_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "unclosed transaction operations"
+      ]
+    },
+    {
+      "case": "duplicate_stage_12_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "exit without entry"
+      ]
+    },
+    {
+      "case": "delete_stage_13_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "unclosed transaction operations"
+      ]
+    },
+    {
+      "case": "duplicate_stage_13_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "exit without entry"
+      ]
+    },
+    {
+      "case": "delete_stage_14_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "unique writer-run-exit {}: 0"
+      ]
+    },
+    {
+      "case": "duplicate_stage_14_recounted",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "unique writer-run-exit {}: 2"
+      ]
+    },
+    {
+      "case": "interval_bool_sequence",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "DELETE interval schema/types"
+      ]
+    },
+    {
+      "case": "interval_float_candidates",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "DELETE interval schema/types"
+      ]
+    },
+    {
+      "case": "retained_float_revision",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "retention/type"
+      ]
+    },
+    {
+      "case": "covered_float_timestamp",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "precommit timestamps/types"
+      ]
+    },
+    {
+      "case": "boundary_float_count",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "boundary counts/dropped/invalid/types"
+      ]
+    },
+    {
+      "case": "boundary_bool_dropped",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "boundary counts/dropped/invalid/types"
+      ]
+    },
+    {
+      "case": "boundary_integer_invalid",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "boundary counts/dropped/invalid/types"
+      ]
+    },
+    {
+      "case": "wrong_columns",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "columns/schema mismatch"
+      ]
+    },
+    {
+      "case": "short_row",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "row length"
+      ]
+    },
+    {
+      "case": "wrong_owner",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "non-author event"
+      ]
+    },
+    {
+      "case": "wrong_task",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "author task mismatch"
+      ]
+    },
+    {
+      "case": "wrong_transaction",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "paired identity mismatch"
+      ]
+    },
+    {
+      "case": "wrong_depth",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "paired identity mismatch"
+      ]
+    },
+    {
+      "case": "wrong_thread",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "worker thread mismatch"
+      ]
+    },
+    {
+      "case": "cpu_backwards",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "per-thread clock order"
+      ]
+    },
+    {
+      "case": "wall_backwards",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "per-thread clock order"
+      ]
+    },
+    {
+      "case": "failure_outcome",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "failed/reversed operation"
+      ]
+    },
+    {
+      "case": "failure_trial",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "failed trial retained; no complete-mode quantiles"
+      ]
+    },
+    {
+      "case": "drop_overflow",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "boundary counts/dropped/invalid/types"
+      ]
+    },
+    {
+      "case": "invalid_trace",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "boundary counts/dropped/invalid/types"
+      ]
+    },
+    {
+      "case": "bad_part",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "shard closure"
+      ]
+    },
+    {
+      "case": "wrong_database",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "non-author database shard"
+      ]
+    },
+    {
+      "case": "wrong_segment",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "reported segment mismatch"
+      ]
+    },
+    {
+      "case": "wrong_reported_cpu",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "reported CPU mismatch"
+      ]
+    },
+    {
+      "case": "wrong_saveMs",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "reported saveMs mismatch"
+      ]
+    },
+    {
+      "case": "wrong_delete_overlap",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "reported exposure mismatch"
+      ]
+    },
+    {
+      "case": "wrong_precommit",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "precommit timestamps/types"
+      ]
+    },
+    {
+      "case": "missing_after_delete",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "batch closure"
+      ]
+    },
+    {
+      "case": "changed_guard",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "batch values changed"
+      ]
+    },
+    {
+      "case": "wrong_cleanup_sum",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "finish count/state"
+      ]
+    },
+    {
+      "case": "missing_after_stats",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "scan phase chain"
+      ]
+    },
+    {
+      "case": "missing_precommit",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "missing commit/after-batch phase"
+      ]
+    },
+    {
+      "case": "precommit_after_return",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "DELETE/commit/after-batch order"
+      ]
+    },
+    {
+      "case": "missing_terminal_guard",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "missing/extra GC sequence group"
+      ]
+    },
+    {
+      "case": "wrong_deferred_flag",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "terminal guard/defer mismatch"
+      ]
+    },
+    {
+      "case": "unknown_trial_field",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "TRIAL fieldset"
+      ]
+    },
+    {
+      "case": "bool_as_scan_count",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "integer field firstRootScans"
+      ]
+    },
+    {
+      "case": "unknown_batch_field",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "batch fieldset"
+      ]
+    },
+    {
+      "case": "bool_as_author_task",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "author summary integer"
+      ]
+    },
+    {
+      "case": "bool_as_sqlite_setting",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "SQLite settings type"
+      ]
+    },
+    {
+      "case": "invented_lockwait",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "pureSqliteLockWaitMs"
+      ]
+    },
+    {
+      "case": "summary_bad_quantile",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "distribution quantile"
+      ]
+    },
+    {
+      "case": "low_exposure_quantile",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "low exposure quantile fabricated"
+      ]
+    },
+    {
+      "case": "summary_wrong_exposure",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "summary exposureStatus"
+      ]
+    },
+    {
+      "case": "missing_summary",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "missing/late summary"
+      ]
+    },
+    {
+      "case": "missing_trial",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "missing/duplicate/out-of-order trials"
+      ]
+    },
+    {
+      "case": "duplicate_summary",
+      "expected": "REJECT_OR_INCOMPLETE",
+      "passed": true,
+      "issues": [
+        "summary count"
+      ]
+    },
+    {
+      "case": "literal_marker_roundtrip",
+      "expected": "ACCEPT_SYNTHETIC_ONLY",
+      "passed": true,
+      "issues": []
+    },
+    {
+      "case": "duplicate_json_key",
+      "expected": "REJECT_INPUT",
+      "passed": true
+    },
+    {
+      "case": "truncated_marker",
+      "expected": "REJECT_INPUT",
+      "passed": true
+    },
+    {
+      "case": "nonfinite",
+      "expected": "REJECT_INPUT",
+      "passed": true
+    }
+  ]
+}

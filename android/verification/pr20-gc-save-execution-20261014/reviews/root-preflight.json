@@ -1,0 +1,340 @@
+{
+  "status": "PASS",
+  "scope": "OFFLINE_ONLY_NO_NEW_NATIVE_NO_NETWORK_NO_BUILD",
+  "groups": [
+    {
+      "name": "unbound isolation and exact scope",
+      "status": "PASS",
+      "details": {
+        "methods": 8,
+        "groups": 1,
+        "source_identities": 1,
+        "apk_count": 1,
+        "execution_binding": "UNBOUND_REFUSED",
+        "copied_functions": [
+          "write_json",
+          "save",
+          "seconds",
+          "digest",
+          "owned",
+          "run",
+          "capture",
+          "shell",
+          "phase",
+          "host",
+          "environment",
+          "source_manifest",
+          "junit"
+        ],
+        "cleanup_byte_identical": true
+      }
+    },
+    {
+      "name": "workflow syntax and isolated real first-step clock",
+      "status": "PASS",
+      "details": {
+        "actionlint": 0,
+        "phase_wrappers": 4,
+        "actual_clock_lines": 8,
+        "second_clock_rejected": true
+      }
+    },
+    {
+      "name": "phase/work absolute deadline boundaries",
+      "status": "PASS",
+      "details": {
+        "phase_boundaries": 9
+      }
+    },
+    {
+      "name": "actual main exact eight-call precondition and obsolete ten-call rejection",
+      "status": "PASS",
+      "details": [
+        {
+          "methods": 8,
+          "accepted": true
+        },
+        {
+          "methods": 7,
+          "accepted": false
+        },
+        {
+          "methods": 9,
+          "accepted": false
+        },
+        {
+          "methods": 10,
+          "accepted": false
+        }
+      ]
+    },
+    {
+      "name": "strict original JUnit parser and skipped/fault cases",
+      "status": "PASS",
+      "details": {
+        "prior_raw_junit": 58,
+        "failure_or_skipped_variants": 10,
+        "new_native": 0
+      }
+    },
+    {
+      "name": "closed GC and snapshot whole-method stage/count/cleanup faults",
+      "status": "PASS",
+      "details": {
+        "synthetic_methods": 8,
+        "negative_mutations": 95,
+        "same_wall_cross_thread_after_close": true,
+        "native": false
+      }
+    },
+    {
+      "name": "exact Git source test/production binding and original fixture hash",
+      "status": "PASS",
+      "details": {
+        "git_source": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353",
+        "all_reviewed_source_blobs_match": true,
+        "save_samples": 90,
+        "gc_samples": 60,
+        "native": false
+      }
+    },
+    {
+      "name": "all-three package natural isolation and no cleanup fallback",
+      "status": "PASS",
+      "details": [
+        "gone",
+        "app_alive",
+        "test_alive",
+        "data_alive",
+        "transport"
+      ]
+    },
+    {
+      "name": "instrumentation manifest uses xmltree and exact target package",
+      "status": "PASS",
+      "details": {
+        "prior_actual_data_manifest": 1,
+        "synthetic_app_target": 1,
+        "mismatches": 4
+      }
+    },
+    {
+      "name": "data-only build receipt: four ABI APK/AAR match and negative source cases",
+      "status": "PASS",
+      "details": [
+        {
+          "case": "match",
+          "native_executions": 0,
+          "gradle_executions": 0
+        },
+        {
+          "case": "missing_apk_abi",
+          "native_executions": 0,
+          "gradle_executions": 0
+        },
+        {
+          "case": "different_aar_native",
+          "native_executions": 0,
+          "gradle_executions": 0
+        },
+        {
+          "case": "wrong_aar_version",
+          "native_executions": 0,
+          "gradle_executions": 0
+        }
+      ]
+    },
+    {
+      "name": "data install group binds exact installed APK bytes; wrong path/hash stop",
+      "status": "PASS",
+      "details": [
+        {
+          "group": "C1-data-diagnostics",
+          "case": "match",
+          "commands": 3
+        },
+        {
+          "group": "C1-data-diagnostics",
+          "case": "wrong_hash",
+          "commands": 3
+        },
+        {
+          "group": "C1-data-diagnostics",
+          "case": "wrong_path",
+          "commands": 2
+        }
+      ]
+    },
+    {
+      "name": "malformed extra marker preserves raw JUnit PASS but host INCOMPLETE",
+      "status": "PASS",
+      "details": {
+        "junit": "PASS",
+        "host": "INCOMPLETE",
+        "unvalidated_payload_forwarded": false,
+        "raw_preserved": true
+      }
+    },
+    {
+      "name": "full failure bytes, path/hash/identity and original exception preservation",
+      "status": "PASS",
+      "details": {
+        "cases": [
+          "unicode",
+          "invalid_utf8",
+          "secret",
+          "oversize",
+          "normal_started",
+          "hash"
+        ],
+        "exact_path_and_symlink_guards": true,
+        "first_failure_preserved_in_two_finally_paths": true
+      }
+    },
+    {
+      "name": "actual normal forward print interruptions and late deadline remain exclusive",
+      "status": "PASS",
+      "details": [
+        {
+          "fault": "context",
+          "status": "FAIL",
+          "normal_and_full_failure_duplicated": false
+        },
+        {
+          "fault": "record",
+          "status": "FAIL",
+          "normal_and_full_failure_duplicated": false
+        },
+        {
+          "fault": "end",
+          "status": "FAIL",
+          "normal_and_full_failure_duplicated": false
+        },
+        {
+          "fault": "after-normal-seconds",
+          "status": "INCOMPLETE",
+          "normal_and_full_failure_duplicated": false
+        },
+        {
+          "fault": "none",
+          "status": "PASS",
+          "normal_and_full_failure_duplicated": false
+        }
+      ]
+    },
+    {
+      "name": "real package fixed buckets, exclusive wire ledger and combined total fail closed",
+      "status": "PASS",
+      "details": {
+        "fixed_bucket_overflows": 5,
+        "wire_overflow": 1,
+        "duplicate_full_forward": 1,
+        "successor_after_failure": 1,
+        "combined_total": 1,
+        "artifact_records_copies": 0
+      }
+    },
+    {
+      "name": "actual new packager: partial, missing raw, failure, limits and privacy",
+      "status": "PASS",
+      "details": [
+        {
+          "case": "running",
+          "exit": 0
+        },
+        {
+          "case": "installed",
+          "exit": 0
+        },
+        {
+          "case": "between_steps",
+          "exit": 0
+        },
+        {
+          "case": "pass_preserved",
+          "exit": 0
+        },
+        {
+          "case": "fail_preserved",
+          "exit": 0
+        },
+        {
+          "case": "notrun_preserved",
+          "exit": 0
+        },
+        {
+          "case": "cleanup_failure",
+          "exit": 0
+        },
+        {
+          "case": "all8_complete",
+          "exit": 0
+        },
+        {
+          "case": "all8_missing_raw",
+          "exit": 0
+        },
+        {
+          "case": "oversize",
+          "exit": 1
+        },
+        {
+          "case": "secret",
+          "exit": 1
+        },
+        {
+          "case": "excluded_binary",
+          "exit": 0
+        },
+        {
+          "case": "no_summary",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "name": "frozen exact shared budget and all first-failure positions",
+      "status": "PASS",
+      "details": {
+        "kind": "CONDITIONAL_SYNTHETIC_CAPACITY_NOT_NATIVE",
+        "cases_bytes": {
+          "all_methods_success": 18348639,
+          "first_failure_in_guards": 3813048,
+          "first_failure_in_GC_worst_last_trial": 19360002,
+          "first_failure_in_save_worst_last_arm": 19675060
+        },
+        "maximum_case_bytes": 19675060,
+        "remaining_bytes": 1296460,
+        "fixed_buckets_bytes": {
+          "source_frozen_protocol_controller_and_manifest_text": 1048576,
+          "build_and_sdk_source_setup_logs": 1048576,
+          "dependencies_apk_install_host_device_receipts": 393216,
+          "forwarding_inventory_context_method_final_and_summary_copies": 393216,
+          "guard_raw_junit_cleanup_acl_packaging_and_manifest": 262144
+        },
+        "limit_bytes": 20971520,
+        "no_derived_records_uploaded": true,
+        "oversize_policy": "FAIL_CLOSED_NO_TRUNCATION"
+      }
+    }
+  ],
+  "inputs": {
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/PLAN.template.md": "eabf0cb0713af118dcea285ff64ebb1d51fa223cdfc45203479d022a3b75303e",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/README.md": "245a5921a1294386d53e535efa8cd51c9a0b842eeeed0ca08df8cfbf22bf02d0",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/authorization.json": "bf2dab6bf7fe3a8f7c4f6d76d285ba0b9b17ae6e47988f8244c4b5635eb6b8e8",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/bind_control.py": "877574ed331a1f3726646b3a807054d0c48a5e8a28cbe4c11a5ec0f85debe421",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/check_offline.py": "1450593f50602bea2d58139d084e48d8786b8b6e32cc020291c1246ff0c6f6d1",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/freeze_readiness.py": "004ef4bf3af8a6e7af6ea68ea5739e312b1324d60173d04ad7212c35aa46cc16",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/marker-contract.template.json": "bc008c13348638a97da1263d9c86719bc1d35e1f322f81326c8a38049b2dd779",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/markers.py": "850707164f4c89ae1920c1f9c99ad9e1a68be7f71b8c456b437671ddada96bda",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/method-plan.template.json": "0eddccf4a4579b895d5bf3a2b794bb7171c660be4f7e7f1ff5dcfd1a720557d4",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/package.py": "0aaca87ec6cf47b61a2b3253c1f611696644bec9909555234bbd2868b9fa8d46",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/prepare_sources.py": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/run.py": "506561ce1c03013ef2043855f82fd8a659b9601bfb8696c4d76a0b297af62fb1",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/size_bounds.py": "d0b71455dbc4d1ef2dcdbc927f4b9cca7799ae6e98bd8dfc64e0f6f0fcdbe2be",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/controller/workflow.proposed.yml": "a4164742f83a3e986971ec261f01b4d82ec41826996b30a1951a787bc4143e71"
+  },
+  "checker_sha256": "1450593f50602bea2d58139d084e48d8786b8b6e32cc020291c1246ff0c6f6d1"
+}

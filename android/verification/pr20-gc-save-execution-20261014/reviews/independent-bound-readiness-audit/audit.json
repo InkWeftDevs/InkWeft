@@ -1,0 +1,31 @@
+{
+  "status": "PASS_READ_ONLY_NOT_ACTIVATED",
+  "source": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353",
+  "readiness": "fbc502eb49c15018bb1ab2694dc256b7a0f9fc25",
+  "readiness_parent": "404588360490e52f093c07541313fb29cc7c0ffc",
+  "source_ancestor": true,
+  "canonical_manifest_sha256": "b4f90800e0abfda5e30bbb7a1af7fb7ce84729e72b8f8d9973ae0351347feba6",
+  "source_files": 1044,
+  "readiness_files": {
+    "C1-source-manifest.json": "6381b8513e5eab9296a87f2e7e1a6b67e4e3921097c37b47e65a8e1aab442064",
+    "PLAN.md": "488458e80500bffb52e6a5d8896711b3df2c880ae47f73022bcaf14102b645bf",
+    "SHA256SUMS": "ff2e27d3701b1d4f55444264a11b1d06cc8a01213581871ac5bf19f8875b83f1",
+    "marker-contract.json": "a0682c82d713cb9d2932f0a6c4cc93d5b1d37b33f2ca8580789241c92854084c",
+    "method-plan.json": "f9f80f29e083824fd82df6714df622963a15b5ad0f1c1a030ada7fd56a123643",
+    "original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "prepare_sources.py": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516",
+    "source-spec.json": "bf6fe840b3113784315e7b7d575a7ce6d17ded867d87359b04cdfdeee67d0f95"
+  },
+  "bound_files": {
+    "authorization.json": "e820e717bce37b7b4e555942676dc9138a41c2c85e7dbeb3c07e2077f4aa6f09",
+    "cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "markers.py": "850707164f4c89ae1920c1f9c99ad9e1a68be7f71b8c456b437671ddada96bda",
+    "package.py": "9a819ec39db5b9aa25b1c9137d1318efe1a467b716f330a8134df720fbefcebb",
+    "run.py": "f7b419815e607d9e3803e8e5e57e91761ae51eabca6714924f2b37d036fdfd66",
+    "workflow.proposed.yml": "a4164742f83a3e986971ec261f01b4d82ec41826996b30a1951a787bc4143e71"
+  },
+  "template_manifest_sha256": "6611c43b87a4e01d7d9c34dba890f59a8f554664bdf340f5fd2c5829effd928c",
+  "exact_literal_and_authorization_bindings": true,
+  "workflow_guard": "ZERO_INACTIVE",
+  "no_network_build_push_or_mutation": true
+}

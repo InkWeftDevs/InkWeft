@@ -1,0 +1,857 @@
+{
+  "status": "PASS_NARROW_INDEPENDENT_OFFLINE_REVIEW_NOT_NATIVE",
+  "checks": [
+    {
+      "name": "independent-12-method-arithmetic-and-84-wire-states",
+      "status": "PASS",
+      "normal": 17795072,
+      "failure": 19245952,
+      "normal_interrupted": 17803264,
+      "headroom": 1725568
+    },
+    {
+      "name": "actual-failure-print-then-kill-0",
+      "status": "PASS",
+      "persisted_status": "RUNNING",
+      "wire_reserved": 1439104,
+      "emitted_lines": 1
+    },
+    {
+      "name": "actual-failure-print-then-kill-1",
+      "status": "PASS",
+      "persisted_status": "RUNNING",
+      "wire_reserved": 1439104,
+      "emitted_lines": 2
+    },
+    {
+      "name": "actual-failure-print-then-kill-2",
+      "status": "PASS",
+      "persisted_status": "RUNNING",
+      "wire_reserved": 1439104,
+      "emitted_lines": 3
+    },
+    {
+      "name": "closed-selection-new-upload-and-runtime-dependency",
+      "status": "PASS",
+      "selected_files": 102,
+      "method_raw_parsed": 24,
+      "optional_summary_tmp": "retained and summary-counted",
+      "runtime_dependency": "size_bounds copied by binder and selected by package"
+    },
+    {
+      "name": "reviewed-real-packager-receipts-and-size-module-manifest",
+      "status": "PASS",
+      "receipt_cases": 4,
+      "owner_checks": 16
+    }
+  ],
+  "input_sha256": {
+    "run.py": "5ba57d828a02581a1bbfc21df982abc085fb4f39c39dc481735cfafe46319f60",
+    "package.py": "9e7cdd2b90079d5262707c360ee2611d42d71802170a4123404fca90c10c4900",
+    "size_bounds.py": "82e1d347d341242d7054a090c6b0b4e2364a9ae69854e41e816e16e3e908e1a5",
+    "bind_control.py": "3ac263b06de4680b3263e1188cf99f8e8171fdd13c8036b50b9aa89c89b57bec"
+  },
+  "owner_budget_audit_sha256": "abe7b399ec4ddb218001f2be1ca1d430b4592ee1d509cb24cb648df490476641",
+  "wire_states": [
+    {
+      "ordinal": 1,
+      "entry": {
+        "status": "NOT_RUN"
+      },
+      "raw_exists": false,
+      "wire_bytes": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 1,
+      "entry": {
+        "status": "PASS"
+      },
+      "raw_exists": true,
+      "wire_bytes": 16384,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 1,
+      "entry": {
+        "status": "RUNNING"
+      },
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 1,
+      "entry": {
+        "status": "INCOMPLETE"
+      },
+      "raw_exists": false,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 1,
+      "entry": {},
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 1,
+      "entry": {
+        "status": "RUNNING",
+        "normal_forward_started": true
+      },
+      "raw_exists": true,
+      "wire_bytes": 24576,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 1,
+      "entry": {
+        "status": "FAIL",
+        "normal_forward_started": true,
+        "failure_log_forwarding": {
+          "status": "REFUSED"
+        }
+      },
+      "raw_exists": true,
+      "wire_bytes": 24576,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 2,
+      "entry": {
+        "status": "NOT_RUN"
+      },
+      "raw_exists": false,
+      "wire_bytes": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 2,
+      "entry": {
+        "status": "PASS"
+      },
+      "raw_exists": true,
+      "wire_bytes": 16384,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 2,
+      "entry": {
+        "status": "RUNNING"
+      },
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 2,
+      "entry": {
+        "status": "INCOMPLETE"
+      },
+      "raw_exists": false,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 2,
+      "entry": {},
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 2,
+      "entry": {
+        "status": "RUNNING",
+        "normal_forward_started": true
+      },
+      "raw_exists": true,
+      "wire_bytes": 24576,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 2,
+      "entry": {
+        "status": "FAIL",
+        "normal_forward_started": true,
+        "failure_log_forwarding": {
+          "status": "REFUSED"
+        }
+      },
+      "raw_exists": true,
+      "wire_bytes": 24576,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 3,
+      "entry": {
+        "status": "NOT_RUN"
+      },
+      "raw_exists": false,
+      "wire_bytes": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 3,
+      "entry": {
+        "status": "PASS"
+      },
+      "raw_exists": true,
+      "wire_bytes": 53248,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 3,
+      "entry": {
+        "status": "RUNNING"
+      },
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 3,
+      "entry": {
+        "status": "INCOMPLETE"
+      },
+      "raw_exists": false,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 3,
+      "entry": {},
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 3,
+      "entry": {
+        "status": "RUNNING",
+        "normal_forward_started": true
+      },
+      "raw_exists": true,
+      "wire_bytes": 61440,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 3,
+      "entry": {
+        "status": "FAIL",
+        "normal_forward_started": true,
+        "failure_log_forwarding": {
+          "status": "REFUSED"
+        }
+      },
+      "raw_exists": true,
+      "wire_bytes": 61440,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 4,
+      "entry": {
+        "status": "NOT_RUN"
+      },
+      "raw_exists": false,
+      "wire_bytes": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 4,
+      "entry": {
+        "status": "PASS"
+      },
+      "raw_exists": true,
+      "wire_bytes": 162816,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 4,
+      "entry": {
+        "status": "RUNNING"
+      },
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 4,
+      "entry": {
+        "status": "INCOMPLETE"
+      },
+      "raw_exists": false,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 4,
+      "entry": {},
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 4,
+      "entry": {
+        "status": "RUNNING",
+        "normal_forward_started": true
+      },
+      "raw_exists": true,
+      "wire_bytes": 171008,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 4,
+      "entry": {
+        "status": "FAIL",
+        "normal_forward_started": true,
+        "failure_log_forwarding": {
+          "status": "REFUSED"
+        }
+      },
+      "raw_exists": true,
+      "wire_bytes": 171008,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 5,
+      "entry": {
+        "status": "NOT_RUN"
+      },
+      "raw_exists": false,
+      "wire_bytes": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 5,
+      "entry": {
+        "status": "PASS"
+      },
+      "raw_exists": true,
+      "wire_bytes": 284672,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 5,
+      "entry": {
+        "status": "RUNNING"
+      },
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 5,
+      "entry": {
+        "status": "INCOMPLETE"
+      },
+      "raw_exists": false,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 5,
+      "entry": {},
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 5,
+      "entry": {
+        "status": "RUNNING",
+        "normal_forward_started": true
+      },
+      "raw_exists": true,
+      "wire_bytes": 292864,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 5,
+      "entry": {
+        "status": "FAIL",
+        "normal_forward_started": true,
+        "failure_log_forwarding": {
+          "status": "REFUSED"
+        }
+      },
+      "raw_exists": true,
+      "wire_bytes": 292864,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 6,
+      "entry": {
+        "status": "NOT_RUN"
+      },
+      "raw_exists": false,
+      "wire_bytes": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 6,
+      "entry": {
+        "status": "PASS"
+      },
+      "raw_exists": true,
+      "wire_bytes": 284672,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 6,
+      "entry": {
+        "status": "RUNNING"
+      },
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 6,
+      "entry": {
+        "status": "INCOMPLETE"
+      },
+      "raw_exists": false,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 6,
+      "entry": {},
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 6,
+      "entry": {
+        "status": "RUNNING",
+        "normal_forward_started": true
+      },
+      "raw_exists": true,
+      "wire_bytes": 292864,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 6,
+      "entry": {
+        "status": "FAIL",
+        "normal_forward_started": true,
+        "failure_log_forwarding": {
+          "status": "REFUSED"
+        }
+      },
+      "raw_exists": true,
+      "wire_bytes": 292864,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 7,
+      "entry": {
+        "status": "NOT_RUN"
+      },
+      "raw_exists": false,
+      "wire_bytes": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 7,
+      "entry": {
+        "status": "PASS"
+      },
+      "raw_exists": true,
+      "wire_bytes": 16384,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 7,
+      "entry": {
+        "status": "RUNNING"
+      },
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 7,
+      "entry": {
+        "status": "INCOMPLETE"
+      },
+      "raw_exists": false,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 7,
+      "entry": {},
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 7,
+      "entry": {
+        "status": "RUNNING",
+        "normal_forward_started": true
+      },
+      "raw_exists": true,
+      "wire_bytes": 24576,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 7,
+      "entry": {
+        "status": "FAIL",
+        "normal_forward_started": true,
+        "failure_log_forwarding": {
+          "status": "REFUSED"
+        }
+      },
+      "raw_exists": true,
+      "wire_bytes": 24576,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 8,
+      "entry": {
+        "status": "NOT_RUN"
+      },
+      "raw_exists": false,
+      "wire_bytes": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 8,
+      "entry": {
+        "status": "PASS"
+      },
+      "raw_exists": true,
+      "wire_bytes": 33792,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 8,
+      "entry": {
+        "status": "RUNNING"
+      },
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 8,
+      "entry": {
+        "status": "INCOMPLETE"
+      },
+      "raw_exists": false,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 8,
+      "entry": {},
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 8,
+      "entry": {
+        "status": "RUNNING",
+        "normal_forward_started": true
+      },
+      "raw_exists": true,
+      "wire_bytes": 41984,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 8,
+      "entry": {
+        "status": "FAIL",
+        "normal_forward_started": true,
+        "failure_log_forwarding": {
+          "status": "REFUSED"
+        }
+      },
+      "raw_exists": true,
+      "wire_bytes": 41984,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 9,
+      "entry": {
+        "status": "NOT_RUN"
+      },
+      "raw_exists": false,
+      "wire_bytes": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 9,
+      "entry": {
+        "status": "PASS"
+      },
+      "raw_exists": true,
+      "wire_bytes": 1592320,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 9,
+      "entry": {
+        "status": "RUNNING"
+      },
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 9,
+      "entry": {
+        "status": "INCOMPLETE"
+      },
+      "raw_exists": false,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 9,
+      "entry": {},
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 9,
+      "entry": {
+        "status": "RUNNING",
+        "normal_forward_started": true
+      },
+      "raw_exists": true,
+      "wire_bytes": 1600512,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 9,
+      "entry": {
+        "status": "FAIL",
+        "normal_forward_started": true,
+        "failure_log_forwarding": {
+          "status": "REFUSED"
+        }
+      },
+      "raw_exists": true,
+      "wire_bytes": 1600512,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 10,
+      "entry": {
+        "status": "NOT_RUN"
+      },
+      "raw_exists": false,
+      "wire_bytes": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 10,
+      "entry": {
+        "status": "PASS"
+      },
+      "raw_exists": true,
+      "wire_bytes": 1592320,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 10,
+      "entry": {
+        "status": "RUNNING"
+      },
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 10,
+      "entry": {
+        "status": "INCOMPLETE"
+      },
+      "raw_exists": false,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 10,
+      "entry": {},
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 10,
+      "entry": {
+        "status": "RUNNING",
+        "normal_forward_started": true
+      },
+      "raw_exists": true,
+      "wire_bytes": 1600512,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 10,
+      "entry": {
+        "status": "FAIL",
+        "normal_forward_started": true,
+        "failure_log_forwarding": {
+          "status": "REFUSED"
+        }
+      },
+      "raw_exists": true,
+      "wire_bytes": 1600512,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 11,
+      "entry": {
+        "status": "NOT_RUN"
+      },
+      "raw_exists": false,
+      "wire_bytes": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 11,
+      "entry": {
+        "status": "PASS"
+      },
+      "raw_exists": true,
+      "wire_bytes": 1592320,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 11,
+      "entry": {
+        "status": "RUNNING"
+      },
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 11,
+      "entry": {
+        "status": "INCOMPLETE"
+      },
+      "raw_exists": false,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 11,
+      "entry": {},
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 11,
+      "entry": {
+        "status": "RUNNING",
+        "normal_forward_started": true
+      },
+      "raw_exists": true,
+      "wire_bytes": 1600512,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 11,
+      "entry": {
+        "status": "FAIL",
+        "normal_forward_started": true,
+        "failure_log_forwarding": {
+          "status": "REFUSED"
+        }
+      },
+      "raw_exists": true,
+      "wire_bytes": 1600512,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 12,
+      "entry": {
+        "status": "NOT_RUN"
+      },
+      "raw_exists": false,
+      "wire_bytes": 0,
+      "kind": "NOT_STARTED"
+    },
+    {
+      "ordinal": 12,
+      "entry": {
+        "status": "PASS"
+      },
+      "raw_exists": true,
+      "wire_bytes": 1592320,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 12,
+      "entry": {
+        "status": "RUNNING"
+      },
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 12,
+      "entry": {
+        "status": "INCOMPLETE"
+      },
+      "raw_exists": false,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 12,
+      "entry": {},
+      "raw_exists": true,
+      "wire_bytes": 1439104,
+      "kind": "FAILURE_OR_INTERRUPTED_FAILURE"
+    },
+    {
+      "ordinal": 12,
+      "entry": {
+        "status": "RUNNING",
+        "normal_forward_started": true
+      },
+      "raw_exists": true,
+      "wire_bytes": 1600512,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    },
+    {
+      "ordinal": 12,
+      "entry": {
+        "status": "FAIL",
+        "normal_forward_started": true,
+        "failure_log_forwarding": {
+          "status": "REFUSED"
+        }
+      },
+      "raw_exists": true,
+      "wire_bytes": 1600512,
+      "kind": "NORMAL_OR_INTERRUPTED_NORMAL"
+    }
+  ],
+  "normal_bytes": 17795072,
+  "maximum_bytes": 19245952,
+  "headroom_bytes": 1725568,
+  "limitations": [
+    "Official fixed 128 KiB is a conservative fixed-source envelope; only FINAL has a direct 32 KiB pre-print check.",
+    "The closed contract does not guarantee publication of arbitrary external output; actual artifact and joint caps fail closed.",
+    "No fresh native/CI execution; no source or controller edits; final readiness/runtime SHA manifest remains root-owned."
+  ]
+}

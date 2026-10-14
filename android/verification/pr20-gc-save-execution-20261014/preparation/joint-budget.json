@@ -1,0 +1,75 @@
+{
+  "status": "DRAFT_DATA_ONLY_CAPACITY_ARITHMETIC_NOT_NATIVE_NOT_FROZEN",
+  "input_sha256": {
+    "/workspace/scratch/pr20-gc-author-only-budget-20261014/budget.json": "ca1a347f93b31a908c2f64027d3c215b7ab5058e83a7081c0a3b336e25b1ce52",
+    "/workspace/scratch/pr20-save-snapshot-control-20261014/contract.json": "a76cec96bbf0add437971938e06e4f54e9e811d43b2f30386d53b0986ba423f7"
+  },
+  "source_test_sha256": {
+    "gc": "597bed443289598870d063af99731a60db48ca0e38d8e3576b24fcd995cf4055",
+    "save": "7a62c5263d94730884b038bc150d9e6f495a08b5500caadaa846954ec927e9df"
+  },
+  "scope": "5 GC guards + 2 GC boundary methods + 1 snapshot-control method, one data APK, one install group",
+  "save_normal_capacity": {
+    "raw_framed_bytes": 355978,
+    "official_record_end_bytes": 356675,
+    "max_payload_bytes": {
+      "LIBRARY_SNAPSHOT_CONTROL_RESULT": 1613,
+      "LIBRARY_SNAPSHOT_CONTROL_EVENTS": 6296,
+      "LIBRARY_SNAPSHOT_CONTROL_READS": 5047,
+      "LIBRARY_SNAPSHOT_CONTROL_END": 300
+    },
+    "payloads": 60,
+    "derived_records_uploaded_bytes": 0
+  },
+  "save_failed_last_arm_capacity": {
+    "raw_framed_bytes": 596370,
+    "official_record_end_bytes": 597101,
+    "max_payload_bytes": {
+      "LIBRARY_SNAPSHOT_CONTROL_RESULT": 3761,
+      "LIBRARY_SNAPSHOT_CONTROL_EVENTS": 20408,
+      "LIBRARY_SNAPSHOT_CONTROL_READS": 14359,
+      "LIBRARY_SNAPSHOT_CONTROL_END": 336
+    },
+    "payloads": 60,
+    "derived_records_uploaded_bytes": 0
+  },
+  "normal_gc_original_and_forwarded_bytes": 14490258,
+  "failure_only_extra_raw_reserve_bytes": 262144,
+  "failure_raw_caps": {
+    "guard": 278528,
+    "gc": 3790465,
+    "save": 858514
+  },
+  "failure_wire_caps": {
+    "guard": 388792,
+    "gc": 5181084,
+    "save": 1180560
+  },
+  "fixed_text_buckets_bytes": {
+    "source_frozen_protocol_controller_and_manifest_text": 1048576,
+    "build_and_sdk_source_setup_logs": 1048576,
+    "dependencies_apk_install_host_device_receipts": 393216,
+    "forwarding_inventory_context_method_final_and_summary_copies": 393216,
+    "guard_raw_junit_cleanup_acl_packaging_and_manifest": 262144
+  },
+  "cases_bytes": {
+    "all_methods_success": 18348639,
+    "first_failure_in_guards": 3813048,
+    "first_failure_in_GC_worst_last_trial": 19360002,
+    "first_failure_in_save_worst_last_arm": 19675060
+  },
+  "maximum_case_bytes": 19675060,
+  "limit_bytes": 20971520,
+  "remaining_bytes": 1296460,
+  "assumptions": [
+    "First nonPASS stops the entire ordered plan; no successful successor payloads are reserved again on failure.",
+    "Normal marker forwarding and full failure text forwarding are mutually exclusive per method, including exceptions after normal forwarding starts.",
+    "Normal payload bytes retained once in raw instrumentation and forwarded once; derived records are not uploaded.",
+    "Full failed method raw bytes replace that method normal forward stream; base64 uses exact chunk padding and bounded headers.",
+    "Failure can violate successful numeric gates: last save arm reserves full Long widths in all rows; GC failed trial retains64 intervals.",
+    "A further256KiB residual raw failure text reserve covers class/suppressed/JUnit stack data; excess is explicit failclosed, never truncate.",
+    "Shared fixed3MiB has one allocation only; actual category and total text must be checked, no binary artifacts or extra download path.",
+    "This is conditional on final source/schema/helper review and exact source hashes, not an activation permit.",
+    "No MuPDF/app build or raster performance claim is part of this data-only scope."
+  ]
+}

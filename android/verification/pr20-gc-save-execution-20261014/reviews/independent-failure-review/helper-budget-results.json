@@ -1,0 +1,278 @@
+{
+  "status": "PASS_OFFLINE_HELPER_AND_BUDGET_ONLY_RUNTIME_PENDING",
+  "cases": 44,
+  "details": [
+    {
+      "name": "byte-exact-size-0",
+      "status": "PASS",
+      "bytes": 0,
+      "wire_bytes": 1174,
+      "wire_cap": 8192
+    },
+    {
+      "name": "byte-exact-size-1",
+      "status": "PASS",
+      "bytes": 1,
+      "wire_bytes": 1476,
+      "wire_cap": 9220
+    },
+    {
+      "name": "byte-exact-size-2",
+      "status": "PASS",
+      "bytes": 2,
+      "wire_bytes": 1476,
+      "wire_cap": 9220
+    },
+    {
+      "name": "byte-exact-size-3",
+      "status": "PASS",
+      "bytes": 3,
+      "wire_bytes": 1476,
+      "wire_cap": 9220
+    },
+    {
+      "name": "byte-exact-size-32767",
+      "status": "PASS",
+      "bytes": 32767,
+      "wire_bytes": 45176,
+      "wire_cap": 52908
+    },
+    {
+      "name": "byte-exact-size-32768",
+      "status": "PASS",
+      "bytes": 32768,
+      "wire_bytes": 45176,
+      "wire_cap": 52908
+    },
+    {
+      "name": "byte-exact-size-32769",
+      "status": "PASS",
+      "bytes": 32769,
+      "wire_bytes": 45478,
+      "wire_cap": 53936
+    },
+    {
+      "name": "byte-exact-size-65535",
+      "status": "PASS",
+      "bytes": 65535,
+      "wire_bytes": 89170,
+      "wire_cap": 97624
+    },
+    {
+      "name": "byte-exact-size-65536",
+      "status": "PASS",
+      "bytes": 65536,
+      "wire_bytes": 89170,
+      "wire_cap": 97624
+    },
+    {
+      "name": "byte-exact-size-65537",
+      "status": "PASS",
+      "bytes": 65537,
+      "wire_bytes": 89472,
+      "wire_cap": 98652
+    },
+    {
+      "name": "byte-exact-size-278528",
+      "status": "PASS",
+      "bytes": 278528,
+      "wire_bytes": 375286,
+      "wire_cap": 388792
+    },
+    {
+      "name": "byte-exact-size-858514",
+      "status": "PASS",
+      "bytes": 858514,
+      "wire_bytes": 1154103,
+      "wire_cap": 1180560
+    },
+    {
+      "name": "byte-exact-size-3790465",
+      "status": "PASS",
+      "bytes": 3790465,
+      "wire_bytes": 5090684,
+      "wire_cap": 5181084
+    },
+    {
+      "name": "utf8-character-straddles-boundary",
+      "status": "PASS",
+      "bytes": 33767,
+      "wire_bytes": 46808,
+      "wire_cap": 55264
+    },
+    {
+      "name": "incomplete-keeps-status",
+      "status": "PASS",
+      "bytes": 37,
+      "wire_bytes": 1530,
+      "wire_cap": 9268
+    },
+    {
+      "name": "wrong-expected-sha",
+      "status": "PASS",
+      "refusal": "HASH_MISMATCH"
+    },
+    {
+      "name": "over-raw-cap",
+      "status": "PASS",
+      "refusal": "RAW_OVERSIZE"
+    },
+    {
+      "name": "invalid-utf8",
+      "status": "PASS",
+      "refusal": "INVALID_UTF8"
+    },
+    {
+      "name": "over-wire-cap",
+      "status": "PASS",
+      "refusal": "ENCODED_OVERSIZE"
+    },
+    {
+      "name": "no-full-stream-after-normal",
+      "status": "PASS",
+      "refusal": "NORMAL_FORWARD_ALREADY_STARTED"
+    },
+    {
+      "name": "listed-sensitive-pattern-cross-chunk-0",
+      "status": "PASS",
+      "refusal": "SENSITIVE"
+    },
+    {
+      "name": "listed-sensitive-pattern-cross-chunk-1",
+      "status": "PASS",
+      "refusal": "SENSITIVE"
+    },
+    {
+      "name": "listed-sensitive-pattern-cross-chunk-2",
+      "status": "PASS",
+      "refusal": "SENSITIVE"
+    },
+    {
+      "name": "listed-sensitive-pattern-cross-chunk-3",
+      "status": "PASS",
+      "refusal": "SENSITIVE"
+    },
+    {
+      "name": "listed-sensitive-pattern-cross-chunk-4",
+      "status": "PASS",
+      "refusal": "SENSITIVE"
+    },
+    {
+      "name": "listed-sensitive-pattern-cross-chunk-5",
+      "status": "PASS",
+      "refusal": "SENSITIVE"
+    },
+    {
+      "name": "listed-sensitive-pattern-cross-chunk-6",
+      "status": "PASS",
+      "refusal": "SENSITIVE"
+    },
+    {
+      "name": "listed-sensitive-pattern-cross-chunk-7",
+      "status": "PASS",
+      "refusal": "SENSITIVE"
+    },
+    {
+      "name": "listed-sensitive-pattern-cross-chunk-8",
+      "status": "PASS",
+      "refusal": "SENSITIVE"
+    },
+    {
+      "name": "mutation-control",
+      "status": "PASS",
+      "bytes": 65537,
+      "wire_bytes": 89472,
+      "wire_cap": 98652
+    },
+    {
+      "name": "missing-part",
+      "status": "PASS",
+      "malformed_rejected_by_both": true
+    },
+    {
+      "name": "duplicate-part",
+      "status": "PASS",
+      "malformed_rejected_by_both": true
+    },
+    {
+      "name": "reordered-parts",
+      "status": "PASS",
+      "malformed_rejected_by_both": true
+    },
+    {
+      "name": "wrong-context",
+      "status": "PASS",
+      "malformed_rejected_by_both": true
+    },
+    {
+      "name": "wrong-part-hash",
+      "status": "PASS",
+      "malformed_rejected_by_both": true
+    },
+    {
+      "name": "wrong-total-hash",
+      "status": "PASS",
+      "malformed_rejected_by_both": true
+    },
+    {
+      "name": "missing-end",
+      "status": "PASS",
+      "malformed_rejected_by_both": true
+    },
+    {
+      "name": "bad-base64",
+      "status": "PASS",
+      "malformed_rejected_by_both": true
+    },
+    {
+      "name": "extra-base64-padding",
+      "status": "PASS",
+      "malformed_rejected_by_both": true
+    },
+    {
+      "name": "wrong-run",
+      "status": "PASS",
+      "malformed_rejected_by_both": true
+    },
+    {
+      "name": "wrong-source",
+      "status": "PASS",
+      "malformed_rejected_by_both": true
+    },
+    {
+      "name": "pass-upgrade",
+      "status": "PASS",
+      "malformed_rejected_by_both": true
+    },
+    {
+      "name": "unknown-part-key",
+      "status": "PASS",
+      "malformed_rejected_by_both": true
+    },
+    {
+      "name": "producer-refuses-PASS",
+      "status": "PASS"
+    }
+  ],
+  "capacity_cases": {
+    "all_methods_success": 18348639,
+    "first_failure_in_guards": 3813048,
+    "first_failure_in_GC_worst_last_trial": 19360002,
+    "first_failure_in_save_worst_last_arm": 19675060
+  },
+  "maximum_bytes": 19675060,
+  "remaining_bytes": 1296460,
+  "input_sha256": {
+    "/workspace/scratch/pr20-gc-save-ci-20261014/failure-proposal/failure_text.py": "4080e090365ae8abdbe85cc6eb8d0c1a097970533659ba5fe9417846a5f83edf",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/joint_budget.py": "a25e493b82a770e21faf78bf9cf364822faa34d57d93ef8ba7076155a525eef1",
+    "/workspace/scratch/pr20-gc-save-ci-20261014/joint-budget.json": "92033d4146cfe99f288e54d454f45373b4b77a33d5aed195f623c7af3c5a7b31",
+    "/workspace/scratch/pr20-gc-author-only-budget-20261014/budget.json": "ca1a347f93b31a908c2f64027d3c215b7ab5058e83a7081c0a3b336e25b1ce52",
+    "/workspace/scratch/pr20-save-snapshot-control-20261014/contract.json": "a76cec96bbf0add437971938e06e4f54e9e811d43b2f30386d53b0986ba423f7"
+  },
+  "limits": [
+    "Synthetic tests are not native results or CI authorization.",
+    "Secret checking proves the listed regex patterns, not detection of every possible credential.",
+    "Runtime path/hash binding, whole-plan fail-stop, normal/failure mutex, category and total-byte enforcement await stable caller review.",
+    "Source capacity assumptions and numeric row bounds are input contracts; no production performance claim."
+  ]
+}

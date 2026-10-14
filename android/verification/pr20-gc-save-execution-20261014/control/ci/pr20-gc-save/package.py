@@ -1,0 +1,178 @@
+"""Publish only fixed text evidence within the approved 20 MiB total budget."""
+import hashlib,json,os,re,shutil,sys
+from pathlib import Path
+def account_text(items, report, contract, auxiliary_bytes):
+    """Actual fixed buckets plus original logs and one official transport path.
+
+    No generated records copy is uploaded. The final receipt is reserved once at
+    64KiB; measured bytes are checked below, so manifest hashing has no cycle.
+    """
+    limits=contract['transport'];caps=limits['fixed_text_buckets_bytes'];counts={key:0 for key in caps}
+    source_key='source_frozen_protocol_controller_and_manifest_text'
+    build_key='build_and_sdk_source_setup_logs'
+    receipt_key='dependencies_apk_install_host_device_receipts'
+    inventory_key='forwarding_inventory_context_method_final_and_summary_copies'
+    other_key='guard_raw_junit_cleanup_acl_packaging_and_manifest'
+    methods={e['ordinal']:e for e in report.get('methods',[])}
+    variable_raw=variable_wire=0
+    for name,data in items:
+        match=re.fullmatch(r'method-(\d{2})-C1-instrumentation.log',name)
+        if match:
+            ordinal=int(match[1]);entry=methods[ordinal];bound=limits['methods'][str(ordinal)]
+            normal=entry.get('forwarding_path') in ['NORMAL_STARTED','NORMAL_COMPLETE']
+            raw_limit=bound['normal_raw_max_bytes'] if normal or entry['status']=='PASS' else bound['failure_raw_max_bytes']
+            assert len(data)<=raw_limit, 'Method original text exceeds frozen cap; no truncation'
+            if ordinal>=6 or entry['status'] in ['FAIL','INCOMPLETE']:variable_raw+=len(data)
+            else:counts[other_key]+=len(data)
+        elif name.startswith('build-') or name in ['source-fetch.log','source-reconstruction.log','sdk.log','acceleration.log','avd.log','emulator-selected.log']:
+            counts[build_key]+=len(data)
+        elif name.startswith(('apk-','dependencies-','install-')) or name in ['host.json','host-after.json','device-before.json','device-after.json','emulator-configuration.json']:
+            counts[receipt_key]+=len(data)
+        elif name.endswith('-log-forwarding.json') or name.startswith('summary'):
+            counts[inventory_key]+=len(data)
+        elif name.startswith('frozen-') or name in ['authorization.json','EXECUTION_SHA256SUMS','run.py','markers.py','package.py','cleanup.py','workflow.proposed.yml'] or (name.endswith('.kt')):
+            counts[source_key]+=len(data)
+        else:counts[other_key]+=len(data)
+    failed=[e for e in methods.values() if e['status'] in ['FAIL','INCOMPLETE']]
+    assert len(failed)<=1, 'Global fail-stop requires at most one failed method'
+    if failed:assert all(e['status']=='NOT_RUN' for e in methods.values() if e['ordinal']>failed[0]['ordinal']), 'Method ran after first failure'
+    for ordinal,entry in methods.items():
+        bound=limits['methods'][str(ordinal)]
+        values={k:entry.get(k,0) for k in ['normal_record_end_wire_bytes','normal_meta_wire_bytes','failure_wire_bytes','method_wire_bytes']}
+        assert all(type(v) is int and v>=0 for v in values.values()), 'Invalid byte ledger'
+        assert values['normal_record_end_wire_bytes']<=bound['normal_record_end_max_bytes']
+        assert values['failure_wire_bytes']<=bound['failure_wire_max_bytes']
+        if values['normal_record_end_wire_bytes'] and values['failure_wire_bytes']:
+            assert entry.get('failure_log_forwarding',{}).get('status')=='REFUSED' and values['failure_wire_bytes']<=8192, 'Normal and full failure streams duplicated'
+        if ordinal>=6:variable_wire+=values['normal_record_end_wire_bytes']
+        else:counts[inventory_key]+=values['normal_record_end_wire_bytes']
+        variable_wire+=values['failure_wire_bytes']
+        counts[inventory_key]+=values['normal_meta_wire_bytes']+values['method_wire_bytes']
+    counts[inventory_key]+=65536 # Fixed final receipt ceiling, emitted only once.
+    counts[other_key]+=auxiliary_bytes
+    for key,size in counts.items():assert size<=caps[key], 'Fixed text bucket exceeds cap: '+key
+    total=sum(counts.values())+variable_raw+variable_wire
+    assert total<=limits['total_text_limit_bytes'], 'Combined artifact + official text exceeds20MiB; no truncation'
+    return {'status':'WITHIN_FIXED_AND_TOTAL_LIMITS','fixed_buckets_bytes':counts,'variable_original_bytes':variable_raw,'official_variable_wire_bytes':variable_wire,'final_receipt_reserved_bytes':65536,'combined_reserved_bytes':total,'limit_bytes':limits['total_text_limit_bytes'],'derived_records_uploaded_bytes':0}
+
+
+here=Path(__file__).resolve().parent
+FROZEN_RELATIVE='android/verification/pr20-gc-save-20261014'
+FROZEN_SOURCE_SPEC_SHA256='bf6fe840b3113784315e7b7d575a7ce6d17ded867d87359b04cdfdeee67d0f95'
+assert re.fullmatch(r'[0-9a-f]{64}', FROZEN_SOURCE_SPEC_SHA256), 'Finalize source-spec hash before execution'
+frozen=here.parents[1]/FROZEN_RELATIVE
+root=Path(os.environ['KVM_ONCE']);source=root/'evidence';out=root/'upload';out.mkdir(exist_ok=True)
+plan=json.loads((frozen/'method-plan.json').read_text());spec=json.loads((frozen/'source-spec.json').read_text())
+contract=json.loads((frozen/'marker-contract.json').read_text())
+assert hashlib.sha256((frozen/'source-spec.json').read_bytes()).hexdigest()==FROZEN_SOURCE_SPEC_SHA256, 'Frozen source-spec hash mismatch'
+summary=source/'summary.json'
+if summary.exists():
+    original=source/'summary-before-packaging.json'
+    if not original.exists():shutil.copyfile(summary,original)
+    report=json.loads(summary.read_text())
+    interrupted=False
+    for entries in [report.get('actions',{}).values(),report.get('phases',[]),
+                    report.get('install_groups',{}).values(),report.get('methods',[])]:
+        for entry in entries:
+            if entry.get('status') in ['RUNNING','INSTALLED']:
+                entry['status_before_packaging']=entry['status']
+                entry['status']='INCOMPLETE'
+                interrupted=True
+    if interrupted:
+        report['status_before_packaging']=report['status']
+        report['status']='INCOMPLETE_OUTER_TIMEOUT_OR_INTERRUPTION'
+    elif report['status'] in ['PREPARING','SOURCES_FROZEN','MEASURING']:
+        report['status_before_packaging']=report['status']
+        report['status']='INCOMPLETE_EXECUTION_NOT_FINISHED'
+    def cleaned(tag):
+        p=source/f'cleanup-{tag}.json'
+        if not p.exists():return False
+        r=json.loads(p.read_text())
+        return (r.get('errors')==[] and r.get('emulator') in ['NOT_STARTED','STOPPED_CONFIRMED'] and
+                r.get('command_groups') in ['NOT_STARTED','STOPPED_CONFIRMED'] and
+                r.get('acl') in ['NOT_TOUCHED','UNCHANGED_EXACT','RESTORED_EXACT'])
+    report['cleanup_verified']=all(cleaned(tag) for tag in ['trap','always'])
+    if not report['cleanup_verified']:report['status']='CLEANUP_UNCONFIRMED'
+    summary.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+fixed=['summary.json','summary-before-packaging.json','clock.json','host.json','host-after.json','device-before.json','device-after.json',
+       'emulator-configuration.json','emulator-selected.log','kvm-identity.json','kvm-before.acl','kvm-granted.acl',
+       'kvm-after-trap.acl','kvm-after-always.acl','cleanup-trap.json','cleanup-always.json']
+for side in ['C1']:fixed += [f'apk-{side}.json',f'dependencies-{side}.json',f'build-{side}.log']
+fixed += [name+'.log' for name in ['source-fetch','source-reconstruction','sdk','acceleration','avd']]
+for group in dict.fromkeys(x['install_group'] for x in plan['steps']):
+    fixed += [f'install-{group}.log']
+    for boundary in ['before','after']:
+        fixed += [f'install-{group}-environment-{boundary}.json',f'install-{group}-host-{boundary}.json']
+for step in plan['steps']:
+    prefix=f"method-{step['ordinal']:02d}-{step['identity']}"
+    fixed += [prefix+suffix for suffix in ['-instrumentation.log','-junit.xml']]
+    fixed.append(prefix+'-log-forwarding.json')
+missing=[name for name in fixed if not (source/name).is_file()]
+if summary.exists():
+    report=json.loads(summary.read_text())
+    report['missing_files']=missing
+    if missing and report['status']=='EXECUTION_COMPLETE_ANALYSIS_PENDING':
+        report['status_before_evidence_check']=report['status']
+        report['status']='EVIDENCE_INCOMPLETE'
+    summary.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+items=[(name,source/name) for name in fixed if (source/name).is_file()]
+for name in ['PLAN.md','original-protocol.json','source-spec.json','method-plan.json','marker-contract.json',
+             'C1-source-manifest.json','prepare_sources.py']:
+    items.append(('frozen-'+name,frozen/name))
+for name in ['authorization.json','EXECUTION_SHA256SUMS','run.py','markers.py','package.py','cleanup.py','workflow.proposed.yml']:
+    items.append((name,here/name))
+for probe in spec['common_probes']:
+    path=here.parents[1]/probe['from_path']
+    assert hashlib.sha256(path.read_bytes()).hexdigest()==probe['sha256']
+    items.append((Path(probe['from_path']).name,path))
+secret=re.compile(rb'gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|AKIA[A-Z0-9]{16}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|(?:ssh-rsa|ssh-ed25519) [A-Za-z0-9+/]{40,}')
+manifest=[];rejected=[];total=0
+assert len(set(name for name,_ in items))==len(items)
+for name,path in items:
+    assert path.is_file() and not path.is_symlink()
+    data=path.read_bytes();data.decode('utf-8');digest=hashlib.sha256(data).hexdigest()
+    item={'name':name,'original_bytes':len(data),'original_sha256':digest,'uploaded_bytes':0,'uploaded_sha256':None}
+    if secret.search(data):item['omitted']='credential/key pattern; refuse unsafe content';rejected.append(name)
+    else:item.update(uploaded_bytes=len(data),uploaded_sha256=digest);total+=len(data)
+    manifest.append(item)
+manifest_bytes=(json.dumps(manifest,indent=2)+'\n').encode()
+packaging_bytes=(json.dumps({'files':len(manifest),'bytes_before_manifest':total,'rejected_names':rejected,'truncated_files':0,'retention_days':3,'missing_files':missing,'complete':not rejected and not missing},indent=2)+'\n').encode()
+try:
+    assert total+len(manifest_bytes)+len(packaging_bytes)<=20*1024*1024, 'Artifact text exceeds20MiB'
+    budget=account_text([(name,path.read_bytes()) for name,path in items],report if summary.exists() else {},contract,len(manifest_bytes)+len(packaging_bytes)+8192)
+    budget_bytes=(json.dumps(budget,indent=2)+'\n').encode();assert len(budget_bytes)<=8192
+except (AssertionError,KeyError,TypeError) as error:
+    (out/'packaging-failure.json').write_text(json.dumps({'status':'EVIDENCE_BUDGET_REFUSED_NOT_UPLOADED','reason':str(error),'bytes':total,'limit':20*1024*1024,'files':manifest},indent=2))
+    raise SystemExit(1)
+(out/'text-budget.json').write_bytes(budget_bytes)
+for name,path in items:
+    if name not in rejected:shutil.copyfile(path,out/name)
+(out/'manifest.json').write_bytes(manifest_bytes);(out/'packaging.json').write_bytes(packaging_bytes)
+assert sum(p.stat().st_size for p in out.iterdir())<=20*1024*1024
+print(json.dumps({'files':len(manifest),'bytes':total,'omitted':len(rejected),'truncated':0}))
+# Fixed, limited terminal receipt for official job-log consumers. Artifact bytes stay authoritative.
+if summary.exists():
+    final=json.loads(summary.read_text())
+    acl={}
+    before=source/'kvm-before.acl'
+    for tag in ['trap','always']:
+        receipt_path=source/('cleanup-'+tag+'.json')
+        value=json.loads(receipt_path.read_text()) if receipt_path.exists() else {}
+        after=source/('kvm-after-'+tag+'.acl')
+        acl[tag]={'emulator':value.get('emulator'),'command_groups':value.get('command_groups'),
+                  'acl':value.get('acl'),'error_count':len(value.get('errors',[])) if 'errors' in value else None,
+                  'before_sha256':hashlib.sha256(before.read_bytes()).hexdigest() if before.exists() else None,
+                  'after_sha256':hashlib.sha256(after.read_bytes()).hexdigest() if after.exists() else None,
+                  'exact_match':before.read_bytes()==after.read_bytes() if before.exists() and after.exists() else None}
+    safe={'scope':'DIAGNOSTIC_ONLY','run_id':final['run_id'],'workflow_sha':final['workflow_sha'],
+          'input_hashes':final['input_hashes'],'status':final['status'],'cleanup_verified':final['cleanup_verified'],
+          'cleanup':acl,'methods':[dict((k,e.get(k)) for k in ['ordinal','identity','phase','selection','seed','status','junit_status','adb_exit','process_exit_outcome','log_sha256']) for e in final['methods']],
+          'install_groups':{k:{'identity':v['identity'],'status':v['status']} for k,v in final['install_groups'].items()},
+          'device_before_sha256':hashlib.sha256((source/'device-before.json').read_bytes()).hexdigest() if (source/'device-before.json').exists() else None,
+          'device_after_sha256':hashlib.sha256((source/'device-after.json').read_bytes()).hexdigest() if (source/'device-after.json').exists() else None,
+          'missing_files':missing,'packaging_complete':not rejected and not missing,'manifest_sha256':hashlib.sha256(manifest_bytes).hexdigest(),
+          'summary_sha256':hashlib.sha256(summary.read_bytes()).hexdigest()}
+    final_line='INKWEFT_CAUSAL_FINAL '+json.dumps(safe,separators=(',',':'))
+    assert len((final_line+'\n').encode())+64<=65536, 'Final receipt bound'
+    print(final_line,flush=True)
+sys.exit(bool(rejected or missing))

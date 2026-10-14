@@ -1,0 +1,157 @@
+name: PR20 one-source save-boundary diagnostics
+'on':
+  push:
+    branches:
+    - codex/kvm-pr20-gc-save-20261014
+    paths:
+    - .github/workflows/pr20-gc-save.yml
+permissions:
+  contents: read
+concurrency:
+  group: pr20-gc-save-20261014
+  cancel-in-progress: false
+jobs:
+  causal:
+    name: DIAGNOSTIC_ONLY one source / one data APK / eight proposed methods
+    if: github.event_name == 'push' && github.ref == 'refs/heads/codex/kvm-pr20-gc-save-20261014' && github.event.created ==
+      false && github.event.before == '0000000000000000000000000000000000000000' && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+    - name: Fix one local first-step screening clock; no network clock API
+      timeout-minutes: 1
+      run: |
+        set -euo pipefail
+        export KVM_ONCE="$RUNNER_TEMP/pr20-gc-save"
+        export ANDROID_AVD_HOME="$KVM_ONCE/avd"
+        export ANDROID_USER_HOME="$KVM_ONCE/android-user"
+        export ANDROID_EMULATOR_HOME="$KVM_ONCE/android-user"
+        python3 - <<'PYCODE'
+        import json,os,pathlib,time
+        observed=time.time();start=int(observed)
+        root=pathlib.Path(os.environ['KVM_ONCE'])
+        assert not root.exists(),'Owned screen directory must be new; do not reuse state or clock'
+        (root/'evidence').mkdir(parents=True)
+        cutoffs={k:start+v*60 for k,v in [('setup',30),('data',45),('work',55)]}
+        values={'KVM_BUDGET_ANCHOR':start,'KVM_SETUP_CUTOFF':cutoffs['setup'],'KVM_DATA_CUTOFF':cutoffs['data'],'KVM_WORK_DEADLINE':cutoffs['work']}
+        clock={'status':'PASS','scope':'DIAGNOSTIC_ONLY','anchor_kind':'runner_first_step','budget_anchor_epoch':start,'first_step_observed_epoch':observed,'actual_job_started_epoch':None,'deadlines_minutes':[30,45,55,60],'deadline_epochs':cutoffs}
+        with (root/'evidence/clock.json').open('x') as f:f.write(json.dumps(clock,indent=2)+'\n')
+        with open(os.environ['GITHUB_ENV'],'a') as f:
+            for k in ['KVM_ONCE','ANDROID_AVD_HOME','ANDROID_USER_HOME','ANDROID_EMULATOR_HOME']:f.write(k+'='+os.environ[k]+'\n')
+            for k,v in values.items():f.write(k+'='+str(v)+'\n')
+        print('INKWEFT_CAUSAL_CLOCK '+json.dumps(clock,separators=(',',':')))
+        PYCODE
+    - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      timeout-minutes: 3
+      with:
+        persist-credentials: false
+        path: control
+    - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+      timeout-minutes: 3
+      with:
+        distribution: temurin
+        java-version: '17'
+    - name: Freeze/reconstruct one source and install fixed SDK
+      shell: bash
+      run: |
+        set -euo pipefail
+        cleanup_on_failure() {
+          code=$?
+          trap - EXIT INT TERM
+          if test "$code" -ne 0; then
+            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-gc-save/cleanup.py trap || code=1
+          fi
+          exit "$code"
+        }
+        trap cleanup_on_failure EXIT
+        trap 'exit 130' INT
+        trap 'exit 143' TERM
+        remaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))
+        test "$remaining" -gt 0
+        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-gc-save/run.py setup
+    - name: Build only C1 data test APK; verify signature, manifest and SQLite native identities
+      shell: bash
+      run: |
+        set -euo pipefail
+        cleanup_on_failure() {
+          code=$?
+          trap - EXIT INT TERM
+          if test "$code" -ne 0; then
+            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-gc-save/cleanup.py trap || code=1
+          fi
+          exit "$code"
+        }
+        trap cleanup_on_failure EXIT
+        trap 'exit 130' INT
+        trap 'exit 143' TERM
+        remaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))
+        test "$remaining" -gt 0
+        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-gc-save/run.py build C1
+    - name: "\u6700\u5C0F\u4E34\u65F6ACL\u4E0E\u540C\u4E00KVM\u6A21\u62DF\u5668"
+      shell: bash
+      run: |
+        set -euo pipefail
+        cleanup_on_failure() {
+          code=$?
+          trap - EXIT INT TERM
+          if test "$code" -ne 0; then
+            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-gc-save/cleanup.py trap || code=1
+          fi
+          exit "$code"
+        }
+        trap cleanup_on_failure EXIT
+        trap 'exit 130' INT
+        trap 'exit 143' TERM
+        remaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))
+        test "$remaining" -gt 0
+        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-gc-save/run.py emulator
+    - name: Five GC guards, two GC diagnostics, one snapshot-control diagnostic; failure stops the run
+      shell: bash
+      run: |
+        set -euo pipefail
+        cleanup_on_failure() {
+          code=$?
+          trap - EXIT INT TERM
+          if test "$code" -ne 0; then
+            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-gc-save/cleanup.py trap || code=1
+          fi
+          exit "$code"
+        }
+        trap cleanup_on_failure EXIT
+        trap 'exit 130' INT
+        trap 'exit 143' TERM
+        remaining=$((KVM_DATA_CUTOFF - $(date +%s) - 2))
+        test "$remaining" -gt 0
+        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-gc-save/run.py methods data
+    - name: "\u6210\u529F\u8DEF\u5F84\u505C\u6B62\u62E5\u6709\u8FDB\u7A0B\u5E76\u7CBE\u786E\u6062\u590DACL"
+      timeout-minutes: 1
+      run: timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-gc-save/cleanup.py trap
+    - name: "always\u518D\u6B21\u6838\u9A8C\u8FDB\u7A0B\u4E0EACL\u6062\u590D"
+      if: always()
+      timeout-minutes: 1
+      run: |
+        if test -f control/ci/pr20-gc-save/cleanup.py; then
+          timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-gc-save/cleanup.py always
+        else
+          mkdir -p "$KVM_ONCE/evidence"
+          echo '{"emulator":"NOT_STARTED","command_groups":"NOT_STARTED","acl":"NOT_TOUCHED","errors":[]}' > "$KVM_ONCE/evidence/cleanup-always.json"
+        fi
+    - name: "\u53EA\u6253\u5305\u767D\u540D\u5355\u539F\u59CB\u6587\u672C\uFF0C\u6700\u592720MiB"
+      if: always()
+      timeout-minutes: 1
+      run: |
+        if test -f control/ci/pr20-gc-save/package.py; then
+          timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-gc-save/package.py
+        else
+          mkdir -p "$KVM_ONCE/upload"
+          if test -f "$KVM_ONCE/evidence/clock.json"; then cp "$KVM_ONCE/evidence/clock.json" "$KVM_ONCE/upload/clock.json"; fi
+          echo '{"status":"SETUP_BLOCKED_BEFORE_SOURCE_CHECKOUT","tests":"NOT_RUN","kvm":"NOT_TOUCHED"}' > "$KVM_ONCE/upload/setup-failure.json"
+        fi
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      if: always()
+      timeout-minutes: 2
+      with:
+        name: pr20-gc-save-${{ github.run_id }}
+        retention-days: 3
+        if-no-files-found: error
+        path: ${{ runner.temp }}/pr20-gc-save/upload/*

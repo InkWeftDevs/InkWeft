@@ -1,0 +1,851 @@
+{
+  "status": "PASS_FIXED_CHAIN_OFFLINE_SYNTHETIC_ONLY",
+  "binding_status": "BOUND",
+  "cases": [
+    {
+      "name": "Actual fixed source/readiness/prep/active Git chain and file bytes; read-only",
+      "status": "PASS",
+      "receipt": {
+        "active": "c3483b74e5db7cb7928d26445bd37af51700284c",
+        "prep": "083a892133d818cf364865d3ee3edc1fdb6413c0",
+        "readiness": "fbc502eb49c15018bb1ab2694dc256b7a0f9fc25",
+        "source": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353",
+        "readiness_files_verified": 8,
+        "reviewed_source_files_verified": 10,
+        "control_files_verified": 8,
+        "network": false,
+        "git_operations": "read-only"
+      }
+    },
+    {
+      "name": "8 calls / exact new synthetic markers / one data APK; UNBOUND",
+      "status": "PASS",
+      "analysis_status": "SYNTHETIC_STRUCTURE_COMPLETE_UNBOUND",
+      "issues": []
+    },
+    {
+      "name": "missing FINAL",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Missing/unfinished receipt set"
+      ]
+    },
+    {
+      "name": "duplicate FINAL",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Receipt after FINAL"
+      ]
+    },
+    {
+      "name": "wrong run",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Expected official binding differs: run_id"
+      ]
+    },
+    {
+      "name": "wrong source",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: CONTEXT source differs"
+      ]
+    },
+    {
+      "name": "wrong args",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: CONTEXT plan mapping differs"
+      ]
+    },
+    {
+      "name": "wrong test hash",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: CONTEXT test hash differs"
+      ]
+    },
+    {
+      "name": "wrong job",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Missing/duplicate official job"
+      ]
+    },
+    {
+      "name": "attempt bool",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Actual run identity differs"
+      ]
+    },
+    {
+      "name": "extra job",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Expected exactly one official job"
+      ]
+    },
+    {
+      "name": "wrong workflow",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official event/branch/workflow path differs"
+      ]
+    },
+    {
+      "name": "wrong branch",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official event/branch/workflow path differs"
+      ]
+    },
+    {
+      "name": "not push",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official event/branch/workflow path differs"
+      ]
+    },
+    {
+      "name": "wrong APK",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: APK package group differs"
+      ]
+    },
+    {
+      "name": "installed mismatch",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Selected/installed APK mismatch"
+      ]
+    },
+    {
+      "name": "signer mismatch",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Within-group installation/source changed"
+      ]
+    },
+    {
+      "name": "raw hash mismatch",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Raw log binding differs"
+      ]
+    },
+    {
+      "name": "payload hash",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Original payload size/hash differs"
+      ]
+    },
+    {
+      "name": "payload length",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Original payload size/hash differs"
+      ]
+    },
+    {
+      "name": "sequence bool",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Record order/identity differs"
+      ]
+    },
+    {
+      "name": "unknown marker",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Unexpected record marker"
+      ]
+    },
+    {
+      "name": "footer hash",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Ordered payload footer differs"
+      ]
+    },
+    {
+      "name": "records hash",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Complete parsed records hash differs"
+      ]
+    },
+    {
+      "name": "missing END",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Missing complete method block"
+      ]
+    },
+    {
+      "name": "JUnit skip",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "adb nonzero",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "non-natural exit",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "cleanup missing",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Envelope keys differ"
+      ]
+    },
+    {
+      "name": "cleanup error",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Cleanup claim not successful"
+      ]
+    },
+    {
+      "name": "ACL mismatch",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: ACL hashes differ"
+      ]
+    },
+    {
+      "name": "ACL origins mismatch",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: ACL origins differ"
+      ]
+    },
+    {
+      "name": "environment mismatch",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Device environment changed"
+      ]
+    },
+    {
+      "name": "incomplete packaging",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL incomplete execution/evidence/cleanup"
+      ]
+    },
+    {
+      "name": "missing files",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL incomplete execution/evidence/cleanup"
+      ]
+    },
+    {
+      "name": "late setup",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official phase exceeds clock budget or sequence"
+      ]
+    },
+    {
+      "name": "wrong cutoff",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Clock cutoff differs"
+      ]
+    },
+    {
+      "name": "over60m",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official job hard 60min budget exceeded"
+      ]
+    },
+    {
+      "name": "official failure",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only"
+      ]
+    },
+    {
+      "name": "duplicate CLOCK",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Duplicate/late CLOCK"
+      ]
+    },
+    {
+      "name": "duplicate CONTEXT",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Nested/duplicate CONTEXT"
+      ]
+    },
+    {
+      "name": "duplicate RECORD",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Record order/identity differs"
+      ]
+    },
+    {
+      "name": "duplicate END",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Missing/duplicate END"
+      ]
+    },
+    {
+      "name": "duplicate METHOD",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD order differs"
+      ]
+    },
+    {
+      "name": "wrong prep",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Expected official binding differs: prep_sha"
+      ]
+    },
+    {
+      "name": "wrong readiness",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Expected official binding differs: readiness_git"
+      ]
+    },
+    {
+      "name": "job attempt bool",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Actual job identity differs"
+      ]
+    },
+    {
+      "name": "job count bool",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Expected exactly one official job"
+      ]
+    },
+    {
+      "name": "END ordinal bool",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: END count differs"
+      ]
+    },
+    {
+      "name": "FINAL exit bool",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD/FINAL differ"
+      ]
+    },
+    {
+      "name": "cleanup error count bool",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Cleanup claim not successful"
+      ]
+    },
+    {
+      "name": "group incomplete",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL install groups differ"
+      ]
+    },
+    {
+      "name": "data phase excludes first context",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Method block outside its official phase step"
+      ]
+    },
+    {
+      "name": "official phase overlap",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official phase exceeds clock budget or sequence"
+      ]
+    },
+    {
+      "name": "phase after job end",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official phase outside actual job span"
+      ]
+    },
+    {
+      "name": "method6 rehashed truncated",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "JSONDecodeError: Expecting value: line 1 column 11 (char 10)"
+      ]
+    },
+    {
+      "name": "method6 rehashed array",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Ordered payload footer differs"
+      ]
+    },
+    {
+      "name": "method6 rehashed duplicate key",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Duplicate JSON key"
+      ]
+    },
+    {
+      "name": "method6 rehashed nonfinite",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Non-finite JSON"
+      ]
+    },
+    {
+      "name": "method6 full rehash unknown schema field",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "AssertionError: "
+      ]
+    },
+    {
+      "name": "method8 rehashed truncated",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "JSONDecodeError: Expecting value: line 1 column 11 (char 10)"
+      ]
+    },
+    {
+      "name": "method8 rehashed array",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "AssertionError: "
+      ]
+    },
+    {
+      "name": "method8 rehashed duplicate key",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Duplicate JSON key"
+      ]
+    },
+    {
+      "name": "method8 rehashed nonfinite",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Non-finite JSON"
+      ]
+    },
+    {
+      "name": "method8 full rehash unknown schema field",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "AssertionError: Unknown/missing object key"
+      ]
+    },
+    {
+      "name": "GC and snapshot original JSON whitespace retained",
+      "status": "PASS",
+      "analysis_status": "SYNTHETIC_STRUCTURE_COMPLETE_UNBOUND",
+      "issues": []
+    },
+    {
+      "name": "full failure bytes, crossed UTF8 chunk, ignored embedded receipt, audited FINAL",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: First non-PASS method: failure evidence and terminal audit never promote whole-run PASS"
+      ]
+    },
+    {
+      "name": "guard failure",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: First non-PASS method: failure evidence and terminal audit never promote whole-run PASS"
+      ]
+    },
+    {
+      "name": "save failure",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: First non-PASS method: failure evidence and terminal audit never promote whole-run PASS"
+      ]
+    },
+    {
+      "name": "empty UTF8 failure",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: First non-PASS method: failure evidence and terminal audit never promote whole-run PASS"
+      ]
+    },
+    {
+      "name": "explicit oversize refusal",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: First non-PASS method: failure evidence and terminal audit never promote whole-run PASS"
+      ]
+    },
+    {
+      "name": "normal forwarded then failure refusal remains incomplete",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: First non-PASS method: failure evidence and terminal audit never promote whole-run PASS"
+      ]
+    },
+    {
+      "name": "failure missing BEGIN",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure PART/END outside open stream"
+      ]
+    },
+    {
+      "name": "failure missing END",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Incomplete failure text stream before METHOD"
+      ]
+    },
+    {
+      "name": "failure bad binding",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure run/source identity"
+      ]
+    },
+    {
+      "name": "failure attempt bool",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure attempt"
+      ]
+    },
+    {
+      "name": "failure bad whole hash",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure context/part order"
+      ]
+    },
+    {
+      "name": "failure bad context",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure context/part order"
+      ]
+    },
+    {
+      "name": "failure bad part",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure context/part order"
+      ]
+    },
+    {
+      "name": "failure boolean part",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure context/part order"
+      ]
+    },
+    {
+      "name": "failure bad chunk length",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure chunk size"
+      ]
+    },
+    {
+      "name": "failure bad chunk hash",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure chunk hash"
+      ]
+    },
+    {
+      "name": "failure invalid base64",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "Error: Only base64 data is allowed"
+      ]
+    },
+    {
+      "name": "failure bad footer",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure footer mismatch"
+      ]
+    },
+    {
+      "name": "failure missing FINAL",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failed run lacks FINAL cleanup/evidence receipt"
+      ]
+    },
+    {
+      "name": "failure cleanup broken",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failed FINAL cleanup/ACL"
+      ]
+    },
+    {
+      "name": "failure METHOD differs",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure envelope/METHOD differ"
+      ]
+    },
+    {
+      "name": "failure FINAL raw differs",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failed FINAL original hash differs"
+      ]
+    },
+    {
+      "name": "failure successor ran",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Method ran after first failure"
+      ]
+    },
+    {
+      "name": "failure fake success FINAL",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failed FINAL status"
+      ]
+    },
+    {
+      "name": "invalid complete UTF8",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte"
+      ]
+    },
+    {
+      "name": "sensitive complete bytes",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure original matches fixed sensitive pattern"
+      ]
+    },
+    {
+      "name": "whole hash with consistent envelope context",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Failure complete original hash"
+      ]
+    },
+    {
+      "name": "method1 exact failure cap 278528 bytes",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: First non-PASS method: failure evidence and terminal audit never promote whole-run PASS"
+      ]
+    },
+    {
+      "name": "method6 exact failure cap 3790465 bytes",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: First non-PASS method: failure evidence and terminal audit never promote whole-run PASS"
+      ]
+    },
+    {
+      "name": "method8 exact failure cap 858514 bytes",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: First non-PASS method: failure evidence and terminal audit never promote whole-run PASS"
+      ]
+    },
+    {
+      "name": "normal and full failure forwarding cannot mix",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: Normal and complete failure forwarding are mutually exclusive"
+      ]
+    },
+    {
+      "name": "missing failure text still audits terminal without claiming text",
+      "status": "PASS",
+      "analysis_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: First non-PASS method: failure evidence and terminal audit never promote whole-run PASS"
+      ]
+    },
+    {
+      "name": "Literal Unicode line separator inside METHOD JSON remains one physical line",
+      "status": "PASS"
+    },
+    {
+      "name": "UNBOUND CLI refuses before reading unavailable inputs",
+      "status": "PASS"
+    },
+    {
+      "name": "BOUND CLI rejects a synthetic run/job before reading unavailable inputs",
+      "status": "PASS"
+    }
+  ],
+  "source_sha256": {
+    "analyze_logs.py": "16c420cee5885f0ee32aa65f4800e489370da8aef4954297ace22f4d8226f61c",
+    "frozen_markers.py": "850707164f4c89ae1920c1f9c99ad9e1a68be7f71b8c456b437671ddada96bda",
+    "test_analyzer.py": "5e1f768041fee222e02bc5c4731d63d2056a3aa4f3ec640853cec7ffe34b040d"
+  },
+  "limitations": [
+    "Git chain checked locally; all job-log/metadata fixtures are synthetic",
+    "No native run result or online authenticity verification"
+  ],
+  "fixture_input_sha256": {
+    "failure_text.py": "4080e090365ae8abdbe85cc6eb8d0c1a097970533659ba5fe9417846a5f83edf",
+    "check_offline.py": "fc595f935cbd1f59c8ed70bd4c2559b1704ee572064a1b98ed3710cfe7eaf536",
+    "COPY_SHA256SUMS": "5375ce82be7cfb89673a96a34924488e2b32b0a1299c37483d390873a2f5462f"
+  }
+}

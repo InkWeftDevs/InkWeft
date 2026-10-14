@@ -1,0 +1,32 @@
+{
+  "status": "PASS_ONE_LINE_PACKAGE_EXIT_REVIEW",
+  "previous_package_sha256": "0aaca87ec6cf47b61a2b3253c1f611696644bec9909555234bbd2868b9fa8d46",
+  "final_package_sha256": "ed6e966941c3cbdbba620d2a85ec7ac4b5c77da5642bbcf6478ff3c9cd4c3f46",
+  "only_one_line_changed": true,
+  "actual_terminal_expression_cases": [
+    {
+      "rejected": false,
+      "missing": false,
+      "exit": 0
+    },
+    {
+      "rejected": false,
+      "missing": true,
+      "exit": 1
+    },
+    {
+      "rejected": true,
+      "missing": false,
+      "exit": 1
+    },
+    {
+      "rejected": true,
+      "missing": true,
+      "exit": 1
+    }
+  ],
+  "owner_final_preflight_sha256": "dab4912723c2d9a51b8466b4dafce7307f7fad58ac630d57e1252b03edbaa538",
+  "owner_groups": 17,
+  "owner_packaging_only_zero_exit_case": "all8_complete",
+  "scope": "Offline only; no new native run, Gradle or CI"
+}

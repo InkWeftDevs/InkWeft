@@ -1,0 +1,16 @@
+{
+  "review_status": {
+    "before": "INCOMPLETE_DO_NOT_FREEZE_OR_EXECUTE",
+    "after": "READY"
+  },
+  "pending": {
+    "before": [
+      "save source/schema/cap",
+      "GC complete semantic validator",
+      "complete failure stream independent review",
+      "one joint evidence budget"
+    ],
+    "after": []
+  },
+  "authorization_unchanged": "UNBOUND/approved=false; root-only freeze/bind/activation remains separate"
+}

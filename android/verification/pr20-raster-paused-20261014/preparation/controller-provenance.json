@@ -1,0 +1,27 @@
+{
+  "run.py": {
+    "baseline": "ci/pr20-causal/run.py",
+    "baseline_sha256": "a361a8c0457e095b1ccc7fc34f7e57d48b6e7eca8425171cc1dceecd4ecb515a",
+    "draft_sha256": "5ba57d828a02581a1bbfc21df982abc085fb4f39c39dc481735cfafe46319f60"
+  },
+  "package.py": {
+    "baseline": "ci/pr20-causal/package.py",
+    "baseline_sha256": "7bbb06ca67b24bc06b78b1bdb258a9de552c33cdf6ec1dfb50f81c455d06bbd6",
+    "draft_sha256": "9e7cdd2b90079d5262707c360ee2611d42d71802170a4123404fca90c10c4900"
+  },
+  "markers.py": {
+    "baseline": "ci/pr20-kvm-triple/markers.py",
+    "baseline_sha256": "7dfb88112bdf17b9cc8ff96b9cdf068a79394505cbb0103be4d93819533a2a80",
+    "draft_sha256": "b6cddc15b85d9b58fb687a054e383bfb847766ca76b044e58c45244a127196dd"
+  },
+  "workflow.proposed.yml": {
+    "baseline": "ci/pr20-causal/workflow.proposed.yml",
+    "baseline_sha256": "01be6b6f2e06d1e858bc5c633ef6b3b3a82588c213dfd20a459a5cbf0222bfb3",
+    "draft_sha256": "bc9548f3e6b339c048d9225c6cdefe7e415397d765a1b8cbb0c62615af37dd92"
+  },
+  "bind_control.py": {
+    "baseline": "ci/pr20-causal/bind_control.py",
+    "baseline_sha256": "19629c16f2ee62b86a9420f830bdb01c781e031a933d1f414bf83bc2c8c04f97",
+    "draft_sha256": "3ac263b06de4680b3263e1188cf99f8e8171fdd13c8036b50b9aa89c89b57bec"
+  }
+}

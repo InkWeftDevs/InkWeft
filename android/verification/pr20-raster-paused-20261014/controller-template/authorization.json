@@ -1,0 +1,23 @@
+{
+  "approved": false,
+  "scope": "DIAGNOSTIC_ONLY",
+  "plan_git": "UNBOUND",
+  "approved_plan_sha256": "UNBOUND",
+  "source_spec_sha256": "UNBOUND",
+  "method_plan_sha256": "UNBOUND",
+  "original_protocol_sha256": "UNBOUND",
+  "marker_contract_sha256": "UNBOUND",
+  "prepare_sources_sha256": "UNBOUND",
+  "phase_cutoff_minutes": {
+    "setup": 30,
+    "data": 45,
+    "raster": 50,
+    "work": 55
+  },
+  "job_timeout_minutes": 60,
+  "task_build_cache": false,
+  "new_permissions": false,
+  "automatic_retry": false,
+  "authorization_scope": "Root-authorized inactive two-source raster candidate screen; twelve calls, five APKs, diagnostic only. No activation until final source/readiness/controller review.",
+  "status": "UNBOUND"
+}

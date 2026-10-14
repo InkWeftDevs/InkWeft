@@ -1,0 +1,16 @@
+{
+  "status": "PASS_INDEPENDENT_OFFLINE_REVIEW_NOT_NATIVE_NOT_ACTIVATED",
+  "helper_cases": 44,
+  "runtime_cases": 27,
+  "package_terminal_combinations": 4,
+  "remaining_review_blockers": [],
+  "files": {
+    "check_independent.py": "5c3f7c5189a95bd841a97ed2c4c912c13c8143640c38dad15b9ceb483c6e5200",
+    "check_runtime.py": "b238074aeb2f85a369042e2e0e40cd9153a1b1b39641f6d29b2ac92b94ed8077",
+    "helper-budget-results.json": "f7274db90644c5c908e926236894e40109b2cf91f01f3f80487b7fef40f00c1c",
+    "runtime-results.json": "14eea8eff45b74cfdbe1ec06ef1f4a08f2f734e944c6a75fbf0743ca99ed46e1",
+    "package-exit-review.json": "cf9bb97abcc9958d0663df9e036dba2c41e71f2db8faddf91ac0ce8ffd03cf6e",
+    "source-binding.json": "a687900f64a545382755ac7402604d409f28f957345f438f4cd1ba5bdd9298d7",
+    "review.md": "529d41a4fa040927086d39fbfb5349558bd483a92dbcc67c64d313590b19be72"
+  }
+}

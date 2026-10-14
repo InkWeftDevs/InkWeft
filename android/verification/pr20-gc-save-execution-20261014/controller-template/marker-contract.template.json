@@ -1,0 +1,1929 @@
+{
+  "status": "UNBOUND",
+  "review_status": "READY",
+  "scope": "DIAGNOSTIC_ONLY",
+  "methods": {
+    "1": {
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt",
+      "test_source_sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5"
+    },
+    "2": {
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt",
+      "test_source_sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5"
+    },
+    "3": {
+      "selection": "org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt",
+      "test_source_sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5"
+    },
+    "4": {
+      "selection": "org.inkweft.data.HistoryCollectionTest#malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt",
+      "test_source_sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5"
+    },
+    "5": {
+      "selection": "org.inkweft.data.HistoryCollectionTest#missingRoomGuardLogAbortsWithoutDeletingCandidates",
+      "marker_policy": "none",
+      "kind": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt",
+      "test_source_sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5"
+    },
+    "6": {
+      "selection": "org.inkweft.data.HistoryDeletionBoundaryDiagnosticsTest#sameRoomNaturalArrivalBoundaries",
+      "marker_policy": "required",
+      "kind": "gc-boundary",
+      "markers": {
+        "HISTORY_GC_BOUNDARY_EVENTS": {
+          "min_count": 30,
+          "max_count": 330,
+          "payload_max_bytes": 16384
+        },
+        "HISTORY_GC_BOUNDARY_TRIAL": {
+          "min_count": 30,
+          "max_count": 30,
+          "payload_max_bytes": 65536
+        },
+        "HISTORY_GC_BOUNDARY_SUMMARY": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 16384
+        }
+      },
+      "method_payload_max_bytes": 4194304,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest.kt",
+      "test_source_sha256": "597bed443289598870d063af99731a60db48ca0e38d8e3576b24fcd995cf4055",
+      "connection": "same-room"
+    },
+    "7": {
+      "selection": "org.inkweft.data.HistoryDeletionBoundaryDiagnosticsTest#separateRoomNaturalArrivalBoundaries",
+      "marker_policy": "required",
+      "kind": "gc-boundary",
+      "markers": {
+        "HISTORY_GC_BOUNDARY_EVENTS": {
+          "min_count": 30,
+          "max_count": 330,
+          "payload_max_bytes": 16384
+        },
+        "HISTORY_GC_BOUNDARY_TRIAL": {
+          "min_count": 30,
+          "max_count": 30,
+          "payload_max_bytes": 65536
+        },
+        "HISTORY_GC_BOUNDARY_SUMMARY": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 16384
+        }
+      },
+      "method_payload_max_bytes": 4194304,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest.kt",
+      "test_source_sha256": "597bed443289598870d063af99731a60db48ca0e38d8e3576b24fcd995cf4055",
+      "connection": "separate-room"
+    },
+    "8": {
+      "selection": "org.inkweft.data.LibrarySnapshotHoldDiagnosticsTest#idleHeldSnapshotAndActiveSearchSaveBoundaries",
+      "marker_policy": "required",
+      "kind": "snapshot-control",
+      "markers": {
+        "LIBRARY_SNAPSHOT_CONTROL_RESULT": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 4096
+        },
+        "LIBRARY_SNAPSHOT_CONTROL_EVENTS": {
+          "min_count": 3,
+          "max_count": 48,
+          "payload_max_bytes": 8192
+        },
+        "LIBRARY_SNAPSHOT_CONTROL_READS": {
+          "min_count": 3,
+          "max_count": 6,
+          "payload_max_bytes": 8192
+        },
+        "LIBRARY_SNAPSHOT_CONTROL_END": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 4096
+        }
+      },
+      "method_payload_max_bytes": 393216,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySnapshotHoldDiagnosticsTest.kt",
+      "test_source_sha256": "7a62c5263d94730884b038bc150d9e6f495a08b5500caadaa846954ec927e9df"
+    }
+  },
+  "schemas": {
+    "LIBRARY_SNAPSHOT_CONTROL_RESULT": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": 1
+        },
+        "mode": {
+          "enum": [
+            "IDLE",
+            "HELD_SNAPSHOT",
+            "ACTIVE_SEARCH"
+          ]
+        },
+        "diagnosticOnly": {
+          "const": true
+        },
+        "seed": {
+          "const": 4101
+        },
+        "readiness": {
+          "enum": [
+            "reader-closed",
+            "main-snapshot-pinned",
+            "first-source-check"
+          ]
+        },
+        "fixture": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "rowCounts": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "notes": {
+                  "const": 501
+                },
+                "note_revisions": {
+                  "const": 501
+                },
+                "notebook_workspace": {
+                  "const": 501
+                },
+                "notebook_pages": {
+                  "const": 20001
+                },
+                "page_search_text": {
+                  "const": 20000
+                },
+                "library_search_pending": {
+                  "const": 20000
+                }
+              },
+              "required": [
+                "notes",
+                "note_revisions",
+                "notebook_workspace",
+                "notebook_pages",
+                "page_search_text",
+                "library_search_pending"
+              ]
+            },
+            "logicalSha256": {
+              "const": "1c69bba77781ba0c0b642309b8e869ff21c9a440fd7714894e67c572b95c9dcf"
+            },
+            "writerSqlite": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "page_size": {
+                  "const": 1024
+                },
+                "auto_vacuum": {
+                  "const": 1
+                },
+                "journal_mode": {
+                  "const": "wal"
+                },
+                "synchronous": {
+                  "const": 2
+                }
+              },
+              "required": [
+                "page_size",
+                "auto_vacuum",
+                "journal_mode",
+                "synchronous"
+              ]
+            }
+          },
+          "required": [
+            "rowCounts",
+            "logicalSha256",
+            "writerSqlite"
+          ]
+        },
+        "startRevision": {
+          "const": 1
+        },
+        "finalRevision": {
+          "const": 31
+        },
+        "readerBeforeRevision": {
+          "enum": [
+            -1,
+            1
+          ]
+        },
+        "readerAfterRevision": {
+          "enum": [
+            -1,
+            1
+          ]
+        },
+        "saves": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 0
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 2
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 1
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 3
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 2
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 4
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 3
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 5
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 4
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 6
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 5
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 7
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 6
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 8
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 7
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 9
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 8
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 10
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 9
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 11
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 10
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 12
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 11
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 13
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 12
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 14
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 13
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 15
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 14
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 16
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 15
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 17
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 16
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 18
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 17
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 19
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 18
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 20
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 19
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 21
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 20
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 22
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 21
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 23
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 22
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 24
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 23
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 25
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 24
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 26
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 25
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 27
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 26
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 28
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 27
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 29
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 28
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 30
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 29
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 31
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            }
+          ],
+          "items": false,
+          "minItems": 30,
+          "maxItems": 30
+        }
+      },
+      "required": [
+        "schema",
+        "mode",
+        "diagnosticOnly",
+        "seed",
+        "readiness",
+        "fixture",
+        "startRevision",
+        "finalRevision",
+        "readerBeforeRevision",
+        "readerAfterRevision",
+        "saves"
+      ]
+    },
+    "LIBRARY_SNAPSHOT_CONTROL_EVENTS": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": 1
+        },
+        "mode": {
+          "enum": [
+            "IDLE",
+            "HELD_SNAPSHOT",
+            "ACTIVE_SEARCH"
+          ]
+        },
+        "part": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 15
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 23
+              },
+              {
+                "type": "integer",
+                "minimum": -1,
+                "maximum": 29
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 999999
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 999999
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 8
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 600000000000
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 600000000000
+              },
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              }
+            ],
+            "items": false,
+            "minItems": 10,
+            "maxItems": 10
+          },
+          "minItems": 1,
+          "maxItems": 96
+        }
+      },
+      "required": [
+        "schema",
+        "mode",
+        "part",
+        "events"
+      ]
+    },
+    "LIBRARY_SNAPSHOT_CONTROL_READS": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": 1
+        },
+        "mode": {
+          "enum": [
+            "IDLE",
+            "HELD_SNAPSHOT",
+            "ACTIVE_SEARCH"
+          ]
+        },
+        "part": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 28
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1
+              },
+              {
+                "type": "integer",
+                "minimum": -1,
+                "maximum": 20001
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 600000000000
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 600000000000
+              },
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              }
+            ],
+            "items": false,
+            "minItems": 7,
+            "maxItems": 7
+          },
+          "minItems": 1,
+          "maxItems": 96
+        }
+      },
+      "required": [
+        "schema",
+        "mode",
+        "part",
+        "events"
+      ]
+    },
+    "LIBRARY_SNAPSHOT_CONTROL_END": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": 1
+        },
+        "mode": {
+          "enum": [
+            "IDLE",
+            "HELD_SNAPSHOT",
+            "ACTIVE_SEARCH"
+          ]
+        },
+        "completed": {
+          "const": true
+        },
+        "coverageValid": {
+          "const": true
+        },
+        "committedSaves": {
+          "const": 30
+        },
+        "recordedEvents": {
+          "type": "integer",
+          "minimum": 660,
+          "maximum": 1536
+        },
+        "recordedReadEvents": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 128
+        },
+        "droppedEvents": {
+          "const": 0
+        },
+        "droppedReadEvents": {
+          "const": 0
+        },
+        "invalid": {
+          "const": false
+        },
+        "readerExited": {
+          "const": true
+        },
+        "writersExited": {
+          "const": true
+        },
+        "databaseClosed": {
+          "const": true
+        },
+        "databaseDeleted": {
+          "const": true
+        },
+        "cleanupErrors": {
+          "const": 0
+        }
+      },
+      "required": [
+        "schema",
+        "mode",
+        "completed",
+        "coverageValid",
+        "committedSaves",
+        "recordedEvents",
+        "recordedReadEvents",
+        "droppedEvents",
+        "droppedReadEvents",
+        "invalid",
+        "readerExited",
+        "writersExited",
+        "databaseClosed",
+        "databaseDeleted",
+        "cleanupErrors"
+      ]
+    }
+  },
+  "reviewed_source_sha256": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt": "c904a8ebc9b2aed64266a82d24b8f1395621314a9087fd6f0de6298b8865fb47",
+    "android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt": "a9351355ca45af5f6f5db34109fa68d6bf10505d3117ed60a7c68cc000b05e89",
+    "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt": "052467625c685a79f72337379b2d4e70718440c6717e91c6d18677c9c1982581",
+    "android/data-local/src/main/kotlin/org/inkweft/data/SaveBoundaryDiagnostics.kt": "392bf0e25e6f62d77f915eec628eac16f3f374e0de5287fb02435d29c0cecab9",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveBoundaryDiagnosticsTest.kt": "cd1b0ba9e112a19e16fdea36b1b867183c890a4addb8c6ebfdfe7986f4a73038",
+    "android/data-local/src/test/kotlin/org/inkweft/data/SaveBoundaryDiagnosticsTest.kt": "d1bd148f6f787bf636d005d5f0932b4e4e02c65c0953ece313eb0e7bbd789dc6",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest.kt": "597bed443289598870d063af99731a60db48ca0e38d8e3576b24fcd995cf4055",
+    "android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt": "b96890478129bbb7b0bbb538c3cf8d5f2e97f2b8b5e2e34d8057c855c9ec6ca9",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySnapshotHoldDiagnosticsTest.kt": "7a62c5263d94730884b038bc150d9e6f495a08b5500caadaa846954ec927e9df"
+  },
+  "pending": [],
+  "representation": "Retain original instrumentation once; forward original JSON plus SHA once; derived records not uploaded.",
+  "snapshot_control": {
+    "status": "source contract prepared; not native evidence or CI activation",
+    "source": "/workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySnapshotHoldDiagnosticsTest.kt",
+    "sourceSha256": "7a62c5263d94730884b038bc150d9e6f495a08b5500caadaa846954ec927e9df",
+    "method": "org.inkweft.data.LibrarySnapshotHoldDiagnosticsTest#idleHeldSnapshotAndActiveSearchSaveBoundaries",
+    "argument": {
+      "librarySnapshotHoldDiagnostics": "true"
+    },
+    "prefix": "LIBRARY_SNAPSHOT_CONTROL_",
+    "schema": 1,
+    "order": [
+      "IDLE",
+      "HELD_SNAPSHOT",
+      "ACTIVE_SEARCH"
+    ],
+    "saveCountPerArm": 30,
+    "markerOrder": [
+      "RESULT",
+      "EVENTS parts 0..ceil(n/96)-1",
+      "READS parts 0..ceil(n/96)-1",
+      "END"
+    ],
+    "fields": {
+      "RESULT": [
+        "schema",
+        "diagnosticOnly",
+        "seed",
+        "mode",
+        "readiness",
+        "fixture",
+        "startRevision",
+        "finalRevision",
+        "readerBeforeRevision",
+        "readerAfterRevision",
+        "saves"
+      ],
+      "EVENTS": [
+        "schema",
+        "mode",
+        "part",
+        "events"
+      ],
+      "READS": [
+        "schema",
+        "mode",
+        "part",
+        "events"
+      ],
+      "END": [
+        "schema",
+        "mode",
+        "completed",
+        "coverageValid",
+        "committedSaves",
+        "recordedEvents",
+        "recordedReadEvents",
+        "droppedEvents",
+        "droppedReadEvents",
+        "invalid",
+        "readerExited",
+        "writersExited",
+        "databaseClosed",
+        "databaseDeleted",
+        "cleanupErrors"
+      ]
+    },
+    "boundaryColumns": [
+      "stageCode",
+      "sample",
+      "task",
+      "transaction",
+      "depth",
+      "successRequested",
+      "outcomeCode",
+      "wallNs",
+      "threadCpuNs",
+      "threadId"
+    ],
+    "readColumns": [
+      "ownerCode",
+      "stageCode",
+      "read",
+      "count",
+      "wallNs",
+      "threadCpuNs",
+      "threadId"
+    ],
+    "saveColumns": [
+      "sample",
+      "startNs",
+      "endNs",
+      "revision",
+      "committed"
+    ],
+    "boundaryStages": [
+      "save-request",
+      "save-writer-acquired",
+      "save-head-read",
+      "save-head-written",
+      "save-revision-written",
+      "save-receipt-written",
+      "save-returned",
+      "save-failed",
+      "writer-submit",
+      "writer-run-enter",
+      "writer-run-exit",
+      "writer-submit-failed",
+      "room-begin-enter",
+      "room-begin-exit",
+      "room-success-enter",
+      "room-success-exit",
+      "room-end-enter",
+      "room-end-exit",
+      "sqlite-begin-enter",
+      "sqlite-begin-exit",
+      "sqlite-success-enter",
+      "sqlite-success-exit",
+      "sqlite-end-enter",
+      "sqlite-end-exit"
+    ],
+    "readStages": [
+      "read-requested",
+      "read-start",
+      "connection-open",
+      "snapshot-open",
+      "drafts-ready",
+      "scope-start",
+      "scope-end",
+      "hits-ready",
+      "page-hits-start",
+      "page-hits-end",
+      "card-hits-start",
+      "card-hits-end",
+      "page-start",
+      "page-end",
+      "metadata-start",
+      "metadata-end",
+      "pending-start",
+      "pending-end",
+      "snapshot-closed",
+      "connection-closed",
+      "read-end",
+      "read-cancel",
+      "read-error",
+      "pin-read",
+      "hold-enter",
+      "hold-exit",
+      "pin-recheck",
+      "idle-ready",
+      "active-ready"
+    ],
+    "outcomes": [
+      "entered",
+      "returned",
+      "threw"
+    ],
+    "owners": [
+      "control",
+      "search"
+    ],
+    "caps": {
+      "boundaryPerArm": 1536,
+      "readPerArm": 128,
+      "chunkRows": 96,
+      "savePerArm": 30
+    },
+    "ranges": {
+      "boundary": [
+        [
+          0,
+          23
+        ],
+        [
+          -1,
+          29
+        ],
+        [
+          0,
+          999999
+        ],
+        [
+          0,
+          999999
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          600000000000
+        ],
+        [
+          0,
+          600000000000
+        ],
+        [
+          1,
+          2147483647
+        ]
+      ],
+      "read": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          28
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          -1,
+          20001
+        ],
+        [
+          0,
+          600000000000
+        ],
+        [
+          0,
+          600000000000
+        ],
+        [
+          1,
+          2147483647
+        ]
+      ],
+      "save": [
+        [
+          0,
+          29
+        ],
+        [
+          0,
+          600000000000
+        ],
+        [
+          0,
+          600000000000
+        ],
+        [
+          2,
+          31
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    "expected": {
+      "seed": 4101,
+      "initialRevision": 1,
+      "finalRevision": 31,
+      "fixtureSha256": "1c69bba77781ba0c0b642309b8e869ff21c9a440fd7714894e67c572b95c9dcf",
+      "readerBeforeRevision": [
+        1,
+        1,
+        -1
+      ],
+      "readerAfterRevision": [
+        -1,
+        1,
+        -1
+      ],
+      "readiness": [
+        "reader-closed",
+        "main-snapshot-pinned",
+        "first-source-check"
+      ],
+      "rowCounts": {
+        "notes": 501,
+        "note_revisions": 501,
+        "notebook_workspace": 501,
+        "notebook_pages": 20001,
+        "page_search_text": 20000,
+        "library_search_pending": 20000
+      },
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      },
+      "cleanup": {
+        "readerExited": true,
+        "writersExited": true,
+        "databaseClosed": true,
+        "databaseDeleted": true,
+        "cleanupErrors": 0
+      }
+    },
+    "coverage": {
+      "IDLE": "all manual events one thread; pin-read=1, snapshot-closed/connection-closed/idle-ready before first save",
+      "HELD_SNAPSHOT": "all manual events one thread; pin-read=1; hold-enter<=first save; last save<=hold-exit; pin-recheck=1; then snapshot-closed/connection-closed",
+      "ACTIVE_SEARCH": "one original read; snapshot-open<=page-hits-start<=active-ready<=first save; last save<=page-hits-end<=snapshot-closed<=read-end; stronger than whole-read lifetime, early query completion is invalid and never retried"
+    },
+    "wholeMethod": "all three arm blocks in order, each complete=true/coverageValid=true/30 committed, zero dropped and invalid=false; otherwise invalid diagnostic, no retry/loop",
+    "numericRowUpperBytes": {
+      "boundary": 64,
+      "read": 51,
+      "save": 35
+    }
+  },
+  "schema_source_sha256": {
+    "snapshot_contract": "a76cec96bbf0add437971938e06e4f54e9e811d43b2f30386d53b0986ba423f7",
+    "snapshot_success_schema": "64e59d822d583b7eddcbc2b25609054e06cee14d5c1b84d79dcb5b33c50b6d32"
+  },
+  "transport": {
+    "kind": "MUTUALLY_EXCLUSIVE_NORMAL_OR_FULL_BASE64_FAILURE",
+    "chunk_bytes": 32768,
+    "methods": {
+      "1": {
+        "normal_raw_max_bytes": 16384,
+        "normal_record_end_max_bytes": 8192,
+        "failure_raw_max_bytes": 278528,
+        "failure_wire_max_bytes": 388792
+      },
+      "2": {
+        "normal_raw_max_bytes": 16384,
+        "normal_record_end_max_bytes": 8192,
+        "failure_raw_max_bytes": 278528,
+        "failure_wire_max_bytes": 388792
+      },
+      "3": {
+        "normal_raw_max_bytes": 16384,
+        "normal_record_end_max_bytes": 8192,
+        "failure_raw_max_bytes": 278528,
+        "failure_wire_max_bytes": 388792
+      },
+      "4": {
+        "normal_raw_max_bytes": 16384,
+        "normal_record_end_max_bytes": 8192,
+        "failure_raw_max_bytes": 278528,
+        "failure_wire_max_bytes": 388792
+      },
+      "5": {
+        "normal_raw_max_bytes": 16384,
+        "normal_record_end_max_bytes": 8192,
+        "failure_raw_max_bytes": 278528,
+        "failure_wire_max_bytes": 388792
+      },
+      "6": {
+        "normal_raw_max_bytes": 3512615,
+        "normal_record_end_max_bytes": 3730110,
+        "failure_raw_max_bytes": 3790465,
+        "failure_wire_max_bytes": 5181084
+      },
+      "7": {
+        "normal_raw_max_bytes": 3514869,
+        "normal_record_end_max_bytes": 3732664,
+        "failure_raw_max_bytes": 3790465,
+        "failure_wire_max_bytes": 5181084
+      },
+      "8": {
+        "normal_raw_max_bytes": 355978,
+        "normal_record_end_max_bytes": 356675,
+        "failure_raw_max_bytes": 858514,
+        "failure_wire_max_bytes": 1180560
+      }
+    },
+    "fixed_text_buckets_bytes": {
+      "source_frozen_protocol_controller_and_manifest_text": 1048576,
+      "build_and_sdk_source_setup_logs": 1048576,
+      "dependencies_apk_install_host_device_receipts": 393216,
+      "forwarding_inventory_context_method_final_and_summary_copies": 393216,
+      "guard_raw_junit_cleanup_acl_packaging_and_manifest": 262144
+    },
+    "total_text_limit_bytes": 20971520,
+    "first_nonpass_stops_all_successors": true,
+    "derived_records_uploaded": false,
+    "sizing_cases_bytes": {
+      "all_methods_success": 18348639,
+      "first_failure_in_guards": 3813048,
+      "first_failure_in_GC_worst_last_trial": 19360002,
+      "first_failure_in_save_worst_last_arm": 19675060
+    },
+    "joint_budget_script_sha256": "a25e493b82a770e21faf78bf9cf364822faa34d57d93ef8ba7076155a525eef1",
+    "joint_budget_json_sha256": "92033d4146cfe99f288e54d454f45373b4b77a33d5aed195f623c7af3c5a7b31",
+    "failure_helper_sha256": "4080e090365ae8abdbe85cc6eb8d0c1a097970533659ba5fe9417846a5f83edf"
+  },
+  "gc_semantic_contract": {
+    "analyzer_sha256": "7d26b088f0ead4b10646f9d794d1783ef88bc9850073054d886a9de5bb31dd12",
+    "schema_notes_sha256": "db342bb69bed6fa11a9924ffcadffa2697f0a7b29d533c3e3f41809dbd606f7c",
+    "schema_notes": {
+      "scope": "SYNTHETIC_AUTHOR_ONLY_ANALYSIS_FIELDSET_NOT_FROZEN_CONTROLLER_CONTRACT",
+      "producerSha256": "597bed443289598870d063af99731a60db48ca0e38d8e3576b24fcd995cf4055",
+      "eventColumns": [
+        "stage",
+        "ownerToken",
+        "task",
+        "transaction",
+        "depth",
+        "successRequested",
+        "outcome",
+        "atNs",
+        "cpuNs",
+        "thread"
+      ],
+      "trialKeys": [
+        "afterRenameTransactionNs",
+        "artificialGates",
+        "authorBoundaries",
+        "authorOwnerToken",
+        "authorWriterSqlite",
+        "batchCapacity",
+        "batchDropped",
+        "batchEvents",
+        "batchLimit",
+        "beforeRenameReceiptNs",
+        "boundaries",
+        "boundaryCapacityPerDatabase",
+        "boundaryScope",
+        "collectorEndNs",
+        "collectorFailureClass",
+        "collectorStartNs",
+        "committed",
+        "connection",
+        "contentVerified",
+        "coveredBeforeBatchCommitNs",
+        "deleteIntervals",
+        "deleteWindowIntersected",
+        "deletionTransactionExposed",
+        "failureClass",
+        "finalRevision",
+        "finishDeferred",
+        "finishDeleted",
+        "finishEndNs",
+        "finishOwnerToken",
+        "finishRootScans",
+        "finishStartNs",
+        "firstCommittedBatches",
+        "firstDeferred",
+        "firstDeleted",
+        "firstRootScans",
+        "fixtureDeleted",
+        "fixtureDetachedSources",
+        "fixtureExplicitRoots",
+        "fixtureLatestRetained",
+        "fixtureSourceVersions",
+        "gcOwnerToken",
+        "helpersClosed",
+        "initialRevision",
+        "phaseCapacity",
+        "phaseDropped",
+        "phases",
+        "pureSqliteLockWaitMs",
+        "replacesFrozenProbe",
+        "retainedRevisions",
+        "sample",
+        "saveEndNs",
+        "saveMs",
+        "saveOutcome",
+        "saveStartNs",
+        "saveStartedDuringDelete",
+        "saveWatchdogMs",
+        "savedRevision",
+        "scenario",
+        "stage",
+        "status",
+        "suppressedFailureClasses",
+        "workersExited",
+        "writerSqlite"
+      ],
+      "batchKeys": [
+        "afterSequence",
+        "atNs",
+        "callbackNs",
+        "candidates",
+        "cpuNs",
+        "expectedChanges",
+        "expectedDataVersion",
+        "observedChanges",
+        "observedDataVersion",
+        "phase",
+        "thread"
+      ],
+      "markers": [
+        "HISTORY_GC_BOUNDARY_EVENTS",
+        "HISTORY_GC_BOUNDARY_TRIAL",
+        "HISTORY_GC_BOUNDARY_SUMMARY"
+      ],
+      "connections": [
+        "same-room",
+        "separate-room"
+      ],
+      "segments": [
+        "requestToSubmit",
+        "writerQueue",
+        "workerToSqliteBegin",
+        "sqliteBeginCall",
+        "sqliteBeginToRoomBegin",
+        "roomBeginToReceipt",
+        "receiptToSqliteEnd",
+        "sqliteEndCall",
+        "sqliteEndToRoomEnd",
+        "roomEndToRenameReturn",
+        "renameReturnToCallEnd"
+      ],
+      "scanPrefix": [
+        "after-roots",
+        "after-stats",
+        "after-scan"
+      ],
+      "capacities": {
+        "trialsPerMode": 30,
+        "authorEvents": 512,
+        "batchEvents": 64,
+        "phases": 32,
+        "shardRows": 48
+      },
+      "conditionalQuantileMinimum": 20,
+      "consumerNote": "Controller should independently verify semantics against production source. This file describes the separate analyzer; it is not activation authorization.",
+      "terminalGuard": "Candidates must be0 after1280deleted else256. firstDeferred exactly equals writer guard mismatch. A matching terminal guard requires all1280deleted; a mismatched empty terminal guard is valid."
+    },
+    "strict_scalar_limits": "Int/Long <= signed64; finite Double; closed success fields and all per-mode original order required"
+  },
+  "source_commit": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353"
+}

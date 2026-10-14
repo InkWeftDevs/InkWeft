@@ -1,0 +1,677 @@
+--- ci/pr20-causal/run.py
++++ scratch/run.py
+@@ -19,7 +19,7 @@
+ 
+ HERE = Path(__file__).resolve().parent
+ CONTROL = HERE.parents[1]
+-FROZEN_RELATIVE = 'android/verification/pr20-causal-20261014'
++FROZEN_RELATIVE = 'android/verification/pr20-raster-screen-20261014'
+ FROZEN_SOURCE_SPEC_SHA256 = 'UNBOUND'
+ assert re.fullmatch(r'[0-9a-f]{64}', FROZEN_SOURCE_SPEC_SHA256), 'Finalize source identity before execution'
+ FROZEN = CONTROL / FROZEN_RELATIVE
+@@ -38,7 +38,7 @@
+ os.environ['PATH'] = str(SDK / 'platform-tools') + ':' + str(SDK / 'cmdline-tools/latest/bin') + ':' + os.environ['PATH']
+ ADB = ['adb', '-s', 'emulator-5554']
+ PACKAGES = ['org.inkweft.app.a0', 'org.inkweft.app.a0.test', 'org.inkweft.data.test']
+-IDENTITIES = ['C1']
++IDENTITIES = ['C1', 'C2']
+ PHASE_NAMES = {'data': 'data-diagnostics', 'raster': 'raster-diagnostics'}
+ SPEC = json.loads((FROZEN / 'source-spec.json').read_text())
+ assert hashlib.sha256((FROZEN / 'source-spec.json').read_bytes()).hexdigest() == FROZEN_SOURCE_SPEC_SHA256
+@@ -53,7 +53,7 @@
+     'run_id': os.environ['GITHUB_RUN_ID'], 'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
+     'workflow_sha': os.environ['GITHUB_SHA'], 'source_spec': SPEC, 'input_hashes': INPUT_HASHES,
+     'version_aliases': {key: {'alias': alias, 'source_commit': SPEC['identities'][key]['git']}
+-                       for key, alias in [('C1', 'causal_diagnostic_candidate')]},
++                       for key, alias in [('C1', 'all_miss_control'), ('C2', 'all_miss_candidate')]},
+     'budget_anchor_epoch': START, 'anchor_kind': 'runner_first_step', 'actual_job_started_epoch': None,
+     'phase_cutoff_epochs': CUTOFFS, 'work_deadline_epoch': DEADLINE,
+     'status': 'PREPARING', 'actions': {}, 'phases': [], 'install_groups': {},
+@@ -258,11 +258,12 @@
+     assert auth['status'] == SPEC['status'] == MARKERS['status'] == 'FROZEN'
+     assert re.fullmatch(r'[0-9a-f]{40}',auth['plan_git'])
+     assert IDENTITIES == list(SPEC['identities']) and re.fullmatch(r'[0-9a-f]{40}',SPEC['identities']['C1']['git'])
+-    assert SPEC['common_probes'] == [] and SPEC['identities']['C1']['production_overrides'] == []
++    assert SPEC['common_probes'] == [] and all(item['production_overrides'] == [] for item in SPEC['identities'].values())
++    assert {key:item['git'] for key,item in SPEC['identities'].items()} == {'C1':'207bc654e0c922bb58b599d0ca619aff85eeebeb','C2':'fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353'}
+     assert auth['task_build_cache'] is False and auth['new_permissions'] is False and auth['automatic_retry'] is False
+-    assert len(PLAN['steps']) == 13 and [s['ordinal'] for s in PLAN['steps']] == list(range(1,14))
+-    assert [sum(s['phase'] == p for s in PLAN['steps']) for p in PHASE_NAMES.values()] == [12,1]
+-    assert len({s['install_group'] for s in PLAN['steps']}) == 2
++    assert len(PLAN['steps']) == 12 and [s['ordinal'] for s in PLAN['steps']] == list(range(1,13))
++    assert [sum(s['phase'] == p for s in PLAN['steps']) for p in PHASE_NAMES.values()] == [2,10]
++    assert len({s['install_group'] for s in PLAN['steps']}) == 5
+     for step in PLAN['steps']:
+         assert step['expected_junit_tests'] == 1 and step['identity'] in IDENTITIES
+         assert step['args'][:8] == ADB + ['shell','am','instrument','-w','-r']
+@@ -270,12 +271,12 @@
+         runner = 'org.inkweft.app.a0.test' if step['phase'] == 'raster-diagnostics' else 'org.inkweft.data.test'
+         assert step['args'][-1] == runner+'/androidx.test.runner.AndroidJUnitRunner'
+         assert step['diagnostic_only'] is True
+-        assert step['outer_cap_seconds'] == (300 if step['ordinal'] == 10 else 3600)
++        assert step['outer_cap_seconds'] == 3600
+     for filename in INPUT_HASHES:
+         assert re.fullmatch(r'[0-9a-f]{64}',auth[filename])
+     official_dependency_check()
+     assert not capture(['git','-C',CONTROL,'status','--porcelain']), 'Execution checkout must be clean'
+-    refs = list(dict.fromkeys([s['git'] for s in SPEC['identities'].values()] + [p['from_git'] for p in SPEC['common_probes']]))
++    refs = [SPEC['identities'][identity]['git'] for identity in IDENTITIES]
+     REPORT['fetched_fixed_refs'] = refs
+     phase('source-fetch',['git','-C',CONTROL,'fetch','--no-tags','--depth=1','origin',*refs],180)
+     phase('source-reconstruction',['python3',FROZEN/'prepare_sources.py','--repo',CONTROL,'--out',ROOT/'sources'],180)
+@@ -305,12 +306,13 @@
+     phase('build-' + identity, ['./gradlew', '--no-daemon', '--max-workers=1', '--no-build-cache',
+           '-Pkotlin.compiler.execution.strategy=in-process',
+           '-Dorg.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8',
+-          ':app:assembleDebug', ':app:assembleDebugAndroidTest', ':data-local:assembleDebugAndroidTest'],
++          ':app:assembleDebug', ':app:assembleDebugAndroidTest'] + ([':data-local:assembleDebugAndroidTest'] if identity == 'C2' else []),
+           1440, cwd=root / 'android', env=env)
+     assert source_manifest(identity) == before
+     paths = ['app/build/outputs/apk/debug/app-debug.apk',
+              'app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk',
+              'data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk']
++    if identity == 'C1': paths = paths[:2]
+     receipts = []
+     for path in paths:
+         apk = root / 'android' / path
+@@ -346,13 +348,14 @@
+             xmltree=capture([SDK/'build-tools/36.0.0/aapt','dump','xmltree',apk,'AndroidManifest.xml'],60)
+             item['manifest_xmltree']=xmltree
+             item['instrumentation_manifest']=validate_instrumentation_manifest(xmltree,packages[0] if index==1 else packages[2])
+-    with zipfile.ZipFile(root/'android'/paths[2]) as archive:
+-        sqlite=[]
+-        for abi in ['arm64-v8a','armeabi-v7a','x86','x86_64']:
+-            name='lib/'+abi+'/libsqlite3x.so';data=archive.read(name)
+-            assert data.startswith(b'\x7fELF') and len(data)>100000
+-            sqlite.append({'path':name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()})
+-        receipts[2]['sqlite_native']=sqlite
++    if identity == 'C2':
++        with zipfile.ZipFile(root/'android'/paths[2]) as archive:
++            sqlite=[]
++            for abi in ['arm64-v8a','armeabi-v7a','x86','x86_64']:
++                name='lib/'+abi+'/libsqlite3x.so';data=archive.read(name)
++                assert data.startswith(b'\x7fELF') and len(data)>100000
++                sqlite.append({'path':name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()})
++            receipts[2]['sqlite_native']=sqlite
+     deps = []
+     cache = Path(os.environ.get('GRADLE_USER_HOME', str(Path.home() / '.gradle'))) / 'caches/modules-2/files-2.1'
+     for path in sorted(cache.rglob('*')):
+@@ -360,10 +363,26 @@
+         if path.is_file():
+             deps.append({'path': path.relative_to(cache).as_posix(), 'bytes': path.stat().st_size, 'sha256': digest(path)})
+     assert deps, 'No dependency provenance recorded'
++    expected_mupdf = {'fitz-1.28.5.aar':(21636412,'e6887a242882cdd2dce062430bb46b6727513e3eb94e222255cc1a37db7a7d8e'), 'fitz-1.28.5.pom':(662,'d66b443446cb2bb992c0de60115ae4988584bd44d16c877d0ba5e2d400b416ff')}
++    for filename,(size,expected_hash) in expected_mupdf.items():
++        resolved=list((cache/'com.artifex.mupdf/fitz/1.28.5').glob('*/'+filename))
++        assert len(resolved)==1 and resolved[0].stat().st_size==size and digest(resolved[0])==expected_hash
++        if filename.endswith('.aar'):
++            with zipfile.ZipFile(resolved[0]) as aar:
++                for item in native:
++                    data=aar.read('jni/'+item['path'][4:])
++                    assert len(data)==item['bytes'] and hashlib.sha256(data).hexdigest()==item['sha256']
++    if identity == 'C2':
++        prior=json.loads((OUT/'apk-C1.json').read_text())['apks'][0]
++        assert prior['mupdf_native']==native and prior['signer_sha256']==receipts[0]['signer_sha256']
++        prior_deps=json.loads((OUT/'dependencies-C1.json').read_text())
++        now={item['path']:item for item in deps}
++        assert all(now.get(item['path'])==item for item in prior_deps), 'Resolved dependency changed between identities'
++
+     write_json(OUT / ('dependencies-' + identity + '.json'), deps)
+     write_json(OUT / ('apk-' + identity + '.json'), {
+         'identity': identity, 'base_commit': env['INKWEFT_HEAD_SHA'], 'source_manifest_sha256': before,
+-        'overlay_identity': 'Embedded source_commit is the Git base; source-spec plus source manifest bind overlays.',
++        'source_identity': 'Embedded source_commit is the exact source commit; no runtime production or probe overlays.',
+         'apks': receipts, 'jvm_tests': 'NOT_RUN', 'lint': 'NOT_RUN'})
+ 
+ 
+@@ -449,7 +468,7 @@
+                  reported_classes=classes, reported_methods=methods, reported_test_counts=counts)
+     records = []
+     for line in raw.splitlines():
+-        match = re.search(r'((?:KVM|LIBRARY|HISTORY|TILE|INDEX|RASTER)_[A-Z0-9_]+) (\{.*\}|\[.*\])\s*$', line)
++        match = re.search(r'((?:KVM|LIBRARY|HISTORY|TILE|INDEX|RASTER|STREAMED|NATIVE)_[A-Z0-9_]+) (\{.*\}|\[.*\])\s*$', line)
+         if match:
+             try:
+                 records.append({'marker': match[1], 'data': json.loads(match[2])})
+@@ -500,7 +519,12 @@
+ 
+ 
+ def common_fixtures(entry, records):
+-    assert entry["diagnostic_only"] is True
++    assert entry['diagnostic_only'] is True
++    if entry['seed'] is None:return
++    values=[r['data']['fixture'] for r in records if r['marker']=='RASTER_CAUSAL_DIAGNOSTIC']
++    assert len(values)==3
++    key=str(entry['seed']); prior=REPORT.setdefault('paired_fixtures',{}).setdefault(key,values)
++    assert prior==values, 'Paired source fixture identity or SQLite settings changed'
+     # No cross-version pairing or formal threshold classification in causal diagnostics.
+ 
+ 
+@@ -549,6 +573,8 @@
+                'install_group':entry['install_group'],'selection':entry['selection'],
+                'raw_log_sha256':entry['log_sha256'],'records_sha256':digest(OUT/(prefix+'-records.json')),
+                'junit_status':entry['junit_status'],'adb_exit':entry['adb_exit'],'process_exit_outcome':entry['process_exit_outcome']}
++    entry['normal_forward_started'] = True
++    save()
+     print('INKWEFT_CAUSAL_CONTEXT '+json.dumps(context,separators=(',',':')),flush=True)
+     ordered=[]
+     for index,p in enumerate(payloads):
+@@ -560,6 +586,26 @@
+     print('INKWEFT_CAUSAL_END '+json.dumps({'ordinal':entry['ordinal'],'identity':entry['identity'],
+           'count':len(ordered),'ordered_payloads':ordered,'ordered_payloads_sha256':hashlib.sha256(json.dumps(ordered,separators=(',',':')).encode()).hexdigest()},separators=(',',':')),flush=True)
+     write_json(OUT/(prefix+'-log-forwarding.json'),{'status':'FORWARDED_VALIDATED_MARKERS','context':context,'ordered_payloads':ordered})
++
++
++def forward_failure_log(entry, logpath):
++    from failure_text import prepare_failure_text,encoded,PREFIX
++    assert entry['status'] in ['FAIL','INCOMPLETE']
++    expected=OUT/f"method-{entry['ordinal']:02d}-{entry['identity']}-instrumentation.log"
++    rule=next(s for s in PLAN['steps'] if s['ordinal']==entry['ordinal'])
++    assert logpath==expected and not logpath.is_symlink() and logpath.is_file()
++    assert all(entry[k]==rule[k] for k in ['identity','selection','args','seed'])
++    limit=MARKERS['failure_text']['raw_max_bytes']
++    assert logpath.stat().st_size<=limit, 'Failure raw limit exceeded; original artifact retained'
++    data=logpath.read_bytes()
++    binding=dict(run_id=REPORT['run_id'],run_attempt=REPORT['run_attempt'],workflow_sha=REPORT['workflow_sha'],
++        source_commit=SPEC['identities'][entry['identity']]['git'],source_spec_sha256=INPUT_HASHES['source_spec_sha256'],
++        method_plan_sha256=INPUT_HASHES['method_plan_sha256'],test_source_sha256=MARKERS['methods'][str(entry['ordinal'])]['test_source_sha256'],
++        ordinal=entry['ordinal'],identity=entry['identity'],selection=entry['selection'],status=entry['status'],
++        junit_status=entry.get('junit_status'),adb_exit=entry.get('adb_exit'),process_exit_outcome=entry.get('process_exit_outcome'))
++    records=prepare_failure_text(data,binding,entry['log_sha256'],limit,MARKERS['failure_text']['wire_max_bytes'],entry.get('normal_forward_started',False))
++    entry['failure_log_forwarding']={'status':records[0]['kind'],'raw_bytes':len(data),'raw_sha256':entry['log_sha256']}
++    for record in records:print(PREFIX+encoded(record),flush=True)
+ 
+ 
+ def method(entry):
+@@ -602,6 +648,10 @@
+         raise
+     finally:
+         entry['seconds'] = time.time() - entry['started_epoch']
++        if entry['status'] != 'PASS':
++            try: forward_failure_log(entry, logpath)
++            except Exception as forwarding:
++                entry['failure_log_forwarding']={'status':'UNAVAILABLE','reason':type(forwarding).__name__}
+         junit(entry, raw, OUT / (prefix + '-junit.xml'))
+         save()
+         print('INKWEFT_CAUSAL_METHOD '+json.dumps({'ordinal': entry['ordinal'], 'phase': entry['phase'], 'identity': entry['identity'],
+@@ -623,8 +673,8 @@
+     write_json(OUT / f'install-{group}-host-before.json', host())
+     assert before == initial, 'Device settings changed before install group'
+     apks = json.loads((OUT / ('apk-' + identity + '.json')).read_text())['apks']
+-    selected_packages = ['org.inkweft.data.test'] if group == 'C1-data-diagnostics' else ['org.inkweft.app.a0','org.inkweft.app.a0.test']
+-    assert group in ['C1-data-diagnostics','C1-raster-diagnostics']
++    selected_packages = ['org.inkweft.data.test'] if group == 'C2-data-guards' else ['org.inkweft.app.a0','org.inkweft.app.a0.test']
++    assert (group,identity) in {(s['install_group'],s['identity']) for s in PLAN['steps']}
+     apks = [a for a in apks if a['package'] in selected_packages]
+     assert [a['package'] for a in apks] == selected_packages
+     with (OUT / f'install-{group}.log').open('x') as log:
+@@ -679,7 +729,7 @@
+         REPORT['install_groups'][group].update(status='PASS', seconds=time.time() - REPORT['install_groups'][group]['started_epoch'])
+         save()
+     if name == 'raster':
+-        assert len(REPORT['install_groups']) == 2 and all(entry['status'] == 'PASS' for entry in REPORT['methods'])
++        assert len(REPORT['install_groups']) == 5 and all(entry['status'] == 'PASS' for entry in REPORT['methods'])
+         write_json(OUT / 'device-after.json', after)
+         write_json(OUT / 'host-after.json', host())
+         REPORT['status'] = 'EXECUTION_COMPLETE_ANALYSIS_PENDING'
+@@ -689,7 +739,7 @@
+ def main():
+     global PHASE
+     action = sys.argv[1:]
+-    sequence = [('setup',), ('build', 'C1'), ('emulator',),
++    sequence = [('setup',), ('build', 'C1'), ('build', 'C2'), ('emulator',),
+                 ('methods', 'data'), ('methods', 'raster')]
+     key = tuple(action)
+     assert key in sequence, 'Expected setup | build C1 | emulator | methods data/raster'
+@@ -700,7 +750,7 @@
+     assert REPORT['budget_anchor_epoch'] == START and REPORT['workflow_sha'] == os.environ['GITHUB_SHA']
+     assert REPORT['phase_cutoff_epochs'] == CUTOFFS and REPORT['work_deadline_epoch'] == DEADLINE
+     assert REPORT['run_id'] == os.environ['GITHUB_RUN_ID'] and REPORT['run_attempt'] == os.environ['GITHUB_RUN_ATTEMPT'] == '1'
+-    assert len(REPORT['methods']) == 13
++    assert len(REPORT['methods']) == 12
+     for entry, step in zip(REPORT['methods'], PLAN['steps']):
+         assert all(entry.get(field) == value for field, value in step.items()), 'Frozen method plan/state mismatch'
+     assert name not in REPORT['actions'], 'Action already attempted; no retries'
+--- ci/pr20-causal/package.py
++++ scratch/package.py
+@@ -1,13 +1,16 @@
+ """Publish only fixed text evidence within the approved 20 MiB total budget."""
+ import hashlib,json,os,re,shutil,sys
+ from pathlib import Path
++from size_bounds import SHARED_BUCKETS,BUDGET_RECEIPT_ALLOWANCE,fixed_bucket,method_wire_bound
+ here=Path(__file__).resolve().parent
+-FROZEN_RELATIVE='android/verification/pr20-causal-20261014'
++FROZEN_RELATIVE='android/verification/pr20-raster-screen-20261014'
+ FROZEN_SOURCE_SPEC_SHA256='UNBOUND'
+ assert re.fullmatch(r'[0-9a-f]{64}', FROZEN_SOURCE_SPEC_SHA256), 'Finalize source-spec hash before execution'
+ frozen=here.parents[1]/FROZEN_RELATIVE
+-root=Path(os.environ['KVM_ONCE']);source=root/'evidence';out=root/'upload';out.mkdir(exist_ok=True)
++root=Path(os.environ['KVM_ONCE']);source=root/'evidence';out=root/'upload';out.mkdir(exist_ok=False)  # Never upload unaccounted stale output.
+ plan=json.loads((frozen/'method-plan.json').read_text());spec=json.loads((frozen/'source-spec.json').read_text())
++contract=json.loads((frozen/'marker-contract.json').read_text())
++assert contract['failure_text']['raw_max_bytes']==1048576 and contract['failure_text']['wire_max_bytes']==1439104
+ assert hashlib.sha256((frozen/'source-spec.json').read_bytes()).hexdigest()==FROZEN_SOURCE_SPEC_SHA256, 'Frozen source-spec hash mismatch'
+ summary=source/'summary.json'
+ if summary.exists():
+@@ -41,7 +44,7 @@
+ fixed=['summary.json','summary-before-packaging.json','clock.json','host.json','host-after.json','device-before.json','device-after.json',
+        'emulator-configuration.json','emulator-selected.log','kvm-identity.json','kvm-before.acl','kvm-granted.acl',
+        'kvm-after-trap.acl','kvm-after-always.acl','cleanup-trap.json','cleanup-always.json']
+-for side in ['C1']:fixed += [f'apk-{side}.json',f'dependencies-{side}.json',f'build-{side}.log']
++for side in ['C1','C2']:fixed += [f'apk-{side}.json',f'dependencies-{side}.json',f'build-{side}.log']
+ fixed += ['official-dependency-check.json','official-dependency-check.log']
+ fixed += [name+'.log' for name in ['source-fetch','source-reconstruction','sdk','acceleration','avd']]
+ for group in dict.fromkeys(x['install_group'] for x in plan['steps']):
+@@ -52,6 +55,8 @@
+     prefix=f"method-{step['ordinal']:02d}-{step['identity']}"
+     fixed += [prefix+suffix for suffix in ['-instrumentation.log','-junit.xml','-records.json']]
+     fixed.append(prefix+'-log-forwarding.json')
++optional=['summary.tmp'] if (source/'summary.tmp').exists() else []
++assert not {p.name for p in source.iterdir()}-set(fixed)-set(optional), 'Unexpected evidence file; no silent residual upload'
+ missing=[name for name in fixed if not (source/name).is_file()]
+ if summary.exists():
+     report=json.loads(summary.read_text())
+@@ -60,11 +65,11 @@
+         report['status_before_evidence_check']=report['status']
+         report['status']='EVIDENCE_INCOMPLETE'
+     summary.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+-items=[(name,source/name) for name in fixed if (source/name).is_file()]
++items=[(name,source/name) for name in fixed+optional if (source/name).is_file()]
+ for name in ['PLAN.md','original-protocol.json','source-spec.json','method-plan.json','marker-contract.json',
+-             'C1-source-manifest.json','prepare_sources.py']:
++             'C1-source-manifest.json','C2-source-manifest.json','prepare_sources.py']:
+     items.append(('frozen-'+name,frozen/name))
+-for name in ['authorization.json','EXECUTION_SHA256SUMS','run.py','markers.py','package.py','cleanup.py','workflow.proposed.yml']:
++for name in ['authorization.json','EXECUTION_SHA256SUMS','run.py','markers.py','package.py','cleanup.py','failure_text.py','size_bounds.py','workflow.proposed.yml']:
+     items.append((name,here/name))
+ for probe in spec['common_probes']:
+     path=here.parents[1]/probe['from_path']
+@@ -82,14 +87,45 @@
+     manifest.append(item)
+ manifest_bytes=(json.dumps(manifest,indent=2)+'\n').encode()
+ packaging_bytes=(json.dumps({'files':len(manifest),'bytes_before_manifest':total,'rejected_names':rejected,'truncated_files':0,'retention_days':3,'missing_files':missing,'complete':not rejected and not missing},indent=2)+'\n').encode()
+-if total+len(manifest_bytes)+len(packaging_bytes)>20*1024*1024:
+-    (out/'packaging-failure.json').write_text(json.dumps({'status':'EVIDENCE_OVERSIZE_NOT_UPLOADED','bytes':total,'limit':20*1024*1024,'files':manifest},indent=2))
++# The mutually exclusive shared buckets include both cleanup invocations, both
++# summaries and any interrupted atomic summary.tmp. No stale upload is permitted.
++buckets={name:0 for name in SHARED_BUCKETS}
++for item in manifest:
++    bucket=fixed_bucket(item['name'])
++    if bucket is not None:buckets[bucket]+=item['uploaded_bytes']
++buckets['packaging']=len(manifest_bytes)+len(packaging_bytes)+BUDGET_RECEIPT_ALLOWANCE
++buckets['official_fixed']=SHARED_BUCKETS['official_fixed']
++entries={entry['ordinal']:entry for entry in report.get('methods',[])} if summary.exists() else {}
++assert len(entries)==len(report.get('methods',[])) if summary.exists() else True
++assert set(entries)<=set(step['ordinal'] for step in plan['steps'])
++wire_rows=[]
++for step in plan['steps']:
++    entry=entries.get(step['ordinal'],{})
++    if entry:assert entry['identity']==step['identity'] and entry['selection']==step['selection']
++    log=source/f"method-{step['ordinal']:02d}-{step['identity']}-instrumentation.log"
++    amount,kind=method_wire_bound(entry,contract['methods'][str(step['ordinal'])],log.exists())
++    wire_rows.append({'ordinal':step['ordinal'],'bytes_upper':amount,'kind':kind})
++wire_upper=buckets['official_fixed']+sum(row['bytes_upper'] for row in wire_rows)
++artifact_bytes=total+len(manifest_bytes)+len(packaging_bytes)+BUDGET_RECEIPT_ALLOWANCE
++shared_bytes=sum(buckets.values());joint_bytes=artifact_bytes+wire_upper
++violations=[name for name,value in buckets.items() if value>SHARED_BUCKETS[name]]
++budget={'status':'PASS' if not violations and joint_bytes<=20*1024*1024 else 'EVIDENCE_OVERSIZE_NOT_UPLOADED',
++        'artifact_bytes_upper':artifact_bytes,'budget_receipt_allowance':BUDGET_RECEIPT_ALLOWANCE,
++        'official_evidence_wire_upper':wire_upper,'joint_bytes_upper':joint_bytes,'shared_bytes':shared_bytes,
++        'shared_buckets':{name:{'bytes_upper':value,'limit':SHARED_BUCKETS[name]}for name,value in buckets.items()},
++        'bucket_violations':violations,'wire_rows':wire_rows,'limit':20*1024*1024}
++if budget['status']!='PASS':
++    refusal=(json.dumps(dict(budget,files=manifest),indent=2)+'\n').encode()
++    assert len(refusal)<=SHARED_BUCKETS['packaging']
++    assert len(refusal)+wire_upper<=20*1024*1024, 'Refusal artifact plus emitted evidence also exceeds cap'
++    (out/'packaging-failure.json').write_bytes(refusal)
+     raise SystemExit(1)
++budget_bytes=(json.dumps(budget,indent=2)+'\n').encode();assert len(budget_bytes)<=BUDGET_RECEIPT_ALLOWANCE
+ for name,path in items:
+     if name not in rejected:shutil.copyfile(path,out/name)
+-(out/'manifest.json').write_bytes(manifest_bytes);(out/'packaging.json').write_bytes(packaging_bytes)
++(out/'manifest.json').write_bytes(manifest_bytes);(out/'packaging.json').write_bytes(packaging_bytes);(out/'publication-budget.json').write_bytes(budget_bytes)
+ assert sum(p.stat().st_size for p in out.iterdir())<=20*1024*1024
+-print(json.dumps({'files':len(manifest),'bytes':total,'omitted':len(rejected),'truncated':0}))
++print(json.dumps({'files':len(manifest),'bytes':total,'omitted':len(rejected),'truncated':0,'joint_bytes_upper':joint_bytes,'shared_bytes':shared_bytes}))
+ # Fixed, limited terminal receipt for official job-log consumers. Artifact bytes stay authoritative.
+ if summary.exists():
+     final=json.loads(summary.read_text())
+@@ -112,5 +148,7 @@
+           'device_after_sha256':hashlib.sha256((source/'device-after.json').read_bytes()).hexdigest() if (source/'device-after.json').exists() else None,
+           'missing_files':missing,'packaging_complete':not rejected and not missing,'manifest_sha256':hashlib.sha256(manifest_bytes).hexdigest(),
+           'summary_sha256':hashlib.sha256(summary.read_bytes()).hexdigest()}
+-    print('INKWEFT_CAUSAL_FINAL '+json.dumps(safe,separators=(',',':')),flush=True)
+-sys.exit(bool(rejected))
++    terminal='INKWEFT_CAUSAL_FINAL '+json.dumps(safe,separators=(',',':'))
++    assert len((terminal+'\n').encode())<=32768, 'FINAL exceeds its fixed official budget; not printed'
++    print(terminal,flush=True)
++sys.exit(bool(rejected or missing))
+--- ci/pr20-kvm-triple/markers.py
++++ scratch/markers.py
+@@ -60,9 +60,10 @@
+         marker,tail=match.groups()
+         assert marker in rule['markers'] and tail.startswith(' '), 'Unknown or malformed marker'
+         original=tail[1:]
++        assert original.isascii(), 'Synthetic raster marker encoding must remain ASCII'
+         assert len(original.encode())<=rule['markers'][marker]['payload_max_bytes'], 'Marker byte limit'
+         data=json.loads(original,object_pairs_hook=pairs,parse_constant=constant)
+-        schema=contract.get('stage_schemas',{}).get(marker,contract['schemas'][marker]) if rule['kind']=='stage' else contract['schemas'][marker]
++        schema=rule.get('schema_overrides',{}).get(marker,contract['schemas'][marker])
+         validate_shape(data,schema)
+         payloads.append({'marker':marker,'original_json':original,'data':data})
+     counts=Counter(p['marker']for p in payloads)
+@@ -139,8 +140,26 @@
+     elif kind=='dense':
+         assert [p['data']['stage']for p in payloads]==['fixture-start','fixture-complete','editor-window-complete','frame-start','frame-complete','verified-and-released']
+         complete=next(p['data']for p in payloads if p['data']['stage']=='frame-complete')
+-        assert complete['snapshotRows']==1201 and sum(x['rows']for x in complete['snapshotReads'])==1201
++        assert complete['snapshotRows']==rule['fixture_strokes'] and sum(x['rows']for x in complete['snapshotReads'])==rule['fixture_strokes']
+         assert all(1<=x['rows']<=256 for x in complete['snapshotReads'])
++    elif kind=='raster_causal':validate_raster(payloads,entry)
+     elif kind=='unicode':assert len(payloads)==1 and payloads[0]['marker']=='LIBRARY_CAUSAL_UNICODE'
+     else:assert kind=='guard'
+     return payloads
++
++
++def validate_raster(payloads,entry):
++    assert len(payloads)==3
++    assert [p['data']['result']['layers']for p in payloads]==[1,4,8]
++    for payload in payloads:
++        data=payload['data'];n=data['result']['layers']
++        assert data['scope']=='DIAGNOSTIC_ONLY' and data['seed']==entry['seed'] and data['fixture']['seed']==entry['seed'] and data['joined'] is True
++        assert data['result']['pixelsEqual'] is True and data['result']['initialStrokes']==320 and data['result']['finalStrokes']==321
++        assert len(data['frames'])==5*n
++        for frame in data['frames']:
++            assert 'WORKER_FINALLY' in frame['timesNanos'] and 'READY_DRAW_END' in frame['timesNanos']
++            assert 'FAILED' not in frame['timesNanos'] and set(frame['timesNanos'])==set(frame['threadIds'])
++        assert data['fixture']['label']==f'raster-{n}-before'
++        expected={(role,phase,layer) for role,phases in [('active',['first','local','hidden-local']),('full',['full','hidden-full'])] for phase in phases for layer in range(n)}
++        assert {(f['role'],f['phase'],f['layer']) for f in data['frames']}==expected
++        assert data['resources']['totalBytes']==data['resources']['inFlightJobs']==data['resources']['geometryReservationBytes']==0
+--- ci/pr20-causal/workflow.proposed.yml
++++ scratch/workflow.proposed.yml
+@@ -1,46 +1,38 @@
+-name: PR20 one-source causal diagnostics
++name: PR20 two-source raster screen
+ 'on':
+   push:
+     branches:
+-    - codex/kvm-pr20-causal-20261014
++    - codex/kvm-pr20-raster-screen-20261014
+     paths:
+-    - .github/workflows/pr20-causal.yml
++    - .github/workflows/pr20-raster-screen.yml
+ permissions:
+   contents: read
+ concurrency:
+-  group: pr20-causal-20261014
++  group: pr20-raster-screen-20261014
+   cancel-in-progress: false
+ jobs:
+   causal:
+-    name: DIAGNOSTIC_ONLY one source / three APKs / thirteen methods
+-    if: github.event_name == 'push' && github.ref == 'refs/heads/codex/kvm-pr20-causal-20261014' && github.event.created ==
+-      false && github.event.before == '0000000000000000000000000000000000000000' && github.run_attempt == 1
++    name: DIAGNOSTIC_ONLY two sources / five APKs / twelve methods
++    if: github.event_name == 'push' && github.ref == 'refs/heads/codex/kvm-pr20-raster-screen-20261014'
++      && github.event.created == false && github.event.before == '0000000000000000000000000000000000000000'
++      && github.run_attempt == 1
+     runs-on: ubuntu-24.04
+     timeout-minutes: 60
+     steps:
+     - name: Fix one local first-step screening clock; no network clock API
+       timeout-minutes: 1
+-      run: |
+-        set -euo pipefail
+-        export KVM_ONCE="$RUNNER_TEMP/pr20-causal"
+-        export ANDROID_AVD_HOME="$KVM_ONCE/avd"
+-        export ANDROID_USER_HOME="$KVM_ONCE/android-user"
+-        export ANDROID_EMULATOR_HOME="$KVM_ONCE/android-user"
+-        python3 - <<'PYCODE'
+-        import json,os,pathlib,time
+-        observed=time.time();start=int(observed)
+-        root=pathlib.Path(os.environ['KVM_ONCE'])
+-        assert not root.exists(),'Owned screen directory must be new; do not reuse state or clock'
+-        (root/'evidence').mkdir(parents=True)
+-        cutoffs={k:start+v*60 for k,v in [('setup',30),('data',45),('raster',50),('work',55)]}
+-        values={'KVM_BUDGET_ANCHOR':start,'KVM_SETUP_CUTOFF':cutoffs['setup'],'KVM_DATA_CUTOFF':cutoffs['data'],'KVM_RASTER_CUTOFF':cutoffs['raster'],'KVM_WORK_DEADLINE':cutoffs['work']}
+-        clock={'status':'PASS','scope':'DIAGNOSTIC_ONLY','anchor_kind':'runner_first_step','budget_anchor_epoch':start,'first_step_observed_epoch':observed,'actual_job_started_epoch':None,'deadlines_minutes':[30,45,50,55,60],'deadline_epochs':cutoffs}
+-        with (root/'evidence/clock.json').open('x') as f:f.write(json.dumps(clock,indent=2)+'\n')
+-        with open(os.environ['GITHUB_ENV'],'a') as f:
+-            for k in ['KVM_ONCE','ANDROID_AVD_HOME','ANDROID_USER_HOME','ANDROID_EMULATOR_HOME']:f.write(k+'='+os.environ[k]+'\n')
+-            for k,v in values.items():f.write(k+'='+str(v)+'\n')
+-        print('INKWEFT_CAUSAL_CLOCK '+json.dumps(clock,separators=(',',':')))
+-        PYCODE
++      run: "set -euo pipefail\nexport KVM_ONCE=\"$RUNNER_TEMP/pr20-raster-screen\"\
++        \nexport ANDROID_AVD_HOME=\"$KVM_ONCE/avd\"\nexport ANDROID_USER_HOME=\"$KVM_ONCE/android-user\"\
++        \nexport ANDROID_EMULATOR_HOME=\"$KVM_ONCE/android-user\"\npython3 - <<'PYCODE'\n\
++        import json,os,pathlib,time\nobserved=time.time();start=int(observed)\nroot=pathlib.Path(os.environ['KVM_ONCE'])\n\
++        assert not root.exists(),'Owned screen directory must be new; do not reuse\
++        \ state or clock'\n(root/'evidence').mkdir(parents=True)\ncutoffs={k:start+v*60\
++        \ for k,v in [('setup',30),('data',45),('raster',50),('work',55)]}\nvalues={'KVM_BUDGET_ANCHOR':start,'KVM_SETUP_CUTOFF':cutoffs['setup'],'KVM_DATA_CUTOFF':cutoffs['data'],'KVM_RASTER_CUTOFF':cutoffs['raster'],'KVM_WORK_DEADLINE':cutoffs['work']}\n\
++        clock={'status':'PASS','scope':'DIAGNOSTIC_ONLY','anchor_kind':'runner_first_step','budget_anchor_epoch':start,'first_step_observed_epoch':observed,'actual_job_started_epoch':None,'deadlines_minutes':[30,45,50,55,60],'deadline_epochs':cutoffs}\n\
++        with (root/'evidence/clock.json').open('x') as f:f.write(json.dumps(clock,indent=2)+'\\\
++        n')\nwith open(os.environ['GITHUB_ENV'],'a') as f:\n    for k in ['KVM_ONCE','ANDROID_AVD_HOME','ANDROID_USER_HOME','ANDROID_EMULATOR_HOME']:f.write(k+'='+os.environ[k]+'\\\
++        n')\n    for k,v in values.items():f.write(k+'='+str(v)+'\\n')\nprint('INKWEFT_CAUSAL_CLOCK\
++        \ '+json.dumps(clock,separators=(',',':')))\nPYCODE\n"
+     - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+       timeout-minutes: 3
+       with:
+@@ -51,125 +43,88 @@
+       with:
+         distribution: temurin
+         java-version: '17'
+-    - name: Freeze/reconstruct one source, check official dependency and SDK
++    - name: Reconstruct two sources with exactly one production-file delta; official
++        dependencies
+       shell: bash
+-      run: |
+-        set -euo pipefail
+-        cleanup_on_failure() {
+-          code=$?
+-          trap - EXIT INT TERM
+-          if test "$code" -ne 0; then
+-            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-causal/cleanup.py trap || code=1
+-          fi
+-          exit "$code"
+-        }
+-        trap cleanup_on_failure EXIT
+-        trap 'exit 130' INT
+-        trap 'exit 143' TERM
+-        remaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))
+-        test "$remaining" -gt 0
+-        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-causal/run.py setup
+-    - name: Build C1 target app and both test APKs, verify signatures/native identities
++      run: "set -euo pipefail\ncleanup_on_failure() {\n  code=$?\n  trap - EXIT INT\
++        \ TERM\n  if test \"$code\" -ne 0; then\n    timeout --signal=TERM --kill-after=2\
++        \ 45s python3 control/ci/pr20-raster-screen/cleanup.py trap || code=1\n  fi\n\
++        \  exit \"$code\"\n}\ntrap cleanup_on_failure EXIT\ntrap 'exit 130' INT\n\
++        trap 'exit 143' TERM\nremaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))\n\
++        test \"$remaining\" -gt 0\ntimeout --signal=TERM --kill-after=2 \"${remaining}s\"\
++        \ python3 control/ci/pr20-raster-screen/run.py setup\n"
++    - name: Build C1 control app and appTest; real native identities
+       shell: bash
+-      run: |
+-        set -euo pipefail
+-        cleanup_on_failure() {
+-          code=$?
+-          trap - EXIT INT TERM
+-          if test "$code" -ne 0; then
+-            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-causal/cleanup.py trap || code=1
+-          fi
+-          exit "$code"
+-        }
+-        trap cleanup_on_failure EXIT
+-        trap 'exit 130' INT
+-        trap 'exit 143' TERM
+-        remaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))
+-        test "$remaining" -gt 0
+-        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-causal/run.py build C1
+-    - name: "\u6700\u5C0F\u4E34\u65F6ACL\u4E0E\u540C\u4E00KVM\u6A21\u62DF\u5668"
++      run: "set -euo pipefail\ncleanup_on_failure() {\n  code=$?\n  trap - EXIT INT\
++        \ TERM\n  if test \"$code\" -ne 0; then\n    timeout --signal=TERM --kill-after=2\
++        \ 45s python3 control/ci/pr20-raster-screen/cleanup.py trap || code=1\n  fi\n\
++        \  exit \"$code\"\n}\ntrap cleanup_on_failure EXIT\ntrap 'exit 130' INT\n\
++        trap 'exit 143' TERM\nremaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))\n\
++        test \"$remaining\" -gt 0\ntimeout --signal=TERM --kill-after=2 \"${remaining}s\"\
++        \ python3 control/ci/pr20-raster-screen/run.py build C1\n"
++    - name: Build C2 candidate app, appTest and dataTest; real native identities
+       shell: bash
+-      run: |
+-        set -euo pipefail
+-        cleanup_on_failure() {
+-          code=$?
+-          trap - EXIT INT TERM
+-          if test "$code" -ne 0; then
+-            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-causal/cleanup.py trap || code=1
+-          fi
+-          exit "$code"
+-        }
+-        trap cleanup_on_failure EXIT
+-        trap 'exit 130' INT
+-        trap 'exit 143' TERM
+-        remaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))
+-        test "$remaining" -gt 0
+-        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-causal/run.py emulator
+-    - name: Seven existing correctness guards and five opt-in data methods; failure stops the run
++      run: "set -euo pipefail\ncleanup_on_failure() {\n  code=$?\n  trap - EXIT INT\
++        \ TERM\n  if test \"$code\" -ne 0; then\n    timeout --signal=TERM --kill-after=2\
++        \ 45s python3 control/ci/pr20-raster-screen/cleanup.py trap || code=1\n  fi\n\
++        \  exit \"$code\"\n}\ntrap cleanup_on_failure EXIT\ntrap 'exit 130' INT\n\
++        trap 'exit 143' TERM\nremaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))\n\
++        test \"$remaining\" -gt 0\ntimeout --signal=TERM --kill-after=2 \"${remaining}s\"\
++        \ python3 control/ci/pr20-raster-screen/run.py build C2\n"
++    - name: 最小临时ACL与同一KVM模拟器
+       shell: bash
+-      run: |
+-        set -euo pipefail
+-        cleanup_on_failure() {
+-          code=$?
+-          trap - EXIT INT TERM
+-          if test "$code" -ne 0; then
+-            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-causal/cleanup.py trap || code=1
+-          fi
+-          exit "$code"
+-        }
+-        trap cleanup_on_failure EXIT
+-        trap 'exit 130' INT
+-        trap 'exit 143' TERM
+-        remaining=$((KVM_DATA_CUTOFF - $(date +%s) - 2))
+-        test "$remaining" -gt 0
+-        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-causal/run.py methods data
+-    - name: 'One opt-in raster method: 1/4/8 layers, strict join and pixels'
++      run: "set -euo pipefail\ncleanup_on_failure() {\n  code=$?\n  trap - EXIT INT\
++        \ TERM\n  if test \"$code\" -ne 0; then\n    timeout --signal=TERM --kill-after=2\
++        \ 45s python3 control/ci/pr20-raster-screen/cleanup.py trap || code=1\n  fi\n\
++        \  exit \"$code\"\n}\ntrap cleanup_on_failure EXIT\ntrap 'exit 130' INT\n\
++        trap 'exit 143' TERM\nremaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))\n\
++        test \"$remaining\" -gt 0\ntimeout --signal=TERM --kill-after=2 \"${remaining}s\"\
++        \ python3 control/ci/pr20-raster-screen/run.py emulator\n"
++    - name: Two exact C2 cache semantic guards
+       shell: bash
+-      run: |
+-        set -euo pipefail
+-        cleanup_on_failure() {
+-          code=$?
+-          trap - EXIT INT TERM
+-          if test "$code" -ne 0; then
+-            timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-causal/cleanup.py trap || code=1
+-          fi
+-          exit "$code"
+-        }
+-        trap cleanup_on_failure EXIT
+-        trap 'exit 130' INT
+-        trap 'exit 143' TERM
+-        remaining=$((KVM_RASTER_CUTOFF - $(date +%s) - 2))
+-        test "$remaining" -gt 0
+-        timeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-causal/run.py methods raster
+-    - name: "\u6210\u529F\u8DEF\u5F84\u505C\u6B62\u62E5\u6709\u8FDB\u7A0B\u5E76\u7CBE\u786E\u6062\u590DACL"
++      run: "set -euo pipefail\ncleanup_on_failure() {\n  code=$?\n  trap - EXIT INT\
++        \ TERM\n  if test \"$code\" -ne 0; then\n    timeout --signal=TERM --kill-after=2\
++        \ 45s python3 control/ci/pr20-raster-screen/cleanup.py trap || code=1\n  fi\n\
++        \  exit \"$code\"\n}\ntrap cleanup_on_failure EXIT\ntrap 'exit 130' INT\n\
++        trap 'exit 143' TERM\nremaining=$((KVM_DATA_CUTOFF - $(date +%s) - 2))\ntest\
++        \ \"$remaining\" -gt 0\ntimeout --signal=TERM --kill-after=2 \"${remaining}s\"\
++        \ python3 control/ci/pr20-raster-screen/run.py methods data\n"
++    - name: Six C2 owned-Job guards and four paired exploratory diagnostics
++      shell: bash
++      run: "set -euo pipefail\ncleanup_on_failure() {\n  code=$?\n  trap - EXIT INT\
++        \ TERM\n  if test \"$code\" -ne 0; then\n    timeout --signal=TERM --kill-after=2\
++        \ 45s python3 control/ci/pr20-raster-screen/cleanup.py trap || code=1\n  fi\n\
++        \  exit \"$code\"\n}\ntrap cleanup_on_failure EXIT\ntrap 'exit 130' INT\n\
++        trap 'exit 143' TERM\nremaining=$((KVM_RASTER_CUTOFF - $(date +%s) - 2))\n\
++        test \"$remaining\" -gt 0\ntimeout --signal=TERM --kill-after=2 \"${remaining}s\"\
++        \ python3 control/ci/pr20-raster-screen/run.py methods raster\n"
++    - name: 成功路径停止拥有进程并精确恢复ACL
+       timeout-minutes: 1
+-      run: timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-causal/cleanup.py trap
+-    - name: "always\u518D\u6B21\u6838\u9A8C\u8FDB\u7A0B\u4E0EACL\u6062\u590D"
++      run: timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-raster-screen/cleanup.py
++        trap
++    - name: always再次核验进程与ACL恢复
+       if: always()
+       timeout-minutes: 1
+-      run: |
+-        if test -f control/ci/pr20-causal/cleanup.py; then
+-          timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-causal/cleanup.py always
+-        else
+-          mkdir -p "$KVM_ONCE/evidence"
+-          echo '{"emulator":"NOT_STARTED","command_groups":"NOT_STARTED","acl":"NOT_TOUCHED","errors":[]}' > "$KVM_ONCE/evidence/cleanup-always.json"
+-        fi
+-    - name: "\u53EA\u6253\u5305\u767D\u540D\u5355\u539F\u59CB\u6587\u672C\uFF0C\u6700\u592720MiB"
++      run: "if test -f control/ci/pr20-raster-screen/cleanup.py; then\n  timeout --signal=TERM\
++        \ --kill-after=2 45s python3 control/ci/pr20-raster-screen/cleanup.py always\n\
++        else\n  mkdir -p \"$KVM_ONCE/evidence\"\n  echo '{\"emulator\":\"NOT_STARTED\"\
++        ,\"command_groups\":\"NOT_STARTED\",\"acl\":\"NOT_TOUCHED\",\"errors\":[]}'\
++        \ > \"$KVM_ONCE/evidence/cleanup-always.json\"\nfi\n"
++    - name: 只打包白名单原始文本，最大20MiB
+       if: always()
+       timeout-minutes: 1
+-      run: |
+-        if test -f control/ci/pr20-causal/package.py; then
+-          timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-causal/package.py
+-        else
+-          mkdir -p "$KVM_ONCE/upload"
+-          if test -f "$KVM_ONCE/evidence/clock.json"; then cp "$KVM_ONCE/evidence/clock.json" "$KVM_ONCE/upload/clock.json"; fi
+-          echo '{"status":"SETUP_BLOCKED_BEFORE_SOURCE_CHECKOUT","tests":"NOT_RUN","kvm":"NOT_TOUCHED"}' > "$KVM_ONCE/upload/setup-failure.json"
+-        fi
++      run: "if test -f control/ci/pr20-raster-screen/package.py; then\n  timeout --signal=TERM\
++        \ --kill-after=2 45s python3 control/ci/pr20-raster-screen/package.py\nelse\n\
++        \  mkdir -p \"$KVM_ONCE/upload\"\n  if test -f \"$KVM_ONCE/evidence/clock.json\"\
++        ; then cp \"$KVM_ONCE/evidence/clock.json\" \"$KVM_ONCE/upload/clock.json\"\
++        ; fi\n  echo '{\"status\":\"SETUP_BLOCKED_BEFORE_SOURCE_CHECKOUT\",\"tests\"\
++        :\"NOT_RUN\",\"kvm\":\"NOT_TOUCHED\"}' > \"$KVM_ONCE/upload/setup-failure.json\"\
++        \nfi\n"
+     - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+       if: always()
+       timeout-minutes: 2
+       with:
+-        name: pr20-causal-${{ github.run_id }}
++        name: pr20-raster-screen-${{ github.run_id }}
+         retention-days: 3
+         if-no-files-found: error
+-        path: ${{ runner.temp }}/pr20-causal/upload/*
++        path: ${{ runner.temp }}/pr20-raster-screen/upload/*
+--- ci/pr20-causal/bind_control.py
++++ scratch/bind_control.py
+@@ -3,12 +3,12 @@
+ from pathlib import Path
+ p=argparse.ArgumentParser();p.add_argument('--repo',type=Path,required=True);p.add_argument('--plan-git',required=True);p.add_argument('--readiness',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
+ assert re.fullmatch('[0-9a-f]{40}',a.plan_git) and a.out.resolve().is_relative_to('/workspace/scratch') and not a.out.exists()
+-here=Path(__file__).resolve().parent;relative='android/verification/pr20-causal-20261014'
++here=Path(__file__).resolve().parent;relative='android/verification/pr20-raster-screen-20261014'
+ for path in a.readiness.iterdir():
+  assert path.is_file() and subprocess.check_output(['git','-C',str(a.repo),'show',a.plan_git+':'+relative+'/'+path.name])==path.read_bytes(), 'Readiness commit mismatch'
+ spec=json.loads((a.readiness/'source-spec.json').read_text());assert spec['status']=='FROZEN'
+ a.out.mkdir(parents=True)
+-for name in ['run.py','markers.py','package.py','cleanup.py','workflow.proposed.yml']:
++for name in ['run.py','markers.py','package.py','cleanup.py','failure_text.py','size_bounds.py','workflow.proposed.yml']:
+  data=(here/name).read_text()
+  if name in ['run.py','package.py']:data=data.replace("'UNBOUND'","'"+hashlib.sha256((a.readiness/'source-spec.json').read_bytes()).hexdigest()+"'")
+  (a.out/name).write_text(data)
+@@ -16,4 +16,4 @@
+ for key,name in [('approved_plan_sha256','PLAN.md'),('source_spec_sha256','source-spec.json'),('method_plan_sha256','method-plan.json'),('original_protocol_sha256','original-protocol.json'),('marker_contract_sha256','marker-contract.json'),('prepare_sources_sha256','prepare_sources.py')]:auth[key]=hashlib.sha256((a.readiness/name).read_bytes()).hexdigest()
+ (a.out/'authorization.json').write_text(json.dumps(auth,indent=2)+'\n')
+ assert all('UNBOUND' not in f.read_text()for f in a.out.iterdir())
+-print(json.dumps({'status':'BOUND_NOT_ACTIVATED','source_git':spec['identities']['C1']['git'],'plan_git':a.plan_git,'out':str(a.out),'guard':'Still zero; root binds exact prep parent after final review'}))
++print(json.dumps({'status':'BOUND_NOT_ACTIVATED','source_gits':{key:item['git'] for key,item in spec['identities'].items()},'plan_git':a.plan_git,'out':str(a.out),'guard':'Still zero; root binds exact prep parent after final review'}))

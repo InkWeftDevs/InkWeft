@@ -1,0 +1,32 @@
+{
+  "scope": "DIAGNOSTIC_ONLY",
+  "run_id": "38553018139",
+  "job_id": "115815277181",
+  "run_attempt": "1",
+  "source_commit": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353",
+  "readiness_git": "fbc502eb49c15018bb1ab2694dc256b7a0f9fc25",
+  "prep_sha": "083a892133d818cf364865d3ee3edc1fdb6413c0",
+  "workflow_sha": "c3483b74e5db7cb7928d26445bd37af51700284c",
+  "input_hashes": {
+    "approved_plan_sha256": "488458e80500bffb52e6a5d8896711b3df2c880ae47f73022bcaf14102b645bf",
+    "source_spec_sha256": "bf6fe840b3113784315e7b7d575a7ce6d17ded867d87359b04cdfdeee67d0f95",
+    "method_plan_sha256": "f9f80f29e083824fd82df6714df622963a15b5ad0f1c1a030ada7fd56a123643",
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "marker_contract_sha256": "a0682c82d713cb9d2932f0a6c4cc93d5b1d37b33f2ca8580789241c92854084c",
+    "prepare_sources_sha256": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516"
+  },
+  "control_hashes": {
+    "ci/pr20-gc-save/authorization.json": "e820e717bce37b7b4e555942676dc9138a41c2c85e7dbeb3c07e2077f4aa6f09",
+    "ci/pr20-gc-save/cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "ci/pr20-gc-save/markers.py": "850707164f4c89ae1920c1f9c99ad9e1a68be7f71b8c456b437671ddada96bda",
+    "ci/pr20-gc-save/package.py": "9a819ec39db5b9aa25b1c9137d1318efe1a467b716f330a8134df720fbefcebb",
+    "ci/pr20-gc-save/run.py": "f7b419815e607d9e3803e8e5e57e91761ae51eabca6714924f2b37d036fdfd66",
+    "ci/pr20-gc-save/workflow.proposed.yml": "5ebb88e2998315bbb021772b986d14baff95f23fe9a2284177400ebf56c1ab57",
+    ".github/workflows/pr20-gc-save.yml": "5ebb88e2998315bbb021772b986d14baff95f23fe9a2284177400ebf56c1ab57",
+    "ci/pr20-gc-save/EXECUTION_SHA256SUMS": "2b15d6c28b9025fbe15c9d7b348a0b71b99c9aac4de1c57495fdad9f8eb5151c"
+  },
+  "run_status": "completed",
+  "run_conclusion": "failure",
+  "job_status": "completed",
+  "job_conclusion": "failure"
+}

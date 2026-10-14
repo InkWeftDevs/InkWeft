@@ -1,0 +1,882 @@
+"""One bounded, explicitly opt-in causal diagnostic; never formal performance acceptance."""
+import datetime
+import base64
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import signal
+import stat
+import subprocess
+import sys
+import time
+import xml.etree.ElementTree as ET
+import zipfile
+
+import math
+from collections import Counter
+
+HERE = Path(__file__).resolve().parent
+CONTROL = HERE.parents[1]
+FROZEN_RELATIVE = 'android/verification/pr20-gc-save-20261014'
+FROZEN_SOURCE_SPEC_SHA256 = 'bf6fe840b3113784315e7b7d575a7ce6d17ded867d87359b04cdfdeee67d0f95'
+assert re.fullmatch(r'[0-9a-f]{64}', FROZEN_SOURCE_SPEC_SHA256), 'Finalize source identity before execution'
+FROZEN = CONTROL / FROZEN_RELATIVE
+ROOT = Path(os.environ['KVM_ONCE'])
+OUT = ROOT / 'evidence'
+OUT.mkdir(parents=True, exist_ok=True)
+SDK = Path(os.environ['ANDROID_HOME'])
+START = int(os.environ['KVM_BUDGET_ANCHOR'])  # First runner step clock, NOT actual job start.
+CUTOFFS = {name: START + minutes * 60 for name, minutes in
+           [('setup', 30), ('data', 45), ('work', 55)]}
+DEADLINE = CUTOFFS['work']
+assert CUTOFFS == {name: int(os.environ[key]) for name, key in
+                   [('setup', 'KVM_SETUP_CUTOFF'), ('data', 'KVM_DATA_CUTOFF'),
+                    ('work', 'KVM_WORK_DEADLINE')]}
+PHASE = 'setup'
+os.environ['PATH'] = str(SDK / 'platform-tools') + ':' + str(SDK / 'cmdline-tools/latest/bin') + ':' + os.environ['PATH']
+ADB = ['adb', '-s', 'emulator-5554']
+PACKAGES = ['org.inkweft.app.a0', 'org.inkweft.app.a0.test', 'org.inkweft.data.test']
+IDENTITIES = ['C1']
+PHASE_NAMES = {'data': 'data-diagnostics'}
+SPEC = json.loads((FROZEN / 'source-spec.json').read_text())
+assert hashlib.sha256((FROZEN / 'source-spec.json').read_bytes()).hexdigest() == FROZEN_SOURCE_SPEC_SHA256
+PLAN = json.loads((FROZEN / 'method-plan.json').read_text())
+MARKERS = json.loads((FROZEN / 'marker-contract.json').read_text())
+INPUT_HASHES = {key: hashlib.sha256((FROZEN / name).read_bytes()).hexdigest() for key, name in
+                [('approved_plan_sha256', 'PLAN.md'), ('source_spec_sha256', 'source-spec.json'),
+                 ('method_plan_sha256', 'method-plan.json'), ('original_protocol_sha256', 'original-protocol.json'),
+                 ('marker_contract_sha256', 'marker-contract.json'), ('prepare_sources_sha256', 'prepare_sources.py')]}
+SUMMARY = OUT / 'summary.json'
+REPORT = json.loads(SUMMARY.read_text()) if SUMMARY.exists() else {
+    'run_id': os.environ['GITHUB_RUN_ID'], 'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
+    'workflow_sha': os.environ['GITHUB_SHA'], 'source_spec': SPEC, 'input_hashes': INPUT_HASHES,
+    'version_aliases': {key: {'alias': alias, 'source_commit': SPEC['identities'][key]['git']}
+                       for key, alias in [('C1', 'causal_diagnostic_candidate')]},
+    'budget_anchor_epoch': START, 'anchor_kind': 'runner_first_step', 'actual_job_started_epoch': None,
+    'phase_cutoff_epochs': CUTOFFS, 'work_deadline_epoch': DEADLINE,
+    'status': 'PREPARING', 'actions': {}, 'phases': [], 'install_groups': {},
+    'methods': [dict(step, status='NOT_RUN') for step in PLAN['steps']],
+    'scope': 'DIAGNOSTIC_ONLY'}
+
+class BudgetAbort(RuntimeError):
+    pass
+
+
+class EvidenceIncomplete(RuntimeError):
+    pass
+
+
+def write_json(path, value):
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+
+
+def save():
+    temporary = SUMMARY.with_suffix('.tmp')
+    write_json(temporary, REPORT)
+    temporary.replace(SUMMARY)
+
+
+
+def seconds(limit=3600):
+    left = min(CUTOFFS[PHASE], DEADLINE) - time.time()
+    if left <= 0:
+        raise BudgetAbort(PHASE + ' absolute cutoff reached')
+    return min(limit, left)
+
+
+
+def digest(path):
+    result = hashlib.sha256()
+    with path.open('rb') as stream:
+        while chunk := stream.read(1024 * 1024):
+            seconds()
+            result.update(chunk)
+    seconds()
+    return result.hexdigest()
+
+
+
+def owned(pid):
+    path = Path(f'/proc/{pid}')
+    fields = (path / 'stat').read_text().rsplit(')', 1)[1].split()
+    return {'pid': pid, 'uid': path.stat().st_uid, 'start': fields[19]}
+
+
+
+def run(argv, limit=60, check=True, **kwargs):
+    """Every subprocess is bounded by its command cap AND the current absolute phase cap."""
+    argv = [str(value) for value in argv]
+    timeout = seconds(limit)
+    data = kwargs.pop('input', None)
+    if data is not None:
+        kwargs['stdin'] = subprocess.PIPE
+    process = subprocess.Popen(argv, start_new_session=True, **kwargs)
+    groups = ROOT / 'command-groups.json'
+    values = json.loads(groups.read_text()) if groups.exists() else []
+    try:
+        values.append(owned(process.pid))
+    except FileNotFoundError:
+        if process.poll() is None:
+            raise
+    temporary = groups.with_suffix('.tmp')
+    write_json(temporary, values)
+    temporary.replace(groups)
+    try:
+        stdout, stderr = process.communicate(input=data, timeout=min(timeout, seconds()))
+    except (subprocess.TimeoutExpired, BudgetAbort):
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        # The outer cleanup owns any remaining process; never wait beyond a phase cutoff.
+        remaining = min(CUTOFFS[PHASE], DEADLINE) - time.time()
+        if remaining > 0:
+            try:
+                process.wait(timeout=min(1, remaining))
+            except subprocess.TimeoutExpired:
+                pass
+        raise BudgetAbort(PHASE + ' command/deadline limit: ' + argv[0])
+    result = subprocess.CompletedProcess(argv, process.returncode, stdout, stderr)
+    if check:
+        result.check_returncode()
+    return result
+
+
+
+def capture(argv, limit=30):
+    return run(argv, limit, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True).stdout.strip()
+
+
+
+def shell(*args):
+    return capture(ADB + ['shell', *args])
+
+
+
+def phase(name, argv, limit=600, **kwargs):
+    item = {'name': name, 'budget_phase': PHASE, 'status': 'RUNNING', 'started_epoch': time.time()}
+    REPORT['phases'].append(item)
+    save()
+    try:
+        with (OUT / (name + '.log')).open('x') as log:
+            result = run(argv, limit, check=False, stdout=log, stderr=subprocess.STDOUT, text=True, **kwargs)
+        item['exit_code'] = result.returncode
+        if result.returncode:
+            raise RuntimeError(name + ' failed; see raw stage log; no retry')
+        seconds()
+        item['status'] = 'PASS'
+    except Exception as error:
+        item['status'] = 'INCOMPLETE' if isinstance(error, BudgetAbort) else 'FAIL'
+        raise
+    finally:
+        item['seconds'] = time.time() - item['started_epoch']
+        save()
+
+
+
+def host():
+    memory = {}
+    for line in Path('/proc/meminfo').read_text().splitlines():
+        key, value = line.split(':', 1)
+        if key in ['MemTotal', 'MemAvailable', 'SwapTotal', 'SwapFree']:
+            memory[key] = value.strip()
+    disk = shutil.disk_usage(ROOT)
+    return {'epoch': time.time(), 'uid': os.getuid(), 'cpu_count': os.cpu_count(),
+            'kernel': os.uname().release, 'load_1_5_15': list(os.getloadavg()),
+            'cpu_model': next((line.split(':', 1)[1].strip() for line in Path('/proc/cpuinfo').read_text().splitlines()
+                               if line.startswith('model name')), None),
+            'memory': memory, 'disk_bytes': {'total': disk.total, 'used': disk.used, 'free': disk.free}}
+
+
+
+def environment():
+    return {'sdk': shell('getprop', 'ro.build.version.sdk'), 'abi': shell('getprop', 'ro.product.cpu.abi'),
+            'fingerprint': shell('getprop', 'ro.build.fingerprint'), 'qemu': shell('getprop', 'ro.kernel.qemu'),
+            'hw_timeout_multiplier': shell('getprop', 'ro.hw_timeout_multiplier'),
+            'size': shell('wm', 'size'), 'density': shell('wm', 'density'),
+            'font_scale': shell('settings', 'get', 'system', 'font_scale'),
+            'animations': {key: shell('settings', 'get', 'global', key) for key in
+                           ['window_animation_scale', 'transition_animation_scale', 'animator_duration_scale']}}
+
+
+
+def source_manifest(identity):
+    root = ROOT / 'sources' / identity
+    expected = json.loads((FROZEN / f'{identity}-source-manifest.json').read_text())
+    assert expected['canonical_manifest_sha256'] == SPEC['identities'][identity]['canonical_manifest_sha256']
+    for name, item in expected['files'].items():
+        path = root / name
+        assert path.stat().st_size == item['bytes'] and digest(path) == item['sha256'], 'Source changed: ' + name
+    return expected['canonical_manifest_sha256']
+
+
+
+def validate_clock(auth):
+    clock = json.loads((OUT / 'clock.json').read_text())
+    assert clock['status'] == 'PASS' and clock['anchor_kind'] == 'runner_first_step'
+    assert clock['scope'] == 'DIAGNOSTIC_ONLY' and clock['actual_job_started_epoch'] is None
+    assert type(clock['budget_anchor_epoch']) is int and clock['budget_anchor_epoch'] == START
+    assert START <= clock['first_step_observed_epoch'] < START + 1
+    assert START <= time.time() < CUTOFFS['setup'], 'Future/expired clock; never replace the anchor'
+    assert clock['deadline_epochs'] == CUTOFFS and clock['deadlines_minutes'] == [30,45,55,60]
+    assert auth['phase_cutoff_minutes'] == {name: (end - START) // 60 for name,end in CUTOFFS.items()}
+    assert auth['scope'] == 'DIAGNOSTIC_ONLY' and auth['job_timeout_minutes'] == 60
+    seconds()
+
+def setup():
+    assert REPORT['run_attempt'] == '1', 'No automatic rerun authorized'
+    auth = json.loads((HERE / 'authorization.json').read_text())
+    assert auth['approved'] is True
+    assert MARKERS.get('review_status')=='READY', 'Inactive draft: schema/source/joint review incomplete'
+    validate_clock(auth)
+    assert all(auth.get(key) == value for key, value in INPUT_HASHES.items()), 'Authorization/input mismatch'
+    assert auth['status'] == SPEC['status'] == MARKERS['status'] == 'FROZEN'
+    assert re.fullmatch(r'[0-9a-f]{40}',auth['plan_git'])
+    assert IDENTITIES == list(SPEC['identities']) and re.fullmatch(r'[0-9a-f]{40}',SPEC['identities']['C1']['git'])
+    assert SPEC['identities']['C1']['git']==MARKERS['source_commit'], 'Wrong frozen source commit'
+    assert SPEC['common_probes'] == [] and SPEC['identities']['C1']['production_overrides'] == []
+    reviewed_manifest=json.loads((FROZEN/'C1-source-manifest.json').read_text())
+    assert reviewed_manifest['canonical_manifest_sha256']==SPEC['identities']['C1']['canonical_manifest_sha256']
+    for path,expected in MARKERS['reviewed_source_sha256'].items():
+        assert reviewed_manifest['files'][path]['sha256']==expected, 'Reviewed source binding differs: '+path
+    assert auth['task_build_cache'] is False and auth['new_permissions'] is False and auth['automatic_retry'] is False
+    assert len(PLAN['steps']) == PLAN['instrumentation_calls'] == PLAN['expected_junit_methods'] and [s['ordinal'] for s in PLAN['steps']] == list(range(1,len(PLAN['steps'])+1))
+    assert [sum(s['phase'] == p for s in PLAN['steps']) for p in PHASE_NAMES.values()] == [len(PLAN['steps'])]
+    assert len({s['install_group'] for s in PLAN['steps']}) == 1
+    for step in PLAN['steps']:
+        assert step['expected_junit_tests'] == 1 and step['identity'] in IDENTITIES
+        assert step['args'][:8] == ADB + ['shell','am','instrument','-w','-r']
+        assert step['args'][-2] == step['selection'] and step['args'][-3] == 'class'
+        runner = 'org.inkweft.data.test'
+        assert step['args'][-1] == runner+'/androidx.test.runner.AndroidJUnitRunner'
+        assert step['diagnostic_only'] is True
+        assert step['outer_cap_seconds'] == (180 if step['ordinal'] in [6,7] else 300 if step['ordinal'] == 8 else 3600)
+    for filename in INPUT_HASHES:
+        assert re.fullmatch(r'[0-9a-f]{64}',auth[filename])
+    assert not capture(['git','-C',CONTROL,'status','--porcelain']), 'Execution checkout must be clean'
+    refs = list(dict.fromkeys([s['git'] for s in SPEC['identities'].values()] + [p['from_git'] for p in SPEC['common_probes']]))
+    REPORT['fetched_fixed_refs'] = refs
+    phase('source-fetch',['git','-C',CONTROL,'fetch','--no-tags','--depth=1','origin',*refs],180)
+    phase('source-reconstruction',['python3',FROZEN/'prepare_sources.py','--repo',CONTROL,'--out',ROOT/'sources'],180)
+    initial = host(); initial['java'] = capture(['java','-version'])
+    write_json(OUT/'host.json',initial)
+    phase('sdk',['sdkmanager','platforms;android-36','build-tools;36.0.0','platform-tools','emulator',
+                 'system-images;android-35;aosp_atd;x86_64'],900)
+    REPORT['status'] = 'SOURCES_FROZEN'
+
+
+def validate_instrumentation_manifest(xmltree, target_package):
+    blocks = re.findall(r'^    E: instrumentation[^\n]*\n((?:      [^\n]*\n)*)',xmltree+'\n',re.M)
+    assert len(blocks) == 1, 'Expected one manifest instrumentation element'
+    values = {}
+    for field,expected in [('name','androidx.test.runner.AndroidJUnitRunner'),('targetPackage',target_package)]:
+        found = re.findall(r'^      A: android:'+field+r'\(0x[0-9a-f]+\)="([^"\n]+)"',blocks[0],re.M)
+        assert found == [expected], 'Wrong/missing instrumentation '+field
+        values[field] = found[0]
+    return values
+
+
+def build(identity):
+    root = ROOT / 'sources' / identity
+    before = source_manifest(identity)
+    env = os.environ.copy()
+    env['INKWEFT_HEAD_SHA'] = SPEC['identities'][identity]['git']
+    phase('build-' + identity, ['./gradlew', '--no-daemon', '--max-workers=1', '--no-build-cache',
+          '-Pkotlin.compiler.execution.strategy=in-process',
+          '-Dorg.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8',
+          ':data-local:assembleDebugAndroidTest'],
+          1440, cwd=root / 'android', env=env)
+    assert source_manifest(identity) == before
+    paths = ['data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk']
+    receipts = []
+    for path in paths:
+        apk = root / 'android' / path
+        item = {'path': path, 'bytes': apk.stat().st_size, 'sha256': digest(apk)}
+        item['signature'] = capture([SDK / 'build-tools/36.0.0/apksigner', 'verify', '--print-certs', apk], 60)
+        item['signer_sha256'] = re.findall(r'^Signer #\d+ certificate SHA-256 digest: (\S+)$', item['signature'], re.M)
+        assert item['signer_sha256'], 'Missing verified signer digest'
+        receipts.append(item)
+    assert len(receipts) == 1
+    item = receipts[0]
+    apk = root / 'android' / paths[0]
+    badging = capture([SDK/'build-tools/36.0.0/aapt','dump','badging',apk],60)
+    assert re.search(r"^package: name='org\.inkweft\.data\.test'",badging,re.M)
+    item['package']='org.inkweft.data.test';item['manifest_badging']=badging
+    xmltree=capture([SDK/'build-tools/36.0.0/aapt','dump','xmltree',apk,'AndroidManifest.xml'],60)
+    item['manifest_xmltree']=xmltree
+    item['instrumentation_manifest']=validate_instrumentation_manifest(xmltree,'org.inkweft.data.test')
+    with zipfile.ZipFile(apk) as archive:
+        sqlite=[]
+        for abi in ['arm64-v8a','armeabi-v7a','x86','x86_64']:
+            name='lib/'+abi+'/libsqlite3x.so';data=archive.read(name)
+            assert data.startswith(b'\x7fELF') and len(data)>100000
+            sqlite.append({'path':name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()})
+        item['sqlite_native']=sqlite
+    deps = []
+    cache = Path(os.environ.get('GRADLE_USER_HOME', str(Path.home() / '.gradle'))) / 'caches/modules-2/files-2.1'
+    for path in sorted(cache.rglob('*')):
+        seconds()
+        if path.is_file():
+            deps.append({'path': path.relative_to(cache).as_posix(), 'bytes': path.stat().st_size, 'sha256': digest(path)})
+    assert deps, 'No dependency provenance recorded'
+    aars = list(cache.glob('com.github.requery/sqlite-android/3.49.0/*/sqlite-android-3.49.0.aar'))
+    assert len(aars) == 1, 'Expected exactly one real fixed requery 3.49.0 AAR'
+    aar = aars[0]
+    aar_native = []
+    with zipfile.ZipFile(aar) as archive:
+        for native in item['sqlite_native']:
+            name = 'jni/' + native['path'][4:]
+            data = archive.read(name)
+            assert data.startswith(b'\x7fELF') and len(data) == native['bytes']
+            value = hashlib.sha256(data).hexdigest()
+            assert value == native['sha256'], 'Built SQLite bytes differ from resolved real AAR'
+            aar_native.append({'path':name,'bytes':len(data),'sha256':value})
+    item['sqlite_aar'] = {'coordinate':'com.github.requery:sqlite-android:3.49.0',
+                          'path':aar.relative_to(cache).as_posix(),'bytes':aar.stat().st_size,
+                          'sha256':digest(aar),'native':aar_native}
+    write_json(OUT / ('dependencies-' + identity + '.json'), deps)
+    write_json(OUT / ('apk-' + identity + '.json'), {
+        'identity': identity, 'base_commit': env['INKWEFT_HEAD_SHA'], 'source_manifest_sha256': before,
+        'overlay_identity': 'No overlays. Source-spec/source manifest, build log, signed and installed APK hashes bind this data test build. No target app build identity is claimed.',
+        'apks': receipts, 'jvm_tests': 'NOT_RUN', 'lint': 'NOT_RUN'})
+
+
+
+def start_emulator():
+    seconds()
+    node = os.lstat('/dev/kvm')
+    assert stat.S_ISCHR(node.st_mode)
+    write_json(OUT / 'kvm-identity.json', [node.st_dev, node.st_ino, node.st_rdev])
+    (OUT / 'kvm-before.acl').write_bytes(run(['getfacl', '-pn', '/dev/kvm'], 15, stdout=subprocess.PIPE).stdout)
+    if not (os.access('/dev/kvm', os.R_OK) and os.access('/dev/kvm', os.W_OK)):
+        (ROOT / 'acl-may-have-changed').touch()
+        run(['sudo', '-n', 'setfacl', '--no-mask', '-m', f'u:{os.getuid()}:rw', '/dev/kvm'], 15)
+    assert os.access('/dev/kvm', os.R_OK) and os.access('/dev/kvm', os.W_OK), 'Stop without widening KVM ACL mask'
+    (OUT / 'kvm-granted.acl').write_bytes(run(['getfacl', '-pn', '/dev/kvm'], 15, stdout=subprocess.PIPE).stdout)
+    phase('acceleration', [SDK / 'emulator/emulator', '-accel-check'], 30)
+    phase('avd', ['avdmanager', 'create', 'avd', '--name', 'pr20-gc-save', '--package',
+                  'system-images;android-35;aosp_atd;x86_64', '--device', 'pixel_2'], 120, input='no\n')
+    command = [str(SDK / 'emulator/emulator'), '-avd', 'pr20-gc-save', '-port', '5554', '-no-window',
+               '-no-snapshot', '-noaudio', '-no-boot-anim', '-gpu', 'swiftshader', '-accel', 'on',
+               '-cores', '2', '-memory', '2048']
+    seconds()
+    with (ROOT / 'emulator-private.log').open('x') as log:
+        process = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+    write_json(ROOT / 'emulator.json', owned(process.pid))
+    until = min(CUTOFFS['setup'], time.time() + 240)
+    while time.time() < until:
+        if process.poll() is not None:
+            raise RuntimeError('Emulator exited before boot')
+        result = run(ADB + ['shell', 'getprop', 'sys.boot_completed'], 10, check=False,
+                     stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
+        if result.returncode == 0 and result.stdout.strip() == '1':
+            break
+        time.sleep(min(2, seconds()))
+    else:
+        raise BudgetAbort('Emulator boot/setup cutoff')
+    assert shell('getprop', 'ro.build.version.sdk') == '35' and shell('getprop', 'ro.kernel.qemu') == '1'
+    for args in [('wm', 'size', '1920x1200'), ('wm', 'density', '240'), ('settings', 'put', 'system', 'font_scale', '1.0'),
+                 ('settings', 'put', 'global', 'window_animation_scale', '1.0'),
+                 ('settings', 'put', 'global', 'transition_animation_scale', '1.0'),
+                 ('settings', 'delete', 'global', 'animator_duration_scale'), ('svc', 'power', 'stayon', 'true'),
+                 ('input', 'keyevent', 'KEYCODE_WAKEUP'), ('wm', 'dismiss-keyguard')]:
+        shell(*args)
+    initial = environment()
+    assert initial['abi'] == 'x86_64' and initial['font_scale'] == '1.0'
+    assert initial['size'].splitlines()[-1].endswith('1920x1200') and initial['density'].splitlines()[-1].endswith('240')
+    assert initial['animations'] == {'window_animation_scale': '1.0', 'transition_animation_scale': '1.0',
+                                     'animator_duration_scale': 'null'}
+    write_json(OUT / 'device-before.json', initial)
+    log = (ROOT / 'emulator-private.log').read_text(errors='replace')
+    selected = [line for line in log.splitlines() if 'Android emulator version ' in line or 'Boot completed in ' in line]
+    (OUT / 'emulator-selected.log').write_text('\n'.join(selected) + '\n')
+    write_json(OUT / 'emulator-configuration.json', {
+        'command_flags': command[1:],
+        'emulator_version': next((line for line in selected if 'Android emulator version ' in line), None),
+        'emulator_source_properties': (SDK / 'emulator/source.properties').read_text(),
+        'image_source_properties': (SDK / 'system-images/android-35/aosp_atd/x86_64/source.properties').read_text()})
+    seconds()
+    REPORT['setup_elapsed_from_anchor_seconds'] = time.time() - START
+    REPORT['status'] = 'MEASURING'
+
+
+
+def raw_result(entry, raw, returncode):
+    ok = re.findall(r'^OK \((\d+) tests?\)\s*$', raw, re.M)
+    codes = [int(value) for value in re.findall(r'^INSTRUMENTATION_STATUS_CODE: (-?\d+)\s*$', raw, re.M)]
+    classes = re.findall(r'^INSTRUMENTATION_STATUS: class=(.*)$', raw, re.M)
+    methods = re.findall(r'^INSTRUMENTATION_STATUS: test=(.*)$', raw, re.M)
+    counts = re.findall(r'^INSTRUMENTATION_STATUS: numtests=(.*)$', raw, re.M)
+    cls, method = entry['selection'].split('#')
+    # Probe sendStatus(0) records are additional zero codes, not additional JUnit tests.
+    valid = (returncode == 0 and ok == ['1'] and codes.count(1) == 1 and 0 in codes
+             and len(codes) == sum(line.startswith('INSTRUMENTATION_STATUS_CODE:') for line in raw.splitlines())
+             and sum(line.startswith('INSTRUMENTATION_CODE:') for line in raw.splitlines()) == 1
+             and all(code in [0, 1] for code in codes)
+             and len(classes) == 2 and all(value.strip() == cls for value in classes)
+             and len(methods) == 2 and all(value.strip() == method for value in methods)
+             and len(counts) == 2 and all(value.strip() == '1' for value in counts)
+             and re.findall(r'^INSTRUMENTATION_CODE: (-?\d+)\s*$', raw, re.M) == ['-1']
+             and 'FAILURES!!!' not in raw and 'INSTRUMENTATION_FAILED' not in raw)
+    entry.update(junit_status='PASS' if valid else ('INCOMPLETE' if returncode is None else 'FAIL'),
+                 adb_exit=returncode, junit_ok_counts=ok, status_codes=codes,
+                 reported_classes=classes, reported_methods=methods, reported_test_counts=counts)
+    records = []
+    for line in raw.splitlines():
+        match = re.search(r'((?:KVM|LIBRARY|HISTORY|TILE|INDEX|RASTER)_[A-Z0-9_]+) (\{.*\}|\[.*\])\s*$', line)
+        if match:
+            try:
+                records.append({'marker': match[1], 'data': json.loads(match[2])})
+            except json.JSONDecodeError as error:
+                records.append({'marker': match[1], 'raw': match[2], 'parse_error': str(error)})
+    return records
+
+
+
+def processes_after(entry):
+    """Keep raw JUnit and package isolation separate; never force-stop the application."""
+    started = time.monotonic()
+    entry['process_exit_observations'] = []
+    entry['process_exit_outcome'] = 'UNCONFIRMED'
+
+    def observe(until, label):
+        values = {}
+        observation = {'stage': label, 'elapsed_seconds': time.monotonic() - started, 'packages': values}
+        entry['process_exit_observations'].append(observation)
+        for package in PACKAGES:
+            remaining = until - time.monotonic()
+            assert remaining > 0, 'Package observation window expired'
+            result = run(ADB + ['shell', 'pidof', package], min(1, remaining), check=False,
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            value = {'exit': result.returncode, 'stdout': result.stdout.strip(), 'stderr': result.stderr.strip()}
+            values[package] = value
+            assert not value['stderr'] and ((value['exit'] == 1 and not value['stdout']) or
+                   (value['exit'] == 0 and re.fullmatch(r'[1-9][0-9]*(?: [1-9][0-9]*)*', value['stdout']))), 'Package observation transport or output invalid'
+        entry['processes_after'] = values
+        return all(value['exit'] == 1 for value in values.values())
+
+    def wait_absent(until, label):
+        # Do not begin a new shell query at the very edge of this short window.
+        while until - time.monotonic() > 0.25:
+            if observe(until, label):
+                return True
+            time.sleep(min(0.1, max(0, until - time.monotonic() - 0.25), seconds()))
+        return False
+
+    try:
+        if wait_absent(started + 3, 'natural-exit'):
+            entry['process_exit_outcome'] = 'NATURAL_EXIT'
+            return
+        raise AssertionError('Owned package did not naturally exit; no helper cleanup, am kill or force-stop allowed')
+    finally:
+        entry['process_exit_seconds'] = time.monotonic() - started
+
+
+
+def common_fixtures(entry, records):
+    assert entry["diagnostic_only"] is True
+    # No cross-version pairing or formal threshold classification in causal diagnostics.
+
+
+
+def junit(entry, raw, path):
+    failed = entry.get('junit_status') == 'FAIL'
+    incomplete = entry['status'] != 'PASS' and not failed
+    suite = ET.Element('testsuite', name=entry['selection'], tests='1', failures=str(int(failed)),
+                       errors=str(int(incomplete)), time=str(entry['seconds']))
+    cls, method = entry['selection'].split('#')
+    case = ET.SubElement(suite, 'testcase', classname=cls, name=method, time=str(entry['seconds']))
+    if failed:
+        ET.SubElement(case, 'failure', message='Original instrumentation/JUnit did not pass').text = raw[-8192:]
+    elif incomplete:
+        ET.SubElement(case, 'error', type=entry.get('error_type', 'Incomplete'),
+                      message=entry.get('error', 'Host validation incomplete')).text = 'See complete raw instrumentation and summary.'
+    ET.ElementTree(suite).write(path, encoding='utf-8', xml_declaration=True)
+
+
+
+def validate_shape(value, schema):
+    from markers import validate_shape as check
+    check(value, schema)
+
+def safe_marker_payloads(entry, raw):
+    from markers import safe_marker_payloads as parse
+    return parse(entry, raw, MARKERS)
+
+def forward_causal_records(entry, raw):
+    payloads = safe_marker_payloads(entry,raw)  # Validate the whole block before any payload reaches stdout.
+    receipt = json.loads((OUT/('apk-'+entry['identity']+'.json')).read_text())
+    prefix = f"method-{entry['ordinal']:02d}-{entry['identity']}"
+    selected = REPORT['install_groups'][entry['install_group']]['installed_apks']
+    selected_packages = {a['package'] for a in selected}
+    apks = [a for a in receipt['apks'] if a['package'] in selected_packages]
+    context = {'scope':'DIAGNOSTIC_ONLY','run_id':REPORT['run_id'],'run_attempt':REPORT['run_attempt'],
+               'workflow_sha':REPORT['workflow_sha'],'source_commit':SPEC['identities'][entry['identity']]['git'],
+               'source_spec_sha256':INPUT_HASHES['source_spec_sha256'],'method_plan_sha256':INPUT_HASHES['method_plan_sha256'],
+               'test_source_sha256':MARKERS['methods'][str(entry['ordinal'])]['test_source_sha256'],'source_manifest_sha256':receipt['source_manifest_sha256'],
+               'selected_apks':[{k:a[k] for k in ['package','sha256','signer_sha256']} for a in apks],
+               'apk_receipt_sha256':digest(OUT/('apk-'+entry['identity']+'.json')),
+               'installed_apks':[{k:a[k] for k in ['package','sha256','source_apk_sha256']} for a in selected],
+               'install_log_sha256':digest(OUT/('install-'+entry['install_group']+'.log')),
+               'environment_sha256':digest(OUT/('install-'+entry['install_group']+'-environment-before.json')),
+               'ordinal':entry['ordinal'],'identity':entry['identity'],'seed':entry['seed'],'args':entry['args'],
+               'install_group':entry['install_group'],'selection':entry['selection'],
+               'raw_log_sha256':entry['log_sha256'],'records_sha256':digest(OUT/(prefix+'-records.json')),
+               'junit_status':entry['junit_status'],'adb_exit':entry['adb_exit'],'process_exit_outcome':entry['process_exit_outcome']}
+    lines=['INKWEFT_CAUSAL_CONTEXT '+json.dumps(context,separators=(',',':'))]
+    ordered=[]
+    for index,p in enumerate(payloads):
+        original=p['original_json']; sha=hashlib.sha256(original.encode()).hexdigest()
+        item={'ordinal':entry['ordinal'],'identity':entry['identity'],'sequence':index,'marker':p['marker'],
+              'payload_bytes':len(original.encode()),'payload_sha256':sha,'original_json':original}
+        ordered.append({key:item[key] for key in ['sequence','marker','payload_bytes','payload_sha256']})
+        lines.append('INKWEFT_CAUSAL_RECORD '+json.dumps(item,separators=(',',':')))
+    lines.append('INKWEFT_CAUSAL_END '+json.dumps({'ordinal':entry['ordinal'],'identity':entry['identity'],
+          'count':len(ordered),'ordered_payloads':ordered,'ordered_payloads_sha256':hashlib.sha256(json.dumps(ordered,separators=(',',':')).encode()).hexdigest()},separators=(',',':')))
+    bound=MARKERS['transport']['methods'][str(entry['ordinal'])]
+    assert len(raw.encode('utf-8')) <= bound['normal_raw_max_bytes'], 'Normal raw text exceeds frozen allowance'
+    record_end_bytes=sum(len((line+'\n').encode())+64 for line in lines[1:])
+    assert record_end_bytes <= bound['normal_record_end_max_bytes'], 'Normal forwarded text exceeds frozen allowance'
+    assert len((lines[0]+'\n').encode()) <= 8192, 'Context allowance'
+    assert entry.get('forwarding_path') is None, 'No duplicate forwarding path'
+    entry['forwarding_path']='NORMAL_STARTED'
+    entry['normal_meta_wire_bytes']=len((lines[0]+'\n').encode())+64
+    entry['normal_record_end_wire_bytes']=record_end_bytes
+    save() # Persist the complete bounded charge before first output, including interruption.
+    for line in lines:print(line,flush=True)
+    entry['forwarding_path']='NORMAL_COMPLETE'
+    write_json(OUT/(prefix+'-log-forwarding.json'),{'status':'FORWARDED_VALIDATED_MARKERS','context':context,'ordered_payloads':ordered})
+
+
+def emit_line(entry, text, category):
+    # 64 bytes reserve per Actions timestamp/framing; exact JSON UTF-8 before transport.
+    size=len((text+'\n').encode('utf-8'))+64
+    entry[category]=entry.get(category,0)+size
+    save()
+    print(text,flush=True)
+
+
+CHUNK_BYTES = 32768
+SECRET = re.compile(rb'gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|AKIA[A-Z0-9]{16}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|(?:ssh-rsa|ssh-ed25519) [A-Za-z0-9+/]{40,}')
+PREFIX = 'INKWEFT_CAUSAL_FAILURE_TEXT '
+BINDING_KEYS = {'run_id','run_attempt','workflow_sha','source_commit','source_spec_sha256',
+                'method_plan_sha256','test_source_sha256','ordinal','identity','selection',
+                'status','junit_status','adb_exit','process_exit_outcome'}
+
+def validate_binding(binding):
+    assert type(binding) is dict and set(binding)==BINDING_KEYS
+    assert type(binding['run_id']) is str and re.fullmatch('[1-9][0-9]*',binding['run_id'])
+    assert type(binding['run_attempt']) is int and binding['run_attempt']==1
+    assert type(binding['ordinal']) is int and binding['ordinal']>0
+    for key in ['workflow_sha','source_commit']:
+        assert type(binding[key]) is str and re.fullmatch('[0-9a-f]{40}',binding[key])
+    for key in ['source_spec_sha256','method_plan_sha256','test_source_sha256']:
+        assert type(binding[key]) is str and re.fullmatch('[0-9a-f]{64}',binding[key])
+    assert type(binding['identity']) is str and re.fullmatch('[A-Z][0-9]',binding['identity'])
+    assert type(binding['selection']) is str and re.fullmatch(r'org\.inkweft\.(?:data|app)\.[A-Za-z0-9_]+#[A-Za-z0-9_]+',binding['selection'])
+    assert binding['status'] in ['FAIL','INCOMPLETE']
+    assert binding['junit_status'] in ['PASS','FAIL','INCOMPLETE',None]
+    assert binding['adb_exit'] is None or type(binding['adb_exit']) is int
+    assert binding['process_exit_outcome'] in ['NATURAL_EXIT','UNCONFIRMED',None]
+
+def encoded(value):
+    return json.dumps(value, ensure_ascii=True, separators=(',', ':'))
+
+def wire_bytes(records):
+    return sum(len((PREFIX + encoded(record) + '\n').encode('utf-8')) for record in records)
+
+def maximum_wire_bytes(raw_bytes):
+    """Exact base64 payload factor plus deliberately bounded headers/line framing.
+
+    32KiB parts are multiples of three only across some boundaries, so count each
+    part's padding separately. 1024B/part and 8192B total headers are checked below.
+    """
+    sizes=[min(CHUNK_BYTES, raw_bytes-start) for start in range(0,raw_bytes,CHUNK_BYTES)]
+    return sum(4*((n+2)//3)+1024 for n in sizes)+8192
+
+def prepare_failure_text(data, binding, expected_sha256, raw_limit, wire_limit,
+                         normal_forward_started=False):
+    """All-or-refuse preparation; callers print only the returned complete list.
+
+    Returned refusal contains no raw content and cannot change the original
+    failure. Original data are never mutated or sliced away from retained logs.
+    """
+    assert type(data) is bytes
+    validate_binding(binding)
+    assert type(raw_limit) is int and 0<=raw_limit<=20*1024*1024
+    assert type(wire_limit) is int and 8192<=wire_limit<=20*1024*1024
+    assert re.fullmatch('[0-9a-f]{64}',expected_sha256)
+    assert len(encoded(binding).encode())<=4096, 'Binding exceeds fixed header budget'
+    digest=hashlib.sha256(data).hexdigest()
+    reason=None
+    if normal_forward_started:reason='NORMAL_FORWARD_ALREADY_STARTED'
+    elif len(data)>raw_limit:reason='RAW_OVERSIZE'
+    elif digest!=expected_sha256:reason='HASH_MISMATCH'
+    elif SECRET.search(data):reason='SENSITIVE'
+    else:
+        try:data.decode('utf-8',errors='strict')
+        except UnicodeDecodeError:reason='INVALID_UTF8'
+    common=dict(schema=2,scope='DIAGNOSTIC_FAILURE_ONLY',binding=binding,
+                raw_bytes=len(data),raw_sha256=digest)
+    def refuse(why):
+        result=[dict(common,kind='REFUSED',reason=why)]
+        assert wire_bytes(result)<=8192
+        return result
+    if reason:return refuse(reason)
+    parts=(len(data)+CHUNK_BYTES-1)//CHUNK_BYTES
+    begin=dict(common,kind='BEGIN',encoding='base64-utf8',chunk_bytes=CHUNK_BYTES,parts=parts)
+    context=hashlib.sha256(encoded(begin).encode()).hexdigest()
+    records=[begin]
+    for part,start in enumerate(range(0,len(data),CHUNK_BYTES)):
+        chunk=data[start:start+CHUNK_BYTES]
+        record=dict(schema=2,scope='DIAGNOSTIC_FAILURE_ONLY',kind='PART',context_sha256=context,
+                    part=part,parts=parts,raw_bytes=len(chunk),raw_sha256=hashlib.sha256(chunk).hexdigest(),
+                    base64=base64.b64encode(chunk).decode('ascii'))
+        assert len((PREFIX+encoded(record)+'\n').encode())-len(record['base64'])<=1024
+        records.append(record)
+    end=dict(schema=2,scope='DIAGNOSTIC_FAILURE_ONLY',kind='END',context_sha256=context,
+             parts=parts,raw_bytes=len(data),raw_sha256=digest)
+    records.append(end)
+    assert wire_bytes([begin,end])<=8192
+    assert wire_bytes(records)<=maximum_wire_bytes(len(data))
+    if wire_bytes(records)>wire_limit:return refuse('ENCODED_OVERSIZE')
+    return records
+
+
+def forward_failure_log(entry, logpath):
+    # Exact method/path binding precedes any read. Failure text never grants PASS.
+    if entry['status'] == 'PASS':return
+    rule = next(s for s in PLAN['steps'] if s['ordinal'] == entry['ordinal'])
+    assert all(entry[k] == rule[k] for k in ['identity','selection','args','install_group','marker_policy'])
+    expected = OUT / f"method-{entry['ordinal']:02d}-{entry['identity']}-instrumentation.log"
+    assert logpath == expected and not logpath.is_symlink() and OUT.resolve() == ROOT.resolve() / 'evidence', 'Unsafe failure log path'
+    assert logpath.is_file(), 'Missing original failure log'
+    bounds=MARKERS['transport']['methods'][str(entry['ordinal'])]
+    binding={'run_id':REPORT['run_id'],'run_attempt':int(REPORT['run_attempt']),
+             'workflow_sha':REPORT['workflow_sha'],'source_commit':SPEC['identities'][entry['identity']]['git'],
+             'source_spec_sha256':INPUT_HASHES['source_spec_sha256'],'method_plan_sha256':INPUT_HASHES['method_plan_sha256'],
+             'test_source_sha256':MARKERS['methods'][str(entry['ordinal'])]['test_source_sha256'],
+             'ordinal':entry['ordinal'],'identity':entry['identity'],'selection':entry['selection'],
+             'status':entry['status'],'junit_status':entry.get('junit_status'),'adb_exit':entry.get('adb_exit'),
+             'process_exit_outcome':entry.get('process_exit_outcome')}
+    # The producer already owns this exact file. Never emit partial/truncated bytes.
+    if logpath.stat().st_size > bounds['failure_raw_max_bytes']:
+        validate_binding(binding)
+        records=[{'schema':2,'scope':'DIAGNOSTIC_FAILURE_ONLY','binding':binding,'kind':'REFUSED',
+                  'raw_bytes':logpath.stat().st_size,'raw_sha256':entry.get('log_sha256'),'reason':'RAW_OVERSIZE'}]
+    else:
+        data=logpath.read_bytes()
+        records=prepare_failure_text(data,binding,entry['log_sha256'],bounds['failure_raw_max_bytes'],
+                                     bounds['failure_wire_max_bytes'],entry.get('forwarding_path') in ['NORMAL_STARTED','NORMAL_COMPLETE'])
+    assert wire_bytes(records)+64*len(records) <= bounds['failure_wire_max_bytes']
+    status='FORWARDED' if records[0]['kind']=='BEGIN' else 'REFUSED'
+    entry['failure_log_forwarding']={'status':status,'reason':records[0].get('reason'),'wire_bytes':wire_bytes(records)}
+    if status=='FORWARDED':entry['forwarding_path']='FAILURE_STARTED'
+    # Preparation and all checks finish before the first byte is emitted.
+    entry['failure_wire_bytes']=wire_bytes(records)+64*len(records)
+    save() # A partial official stream is incomplete, but its full upper charge survives.
+    for record in records:print(PREFIX+encoded(record),flush=True)
+    if status=='FORWARDED':entry['forwarding_path']='FAILURE_COMPLETE'
+    prefix=f"method-{entry['ordinal']:02d}-{entry['identity']}"
+    if not (OUT/(prefix+'-log-forwarding.json')).exists():
+        write_json(OUT/(prefix+'-log-forwarding.json'),{'status':'FAILURE_ONLY','failure':entry['failure_log_forwarding']})
+
+
+
+def method(entry):
+    assert entry['status'] == 'NOT_RUN', 'No method retry permitted'
+    assert all(other['status'] == 'PASS' for other in REPORT['methods'] if other['ordinal'] < entry['ordinal'])
+    seconds()
+    entry.update(status='RUNNING', started_epoch=time.time())
+    save()
+    prefix = f"method-{entry['ordinal']:02d}-{entry['identity']}"
+    logpath = OUT / (prefix + '-instrumentation.log')
+    returncode = None
+    records = []
+    raw = ''
+    try:
+        try:
+            with logpath.open('x') as log:
+                result = run(entry['args'], entry['outer_cap_seconds'], check=False, stdout=log, stderr=subprocess.STDOUT, text=True)
+            returncode = result.returncode
+        finally:
+            if logpath.exists():
+                data = logpath.read_bytes()
+                entry['log_sha256'] = hashlib.sha256(data).hexdigest()
+                raw = data.decode('utf-8', errors='strict')
+                records = raw_result(entry, raw, returncode)
+                (OUT / (prefix + '-records.json')).write_text(json.dumps(records,ensure_ascii=False,separators=(',',':'))+'\n')
+        # Check package isolation separately; failed raw JUnit cannot authorize auxiliary cleanup.
+        processes_after(entry)
+        assert entry['junit_status'] == 'PASS', 'Original method/JUnit failed; stop without retry'
+        try:
+            assert not any('parse_error' in record for record in records), 'Malformed evidence marker; raw record retained'
+            safe_marker_payloads(entry, raw)
+        except (AssertionError, ValueError, TypeError, KeyError, RecursionError) as error:
+            raise EvidenceIncomplete('Probe evidence could not be validated; preserve raw JUnit separately') from error
+        common_fixtures(entry, records)
+        forward_causal_records(entry, raw)
+        seconds()
+        entry['status'] = 'PASS'
+    except Exception as error:
+        entry.update(status='INCOMPLETE' if isinstance(error, (BudgetAbort, EvidenceIncomplete)) else 'FAIL',
+                     error_type=type(error).__name__, error=str(error))
+        raise
+    finally:
+        entry['seconds'] = time.time() - entry['started_epoch']
+        if entry['status'] != 'PASS':
+            try:
+                forward_failure_log(entry, logpath)
+            except Exception:
+                # A forwarding/I/O fault must not replace the original method failure.
+                entry['failure_log_forwarding'] = {'status':'UNAVAILABLE','reason':'FORWARD_EXCEPTION'}
+        junit(entry, raw, OUT / (prefix + '-junit.xml'))
+        save()
+        emit_line(entry, 'INKWEFT_CAUSAL_METHOD '+json.dumps({'ordinal': entry['ordinal'], 'phase': entry['phase'], 'identity': entry['identity'],
+                          'selection': entry['selection'], 'status': entry['status'],
+                          'junit_status': entry.get('junit_status'), 'adb_exit': entry.get('adb_exit'),
+                          'process_exit_outcome': entry.get('process_exit_outcome'),
+                          'error': entry.get('error')}, ensure_ascii=False), 'method_wire_bytes')
+        save()
+
+
+
+def install(group, identity):
+    assert group not in REPORT['install_groups'], 'No install-group retry permitted'
+    item = {'identity': identity, 'status': 'RUNNING', 'started_epoch': time.time()}
+    REPORT['install_groups'][group] = item
+    save()
+    initial = json.loads((OUT / 'device-before.json').read_text())
+    before = environment()
+    write_json(OUT / f'install-{group}-environment-before.json', before)
+    write_json(OUT / f'install-{group}-host-before.json', host())
+    assert before == initial, 'Device settings changed before install group'
+    apks = json.loads((OUT / ('apk-' + identity + '.json')).read_text())['apks']
+    selected_packages = ['org.inkweft.data.test']
+    assert group == 'C1-data-diagnostics'
+    apks = [a for a in apks if a['package'] in selected_packages]
+    assert [a['package'] for a in apks] == selected_packages
+    with (OUT / f'install-{group}.log').open('x') as log:
+        for package in PACKAGES:
+            probe = run(ADB + ['shell', 'pm', 'path', package], 30, check=False,
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            log.write(json.dumps({'package': package, 'presence_exit': probe.returncode,
+                                 'stdout': probe.stdout, 'stderr': probe.stderr}) + '\n')
+            log.flush()
+            assert probe.returncode in [0, 1] and not probe.stderr.strip(), 'Package presence transport failed'
+            locations = probe.stdout.strip()
+            assert not locations or (probe.returncode == 0 and all(line.startswith('package:') for line in locations.splitlines()))
+            if locations:
+                result = capture(ADB + ['uninstall', package], 60)
+                log.write(package + ': ' + result + '\n')
+                log.flush()
+                assert result == 'Success', 'Uninstall failed'
+        for apk_item in apks:
+            apk = ROOT / 'sources' / identity / 'android' / apk_item['path']
+            assert digest(apk) == apk_item['sha256'], 'APK changed after signature verification'
+            result = capture(ADB + ['install', '-t', apk], 120)
+            log.write(apk_item['path'] + ': ' + result + '\n')
+            log.flush()
+            assert result.endswith('Success'), 'Install failed'
+            locations = capture(ADB+['shell','pm','path',apk_item['package']],30)
+            match = re.fullmatch(r'package:(/data/app/[A-Za-z0-9_./+=~-]+/base\.apk)',locations)
+            assert match and '..' not in Path(match[1]).parts, 'Unexpected installed base APK location'
+            installed_path = match[1]
+            output = capture(ADB+['shell','sha256sum',installed_path],30).split()
+            assert len(output)==2 and output[1]==installed_path and output[0]==apk_item['sha256'], 'Installed APK bytes differ'
+            installed = {'package':apk_item['package'],'path':installed_path,'sha256':output[0],
+                         'source_apk_sha256':apk_item['sha256'],'source_manifest_sha256':SPEC['identities'][identity]['canonical_manifest_sha256']}
+            item.setdefault('installed_apks',[]).append(installed)
+            log.write(json.dumps({'installed_apk':installed})+'\n');log.flush()
+    item['status'] = 'INSTALLED'
+    save()
+
+
+
+def methods(name):
+    entries = [entry for entry in REPORT['methods'] if entry['phase'] == PHASE_NAMES[name]]
+    initial = json.loads((OUT / 'device-before.json').read_text())
+    for group in dict.fromkeys(entry['install_group'] for entry in entries):
+        grouped = [entry for entry in entries if entry['install_group'] == group]
+        install(group, grouped[0]['identity'])
+        for entry in grouped:
+            method(entry)
+        after = environment()
+        write_json(OUT / f'install-{group}-environment-after.json', after)
+        write_json(OUT / f'install-{group}-host-after.json', host())
+        assert after == initial, 'Device settings changed after install group'
+        REPORT['install_groups'][group].update(status='PASS', seconds=time.time() - REPORT['install_groups'][group]['started_epoch'])
+        save()
+    if name == 'data':
+        assert len(REPORT['install_groups']) == 1 and all(entry['status'] == 'PASS' for entry in REPORT['methods'])
+        write_json(OUT / 'device-after.json', after)
+        write_json(OUT / 'host-after.json', host())
+        REPORT['status'] = 'EXECUTION_COMPLETE_ANALYSIS_PENDING'
+
+
+
+def main():
+    global PHASE
+    action = sys.argv[1:]
+    sequence = [('setup',), ('build', 'C1'), ('emulator',),
+                ('methods', 'data')]
+    key = tuple(action)
+    assert key in sequence, 'Expected setup | build C1 | emulator | methods data'
+    name = '-'.join(action)
+    PHASE = action[1] if action[0] == 'methods' else 'setup'
+    assert REPORT['input_hashes'] == INPUT_HASHES and REPORT['source_spec'] == SPEC
+    assert REPORT['actual_job_started_epoch'] is None
+    assert REPORT['budget_anchor_epoch'] == START and REPORT['workflow_sha'] == os.environ['GITHUB_SHA']
+    assert REPORT['phase_cutoff_epochs'] == CUTOFFS and REPORT['work_deadline_epoch'] == DEADLINE
+    assert REPORT['run_id'] == os.environ['GITHUB_RUN_ID'] and REPORT['run_attempt'] == os.environ['GITHUB_RUN_ATTEMPT'] == '1'
+    assert len(REPORT['methods']) == len(PLAN['steps']) == 8
+    for entry, step in zip(REPORT['methods'], PLAN['steps']):
+        assert all(entry.get(field) == value for field, value in step.items()), 'Frozen method plan/state mismatch'
+    assert name not in REPORT['actions'], 'Action already attempted; no retries'
+    for previous in sequence[:sequence.index(key)]:
+        assert REPORT['actions'].get('-'.join(previous), {}).get('status') == 'PASS', 'Earlier phase incomplete or failed'
+    assert REPORT['status'] not in ['BUDGET_ABORTED', 'BLOCKED_OR_FAILED'], 'Execution already stopped'
+    item = {'status': 'RUNNING', 'budget_phase': PHASE, 'started_epoch': time.time()}
+    REPORT['actions'][name] = item
+    save()
+    try:
+        seconds()
+        if action[0] == 'setup':
+            setup()
+        elif action[0] == 'build':
+            build(action[1])
+        elif action[0] == 'emulator':
+            start_emulator()
+        else:
+            methods(action[1])
+        seconds()
+        item['status'] = 'PASS'
+    except Exception as error:
+        item['status'] = 'INCOMPLETE' if isinstance(error, BudgetAbort) else 'FAIL'
+        raise
+    finally:
+        item['seconds'] = time.time() - item['started_epoch']
+        save()
+
+
+
+
+try:
+    main()
+except Exception as error:
+    REPORT['status'] = 'BUDGET_ABORTED' if isinstance(error, BudgetAbort) else 'BLOCKED_OR_FAILED'
+    REPORT['error'] = type(error).__name__ + ': ' + str(error)
+    if isinstance(error, subprocess.CalledProcessError):
+        REPORT['failed_command_output'] = str(error.stdout or '')[-8192:]
+    for item in list(REPORT['install_groups'].values()) + REPORT['methods']:
+        if item['status'] in ['RUNNING', 'INSTALLED']:
+            item.update(status='INCOMPLETE', seconds=time.time() - item['started_epoch'])
+    write_json(OUT / 'host-after.json', host())
+    save()
+    print(json.dumps({'status': REPORT['status'], 'error': REPORT['error']}, ensure_ascii=False), flush=True)
+    raise SystemExit(1)
+save()

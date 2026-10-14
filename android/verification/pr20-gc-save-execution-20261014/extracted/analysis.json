@@ -1,0 +1,426 @@
+{
+  "schema": 1,
+  "analysis_status": "INCOMPLETE",
+  "binding_status": "BOUND",
+  "scope": "DIAGNOSTIC_ONLY",
+  "expected": {
+    "run_id": "38553018139",
+    "job_id": "115815277181",
+    "workflow_sha": "c3483b74e5db7cb7928d26445bd37af51700284c",
+    "source_commit": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353",
+    "readiness_git": "fbc502eb49c15018bb1ab2694dc256b7a0f9fc25",
+    "prep_sha": "083a892133d818cf364865d3ee3edc1fdb6413c0"
+  },
+  "issues": [
+    "Official run/job not successful; preserve partial records only",
+    "ValueError: First non-PASS method: failure evidence and terminal audit never promote whole-run PASS"
+  ],
+  "state": {
+    "clock": {
+      "status": "PASS",
+      "scope": "DIAGNOSTIC_ONLY",
+      "anchor_kind": "runner_first_step",
+      "budget_anchor_epoch": 1791975368,
+      "first_step_observed_epoch": 1791975368.092405,
+      "actual_job_started_epoch": null,
+      "deadlines_minutes": [
+        30,
+        45,
+        55,
+        60
+      ],
+      "deadline_epochs": {
+        "setup": 1791977168,
+        "data": 1791978068,
+        "work": 1791978668
+      }
+    },
+    "methods": [],
+    "observed_method_receipts": [
+      {
+        "ordinal": 1,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+        "status": "INCOMPLETE",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": "Probe evidence could not be validated; preserve raw JUnit separately"
+      }
+    ],
+    "blocks": [],
+    "failures": [
+      {
+        "binding": {
+          "run_id": "38553018139",
+          "run_attempt": 1,
+          "workflow_sha": "c3483b74e5db7cb7928d26445bd37af51700284c",
+          "source_commit": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353",
+          "source_spec_sha256": "bf6fe840b3113784315e7b7d575a7ce6d17ded867d87359b04cdfdeee67d0f95",
+          "method_plan_sha256": "f9f80f29e083824fd82df6714df622963a15b5ad0f1c1a030ada7fd56a123643",
+          "test_source_sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5",
+          "ordinal": 1,
+          "identity": "C1",
+          "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+          "status": "INCOMPLETE",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT"
+        },
+        "begin": {
+          "schema": 2,
+          "scope": "DIAGNOSTIC_FAILURE_ONLY",
+          "binding": {
+            "run_id": "38553018139",
+            "run_attempt": 1,
+            "workflow_sha": "c3483b74e5db7cb7928d26445bd37af51700284c",
+            "source_commit": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353",
+            "source_spec_sha256": "bf6fe840b3113784315e7b7d575a7ce6d17ded867d87359b04cdfdeee67d0f95",
+            "method_plan_sha256": "f9f80f29e083824fd82df6714df622963a15b5ad0f1c1a030ada7fd56a123643",
+            "test_source_sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5",
+            "ordinal": 1,
+            "identity": "C1",
+            "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+            "status": "INCOMPLETE",
+            "junit_status": "PASS",
+            "adb_exit": 0,
+            "process_exit_outcome": "NATURAL_EXIT"
+          },
+          "raw_bytes": 1142,
+          "raw_sha256": "f1ee6adafc9195b66a3e5f9abbc84086ce8118e2339951846aebd05cfdc38204",
+          "kind": "BEGIN",
+          "encoding": "base64-utf8",
+          "chunk_bytes": 32768,
+          "parts": 1
+        },
+        "context_sha256": "602c8edef09a547c29071be872e28c5c2dea6b215af38912c7d608ebab32d2a2",
+        "wire_bytes": 3201,
+        "line": 315,
+        "status": "FORWARDED",
+        "matched_method_receipt": true
+      }
+    ],
+    "final_observed": {
+      "scope": "DIAGNOSTIC_ONLY",
+      "run_id": "38553018139",
+      "workflow_sha": "c3483b74e5db7cb7928d26445bd37af51700284c",
+      "input_hashes": {
+        "approved_plan_sha256": "488458e80500bffb52e6a5d8896711b3df2c880ae47f73022bcaf14102b645bf",
+        "source_spec_sha256": "bf6fe840b3113784315e7b7d575a7ce6d17ded867d87359b04cdfdeee67d0f95",
+        "method_plan_sha256": "f9f80f29e083824fd82df6714df622963a15b5ad0f1c1a030ada7fd56a123643",
+        "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+        "marker_contract_sha256": "a0682c82d713cb9d2932f0a6c4cc93d5b1d37b33f2ca8580789241c92854084c",
+        "prepare_sources_sha256": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516"
+      },
+      "status": "BLOCKED_OR_FAILED",
+      "cleanup_verified": true,
+      "cleanup": {
+        "trap": {
+          "emulator": "STOPPED_CONFIRMED",
+          "command_groups": "STOPPED_CONFIRMED",
+          "acl": "RESTORED_EXACT",
+          "error_count": 0,
+          "before_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+          "after_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+          "exact_match": true
+        },
+        "always": {
+          "emulator": "STOPPED_CONFIRMED",
+          "command_groups": "STOPPED_CONFIRMED",
+          "acl": "RESTORED_EXACT",
+          "error_count": 0,
+          "before_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+          "after_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+          "exact_match": true
+        }
+      },
+      "methods": [
+        {
+          "ordinal": 1,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+          "seed": null,
+          "status": "INCOMPLETE",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "f1ee6adafc9195b66a3e5f9abbc84086ce8118e2339951846aebd05cfdc38204"
+        },
+        {
+          "ordinal": 2,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+          "seed": null,
+          "status": "NOT_RUN",
+          "junit_status": null,
+          "adb_exit": null,
+          "process_exit_outcome": null,
+          "log_sha256": null
+        },
+        {
+          "ordinal": 3,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes",
+          "seed": null,
+          "status": "NOT_RUN",
+          "junit_status": null,
+          "adb_exit": null,
+          "process_exit_outcome": null,
+          "log_sha256": null
+        },
+        {
+          "ordinal": 4,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.HistoryCollectionTest#malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+          "seed": null,
+          "status": "NOT_RUN",
+          "junit_status": null,
+          "adb_exit": null,
+          "process_exit_outcome": null,
+          "log_sha256": null
+        },
+        {
+          "ordinal": 5,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.HistoryCollectionTest#missingRoomGuardLogAbortsWithoutDeletingCandidates",
+          "seed": null,
+          "status": "NOT_RUN",
+          "junit_status": null,
+          "adb_exit": null,
+          "process_exit_outcome": null,
+          "log_sha256": null
+        },
+        {
+          "ordinal": 6,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.HistoryDeletionBoundaryDiagnosticsTest#sameRoomNaturalArrivalBoundaries",
+          "seed": null,
+          "status": "NOT_RUN",
+          "junit_status": null,
+          "adb_exit": null,
+          "process_exit_outcome": null,
+          "log_sha256": null
+        },
+        {
+          "ordinal": 7,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.HistoryDeletionBoundaryDiagnosticsTest#separateRoomNaturalArrivalBoundaries",
+          "seed": null,
+          "status": "NOT_RUN",
+          "junit_status": null,
+          "adb_exit": null,
+          "process_exit_outcome": null,
+          "log_sha256": null
+        },
+        {
+          "ordinal": 8,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.LibrarySnapshotHoldDiagnosticsTest#idleHeldSnapshotAndActiveSearchSaveBoundaries",
+          "seed": null,
+          "status": "NOT_RUN",
+          "junit_status": null,
+          "adb_exit": null,
+          "process_exit_outcome": null,
+          "log_sha256": null
+        }
+      ],
+      "install_groups": {
+        "C1-data-diagnostics": {
+          "identity": "C1",
+          "status": "INCOMPLETE"
+        }
+      },
+      "device_before_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "device_after_sha256": null,
+      "missing_files": [
+        "device-after.json",
+        "install-C1-data-diagnostics-environment-after.json",
+        "install-C1-data-diagnostics-host-after.json",
+        "method-02-C1-instrumentation.log",
+        "method-02-C1-junit.xml",
+        "method-02-C1-log-forwarding.json",
+        "method-03-C1-instrumentation.log",
+        "method-03-C1-junit.xml",
+        "method-03-C1-log-forwarding.json",
+        "method-04-C1-instrumentation.log",
+        "method-04-C1-junit.xml",
+        "method-04-C1-log-forwarding.json",
+        "method-05-C1-instrumentation.log",
+        "method-05-C1-junit.xml",
+        "method-05-C1-log-forwarding.json",
+        "method-06-C1-instrumentation.log",
+        "method-06-C1-junit.xml",
+        "method-06-C1-log-forwarding.json",
+        "method-07-C1-instrumentation.log",
+        "method-07-C1-junit.xml",
+        "method-07-C1-log-forwarding.json",
+        "method-08-C1-instrumentation.log",
+        "method-08-C1-junit.xml",
+        "method-08-C1-log-forwarding.json"
+      ],
+      "packaging_complete": false,
+      "manifest_sha256": "42082fa47d42d27d3df968d9f9a72b6270e801f209fa16048b2253c23ca5321d",
+      "summary_sha256": "56aa266237cbe6c30780ac81faa963ad8ab2ed034d75e851c9b8b699504ca5cb"
+    },
+    "final": null,
+    "last_receipt_line": 365,
+    "failed_method": {
+      "receipt": {
+        "ordinal": 1,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+        "status": "INCOMPLETE",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": "Probe evidence could not be validated; preserve raw JUnit separately"
+      },
+      "line": 318,
+      "epoch": 1791975764.015622,
+      "failure_text_audited": true
+    },
+    "failed_final_audit": {
+      "status": "FAILED_TERMINAL_AUDITED_NOT_PASS",
+      "passed_prefix": 0,
+      "first_failed_ordinal": 1,
+      "successors_not_run": 7,
+      "dual_cleanup_exact": true,
+      "failure_text_audited": true,
+      "packaging_complete": false,
+      "missing_files": [
+        "device-after.json",
+        "install-C1-data-diagnostics-environment-after.json",
+        "install-C1-data-diagnostics-host-after.json",
+        "method-02-C1-instrumentation.log",
+        "method-02-C1-junit.xml",
+        "method-02-C1-log-forwarding.json",
+        "method-03-C1-instrumentation.log",
+        "method-03-C1-junit.xml",
+        "method-03-C1-log-forwarding.json",
+        "method-04-C1-instrumentation.log",
+        "method-04-C1-junit.xml",
+        "method-04-C1-log-forwarding.json",
+        "method-05-C1-instrumentation.log",
+        "method-05-C1-junit.xml",
+        "method-05-C1-log-forwarding.json",
+        "method-06-C1-instrumentation.log",
+        "method-06-C1-junit.xml",
+        "method-06-C1-log-forwarding.json",
+        "method-07-C1-instrumentation.log",
+        "method-07-C1-junit.xml",
+        "method-07-C1-log-forwarding.json",
+        "method-08-C1-instrumentation.log",
+        "method-08-C1-junit.xml",
+        "method-08-C1-log-forwarding.json"
+      ],
+      "phase_times": [
+        {
+          "name": "Freeze/reconstruct one source and install fixed SDK",
+          "phase": "setup",
+          "start_epoch": 1791975375.0,
+          "end_epoch": 1791975404.0,
+          "within_success_deadline": true
+        },
+        {
+          "name": "Build only C1 data test APK; verify signature, manifest and SQLite native identities",
+          "phase": "setup",
+          "start_epoch": 1791975404.0,
+          "end_epoch": 1791975728.0,
+          "within_success_deadline": true
+        },
+        {
+          "name": "最小临时ACL与同一KVM模拟器",
+          "phase": "setup",
+          "start_epoch": 1791975728.0,
+          "end_epoch": 1791975761.0,
+          "within_success_deadline": true
+        },
+        {
+          "name": "Five GC guards, two GC diagnostics, one snapshot-control diagnostic; failure stops the run",
+          "phase": "data",
+          "start_epoch": 1791975761.0,
+          "end_epoch": 1791975766.0,
+          "within_success_deadline": true
+        }
+      ]
+    }
+  },
+  "numeric_acceptance": "NOT_EVALUATED",
+  "limitations": [
+    "Official run/job metadata and decoded-log provenance are supplied externally; no online authenticity check.",
+    "Compact receipts do not independently audit APK binaries, raw JUnit files, native libraries, installed bytes or ACL files.",
+    "records_sha256 is reconstructed exactly; raw_log_sha256 is only linked between CONTEXT and FINAL.",
+    "Group post-environment equality is a bound-controller PASS claim; only its before environment hash is directly forwarded.",
+    "All diagnostics are instrumented observations. No formal gate, product speedup, pure lock-wait or additive causal attribution is claimed."
+  ],
+  "official_statuses": {
+    "run_status": "completed",
+    "run_conclusion": "failure",
+    "job_status": "completed",
+    "job_conclusion": "failure"
+  },
+  "local_git_binding": {
+    "active": "c3483b74e5db7cb7928d26445bd37af51700284c",
+    "prep": "083a892133d818cf364865d3ee3edc1fdb6413c0",
+    "readiness": "fbc502eb49c15018bb1ab2694dc256b7a0f9fc25",
+    "source": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353",
+    "readiness_files_verified": 8,
+    "reviewed_source_files_verified": 10,
+    "control_files_verified": 8,
+    "network": false,
+    "git_operations": "read-only"
+  },
+  "input_hashes": {
+    "approved_plan_sha256": "488458e80500bffb52e6a5d8896711b3df2c880ae47f73022bcaf14102b645bf",
+    "source_spec_sha256": "bf6fe840b3113784315e7b7d575a7ce6d17ded867d87359b04cdfdeee67d0f95",
+    "method_plan_sha256": "f9f80f29e083824fd82df6714df622963a15b5ad0f1c1a030ada7fd56a123643",
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "marker_contract_sha256": "a0682c82d713cb9d2932f0a6c4cc93d5b1d37b33f2ca8580789241c92854084c",
+    "prepare_sources_sha256": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516"
+  },
+  "files": {
+    "/workspace/scratch/pr20-gc-save-execution-20261014/official-decoded-job.log": {
+      "bytes": 42301,
+      "sha256": "6927c9f875e69d5be178c0402961b4811c843f7136abfedab2e95d0ad54b6469"
+    },
+    "/workspace/scratch/pr20-gc-save-execution-20261014/terminal-binding.json": {
+      "bytes": 1955,
+      "sha256": "b833f79619f57a01945ff8344c88525e322e9672c81c9eb5f8e739559caaaa5b"
+    },
+    "/workspace/scratch/pr20-gc-save-execution-20261014/official-run.json": {
+      "bytes": 12686,
+      "sha256": "4781aed29f9792218fa8fd71cfff1855218d15d6e45d454f52c279b319235fb8"
+    },
+    "/workspace/scratch/pr20-gc-save-execution-20261014/official-jobs.json": {
+      "bytes": 3945,
+      "sha256": "2e58987ec8df1f732d64c2f3ed5b301147c34903c90d658561f53dfb1576d4b7"
+    }
+  },
+  "analyzer_sha256": "16c420cee5885f0ee32aa65f4800e489370da8aef4954297ace22f4d8226f61c",
+  "frozen_markers_sha256": "850707164f4c89ae1920c1f9c99ad9e1a68be7f71b8c456b437671ddada96bda",
+  "extracted_records": [],
+  "failure_evidence": [
+    {
+      "ordinal": 1,
+      "envelope_path": "failure-method-01-C1-original-envelopes.json",
+      "envelope_sha256": "6f1cbc2cfcd0053abd43f9121339bcc0bb1220e148e9763ce9a1ed3bade53793",
+      "forwarding_status": "FORWARDED",
+      "refusal_reason": null,
+      "matched_method_receipt": true,
+      "whole_run_complete": false,
+      "raw_path": "failure-method-01-C1-instrumentation.log",
+      "raw_bytes": 1142,
+      "raw_sha256": "f1ee6adafc9195b66a3e5f9abbc84086ce8118e2339951846aebd05cfdc38204"
+    }
+  ]
+}

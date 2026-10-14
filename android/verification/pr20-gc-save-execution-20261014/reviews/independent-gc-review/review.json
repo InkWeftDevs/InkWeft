@@ -1,0 +1,38 @@
+{
+  "status": "PASS_SCOPED_GC_CONTRACT",
+  "scope": "GC schema/payload/terminal guard/shards/mode/source identity; static and synthetic only",
+  "sourceCommit": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353",
+  "gcProducerSha256": "597bed443289598870d063af99731a60db48ca0e38d8e3576b24fcd995cf4055",
+  "controllerDirectory": "/workspace/scratch/pr20-gc-save-ci-20261014/controller",
+  "controllerManifestSha256": "6611c43b87a4e01d7d9c34dba890f59a8f554664bdf340f5fd2c5829effd928c",
+  "markersSha256": "850707164f4c89ae1920c1f9c99ad9e1a68be7f71b8c456b437671ddada96bda",
+  "runSha256": "506561ce1c03013ef2043855f82fd8a659b9601bfb8696c4d76a0b297af62fb1",
+  "contractSha256": "4d01759b5fa9f5e4aa1b05b75f2b4498f45cc3cdd4cc6a3727da4a7349881eef",
+  "checksSha256": "fab31d7af73f56f96dfff82591526e17f9f5a6af1436e2adc44bd3dc4c92ae33",
+  "independentChecks": 56,
+  "coreAstIdentityNamedNodes": 23,
+  "closedFindings": [
+    {
+      "finding": "Python equality accepted malformed bool/int or int/float coercions in DELETE intervals, retained revisions and covered commit timestamps.",
+      "fix": "Strict controller wrapper fields/types at markers.py:552-560, plus exact boundary JSON comparison at551.",
+      "evidence": "All7 independent scalar-negative cases reject; valid traces continue to pass."
+    }
+  ],
+  "numericAnalyzerV3": {
+    "path": "/workspace/scratch/pr20-gc-author-only-analysis-v3-20261014",
+    "analyzerSha256": "d27991af251dd3031245d0db6ccf9b70e3b25f9eec3dc807e94d5244e67c59d2",
+    "manifestSha256": "0981ed37b9fe0aeb20c8a9e2d048b46737249684448d4d38d0c6858e57bd47e2",
+    "syntheticCases": 94,
+    "note": "V3 independently validates scalar types. Controller keeps v2 numeric AST plus equivalent outer type checks."
+  },
+  "activation": "review_status READY metadata only; execution remains UNBOUND/approved=false/source-spec UNBOUND/unique zero guard.",
+  "remainingBlockersInScope": [],
+  "excluded": [
+    "No Android execution or performance acceptance.",
+    "Failure forwarding, strict missing-evidence packaging exit and joint20MiB sizing belong to save_boundary review.",
+    "No source/readiness/prep/active binding or remote identity verification."
+  ],
+  "networkCalls": 0,
+  "nativeExecutions": 0,
+  "sourceEdits": 0
+}

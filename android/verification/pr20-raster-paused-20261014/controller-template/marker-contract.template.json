@@ -1,0 +1,2049 @@
+{
+  "status": "UNBOUND",
+  "scope": "DIAGNOSTIC_ONLY",
+  "methods": {
+    "1": {
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/RasterReadCacheTest.kt",
+      "selection": "org.inkweft.data.RasterReadCacheTest#coldBatchesPreservePaintOrderAndPopulateEveryCachedIdentity",
+      "identity": "C2",
+      "test_source_sha256": "2467d9dffb61e6d987654ad37d83d4dfc74d3ee0c3d3cad92d8feacdae7ea1dd"
+    },
+    "2": {
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/RasterReadCacheTest.kt",
+      "selection": "org.inkweft.data.RasterReadCacheTest#sameRevisionMaskChangeDuringCachedVisitRejectsTheWholeRead",
+      "identity": "C2",
+      "test_source_sha256": "2467d9dffb61e6d987654ad37d83d4dfc74d3ee0c3d3cad92d8feacdae7ea1dd"
+    },
+    "3": {
+      "kind": "native",
+      "marker_policy": "required",
+      "markers": {
+        "NATIVE_STROKE_TILE_EVIDENCE": {
+          "min_count": 4,
+          "max_count": 4,
+          "payload_max_bytes": 4096
+        }
+      },
+      "method_payload_max_bytes": 16384,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt",
+      "selection": "org.inkweft.app.NativeStrokeTileReuseTest#oneNativeShapePerStrokeMatchesPerTileConstructionThroughTransformsAndClips",
+      "identity": "C2",
+      "test_source_sha256": "ea3f320d3189e053a1e316dc399eece4afb4792ace36cf0b16087330027beb98"
+    },
+    "4": {
+      "kind": "frame",
+      "marker_policy": "required",
+      "markers": {
+        "RASTER_PAIRED_EVIDENCE": {
+          "min_count": 14,
+          "max_count": 14,
+          "payload_max_bytes": 8192
+        },
+        "RASTER_SQLITE_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 65536,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt",
+      "selection": "org.inkweft.app.RasterPerformanceProbe#continuousTransformsAndSeparatedDirtyTiles",
+      "identity": "C2",
+      "test_source_sha256": "38fd3638d88ed3b21b23442a3759c61a0a3733af7c1619dbbf0bafaac419aa5f"
+    },
+    "5": {
+      "kind": "dense",
+      "marker_policy": "required",
+      "markers": {
+        "STREAMED_FRAME_STAGE": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt",
+      "fixture_strokes": 1201,
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "identity": "C2",
+      "test_source_sha256": "6b61b7bbe518729ffc65195f72bfb4a4fe7e84139fbf896e5b687fbe29f756e5"
+    },
+    "6": {
+      "kind": "dense",
+      "marker_policy": "required",
+      "markers": {
+        "STREAMED_FRAME_STAGE": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt",
+      "schema_overrides": {
+        "STREAMED_FRAME_STAGE": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "case",
+                "stage",
+                "elapsedMs",
+                "fixtureStrokes",
+                "fixturePoints",
+                "frameDeadlineMs",
+                "windowStrokes",
+                "windowPoints"
+              ],
+              "properties": {
+                "case": {
+                  "type": "string",
+                  "enum": [
+                    "bounded-two-batch"
+                  ],
+                  "maxLength": 17
+                },
+                "stage": {
+                  "const": "editor-window-complete"
+                },
+                "elapsedMs": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "fixtureStrokes": {
+                  "const": 258
+                },
+                "fixturePoints": {
+                  "const": 8226
+                },
+                "frameDeadlineMs": {
+                  "const": 30000
+                },
+                "windowStrokes": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "windowPoints": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "case",
+                "stage",
+                "elapsedMs",
+                "fixtureStrokes",
+                "fixturePoints",
+                "frameDeadlineMs"
+              ],
+              "properties": {
+                "case": {
+                  "type": "string",
+                  "enum": [
+                    "bounded-two-batch"
+                  ],
+                  "maxLength": 17
+                },
+                "stage": {
+                  "const": "fixture-complete"
+                },
+                "elapsedMs": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "fixtureStrokes": {
+                  "const": 258
+                },
+                "fixturePoints": {
+                  "const": 8226
+                },
+                "frameDeadlineMs": {
+                  "const": 30000
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "case",
+                "stage",
+                "elapsedMs",
+                "fixtureStrokes",
+                "fixturePoints",
+                "frameDeadlineMs"
+              ],
+              "properties": {
+                "case": {
+                  "type": "string",
+                  "enum": [
+                    "bounded-two-batch"
+                  ],
+                  "maxLength": 17
+                },
+                "stage": {
+                  "const": "fixture-start"
+                },
+                "elapsedMs": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "fixtureStrokes": {
+                  "const": 258
+                },
+                "fixturePoints": {
+                  "const": 8226
+                },
+                "frameDeadlineMs": {
+                  "const": 30000
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "case",
+                "stage",
+                "elapsedMs",
+                "fixtureStrokes",
+                "fixturePoints",
+                "frameDeadlineMs",
+                "frameElapsedMs",
+                "snapshotReads",
+                "snapshotRows",
+                "changeCallbacks",
+                "publishedStats"
+              ],
+              "properties": {
+                "case": {
+                  "type": "string",
+                  "enum": [
+                    "bounded-two-batch"
+                  ],
+                  "maxLength": 17
+                },
+                "stage": {
+                  "const": "frame-complete"
+                },
+                "elapsedMs": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "fixtureStrokes": {
+                  "const": 258
+                },
+                "fixturePoints": {
+                  "const": 8226
+                },
+                "frameDeadlineMs": {
+                  "const": 30000
+                },
+                "frameElapsedMs": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "snapshotReads": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 128,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "frameElapsedMs",
+                      "rows",
+                      "points",
+                      "freezeMs",
+                      "decodeMs"
+                    ],
+                    "properties": {
+                      "frameElapsedMs": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 9223372036854775807
+                      },
+                      "rows": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 9223372036854775807
+                      },
+                      "points": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 9223372036854775807
+                      },
+                      "freezeMs": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 9223372036854775807
+                      },
+                      "decodeMs": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 9223372036854775807
+                      }
+                    }
+                  }
+                },
+                "snapshotRows": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "changeCallbacks": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "publishedStats": {
+                  "type": "string",
+                  "maxLength": 1024,
+                  "pattern": "^BuildStats\\(tiles=[0-9]+, rebuilt=[0-9]+, decoded=[0-9]+, bitmapBytes=[0-9]+, metadataMs=[0-9]+(?:\\.[0-9]+)?(?:[Ee][+-]?[0-9]+)?, rasterMs=[0-9]+(?:\\.[0-9]+)?(?:[Ee][+-]?[0-9]+)?, publicationMs=[0-9]+(?:\\.[0-9]+)?(?:[Ee][+-]?[0-9]+)?, reusedStrokes=[0-9]+, geometryBytes=[0-9]+, nativeStrokeBuilds=[0-9]+\\)$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "case",
+                "stage",
+                "elapsedMs",
+                "fixtureStrokes",
+                "fixturePoints",
+                "frameDeadlineMs"
+              ],
+              "properties": {
+                "case": {
+                  "type": "string",
+                  "enum": [
+                    "bounded-two-batch"
+                  ],
+                  "maxLength": 17
+                },
+                "stage": {
+                  "const": "frame-start"
+                },
+                "elapsedMs": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "fixtureStrokes": {
+                  "const": 258
+                },
+                "fixturePoints": {
+                  "const": 8226
+                },
+                "frameDeadlineMs": {
+                  "const": 30000
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "case",
+                "stage",
+                "elapsedMs",
+                "fixtureStrokes",
+                "fixturePoints",
+                "frameDeadlineMs"
+              ],
+              "properties": {
+                "case": {
+                  "type": "string",
+                  "enum": [
+                    "bounded-two-batch"
+                  ],
+                  "maxLength": 17
+                },
+                "stage": {
+                  "const": "verified-and-released"
+                },
+                "elapsedMs": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "fixtureStrokes": {
+                  "const": 258
+                },
+                "fixturePoints": {
+                  "const": 8226
+                },
+                "frameDeadlineMs": {
+                  "const": 30000
+                }
+              }
+            }
+          ]
+        }
+      },
+      "fixture_strokes": 258,
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameCrossesBothTheEditorPointWindowAndDatabaseBatchBoundary",
+      "identity": "C2",
+      "test_source_sha256": "6b61b7bbe518729ffc65195f72bfb4a4fe7e84139fbf896e5b687fbe29f756e5"
+    },
+    "7": {
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#appendRetainsGeometryAcrossIdleLayerRevisionsAndDestructiveChangesMatchColdFrames",
+      "identity": "C2",
+      "test_source_sha256": "385e5618cdb95d91084054da9724f012b57f63e4e77a33d97bf1588681ba792a"
+    },
+    "8": {
+      "kind": "guard",
+      "marker_policy": "required",
+      "markers": {
+        "TILE_PAN_STAGE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 8192,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources",
+      "identity": "C2",
+      "test_source_sha256": "385e5618cdb95d91084054da9724f012b57f63e4e77a33d97bf1588681ba792a"
+    },
+    "9": {
+      "selection": "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+      "marker_policy": "required",
+      "kind": "raster_causal",
+      "markers": {
+        "RASTER_CAUSAL_DIAGNOSTIC": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 262144
+        }
+      },
+      "method_payload_max_bytes": 786432,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/RasterCausalDiagnosticsTest.kt",
+      "test_source_sha256": "9625877ead48ded748ab600587f92738f8711ff1fefdcd825e0bbb6b35ece561",
+      "identity": "C1"
+    },
+    "10": {
+      "selection": "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+      "marker_policy": "required",
+      "kind": "raster_causal",
+      "markers": {
+        "RASTER_CAUSAL_DIAGNOSTIC": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 262144
+        }
+      },
+      "method_payload_max_bytes": 786432,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/RasterCausalDiagnosticsTest.kt",
+      "test_source_sha256": "9625877ead48ded748ab600587f92738f8711ff1fefdcd825e0bbb6b35ece561",
+      "identity": "C2"
+    },
+    "11": {
+      "selection": "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+      "marker_policy": "required",
+      "kind": "raster_causal",
+      "markers": {
+        "RASTER_CAUSAL_DIAGNOSTIC": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 262144
+        }
+      },
+      "method_payload_max_bytes": 786432,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/RasterCausalDiagnosticsTest.kt",
+      "test_source_sha256": "9625877ead48ded748ab600587f92738f8711ff1fefdcd825e0bbb6b35ece561",
+      "identity": "C2"
+    },
+    "12": {
+      "selection": "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+      "marker_policy": "required",
+      "kind": "raster_causal",
+      "markers": {
+        "RASTER_CAUSAL_DIAGNOSTIC": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 262144
+        }
+      },
+      "method_payload_max_bytes": 786432,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/RasterCausalDiagnosticsTest.kt",
+      "test_source_sha256": "9625877ead48ded748ab600587f92738f8711ff1fefdcd825e0bbb6b35ece561",
+      "identity": "C1"
+    }
+  },
+  "schemas": {
+    "NATIVE_STROKE_TILE_EVIDENCE": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase",
+        "nativeStrokeBuilds",
+        "perTileReferenceBuilds",
+        "tiles",
+        "rebuilt",
+        "pixelsEqual"
+      ],
+      "properties": {
+        "phase": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "nativeStrokeBuilds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "perTileReferenceBuilds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "tiles": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 2147483647
+        },
+        "rebuilt": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "pixelsEqual": {
+          "const": true
+        }
+      }
+    },
+    "RASTER_PAIRED_EVIDENCE": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case",
+        "completeMs",
+        "decoded",
+        "snapshotReadRows",
+        "rebuilt",
+        "tiles",
+        "metadataMs",
+        "rasterMs",
+        "publicationMs",
+        "coldMs",
+        "coldDecoded",
+        "coldSnapshotReadRows",
+        "coldRebuilt",
+        "pixelsEqual",
+        "reusedStrokes",
+        "geometryBytes",
+        "nativeStrokeBuilds"
+      ],
+      "properties": {
+        "case": {
+          "type": "string",
+          "enum": [
+            "initial",
+            "separated-append",
+            "transform-0-0",
+            "transform-0-1",
+            "transform-0-2",
+            "transform-0-3",
+            "transform-1-0",
+            "transform-1-1",
+            "transform-1-2",
+            "transform-1-3",
+            "transform-2-0",
+            "transform-2-1",
+            "transform-2-2",
+            "transform-2-3"
+          ],
+          "maxLength": 16
+        },
+        "completeMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "decoded": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "snapshotReadRows": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "rebuilt": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "tiles": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "metadataMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "rasterMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "publicationMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "coldMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "coldDecoded": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "coldSnapshotReadRows": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "coldRebuilt": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "pixelsEqual": {
+          "type": "boolean"
+        },
+        "reusedStrokes": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "geometryBytes": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "nativeStrokeBuilds": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        }
+      }
+    },
+    "RASTER_SQLITE_EVIDENCE": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "writerSqlite"
+      ],
+      "properties": {
+        "writerSqlite": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "page_size",
+            "auto_vacuum",
+            "journal_mode",
+            "synchronous"
+          ],
+          "properties": {
+            "page_size": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "auto_vacuum": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "journal_mode": {
+              "type": "string",
+              "enum": [
+                "wal"
+              ],
+              "maxLength": 3
+            },
+            "synchronous": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        }
+      }
+    },
+    "TILE_PAN_STAGE": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage",
+        "event",
+        "error",
+        "elapsedMs",
+        "pending",
+        "frameReady",
+        "lastCompletedBuild",
+        "resources"
+      ],
+      "properties": {
+        "stage": {
+          "type": "string",
+          "enum": [
+            "initial-cached"
+          ],
+          "maxLength": 14
+        },
+        "event": {
+          "type": "string",
+          "enum": [
+            "failed"
+          ],
+          "maxLength": 6
+        },
+        "error": {
+          "type": "string",
+          "enum": [
+            "InterruptedPanWait"
+          ],
+          "maxLength": 18
+        },
+        "elapsedMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "pending": {
+          "type": "boolean"
+        },
+        "frameReady": {
+          "type": "boolean"
+        },
+        "lastCompletedBuild": {
+          "type": "null"
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "totalBytes",
+            "budgetBytes",
+            "peakTrackedBytes",
+            "inFlightJobs",
+            "cancelledJobs",
+            "cacheBytes",
+            "in_flightBytes",
+            "activeBytes",
+            "live_inkBytes"
+          ],
+          "properties": {
+            "totalBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "budgetBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "peakTrackedBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "inFlightJobs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "cancelledJobs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "cacheBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "in_flightBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "activeBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "live_inkBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.image-region": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.export": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.map-source": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.formula-input": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.background-work": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.ink-geometry-reservation": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.image": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.pdf": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.pencil-deposition": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.ocr": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.pencil-tile": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.ink-frame": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.page-frame": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        }
+      }
+    },
+    "STREAMED_FRAME_STAGE": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "case",
+            "stage",
+            "elapsedMs",
+            "fixtureStrokes",
+            "fixturePoints",
+            "frameDeadlineMs",
+            "windowStrokes",
+            "windowPoints"
+          ],
+          "properties": {
+            "case": {
+              "type": "string",
+              "enum": [
+                "original-dense"
+              ],
+              "maxLength": 14
+            },
+            "stage": {
+              "const": "editor-window-complete"
+            },
+            "elapsedMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "fixtureStrokes": {
+              "const": 1201
+            },
+            "fixturePoints": {
+              "const": 76802
+            },
+            "frameDeadlineMs": {
+              "const": 30000
+            },
+            "windowStrokes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "windowPoints": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "case",
+            "stage",
+            "elapsedMs",
+            "fixtureStrokes",
+            "fixturePoints",
+            "frameDeadlineMs"
+          ],
+          "properties": {
+            "case": {
+              "type": "string",
+              "enum": [
+                "original-dense"
+              ],
+              "maxLength": 14
+            },
+            "stage": {
+              "const": "fixture-complete"
+            },
+            "elapsedMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "fixtureStrokes": {
+              "const": 1201
+            },
+            "fixturePoints": {
+              "const": 76802
+            },
+            "frameDeadlineMs": {
+              "const": 30000
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "case",
+            "stage",
+            "elapsedMs",
+            "fixtureStrokes",
+            "fixturePoints",
+            "frameDeadlineMs"
+          ],
+          "properties": {
+            "case": {
+              "type": "string",
+              "enum": [
+                "original-dense"
+              ],
+              "maxLength": 14
+            },
+            "stage": {
+              "const": "fixture-start"
+            },
+            "elapsedMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "fixtureStrokes": {
+              "const": 1201
+            },
+            "fixturePoints": {
+              "const": 76802
+            },
+            "frameDeadlineMs": {
+              "const": 30000
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "case",
+            "stage",
+            "elapsedMs",
+            "fixtureStrokes",
+            "fixturePoints",
+            "frameDeadlineMs",
+            "frameElapsedMs",
+            "snapshotReads",
+            "snapshotRows",
+            "changeCallbacks",
+            "publishedStats"
+          ],
+          "properties": {
+            "case": {
+              "type": "string",
+              "enum": [
+                "original-dense"
+              ],
+              "maxLength": 14
+            },
+            "stage": {
+              "const": "frame-complete"
+            },
+            "elapsedMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "fixtureStrokes": {
+              "const": 1201
+            },
+            "fixturePoints": {
+              "const": 76802
+            },
+            "frameDeadlineMs": {
+              "const": 30000
+            },
+            "frameElapsedMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "snapshotReads": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 128,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "frameElapsedMs",
+                  "rows",
+                  "points",
+                  "freezeMs",
+                  "decodeMs"
+                ],
+                "properties": {
+                  "frameElapsedMs": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9223372036854775807
+                  },
+                  "rows": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9223372036854775807
+                  },
+                  "points": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9223372036854775807
+                  },
+                  "freezeMs": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9223372036854775807
+                  },
+                  "decodeMs": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9223372036854775807
+                  }
+                }
+              }
+            },
+            "snapshotRows": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "changeCallbacks": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "publishedStats": {
+              "type": "string",
+              "maxLength": 1024,
+              "pattern": "^BuildStats\\(tiles=[0-9]+, rebuilt=[0-9]+, decoded=[0-9]+, bitmapBytes=[0-9]+, metadataMs=[0-9]+(?:\\.[0-9]+)?(?:[Ee][+-]?[0-9]+)?, rasterMs=[0-9]+(?:\\.[0-9]+)?(?:[Ee][+-]?[0-9]+)?, publicationMs=[0-9]+(?:\\.[0-9]+)?(?:[Ee][+-]?[0-9]+)?, reusedStrokes=[0-9]+, geometryBytes=[0-9]+, nativeStrokeBuilds=[0-9]+\\)$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "case",
+            "stage",
+            "elapsedMs",
+            "fixtureStrokes",
+            "fixturePoints",
+            "frameDeadlineMs"
+          ],
+          "properties": {
+            "case": {
+              "type": "string",
+              "enum": [
+                "original-dense"
+              ],
+              "maxLength": 14
+            },
+            "stage": {
+              "const": "frame-start"
+            },
+            "elapsedMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "fixtureStrokes": {
+              "const": 1201
+            },
+            "fixturePoints": {
+              "const": 76802
+            },
+            "frameDeadlineMs": {
+              "const": 30000
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "case",
+            "stage",
+            "elapsedMs",
+            "fixtureStrokes",
+            "fixturePoints",
+            "frameDeadlineMs"
+          ],
+          "properties": {
+            "case": {
+              "type": "string",
+              "enum": [
+                "original-dense"
+              ],
+              "maxLength": 14
+            },
+            "stage": {
+              "const": "verified-and-released"
+            },
+            "elapsedMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "fixtureStrokes": {
+              "const": 1201
+            },
+            "fixturePoints": {
+              "const": 76802
+            },
+            "frameDeadlineMs": {
+              "const": 30000
+            }
+          }
+        }
+      ]
+    },
+    "RASTER_CAUSAL_DIAGNOSTIC": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scope": {
+          "type": "string",
+          "enum": [
+            "DIAGNOSTIC_ONLY"
+          ],
+          "maxLength": 15
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 4101,
+          "maximum": 4102
+        },
+        "fixture": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string",
+              "enum": [
+                "raster-1-before",
+                "raster-4-before",
+                "raster-8-before"
+              ],
+              "maxLength": 15
+            },
+            "seed": {
+              "type": "integer",
+              "minimum": 4101,
+              "maximum": 4102
+            },
+            "logicalSha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "maxLength": 64
+            },
+            "rowCounts": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "notes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "note_revisions": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "notebook_workspace": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "notebook_pages": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "ink_pages": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "ink_strokes": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "canvas_authoring": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "page_layer_memberships": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                }
+              },
+              "required": [
+                "notes",
+                "note_revisions",
+                "notebook_workspace",
+                "notebook_pages",
+                "ink_pages",
+                "ink_strokes",
+                "canvas_authoring",
+                "page_layer_memberships"
+              ]
+            },
+            "writerSqlite": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "page_size": {
+                  "type": "integer",
+                  "minimum": 1024,
+                  "maximum": 1024
+                },
+                "auto_vacuum": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                },
+                "journal_mode": {
+                  "type": "string",
+                  "enum": [
+                    "wal"
+                  ],
+                  "maxLength": 3
+                },
+                "synchronous": {
+                  "type": "integer",
+                  "minimum": 2,
+                  "maximum": 2
+                }
+              },
+              "required": [
+                "page_size",
+                "auto_vacuum",
+                "journal_mode",
+                "synchronous"
+              ]
+            }
+          },
+          "required": [
+            "label",
+            "seed",
+            "logicalSha256",
+            "rowCounts",
+            "writerSqlite"
+          ]
+        },
+        "result": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "layers": {
+              "type": "integer",
+              "enum": [
+                1,
+                4,
+                8
+              ]
+            },
+            "initialStrokes": {
+              "type": "integer",
+              "minimum": 320,
+              "maximum": 320
+            },
+            "finalStrokes": {
+              "type": "integer",
+              "minimum": 321,
+              "maximum": 321
+            },
+            "firstCompleteMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000000000.0
+            },
+            "appendCompleteMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000000000.0
+            },
+            "forcedFullCompleteMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000000000.0
+            },
+            "localDecoded": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 320
+            },
+            "fullDecoded": {
+              "type": "integer",
+              "minimum": 321,
+              "maximum": 321
+            },
+            "localRebuiltTiles": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 512
+            },
+            "fullRebuiltTiles": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 4096
+            },
+            "metadataMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000000000.0
+            },
+            "rasterMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000000000.0
+            },
+            "publicationMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000000000.0
+            },
+            "pixelsEqual": {
+              "type": "boolean",
+              "const": true
+            },
+            "bitmapBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "nativeStrokeBuilds": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 321
+            }
+          },
+          "required": [
+            "layers",
+            "initialStrokes",
+            "finalStrokes",
+            "firstCompleteMs",
+            "appendCompleteMs",
+            "forcedFullCompleteMs",
+            "localDecoded",
+            "fullDecoded",
+            "localRebuiltTiles",
+            "fullRebuiltTiles",
+            "metadataMs",
+            "rasterMs",
+            "publicationMs",
+            "pixelsEqual",
+            "bitmapBytes",
+            "nativeStrokeBuilds"
+          ]
+        },
+        "frames": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "phase": {
+                "type": "string",
+                "enum": [
+                  "first",
+                  "local",
+                  "full",
+                  "hidden-local",
+                  "hidden-full"
+                ],
+                "maxLength": 12
+              },
+              "generation": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 3
+              },
+              "timesNanos": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "REQUEST": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "WORKER_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "METADATA_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "RASTER_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "PREPARE_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "PREPARE_END": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "PUBLICATION_ENTER": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "PUBLISHED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "NOTIFY_ENQUEUE": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "NOTIFY_CALLBACK": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "READY_DRAW_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "READY_DRAW_END": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "WORKER_FINALLY": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "CLEAR_REQUESTED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "SUPERSEDED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "CANCELLED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "FAILED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  },
+                  "BUDGET_BUSY": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9223372036854775807
+                  }
+                },
+                "required": [
+                  "REQUEST",
+                  "WORKER_START",
+                  "METADATA_START",
+                  "RASTER_START",
+                  "PREPARE_START",
+                  "PREPARE_END",
+                  "PUBLICATION_ENTER",
+                  "PUBLISHED",
+                  "READY_DRAW_START",
+                  "READY_DRAW_END",
+                  "WORKER_FINALLY"
+                ]
+              },
+              "threadIds": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "REQUEST": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "WORKER_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "METADATA_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "RASTER_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "PREPARE_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "PREPARE_END": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "PUBLICATION_ENTER": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "PUBLISHED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "NOTIFY_ENQUEUE": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "NOTIFY_CALLBACK": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "READY_DRAW_START": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "READY_DRAW_END": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "WORKER_FINALLY": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "CLEAR_REQUESTED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "SUPERSEDED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "CANCELLED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "FAILED": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "BUDGET_BUSY": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  }
+                },
+                "required": [
+                  "REQUEST",
+                  "WORKER_START",
+                  "METADATA_START",
+                  "RASTER_START",
+                  "PREPARE_START",
+                  "PREPARE_END",
+                  "PUBLICATION_ENTER",
+                  "PUBLISHED",
+                  "READY_DRAW_START",
+                  "READY_DRAW_END",
+                  "WORKER_FINALLY"
+                ]
+              },
+              "notificationRequests": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
+              },
+              "notificationCallbacks": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
+              },
+              "notificationsSuperseded": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
+              },
+              "nativeAttempts": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 321
+              },
+              "nativeCompleted": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 321
+              },
+              "nativePreparationAndBuildWallNanos": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "nativePreparationAndBuildThreadCpuNanos": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "active",
+                  "full"
+                ],
+                "maxLength": 6
+              },
+              "layer": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 7
+              }
+            },
+            "required": [
+              "phase",
+              "generation",
+              "revision",
+              "timesNanos",
+              "threadIds",
+              "notificationRequests",
+              "notificationCallbacks",
+              "notificationsSuperseded",
+              "nativeAttempts",
+              "nativeCompleted",
+              "nativePreparationAndBuildWallNanos",
+              "nativePreparationAndBuildThreadCpuNanos",
+              "role",
+              "layer"
+            ]
+          },
+          "minItems": 5,
+          "maxItems": 40
+        },
+        "metadata": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "phase": {
+                "type": "string",
+                "enum": [
+                  "first",
+                  "local",
+                  "full",
+                  "hidden-local",
+                  "hidden-full"
+                ],
+                "maxLength": 12
+              },
+              "layer": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 7
+              },
+              "regions": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 512
+              },
+              "preparationBatches": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "preparationRows": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "queryBatches": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "metadataRows": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "admissionAndPreparationNanos": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "queryAndDigestNanos": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "queryAndDigestThreadCpuNanos": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "hexAndResultNanos": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "hexAndResultThreadCpuNanos": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "queryStartThreadId": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              "hexStartThreadId": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              "hexEndThreadId": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              }
+            },
+            "required": [
+              "phase",
+              "layer",
+              "regions",
+              "preparationBatches",
+              "preparationRows",
+              "queryBatches",
+              "metadataRows",
+              "admissionAndPreparationNanos",
+              "queryAndDigestNanos",
+              "queryAndDigestThreadCpuNanos",
+              "hexAndResultNanos",
+              "hexAndResultThreadCpuNanos",
+              "queryStartThreadId",
+              "hexStartThreadId",
+              "hexEndThreadId"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 128
+        },
+        "reads": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "phase": {
+                "type": "string",
+                "enum": [
+                  "first",
+                  "local",
+                  "full",
+                  "hidden-local",
+                  "hidden-full"
+                ],
+                "maxLength": 12
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "INK"
+                ],
+                "maxLength": 3
+              },
+              "freezeNanos": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "decodeNanos": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "entries": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 321
+              },
+              "payloadBytes": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "decodedPoints": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 642
+              },
+              "candidateRows": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              }
+            },
+            "required": [
+              "phase",
+              "kind",
+              "freezeNanos",
+              "decodeNanos",
+              "entries",
+              "payloadBytes",
+              "decodedPoints",
+              "candidateRows"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 128
+        },
+        "joined": {
+          "type": "boolean",
+          "const": true
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "totalBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "budgetBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "peakTrackedBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "inFlightJobs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "cancelledJobs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "cacheBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "in_flightBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "activeBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "live_inkBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "geometryReservationBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          },
+          "required": [
+            "totalBytes",
+            "budgetBytes",
+            "peakTrackedBytes",
+            "inFlightJobs",
+            "cancelledJobs",
+            "cacheBytes",
+            "in_flightBytes",
+            "activeBytes",
+            "live_inkBytes",
+            "geometryReservationBytes"
+          ]
+        }
+      },
+      "required": [
+        "scope",
+        "seed",
+        "fixture",
+        "result",
+        "frames",
+        "metadata",
+        "reads",
+        "joined",
+        "resources"
+      ]
+    }
+  },
+  "publication_limits": {
+    "total_artifact_bytes": 20971520,
+    "retention_days": 3
+  },
+  "failure_text": {
+    "raw_max_bytes": 1048576,
+    "wire_max_bytes": 1439104,
+    "normal_forward_duplicate_forbidden": true
+  }
+}
