@@ -1,0 +1,37 @@
+{
+  "status": "PRIOR_RECONSTRUCTED_SOURCES_UNCHANGED_62_METHOD_PLAN_AMENDMENT",
+  "candidate": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+  "prior_receipt_path": "/workspace/scratch/pr20-match-candidate-20261014/preparation/frozen-readiness/source-freeze-receipt.json",
+  "prior_receipt_sha256": "58589344167e6ab6c90981c860bca1a7ceadcdc8ca0ec4b1e5def2ee69abbf9d",
+  "verified": {
+    "B": {
+      "files_matched": 947,
+      "canonical_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8"
+    },
+    "C0": {
+      "files_matched": 964,
+      "canonical_manifest_sha256": "06e7cea253c061891e10f658400143a7da34ba23f6ec95224bee31f5c0d13eb6"
+    },
+    "C1": {
+      "files_matched": 999,
+      "canonical_manifest_sha256": "6f9c33d89bab33c032af958727ac1ee9b8b6011b2af2af5d06984556cc839d3e"
+    }
+  },
+  "unchanged_files": {
+    "B-source-manifest.json": "28ee85b6a27b6b99ed6375f486258894abed840a1e1da4181250b84a8d8cfd75",
+    "C0-source-manifest.json": "84f6e8ed68c7ac36123f7265bebd90ba34b0a0fa9c69c64024fbb5e9c577c2a1",
+    "C1-source-manifest.json": "3c3c2ded6e2fbf30180c129449c3a20815401c21f97b25f01df7f056458eb473",
+    "candidate-source-delta.json": "ae56b1cec436de44997076b97088f436d0f1f89bdad515d682f00b7cf6d3f67e",
+    "prepare_sources.py": "2b544afa479b81294efc6bad2bf8af910bf39039af4664ab70035fce3e6e0dfb",
+    "original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "reconstruction.stdout.log": "b8663abb16a9de65cbd57a29b05e3fb45fb2902d5502df95b75cede255dff5ff",
+    "reconstruction.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+  "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+  "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+  "original58_preserved": true,
+  "new_total_methods": 62,
+  "new_native_source_sha256": "33a12420e1a8230cb272f65ada9501ac8ceb12b4be068598c1f1e161e26c44e7",
+  "new_build_or_native": false
+}

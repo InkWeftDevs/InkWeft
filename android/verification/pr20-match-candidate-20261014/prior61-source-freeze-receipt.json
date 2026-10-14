@@ -1,0 +1,25 @@
+{
+  "status": "THREE_SOURCE_RECONSTRUCTION_VERIFIED_NO_BUILD_NATIVE",
+  "candidate": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+  "parent_readiness_git": "445654c90a4c78893f158fdc4eca4313f3320a7f",
+  "verified": {
+    "B": {
+      "files_matched": 947,
+      "canonical_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8"
+    },
+    "C0": {
+      "files_matched": 964,
+      "canonical_manifest_sha256": "06e7cea253c061891e10f658400143a7da34ba23f6ec95224bee31f5c0d13eb6"
+    },
+    "C1": {
+      "files_matched": 999,
+      "canonical_manifest_sha256": "6f9c33d89bab33c032af958727ac1ee9b8b6011b2af2af5d06984556cc839d3e"
+    }
+  },
+  "source_spec_sha256": "149f42989f0d8d4598c6ab488d0a27068be8a4523be5b5e16238c268a0dc9f74",
+  "method_plan_sha256": "21f2fae10a6bbf5db490d242f50fdf901daea531492465c9908ed0e8481d866b",
+  "marker_contract_sha256": "9b5a5e4d7e7df2837fbab8d4b1224e8f879faf6d63415f50fd60f2049a1e42d6",
+  "original58_preserved": true,
+  "new_total_methods": 61,
+  "production_delta_count": 7
+}

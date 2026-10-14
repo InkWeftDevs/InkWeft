@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "status": "FROZEN_SOURCE_NOT_BUILT_NOT_RUN",
+  "materialized_scope": [
+    "android",
+    "ci"
+  ],
+  "excluded_from_build_inputs": [
+    "android/verification"
+  ],
+  "identities": {
+    "B": {
+      "git": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+      "tree": "2eefbf879679d29f5ae4b1d6b9715a4cef14d5d9",
+      "production_overrides": [
+        {
+          "from_git": "7949011ca2b84492f6438d275a09d28faef3b472",
+          "from_path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+          "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+          "bytes": 4426,
+          "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d"
+        }
+      ],
+      "canonical_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+      "file_count": 947
+    },
+    "C0": {
+      "git": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+      "tree": "e773d660abbc15fd727000eb60631d3b72a19a92",
+      "production_overrides": [],
+      "canonical_manifest_sha256": "06e7cea253c061891e10f658400143a7da34ba23f6ec95224bee31f5c0d13eb6",
+      "file_count": 964
+    },
+    "C1": {
+      "git": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+      "tree": "5e5b9651197f024832ff7763ff0d87f2011a606d",
+      "production_overrides": [],
+      "canonical_manifest_sha256": "6f9c33d89bab33c032af958727ac1ee9b8b6011b2af2af5d06984556cc839d3e",
+      "file_count": 999
+    }
+  },
+  "common_probes": [
+    {
+      "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+      "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLibraryPairProbe.kt",
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "bytes": 18281,
+      "sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    },
+    {
+      "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+      "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLocalAppendPairProbe.kt",
+      "path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+      "bytes": 12932,
+      "sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    }
+  ],
+  "native_execution": "NOT_RUN",
+  "notes": [
+    "B and common probes remain byte-identical to the prior full58 source manifest.",
+    "C0 equals prior full58 C1=d66, not the old45b slot.",
+    "C1 contains the entire committed delta from d66, including prior default-off diagnostic hooks; do not claim one-helper-only causal isolation.",
+    "62 methods preserve all old1..58 fields and add Unicode/NativeReuse/Frame/originaldense only.",
+    "No build/native/network operation is performed by freezing."
+  ],
+  "version_aliases": {
+    "B": "controlled_baseline",
+    "C0": "previous_complete_candidate_d66b60d",
+    "C1": "matching_and_frame_pencil_candidate"
+  }
+}

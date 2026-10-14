@@ -1,0 +1,618 @@
+{
+  "status": "PASS",
+  "scope": "OFFLINE_SYNTHETIC_NOT_NEW_NATIVE",
+  "cases": [
+    {
+      "name": "synthetic 62 methods / 9 APK / 14 groups",
+      "status": "PASS",
+      "parser_status": "COMPLETE_SCOPED_MATCH_LOG_EVIDENCE",
+      "issues": []
+    },
+    {
+      "name": "missing FINAL",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Missing/unfinished receipt set"
+      ]
+    },
+    {
+      "name": "duplicate FINAL",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Receipt after FINAL"
+      ]
+    },
+    {
+      "name": "wrong binding run",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Expected official binding differs: run_id"
+      ]
+    },
+    {
+      "name": "extra official job",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Expected exactly one official job"
+      ]
+    },
+    {
+      "name": "wrong official event",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official event/branch/workflow differs"
+      ]
+    },
+    {
+      "name": "wrong official head_branch",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official event/branch/workflow differs"
+      ]
+    },
+    {
+      "name": "wrong official path",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official event/branch/workflow differs"
+      ]
+    },
+    {
+      "name": "wrong official head_sha",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Actual run identity differs"
+      ]
+    },
+    {
+      "name": "wrong job ID",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Actual job identity differs"
+      ]
+    },
+    {
+      "name": "anchor after job start",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Anchor/job hard 60min boundary differs"
+      ]
+    },
+    {
+      "name": "job longer than60min",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Anchor/job hard 60min boundary differs"
+      ]
+    },
+    {
+      "name": "wrong context source_commit",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: CONTEXT source differs"
+      ]
+    },
+    {
+      "name": "wrong context test_source_sha256",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: CONTEXT test hash differs"
+      ]
+    },
+    {
+      "name": "wrong context readiness_git",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: CONTEXT run identity differs"
+      ]
+    },
+    {
+      "name": "wrong context source_manifest_sha256",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: CONTEXT source differs"
+      ]
+    },
+    {
+      "name": "wrong context marker_contract_sha256",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: CONTEXT frozen hash differs"
+      ]
+    },
+    {
+      "name": "wrong method args",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: CONTEXT plan mapping differs"
+      ]
+    },
+    {
+      "name": "wrong seed",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: CONTEXT plan mapping differs"
+      ]
+    },
+    {
+      "name": "installed hash mismatch",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Selected/installed APK mismatch"
+      ]
+    },
+    {
+      "name": "wrong APK package",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Three APK package group differs"
+      ]
+    },
+    {
+      "name": "cross-identity signer mismatch",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Per-identity APK/source changed"
+      ]
+    },
+    {
+      "name": "identity APK changed coherently",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Per-identity APK/source changed"
+      ]
+    },
+    {
+      "name": "record payload_sha256",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Original payload size/hash differs"
+      ]
+    },
+    {
+      "name": "record payload_bytes",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Original payload size/hash differs"
+      ]
+    },
+    {
+      "name": "record marker",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Unexpected marker"
+      ]
+    },
+    {
+      "name": "record sequence",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Record order/identity differs"
+      ]
+    },
+    {
+      "name": "footer hash",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Ordered payload footer differs"
+      ]
+    },
+    {
+      "name": "parsed records hash",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Complete parsed records hash differs"
+      ]
+    },
+    {
+      "name": "missing END on zero-record method",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Missing complete method block"
+      ]
+    },
+    {
+      "name": "method status",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "method junit_status",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "method adb_exit",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "method17 forced stop disallowed",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Wrong helper cleanup"
+      ]
+    },
+    {
+      "name": "natural missing observations",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Process receipt absent/oversize"
+      ]
+    },
+    {
+      "name": "helper before observe window",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Auxiliary chronology/window differs"
+      ]
+    },
+    {
+      "name": "helper still alive",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Auxiliary absence/window not closed"
+      ]
+    },
+    {
+      "name": "group incomplete",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL install groups differ"
+      ]
+    },
+    {
+      "name": "environment changed",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Device environment changed"
+      ]
+    },
+    {
+      "name": "group environment changed",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Group environment differs"
+      ]
+    },
+    {
+      "name": "cleanup error",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Cleanup claim not successful"
+      ]
+    },
+    {
+      "name": "ACL bytes unequal claim",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: ACL hashes differ"
+      ]
+    },
+    {
+      "name": "missing original log",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL incomplete execution/evidence/cleanup"
+      ]
+    },
+    {
+      "name": "packaging incomplete",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL incomplete execution/evidence/cleanup"
+      ]
+    },
+    {
+      "name": "official failure",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only"
+      ]
+    },
+    {
+      "name": "late setup boundary",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official phase exceeds budget/sequence"
+      ]
+    },
+    {
+      "name": "first context before actual correctness",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Method block outside official phase"
+      ]
+    },
+    {
+      "name": "phase order reversed",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official phase exceeds budget/sequence"
+      ]
+    },
+    {
+      "name": "clock cutoff changed",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Clock cutoffs differ"
+      ]
+    },
+    {
+      "name": "clock firststep before job",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: First step outside job/setup budget"
+      ]
+    },
+    {
+      "name": "FINAL bool pretending exit code",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: METHOD/FINAL differ"
+      ]
+    },
+    {
+      "name": "truncated",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "JSONDecodeError: Expecting value: line 1 column 18 (char 17)"
+      ]
+    },
+    {
+      "name": "array",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "AssertionError: "
+      ]
+    },
+    {
+      "name": "duplicate",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Duplicate JSON key"
+      ]
+    },
+    {
+      "name": "nonfinite",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Non-finite JSON"
+      ]
+    },
+    {
+      "name": "unexpected key",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "AssertionError: Unknown/missing object key"
+      ]
+    },
+    {
+      "name": "extra method before FINAL",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Extra method block"
+      ]
+    },
+    {
+      "name": "missing record within native oracle",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: END count differs"
+      ]
+    },
+    {
+      "name": "missing required dense final stage",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: END count differs"
+      ]
+    },
+    {
+      "name": "payload limit",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Original payload size/hash differs"
+      ]
+    },
+    {
+      "name": "END bool is not integer ordinal",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: END count differs"
+      ]
+    },
+    {
+      "name": "footer bool is not integer sequence even rehashed",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Footer integer type differs"
+      ]
+    },
+    {
+      "name": "negative process observation elapsed",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Process chronology differs"
+      ]
+    },
+    {
+      "name": "official setup before actual job",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official phase exceeds budget/sequence"
+      ]
+    },
+    {
+      "name": "dense failure retains61 closures but no numerical promotion",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only",
+        "ValueError: METHOD failed/incomplete/skipped"
+      ]
+    },
+    {
+      "name": "frozen statistics hash required",
+      "status": "PASS"
+    },
+    {
+      "name": "late I/O cannot retain COMPLETE",
+      "status": "PASS"
+    },
+    {
+      "name": "original frozen arithmetic / 720 raw samples / 54 comparisons exact",
+      "status": "PASS"
+    },
+    {
+      "name": "frozen/control files read-only including no bytecode cache",
+      "status": "PASS"
+    }
+  ],
+  "analyzer_sha256": "bafc7ca19ad2fb0523dd5d859ef0b521c78d8715d888c30dee274fdf97eae800",
+  "checker_sha256": "9536712d7117c7ab5d763dad8b531f2cb0e7beeb2ffeb220ce4e3fdf3dc220d7",
+  "validator_sha256": "7dfb88112bdf17b9cc8ff96b9cdf068a79394505cbb0103be4d93819533a2a80",
+  "statistics_sha256": "fdbf7b76ebbf587bccaede00910209ba2586c0982bbd0da80cb26cb94ce07740",
+  "frozen_input_hashes": {
+    "approved_plan_sha256": "fddc7225de7db0c14048a0d8f364dc749c2779ed9c959527d0ebadd78888f087",
+    "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+    "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+    "clock_contract_sha256": "ddadfaeb6245f526055b80f2de0b5afdac45cd303a8770836c4970200432f34b",
+    "server_receipt_sha256": "d6a6ba16701d5be5b19dfe0d1e1112922ada92dd8c8de2e4dc90ce7ac38926af"
+  },
+  "historical_fixture_hashes": {
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-01-C1-instrumentation.log": "67279a8b3e4f817e617a39d40f116f9651337335d544b8abd13560cc5a7f0e9a",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-02-C1-instrumentation.log": "de138799740a9c42b38909a2bbc7a73500f94b9d3399035d6bd0a5a89097b35d",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-03-C1-instrumentation.log": "bc180b13751b6bd51d48cc5c7443e524616a352c418a6098691233f2708d53e3",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-04-C1-instrumentation.log": "51df1270a4584e4f3a81295954d79d74a8de2777ba9f3b260161e0a58e196836",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-05-C1-instrumentation.log": "170c1eede194a918dd53b25948d9b06a035b293cc008d8e5c278d2d95f84fcda",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-06-C1-instrumentation.log": "b0d3ecaab7d521e22a367d8bc256078b1f4da5d25ab94f2eefea629c21a1b4ca",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-07-C1-instrumentation.log": "4122edbec45210affdb9cd2f8a7c9f49cc74fc58d667f0411de0f6485f853c34",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-08-C1-instrumentation.log": "be8b142e8d504273f19a127fbc9c0b6757406de5befc4e3811de908f7b1ac080",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-09-C1-instrumentation.log": "35d6198d210073c6d681577aebf4dee8cbf6ea316689213437bbf5bda93adc4f",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-10-C1-instrumentation.log": "c1159ecafa34db85ab2c00834057e6cc479788d0cabe11fa2171625bf7f0d070",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-11-C1-instrumentation.log": "4e16e91474fb5daa79915e7543aaa3547b9b72aa1f7bfa9d35c9640a5298db80",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-12-C1-instrumentation.log": "1f19033aa177e3b2dd4b60adb3fc0a65b79d9ee6037cf9c4194bed14c5de371b",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-13-C1-instrumentation.log": "3907a2d5c07529c3807973afd5a6042d38b9274f4db4c333f0d518889ea92265",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-14-C1-instrumentation.log": "7cb8ee0ae5aac47bb8cfabf4263ccfccd9d491113367f6d0b893b01b6f423d30",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-15-C1-instrumentation.log": "76a357dcb5482ad73d427284fafc48f441506f7b53f52f0bd2f5ce16f2f4ef01",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-16-C1-instrumentation.log": "fb9260b404d3b54e7d52c55df23346bc788f860a586da2f53a011067a3eefc20",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-17-C1-instrumentation.log": "4ff02c8491d2cb79e58bab1fc2ab0f9f052ceb08597e8f95589d91e62f17acea",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-18-C1-instrumentation.log": "13d4098aeea1151c71138ac32e134bc78229b12cace1836742310c1ca98574cc",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-19-C1-instrumentation.log": "448c470a401d724e62bfdb7bb4557687a19e488645bd2dd71d5cd2a927fe82f8",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-20-C1-instrumentation.log": "458ade034f57b66d69d7b8dccc6fd85d63dea4d1fb79722b6e3efea9aa7ab793",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-21-C1-instrumentation.log": "f1516545b677bbb8334127577a20474961fa8c28a6639245952d3fa9700b101d",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-22-C1-instrumentation.log": "221d46ea9135ded0179c519b6351670e21aa4357641555891a404934562e55f0",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-23-C1-instrumentation.log": "26abc8cb06a4d094b4a165421974233a9f8f083d1454bece78a320e0fc4decbb",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-24-C1-instrumentation.log": "a8e16e5f54db862dffa0a2c2acd5a2a93a59d84a59fe976a81400262d28c3577",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-25-C1-instrumentation.log": "84517abcf54a19cf155ff6503d5a95e4fac00dd6f82b61732c1293ac457185ca",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-26-C1-instrumentation.log": "f8547976dbe7e38bd67bb7745cdfd3c0a79e600f2ef421b2cd00363d3c854764",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-27-C1-instrumentation.log": "4b0521397755df74a15560159aef7e420e907ad9b3d44df7be4bee2d3b063bbb",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-28-C1-instrumentation.log": "080518f11668204b216f364faed0312ad58aebbeed9dcce1b891e61439dabf19",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-29-C1-instrumentation.log": "68a26dd58d2307d6ae80ccbfebb72ee71be08f967b0a68165efad1c33b1d5624",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-30-C1-instrumentation.log": "a85d78be4a29d296e3fd7c1612dceddc5632da4a66b2207ae98b3e410e0e17ab",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-31-C1-instrumentation.log": "ce48e007f711d660ba7d32583702d8deef897dd0de6b7ea0b4957be9c8c04069",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-32-B-instrumentation.log": "2f10ad27d714ea62bfc0c5c5b44d84f9c441086f12848594e66922a0bf5e1883",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-33-B-instrumentation.log": "422e94c0894174502a7cc418421256b3cac14ff30e3fbf79140c068ea6ea65f7",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-34-C0-instrumentation.log": "8bbd892f80ff38479cd25430e3ee3b74839b3c56ebdbdcb4f6436779d2c48663",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-35-C0-instrumentation.log": "4912f375f0ad98729757a375fc848ad19ce7bb3dfa5b7fa90cb93a79731f5aaa",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-36-C1-instrumentation.log": "6a64b19bf85cb80b04ba87a172454d68532a5f2b4c001f8bc95cc6ea31a5bcfd",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-37-C1-instrumentation.log": "152a58e9fe5238ba98372dbb66e39c1d1dab5fc28e374891cbe6a0228ed45826",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-38-C1-instrumentation.log": "b091e196580d733318ad2f4090fe7e0a6507beb001fe2502b403fbb8ea09963e",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-39-C1-instrumentation.log": "192ee18eb0d9ed9d4cc190004a313394356c2530cc239c2ab6c5d0ee223fd2e2",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-40-B-instrumentation.log": "a450e7f20b6f0204375482246a43303ce1ad891170c3c83dd815d19cb944c7c5",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-41-B-instrumentation.log": "d29ef4216e823eeeb79b34b0a4b15de2b6fef59ac64159eb25900373dafcb701",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-42-C0-instrumentation.log": "b4efff47628dd3f2413deac255bddc91d64097552b4bcf56739404f57964141e",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-43-C0-instrumentation.log": "3c4f556ba3465913b347ed4542b9046f41ddf82c3d37d80e004c6a6fdf8b5c9f",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-44-C0-instrumentation.log": "0a0c390a3a4acddb22c2ee2ff972b529271ba93690fcb135250b7734988ca280",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-45-C0-instrumentation.log": "62241bea8e93849344396c8699095cf42510c553a13b3beafad38e8fddace2c7",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-46-C1-instrumentation.log": "48d2385614fa2a489e07d4459fa89e35897c0aef5a0bf3d796c7478f675fa9d2",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-47-C1-instrumentation.log": "31ba41ad8ff2c20d88f4f39970f5a55a5821b5ff7f22070fa8ae6909cc4004e1",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-48-B-instrumentation.log": "660f805af9274222f810f2892f7fbb052691f9728f212f72e7015daef84a2170",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-49-B-instrumentation.log": "fc6921cedd063d3b6297ac1a9c30f891a3d50126d0dccb24e4371be80b9b101f",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-50-B-instrumentation.log": "b87b3349ce5bc7f93a7434a1681d8b9120d74e22e8e0ee60b718c3d66e61d49e",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-51-B-instrumentation.log": "d86ba183ea1aab778b2a0d2f63cd2f477fa65a2c443478c0ef8f017cf072464d",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-52-C1-instrumentation.log": "e1d5a1a5d5f2525b54ed95ca775b020761585fd117e3d08130880b8b313fea90",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-53-C1-instrumentation.log": "7da8746646f60a42fa58cd6bf56e61b484f0f0d2e42e48705f379328900e0c8e",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-54-C0-instrumentation.log": "9e751b6f2f0b9fb5360511cd1a944a721fb8718cbf9a2265a13ee8ac3f77c778",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-55-C0-instrumentation.log": "9b9cc52ed36e93a1a59b8b0bb45556743ee4fe17be2901b602404592d3808ad9",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-56-C1-instrumentation.log": "067bd548a91e3adc449faa6271f1d915b355d1e458473b6bac933fb9be327cac",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-57-C1-instrumentation.log": "6152bbbf8dc25b673a299bdf695ac595251f807d71d8318721bbc0850b068ee8",
+    "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-58-C1-instrumentation.log": "ca82947b7a1173f0bbe75d07667f47a78672c3fc5272d669a0b12fce4700ab5b",
+    "/workspace/scratch/pr20-causal-execution-20261014/extracted/method-08-C1-records.json": "98349570bba15821033dcbf9bdb223584d90afe2141a6a38ac5aefd7ae483c82",
+    "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-native-reuse-targeted.log": "8e74c9d90eccfc2a3bfa92634f573ca724c3a2722aceec443e7cbd49e3ff0811",
+    "/workspace/scratch/pr20-closure-evidence/candidate-raster-hex-v1-frame-targeted.log": "2c641483812f79408be81386f59edac66fa077a4f9ca4d43b23000f16f3b688e"
+  },
+  "synthetic_dense": "Only shape/closure, values1.0 are invented parser data, no device execution."
+}

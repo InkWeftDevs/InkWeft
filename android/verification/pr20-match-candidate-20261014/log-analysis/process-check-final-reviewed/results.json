@@ -1,0 +1,110 @@
+{
+  "scope": "OFFLINE_PARSER_TESTS_NOT_NEW_NATIVE",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "historical natural receipt",
+      "status": "PASS",
+      "accepted": true
+    },
+    {
+      "name": "historical method17 helper receipt",
+      "status": "PASS",
+      "accepted": true
+    },
+    {
+      "name": "missing observations",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "natural has auxiliary receipt",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "wrong helper method",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "wrong helper identity",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "wrong helper runner",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "helper cleanup wrong command",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "helper nonzero command",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "helper cleanup before natural window",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "helper after five-second window",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "natural after three-second window",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "missing one process",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "stderr is not absence",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "exit0 PID zero invalid",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "exit1 nonempty invalid",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "app remains before helper cleanup",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "helper still alive after cleanup",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "process chronology reverses",
+      "status": "PASS",
+      "accepted": false
+    },
+    {
+      "name": "infinite process timer",
+      "status": "PASS",
+      "accepted": false
+    }
+  ],
+  "historical_fixture": "/workspace/scratch/pr20-candidate3-results-20261014/raw/summary.json",
+  "historical_fixture_sha256": "bd7568f09148f298044dc47a0b436f861eaf3e6ed0a507258483585301c068e8",
+  "parser_sha256": "bafc7ca19ad2fb0523dd5d859ef0b521c78d8715d888c30dee274fdf97eae800",
+  "checker_sha256": "ed9368f59ce921533cf0560b876b7eb8e979be687c7bb70616b575064fcc0056"
+}

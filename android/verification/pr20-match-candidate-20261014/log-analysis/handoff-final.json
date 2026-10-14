@@ -1,0 +1,46 @@
+{
+  "status": "READY_FINAL_SCRIPTS_FROZEN",
+  "scope": "OFFLINE_ONLY_NOT_NATIVE",
+  "files": {
+    "analyze_logs.py": {
+      "sha256": "bafc7ca19ad2fb0523dd5d859ef0b521c78d8715d888c30dee274fdf97eae800",
+      "bytes": 33703
+    },
+    "test_analyzer.py": {
+      "sha256": "9536712d7117c7ab5d763dad8b531f2cb0e7beeb2ffeb220ce4e3fdf3dc220d7",
+      "bytes": 22637
+    },
+    "test_process_receipts.py": {
+      "sha256": "ed9368f59ce921533cf0560b876b7eb8e979be687c7bb70616b575064fcc0056",
+      "bytes": 3218
+    },
+    "README.md": {
+      "sha256": "46a6f3f4efb4d31a379c0d91f1f767457316525a42273a5966b9714fe3a5e467",
+      "bytes": 6527
+    },
+    "controller-source-review.md": {
+      "sha256": "6a0ae8d4e291eb9338c38394c075604e439b19c87cf85538e7cf2983942c8220",
+      "bytes": 4371
+    },
+    "check-final-reviewed-metadata/selftest-results.json": {
+      "sha256": "68e83ee9bfbedbbe311bc95945d22c5a9e53314769939976df7fcaa465891673",
+      "bytes": 24280
+    },
+    "process-check-final-reviewed/results.json": {
+      "sha256": "13ee3ec781e017d675249b02d9a11e7a8a6b025ac28fd34a10222fec0dcafdc7",
+      "bytes": 2554
+    }
+  },
+  "complete_log_cases": 69,
+  "process_receipt_cases": 20,
+  "statistics_sha256": "fdbf7b76ebbf587bccaede00910209ba2586c0982bbd0da80cb26cb94ce07740",
+  "validator_sha256": "7dfb88112bdf17b9cc8ff96b9cdf068a79394505cbb0103be4d93819533a2a80",
+  "real_run_analyzed": false,
+  "control_source": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/bound-control/ci/pr20-kvm-triple",
+  "input_files_unchanged_under_default_python": true,
+  "limitations": [
+    "Real source/controller/clock active binding still requires root review.",
+    "Compact claims do not replace original raw JUnit/APK/ACL/ZIP audit.",
+    "62 execution closure is required even with all24/720 common values available."
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "status": "SOURCE_BOUND_CLOCK_LAUNCH_UNBOUND_READY_FOR_INDEPENDENT_REVIEW",
+  "scope": "SCRATCH_ONLY_OFFLINE_NOT_NATIVE",
+  "candidate": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+  "readiness": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/frozen-readiness",
+  "control": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/bound-control-final/ci/pr20-kvm-triple",
+  "checker": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/check_preparation.py",
+  "preflight": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/offline-final/preflight.json",
+  "preflight_sha256": "a98d9ada28aac7350e76506b88d102426fb7a5021600247e3cd60d8043a3e194",
+  "checks_passed": 87,
+  "methods": 62,
+  "phase_counts": [
+    31,
+    24,
+    7
+  ],
+  "original_methods_preserved": 58,
+  "groups": 14,
+  "apks": 9,
+  "original_public_calls": 24,
+  "deadlines_minutes": [
+    38,
+    41,
+    53,
+    55,
+    60
+  ],
+  "source_identities": {
+    "B": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+    "C0": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+    "C1": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547"
+  },
+  "readiness_hashes": {
+    "prior61-source-freeze-receipt.json": "58589344167e6ab6c90981c860bca1a7ceadcdc8ca0ec4b1e5def2ee69abbf9d",
+    "PLAN.md": "fddc7225de7db0c14048a0d8f364dc749c2779ed9c959527d0ebadd78888f087",
+    "source-spec.json": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+    "prepare_sources.py": "2b544afa479b81294efc6bad2bf8af910bf39039af4664ab70035fce3e6e0dfb",
+    "C1-source-manifest.json": "3c3c2ded6e2fbf30180c129449c3a20815401c21f97b25f01df7f056458eb473",
+    "reconstruction.stdout.log": "b8663abb16a9de65cbd57a29b05e3fb45fb2902d5502df95b75cede255dff5ff",
+    "candidate-source-delta.json": "ae56b1cec436de44997076b97088f436d0f1f89bdad515d682f00b7cf6d3f67e",
+    "reconstruction.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "B-source-manifest.json": "28ee85b6a27b6b99ed6375f486258894abed840a1e1da4181250b84a8d8cfd75",
+    "analyze.py": "fdbf7b76ebbf587bccaede00910209ba2586c0982bbd0da80cb26cb94ce07740",
+    "source-freeze-receipt.json": "c7558b6ecd705dd53b57a5e77a2ea6f1b75e5a431a36844d0d41bd22c1fe4755",
+    "original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "C0-source-manifest.json": "84f6e8ed68c7ac36123f7265bebd90ba34b0a0fa9c69c64024fbb5e9c577c2a1",
+    "method-plan.json": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+    "marker-contract.json": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0"
+  },
+  "control_hashes": {
+    "workflow.proposed.yml": "ca8e44642cf2bf6e63156a77f6490ed0690d3003633726d4fffb1a9f2730ced0",
+    "budget-revision.json": "08c48b430d86be15e3c376161d2ab070f86fbcd67ac6c3a523fc0ddcce53ed4f",
+    "run.py": "4a3fc95304dfe0dfeeeecfda85a67f9f7ffc288fb904b9608262be5b04d97466",
+    "clock-server-receipt.json": "c15b6ddd3da0028beba94cdf4668832df94ad9d3dcd334a238bd98e935b035cf",
+    "package.py": "e9b0fcfa55549dfc71e1737f07b7eaf7a598e09f961145be509d0c0945b6e24a",
+    "authorization.json": "165132defd87bf0c2ef22f4bf2d2f34eb2a9eb3c760c67c0e4cb3efc0633be4d",
+    "markers.py": "7dfb88112bdf17b9cc8ff96b9cdf068a79394505cbb0103be4d93819533a2a80",
+    "cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "clock-contract.json": "e973055dc62a2f3626c119af175f337f82ca6e4e23412e0022c8bc9d652923b6"
+  },
+  "support_hashes": {
+    "check_preparation.py": "3024c3fd55e5afe6b5d13371d002f5c1525258506b896ef0a14753cb1e81def6",
+    "offline_cases.py": "e055f8a4c6181a9ba331dbb91add399abf3523c297752481ff191db8ccd57ba3",
+    "freeze_sources.py": "58d7c76d6eedea8d5a68c7b443f0911c201bc34ce8e585f58138e2582d573740",
+    "bind_control.py": "a0c96af9c7ff4a39f008cbe9c9008287208a7c7e851aa0ce7b1af696db30a476",
+    "amend61_to62.py": "b4d59b3f04f29d559efe957cd465d2fde731c655a33763678b469ec3be693182",
+    "README.md": "e639d250bc3810de512bb0150ba76dbf55f10dcde12a3e0c6cbd306b088f1c89"
+  },
+  "ast_diff_from_full58": {
+    "run.py": {
+      "changed_functions": [
+        "install",
+        "main",
+        "raw_result",
+        "method",
+        "build",
+        "setup"
+      ],
+      "added_functions": [
+        "validate_instrumentation_manifest",
+        "safe_marker_payloads",
+        "forward_match_records"
+      ],
+      "removed_functions": []
+    },
+    "package.py": {
+      "changed_functions": [],
+      "added_functions": [],
+      "removed_functions": []
+    }
+  },
+  "native60_cleanup": "BEST_EFFORT_FINALLY_UNCHANGED_NOT_STRICT_JOIN",
+  "required_remaining": [
+    "Independent controller/extractor review",
+    "Root commits readiness and binds exact plan_git/report_git",
+    "Root freezes immutable real PR server receipt/clock/budget/auth",
+    "Root final preflight and once-only exact prep guard binding",
+    "Root alone activates if authorized"
+  ],
+  "no_new_execution": [
+    "No Gradle",
+    "No ADB/native",
+    "No network",
+    "No push/activation",
+    "No production or old execution-tree edits"
+  ]
+}

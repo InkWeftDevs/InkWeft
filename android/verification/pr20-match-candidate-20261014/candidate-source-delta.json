@@ -1,0 +1,331 @@
+{
+  "from_git": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+  "to_git": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+  "file_deltas": {
+    "android/VERIFY-SCREENING.md": {
+      "before": null,
+      "after": {
+        "bytes": 5185,
+        "sha256": "d1fc29d9d2664327d580ea6a9058c2a2d377115fa5905bde91866187f9f3fd1c"
+      }
+    },
+    "android/app/src/androidTest/java/org/inkweft/app/RasterCausalDiagnosticsTest.kt": {
+      "before": null,
+      "after": {
+        "bytes": 19218,
+        "sha256": "f7a1424cfec939344584c86a1c11005d9f5d70447d31651bc9764907938cccc1"
+      }
+    },
+    "android/app/src/main/java/org/inkweft/app/RasterFrameDiagnostics.kt": {
+      "before": null,
+      "after": {
+        "bytes": 3801,
+        "sha256": "24f139a486d6603ea5bc62616f05f0d55d2a4fd90a3e5dd67b87b883c6689232"
+      }
+    },
+    "android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt": {
+      "before": {
+        "bytes": 17176,
+        "sha256": "0001f4fbb5dd4bd297fc60558d0998b718a6fed318fcd51e281bbefb8905a221"
+      },
+      "after": {
+        "bytes": 19617,
+        "sha256": "c27b9f9d3326a625a9063b8fa8a446cc68296406b527a8254d8993dd41f44731"
+      }
+    },
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionCausalTest.kt": {
+      "before": null,
+      "after": {
+        "bytes": 18607,
+        "sha256": "4f80b8ce32e1aa2bae1d919b96c06b1897e7a8500c748822efd05119ba87ec4a"
+      }
+    },
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt": {
+      "before": {
+        "bytes": 10501,
+        "sha256": "4deefcf739ebbdd1ead6e4e2259b72e4b5af07a122d2ff766ccff311f3e188de"
+      },
+      "after": {
+        "bytes": 10651,
+        "sha256": "b05c4c93f2c0ed36204bb548c20f8d95c0dca5a35238e05361ac3655f6f9a061"
+      }
+    },
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveCausalTest.kt": {
+      "before": null,
+      "after": {
+        "bytes": 13190,
+        "sha256": "f2faf22c8eff0c5f37c981c389917e17214d86edc38535e68dd9b0ab69a1eb8e"
+      }
+    },
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchCausalTest.kt": {
+      "before": null,
+      "after": {
+        "bytes": 13752,
+        "sha256": "8bbf97dc7d31ed93dedbd66a1758973c53df34a2226984f9fa59562bf0b89ebe"
+      }
+    },
+    "android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt": {
+      "before": {
+        "bytes": 13268,
+        "sha256": "07046d5d7653723153744cff81ca63430a778112b49c31d16bd6e7535f856677"
+      },
+      "after": {
+        "bytes": 14910,
+        "sha256": "b96890478129bbb7b0bbb538c3cf8d5f2e97f2b8b5e2e34d8057c855c9ec6ca9"
+      }
+    },
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchMatcher.kt": {
+      "before": null,
+      "after": {
+        "bytes": 1002,
+        "sha256": "dca79a9188799f608bec31c1d0c799d82490237347142b7f88c7490275793b3b"
+      }
+    },
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt": {
+      "before": {
+        "bytes": 16836,
+        "sha256": "33b4e9cc4fcf3fac593f0abc5dc6e2c070e10603a179979ec57be2d554198f48"
+      },
+      "after": {
+        "bytes": 21415,
+        "sha256": "50089cb11edae66be4339a7258b96c7ac6b866b440255d48220aea7bf2fdb963"
+      }
+    },
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibraryTextIndex.kt": {
+      "before": {
+        "bytes": 7607,
+        "sha256": "9861462b2eb3328020dcdc0396b1ed380d4b56fa4dd0646b030fb7a1a4f77fdf"
+      },
+      "after": {
+        "bytes": 7806,
+        "sha256": "34fac20efe18b5c8c88039b9303114569ca17e1b0f2c88be2b45fd201494b50b"
+      }
+    },
+    "android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt": {
+      "before": {
+        "bytes": 3625,
+        "sha256": "b789cfe0b328bef5b9bfe6ffe72999916bfff61cf585e6ce8671dafcb2782af5"
+      },
+      "after": {
+        "bytes": 4426,
+        "sha256": "e1570c26f61ba352f7a636d934e7acbff6f0b3250985f1e9caf0a55046432c9a"
+      }
+    },
+    "android/data-local/src/test/kotlin/org/inkweft/data/LibrarySearchMatcherTest.kt": {
+      "before": null,
+      "after": {
+        "bytes": 3344,
+        "sha256": "0c97fa38e8b52810fbf0c3d61ca937791baf9191108eaf244fff775592931d8a"
+      }
+    },
+    "android/verify.py": {
+      "before": {
+        "bytes": 9526,
+        "sha256": "9b6af1099563c3c7a3f9b5a3ad0b51609c70b6c2ca1e8c23f99e58cf347bc4f2"
+      },
+      "after": {
+        "bytes": 18147,
+        "sha256": "c8858920e558c47b097eea19b9e4b366bedd0022cf1ea7bdc24e8562c547a356"
+      }
+    },
+    "ci/pr20-causal/PLAN.template.md": {
+      "before": null,
+      "after": {
+        "bytes": 4319,
+        "sha256": "0dd59e718b72e42d74fc2027d773bf935cee33dfca5ed4c0043f7536f88aa757"
+      }
+    },
+    "ci/pr20-causal/README.md": {
+      "before": null,
+      "after": {
+        "bytes": 6003,
+        "sha256": "1b3bd899696d80240403a46ed662b38a89f592dd656f1ee79ade39c4e4a0af7b"
+      }
+    },
+    "ci/pr20-causal/authorization.json": {
+      "before": null,
+      "after": {
+        "bytes": 750,
+        "sha256": "f05be96b57aa10ce6c2252ec12197ce1f0f03fbd130009d195b204252c2df7ab"
+      }
+    },
+    "ci/pr20-causal/bind_control.py": {
+      "before": null,
+      "after": {
+        "bytes": 2077,
+        "sha256": "19629c16f2ee62b86a9420f830bdb01c781e031a933d1f414bf83bc2c8c04f97"
+      }
+    },
+    "ci/pr20-causal/check_offline.py": {
+      "before": null,
+      "after": {
+        "bytes": 27028,
+        "sha256": "76e359263a6af7e7e3d68bfc8a6fdb6ff4c88570da2b4355736b13917cb3df82"
+      }
+    },
+    "ci/pr20-causal/cleanup.py": {
+      "before": null,
+      "after": {
+        "bytes": 4068,
+        "sha256": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576"
+      }
+    },
+    "ci/pr20-causal/freeze_readiness.py": {
+      "before": null,
+      "after": {
+        "bytes": 2799,
+        "sha256": "46fe8a72df580399fb60051e8eaac4bc29880f487555f3825ac48fcd06a4994a"
+      }
+    },
+    "ci/pr20-causal/marker-contract.template.json": {
+      "before": null,
+      "after": {
+        "bytes": 93367,
+        "sha256": "ad83592ef4c9b805a6c6d89f5cafec328cbc16f7c494cb55ced66ff5215b797c"
+      }
+    },
+    "ci/pr20-causal/markers.py": {
+      "before": null,
+      "after": {
+        "bytes": 8839,
+        "sha256": "3514d2bca1f7b91efe7886ea42763b37eca873c8914938e8ad3dfeb03eaa1592"
+      }
+    },
+    "ci/pr20-causal/method-plan.template.json": {
+      "before": null,
+      "after": {
+        "bytes": 11135,
+        "sha256": "bade9c4d2eecdc6e4c32f92d772dee3a478a9692aaaade5140568085917b0c42"
+      }
+    },
+    "ci/pr20-causal/original-protocol.json": {
+      "before": null,
+      "after": {
+        "bytes": 1942,
+        "sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+      }
+    },
+    "ci/pr20-causal/package.py": {
+      "before": null,
+      "after": {
+        "bytes": 8449,
+        "sha256": "7bbb06ca67b24bc06b78b1bdb258a9de552c33cdf6ec1dfb50f81c455d06bbd6"
+      }
+    },
+    "ci/pr20-causal/prepare_sources.py": {
+      "before": null,
+      "after": {
+        "bytes": 1980,
+        "sha256": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516"
+      }
+    },
+    "ci/pr20-causal/run.py": {
+      "before": null,
+      "after": {
+        "bytes": 41151,
+        "sha256": "a361a8c0457e095b1ccc7fc34f7e57d48b6e7eca8425171cc1dceecd4ecb515a"
+      }
+    },
+    "ci/pr20-causal/save-marker-schemas.json": {
+      "before": null,
+      "after": {
+        "bytes": 10321,
+        "sha256": "6384d58153399c9c743dad8dd5c9d80927da4a70aa737eef38ab1261e41f05c8"
+      }
+    },
+    "ci/pr20-causal/size_bounds.py": {
+      "before": null,
+      "after": {
+        "bytes": 2809,
+        "sha256": "3eca77783dcbffb707f69e2e5e41600d286157c7db57cba882a773fe0282e10a"
+      }
+    },
+    "ci/pr20-causal/workflow.proposed.yml": {
+      "before": null,
+      "after": {
+        "bytes": 7826,
+        "sha256": "01be6b6f2e06d1e858bc5c633ef6b3b3a82588c213dfd20a459a5cbf0222bfb3"
+      }
+    },
+    "ci/pr20-search-screen/EXECUTION_SHA256SUMS": {
+      "before": null,
+      "after": {
+        "bytes": 608,
+        "sha256": "c862068f11c6ca6d44f3855e248d6847a81eac7d77f33e1302aa44c40a01b5b3"
+      }
+    },
+    "ci/pr20-search-screen/README.md": {
+      "before": null,
+      "after": {
+        "bytes": 1991,
+        "sha256": "9a943aacd0cd9d17af30fd82d6c1fb9f48aed7a37d704676da22ddb7673615e1"
+      }
+    },
+    "ci/pr20-search-screen/authorization.json": {
+      "before": null,
+      "after": {
+        "bytes": 1083,
+        "sha256": "acdcce3b571a891ddbee3189d2ae241f6769bb2691403c201c7c1243b8cc2b3a"
+      }
+    },
+    "ci/pr20-search-screen/cleanup.py": {
+      "before": null,
+      "after": {
+        "bytes": 4068,
+        "sha256": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576"
+      }
+    },
+    "ci/pr20-search-screen/package.py": {
+      "before": null,
+      "after": {
+        "bytes": 8440,
+        "sha256": "6662193ae687c097df6d4e748c348d7a83a3e702b8c44ca1ce79b86ee27d449a"
+      }
+    },
+    "ci/pr20-search-screen/run.py": {
+      "before": null,
+      "after": {
+        "bytes": 42236,
+        "sha256": "3b88cda9aabda1eb261a4d1c860cde11ce73fd4d3b22223bac34676aa21febec"
+      }
+    },
+    "ci/pr20-search-screen/workflow.proposed.yml": {
+      "before": null,
+      "after": {
+        "bytes": 8041,
+        "sha256": "26fa7448371fdb56b6874091f95a78f9e196f8d726382fd9ef104f8a3bd5dd91"
+      }
+    },
+    "ci/pr20_build_cache.init.gradle": {
+      "before": null,
+      "after": {
+        "bytes": 2584,
+        "sha256": "d3e02bb3d9d237530867e04eac9892d526093fb51fdf85fcd2928bdab715e830"
+      }
+    },
+    "ci/test_android_screen.py": {
+      "before": null,
+      "after": {
+        "bytes": 16815,
+        "sha256": "bd4eefc66353818c93218f9f3978c78ca8caa69725bd8b8681aad33fdece7be0"
+      }
+    },
+    "ci/test_pr20_build_cache.py": {
+      "before": null,
+      "after": {
+        "bytes": 8532,
+        "sha256": "5523ae7e35ced537d2c22b15ee7046cbd9b641c203d4418ac6a501fe2c72f35b"
+      }
+    }
+  },
+  "production_paths": [
+    "android/app/src/main/java/org/inkweft/app/RasterFrameDiagnostics.kt",
+    "android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt",
+    "android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt",
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchMatcher.kt",
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt",
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibraryTextIndex.kt",
+    "android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt"
+  ],
+  "notes": "Full transitive delta; default-off diagnostic hooks are not omitted."
+}

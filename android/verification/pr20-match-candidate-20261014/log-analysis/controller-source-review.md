@@ -1,0 +1,24 @@
+# 62 方法控制器源码独立审查
+
+结论：当前 source-bound / clock-unbound 准备快照未发现新的确定性启动阻断；它仍不是可直接运行的授权/激活状态。真实 PR clock、readiness Git、prep/active一次性guard及最终执行清单需根节点另行冻结和审查。
+
+范围：`preparation62/bound-control-final/ci/pr20-kvm-triple` 与 `frozen-readiness`；只读源码/哈希/原58清单对照。未运行构建、Android、网络或CI。runtime的87项preflight是离线检查，不是本审查新执行的原生结果。
+
+- 原1–58 step对象逐项相等；追加59 Unicode、60原NativeStrokeTileReuse逐瓦片oracle、61 Frame、62 dense，合计31/24/7。14组、9APK，四seed公共24调用/720保存/18指标/54比较及原门槛不变。Native oracle是既有best-effort finally，不能代替原清理门槛。
+- B=a128+唯一共同安全factory、C0=d66、C1=cb7e142；source-spec、三份manifest及原共同probe来源由冻结哈希绑定。此次候选含从d66累计的诊断及生产差异，不是两个局部改动的因果隔离实验。
+- 命令及外层步骤继续受保守anchor累计38/41/53/55分钟和job60分钟限制；不重试、不减少清单。原helper17单例保留，cleanup.py逐字节等于旧candidate3；UID-only最小ACL、双清理和45秒上限未扩展。
+- 新安全marker验证在转发前检查完整块；NATIVE前缀已在raw和forward两处接入，旧native oracle4条历史raw正例可解析。records坏/缺失保持原JUnit与host独立；转发或截止失败不升级PASS。每块原JSON/字节/摘要/footer与全部62终态输出可由独立离线提取器闭合。
+- app/data instrumentation通过实际xmltree验证；安装后包路径SHA对应所选APK。原env/fixture/writer设置与同seed跨身份检查保留。完整native依赖仍由构建回执证明，日志compact不是第二份APK审计。
+- package维持20MiB白名单文本/3天、不截断、敏感模式拒绝；丢文件即EVIDENCE_INCOMPLETE。最末展示名已改为“C1原3诊断与4项候选正确性补充”；parser动态使用workflow实际name并对官方phase核验。
+
+实际复核哈希：run `4a3fc95304dfe0dfeeeecfda85a67f9f7ffc288fb904b9608262be5b04d97466`；markers `7dfb88112bdf17b9cc8ff96b9cdf068a79394505cbb0103be4d93819533a2a80`；package `e9b0fcfa55549dfc71e1737f07b7eaf7a598e09f961145be509d0c0945b6e24a`；cleanup `49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576`；proposed workflow `ca8e44642cf2bf6e63156a77f6490ed0690d3003633726d4fffb1a9f2730ced0`。
+
+readiness关键哈希：method-plan `6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913`；marker-contract `e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0`；source-spec `87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5`；statistics `fdbf7b76ebbf587bccaede00910209ba2586c0982bbd0da80cb26cb94ce07740`。handoff列出的control/readiness全部哈希与当前文件逐项MATCH。
+
+本审查不保证62项在剩余时间内完成；任何阶段超时均保留证据并停止。现有门槛不会因新增日志或源码编译通过而关闭。
+
+## 最终metadata修订复核
+
+根节点发现并要求修正的3个当前metadata旧值已在新 `preparation62/reviewed-final/bound-control/ci/pr20-kvm-triple` 修复。独立逐叶对照确认只有：budget.phase_budget_amendment.method_plan_sha256更新至6660f4f2…；auth.phase_budget_override.scope_reference明确原58+4；budget.phase_budget_amendment.authorization_source改为matching/lazyPencil候选范围。所有其他控制/冻结readiness字节不变。最终auth SHA `3e40c1a4efcbf0ca92cbb57c0a2d9094415bb061b48695c945f33f379363ec31`、budget SHA `57466c0df2812dc934a826d65d65b553bb69214d0949bee620994826a72faf5a`；runtime新88项离线回执 `03279c423659a7c07f7cabc548e837c32f3984a9fb7efa6d54ed2d4498226005`。
+
+run.py validate_clock只消费budget.clock_amendment；setup消费budget整体SHA、auth7个顶层input hashes、62/31-24-7/14清单与marker method绑定，不会因旧嵌套method SHA产生隐藏拒绝。旧值仍属于必须修正文档矛盾，现已关闭。真实绑定时须将实际最终budget文件SHA重新写入auth，clock/prep尚未绑定的状态没有改变。独立提取器的最终69项checks已使用此新metadata快照，脚本无须因文案变化修改。

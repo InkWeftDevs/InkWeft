@@ -1,0 +1,4630 @@
+{
+  "stage_schemas": {
+    "LIBRARY_INDEX_SAVE_CHECKPOINT": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "indexRowsBeforeSaves",
+        "indexRowsAfterSaves",
+        "firstCommittedBatchMs",
+        "saveCount",
+        "saveP50Ms",
+        "saveP95Ms",
+        "saveMaxMs",
+        "saveSamplesMs",
+        "saveProgressSamples",
+        "sourceChecksAfterSaves"
+      ],
+      "properties": {
+        "indexRowsBeforeSaves": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "indexRowsAfterSaves": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "firstCommittedBatchMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "saveCount": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "saveP50Ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "saveP95Ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "saveMaxMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "saveSamplesMs": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 128,
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 9223372036854775807
+          }
+        },
+        "saveProgressSamples": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 128,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sample",
+              "elapsedMs",
+              "indexRowsStart",
+              "indexRowsEnd",
+              "sourceChecksStart",
+              "sourceChecksEnd"
+            ],
+            "properties": {
+              "sample": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "elapsedMs": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "indexRowsStart": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "indexRowsEnd": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "sourceChecksStart": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "sourceChecksEnd": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              }
+            }
+          }
+        },
+        "sourceChecksAfterSaves": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        }
+      }
+    },
+    "LIBRARY_READ_EVIDENCE": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "books",
+        "pages",
+        "noteBodyChars",
+        "writerSqlite",
+        "headerReadMs",
+        "headerReturnedBodyChars",
+        "coldMs",
+        "coldSourceChecks",
+        "warmMedianMs",
+        "warmSamplesMs",
+        "stageDiagnosticsEnabled",
+        "saveCount",
+        "saveP50Ms",
+        "saveP95Ms",
+        "saveMaxMs",
+        "saveSamplesMs",
+        "observeIndexConcurrentSaves",
+        "writerCompletedDuringPausedSearch",
+        "shelfReturnedPreviewChars",
+        "shelfDirectoryBodyChars",
+        "projectionRows",
+        "projectionChars",
+        "fullBodyOnDemandMatches"
+      ],
+      "properties": {
+        "books": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "pages": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "noteBodyChars": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "writerSqlite": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "page_size",
+            "auto_vacuum",
+            "journal_mode",
+            "synchronous"
+          ],
+          "properties": {
+            "page_size": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "auto_vacuum": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "journal_mode": {
+              "type": "string",
+              "enum": [
+                "wal"
+              ],
+              "maxLength": 3
+            },
+            "synchronous": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        },
+        "headerReadMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "headerReturnedBodyChars": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "coldMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "coldSourceChecks": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "warmMedianMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "warmSamplesMs": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 128,
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 9223372036854775807
+          }
+        },
+        "stageDiagnosticsEnabled": {
+          "type": "boolean"
+        },
+        "saveCount": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "saveP50Ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "saveP95Ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "saveMaxMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "saveSamplesMs": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 128,
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 9223372036854775807
+          }
+        },
+        "observeIndexConcurrentSaves": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "indexRowsBeforeSaves",
+            "indexRowsAfterSaves",
+            "firstCommittedBatchMs",
+            "saveCount",
+            "saveP50Ms",
+            "saveP95Ms",
+            "saveMaxMs",
+            "saveSamplesMs",
+            "saveProgressSamples",
+            "sourceChecksAfterSaves",
+            "indexRowsFinal",
+            "allIndexRowsCommittedMs",
+            "searchIndexReadyMs",
+            "sourceChecks"
+          ],
+          "properties": {
+            "indexRowsBeforeSaves": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "indexRowsAfterSaves": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "firstCommittedBatchMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "saveCount": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "saveP50Ms": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "saveP95Ms": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "saveMaxMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "saveSamplesMs": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 128,
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              }
+            },
+            "saveProgressSamples": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 128,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "sample",
+                  "elapsedMs",
+                  "indexRowsStart",
+                  "indexRowsEnd",
+                  "sourceChecksStart",
+                  "sourceChecksEnd"
+                ],
+                "properties": {
+                  "sample": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9223372036854775807
+                  },
+                  "elapsedMs": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9223372036854775807
+                  },
+                  "indexRowsStart": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9223372036854775807
+                  },
+                  "indexRowsEnd": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9223372036854775807
+                  },
+                  "sourceChecksStart": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9223372036854775807
+                  },
+                  "sourceChecksEnd": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9223372036854775807
+                  }
+                }
+              }
+            },
+            "sourceChecksAfterSaves": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "indexRowsFinal": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "allIndexRowsCommittedMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "searchIndexReadyMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "sourceChecks": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        },
+        "writerCompletedDuringPausedSearch": {
+          "type": "boolean"
+        },
+        "shelfReturnedPreviewChars": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "shelfDirectoryBodyChars": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "projectionRows": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "projectionChars": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "fullBodyOnDemandMatches": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "status": "FROZEN",
+  "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+  "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+  "methods": {
+    "1": {
+      "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt",
+      "test_source_sha256": "b05c4c93f2c0ed36204bb548c20f8d95c0dca5a35238e05361ac3655f6f9a061"
+    },
+    "2": {
+      "selection": "org.inkweft.data.LibraryPagingTest#snapshotRetainsOldClassificationAndSourceWhileWriterCommits",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt",
+      "test_source_sha256": "b05c4c93f2c0ed36204bb548c20f8d95c0dca5a35238e05361ac3655f6f9a061"
+    },
+    "3": {
+      "selection": "org.inkweft.data.LibraryPagingTest#refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt",
+      "test_source_sha256": "b05c4c93f2c0ed36204bb548c20f8d95c0dca5a35238e05361ac3655f6f9a061"
+    },
+    "4": {
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt",
+      "test_source_sha256": "6c8de5807f85f739f65eb0d99a9e6ceb0328841a2d9a03c2b583eab9d551700d"
+    },
+    "5": {
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchRepositoryTest.kt",
+      "test_source_sha256": "6c8de5807f85f739f65eb0d99a9e6ceb0328841a2d9a03c2b583eab9d551700d"
+    },
+    "6": {
+      "selection": "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/SearchIndexFreshnessTest.kt",
+      "test_source_sha256": "a68161893353adde50873bb2fce250c7e58df9052db40875b5f526c135c8c58f"
+    },
+    "7": {
+      "selection": "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/SearchIndexFreshnessTest.kt",
+      "test_source_sha256": "a68161893353adde50873bb2fce250c7e58df9052db40875b5f526c135c8c58f"
+    },
+    "8": {
+      "selection": "org.inkweft.data.HistoryCollectionTest#oneScanSurvivesRoomObserverRefreshAcrossSevenBatches",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt",
+      "test_source_sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5"
+    },
+    "9": {
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt",
+      "test_source_sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5"
+    },
+    "10": {
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt",
+      "test_source_sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5"
+    },
+    "11": {
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "identity": "C1",
+      "kind": "guard",
+      "marker_policy": "required",
+      "markers": {
+        "HISTORY_DELETE_WRITER_CORRECTNESS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 8192,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt",
+      "test_source_sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5"
+    },
+    "12": {
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "identity": "C1",
+      "kind": "guard",
+      "marker_policy": "required",
+      "markers": {
+        "HISTORY_DELETE_WRITER_CORRECTNESS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 8192,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt",
+      "test_source_sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5"
+    },
+    "13": {
+      "selection": "org.inkweft.data.HistoryCollectionTest#overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt",
+      "test_source_sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5"
+    },
+    "14": {
+      "selection": "org.inkweft.data.HistoryCollectionTest#malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt",
+      "test_source_sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5"
+    },
+    "15": {
+      "selection": "org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt",
+      "test_source_sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5"
+    },
+    "16": {
+      "selection": "org.inkweft.data.HistoryCollectionTest#missingRoomGuardLogAbortsWithoutDeletingCandidates",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt",
+      "test_source_sha256": "de78e40a7038e4380f81443d3438803dafbc2695c663c9d96fd002e9295a0df5"
+    },
+    "17": {
+      "selection": "org.inkweft.app.NotebookShelfUiTest#pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/NotebookShelfUiTest.kt",
+      "test_source_sha256": "bf660210fefb0dd0fd5c593556b3bf058e14a40f51084655fbb5c1d6e553563f"
+    },
+    "18": {
+      "selection": "org.inkweft.data.LibraryPagingTest#cancelledSourceReadSkipsDirectoryAssemblyAndNextReadKeepsClassification",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt",
+      "test_source_sha256": "b05c4c93f2c0ed36204bb548c20f8d95c0dca5a35238e05361ac3655f6f9a061"
+    },
+    "19": {
+      "selection": "org.inkweft.data.RasterReadCacheTest#separatedRegionsSkipEmptyMetadataBatchesAndDecodeCrossingStrokeOnce",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/RasterReadCacheTest.kt",
+      "test_source_sha256": "8a4d1bef8092ba418563695dd5709602be00033a37a7658f50602d6186661894"
+    },
+    "20": {
+      "selection": "org.inkweft.data.RasterReadCacheTest#payloadMaskAndRevisionChangesCannotReuseStaleDecodedGeometry",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/RasterReadCacheTest.kt",
+      "test_source_sha256": "8a4d1bef8092ba418563695dd5709602be00033a37a7658f50602d6186661894"
+    },
+    "21": {
+      "selection": "org.inkweft.data.RasterReadCacheTest#explicitAppendReuseSkipsOldPayloadsAcrossRevisionJumpsAndDefaultsToInvalidation",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/RasterReadCacheTest.kt",
+      "test_source_sha256": "8a4d1bef8092ba418563695dd5709602be00033a37a7658f50602d6186661894"
+    },
+    "22": {
+      "selection": "org.inkweft.data.RasterReadCacheTest#appendPermissionStillRefreshesChangedPayloadVisibilityUndoAndMasks",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/RasterReadCacheTest.kt",
+      "test_source_sha256": "8a4d1bef8092ba418563695dd5709602be00033a37a7658f50602d6186661894"
+    },
+    "23": {
+      "selection": "org.inkweft.data.RasterReadCacheTest#appendReuseRejectsHeadOrMaskChangesDuringCachedBatches",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/RasterReadCacheTest.kt",
+      "test_source_sha256": "8a4d1bef8092ba418563695dd5709602be00033a37a7658f50602d6186661894"
+    },
+    "24": {
+      "selection": "org.inkweft.data.RasterReadCacheTest#decodedCacheRemainsBoundedForManyStrokesAndDenseMasks",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/RasterReadCacheTest.kt",
+      "test_source_sha256": "8a4d1bef8092ba418563695dd5709602be00033a37a7658f50602d6186661894"
+    },
+    "25": {
+      "selection": "org.inkweft.data.RasterReadCacheTest#sameRevisionMaskChangeDuringCachedVisitRejectsTheWholeRead",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/RasterReadCacheTest.kt",
+      "test_source_sha256": "8a4d1bef8092ba418563695dd5709602be00033a37a7658f50602d6186661894"
+    },
+    "26": {
+      "selection": "org.inkweft.app.TileLocalRedrawTest#appendRetainsGeometryAcrossIdleLayerRevisionsAndDestructiveChangesMatchColdFrames",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+      "test_source_sha256": "385e5618cdb95d91084054da9724f012b57f63e4e77a33d97bf1588681ba792a"
+    },
+    "27": {
+      "selection": "org.inkweft.app.TileLocalRedrawTest#integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+      "identity": "C1",
+      "kind": "guard",
+      "marker_policy": "required",
+      "markers": {
+        "TILE_PAN_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 8192,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+      "test_source_sha256": "385e5618cdb95d91084054da9724f012b57f63e4e77a33d97bf1588681ba792a"
+    },
+    "28": {
+      "selection": "org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources",
+      "identity": "C1",
+      "kind": "guard",
+      "marker_policy": "required",
+      "markers": {
+        "TILE_PAN_STAGE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 8192,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+      "test_source_sha256": "385e5618cdb95d91084054da9724f012b57f63e4e77a33d97bf1588681ba792a"
+    },
+    "29": {
+      "selection": "org.inkweft.app.StreamedInkRasterTest#clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt",
+      "test_source_sha256": "c5700b11df7e4535aaf248ba074f9952f356a571fe238770887c813fe84dcca2"
+    },
+    "30": {
+      "selection": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt",
+      "test_source_sha256": "c5700b11df7e4535aaf248ba074f9952f356a571fe238770887c813fe84dcca2"
+    },
+    "31": {
+      "selection": "org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt",
+      "test_source_sha256": "b05c4c93f2c0ed36204bb548c20f8d95c0dca5a35238e05361ac3655f6f9a061"
+    },
+    "32": {
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "identity": "B",
+      "kind": "raster",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "TILE_LOCAL_EVIDENCE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "KVM_RASTER_CLEANUP": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 16384,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    },
+    "33": {
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "identity": "B",
+      "kind": "library",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_DIRECT_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_DIRECT_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "INDEX_SAVE_PROGRESS": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_INDEX_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_INDEX_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_READ_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "test_source_sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    },
+    "34": {
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "identity": "C0",
+      "kind": "raster",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "TILE_LOCAL_EVIDENCE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "KVM_RASTER_CLEANUP": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 16384,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    },
+    "35": {
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "identity": "C0",
+      "kind": "library",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_DIRECT_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_DIRECT_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "INDEX_SAVE_PROGRESS": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_INDEX_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_INDEX_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_READ_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "test_source_sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    },
+    "36": {
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "identity": "C1",
+      "kind": "raster",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "TILE_LOCAL_EVIDENCE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "KVM_RASTER_CLEANUP": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 16384,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    },
+    "37": {
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "identity": "C1",
+      "kind": "library",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_DIRECT_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_DIRECT_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "INDEX_SAVE_PROGRESS": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_INDEX_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_INDEX_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_READ_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "test_source_sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    },
+    "38": {
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "identity": "C1",
+      "kind": "raster",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "TILE_LOCAL_EVIDENCE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "KVM_RASTER_CLEANUP": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 16384,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    },
+    "39": {
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "identity": "C1",
+      "kind": "library",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_DIRECT_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_DIRECT_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "INDEX_SAVE_PROGRESS": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_INDEX_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_INDEX_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_READ_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "test_source_sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    },
+    "40": {
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "identity": "B",
+      "kind": "raster",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "TILE_LOCAL_EVIDENCE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "KVM_RASTER_CLEANUP": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 16384,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    },
+    "41": {
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "identity": "B",
+      "kind": "library",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_DIRECT_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_DIRECT_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "INDEX_SAVE_PROGRESS": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_INDEX_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_INDEX_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_READ_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "test_source_sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    },
+    "42": {
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "identity": "C0",
+      "kind": "raster",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "TILE_LOCAL_EVIDENCE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "KVM_RASTER_CLEANUP": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 16384,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    },
+    "43": {
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "identity": "C0",
+      "kind": "library",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_DIRECT_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_DIRECT_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "INDEX_SAVE_PROGRESS": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_INDEX_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_INDEX_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_READ_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "test_source_sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    },
+    "44": {
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "identity": "C0",
+      "kind": "raster",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "TILE_LOCAL_EVIDENCE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "KVM_RASTER_CLEANUP": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 16384,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    },
+    "45": {
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "identity": "C0",
+      "kind": "library",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_DIRECT_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_DIRECT_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "INDEX_SAVE_PROGRESS": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_INDEX_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_INDEX_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_READ_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "test_source_sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    },
+    "46": {
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "identity": "C1",
+      "kind": "raster",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "TILE_LOCAL_EVIDENCE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "KVM_RASTER_CLEANUP": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 16384,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    },
+    "47": {
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "identity": "C1",
+      "kind": "library",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_DIRECT_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_DIRECT_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "INDEX_SAVE_PROGRESS": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_INDEX_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_INDEX_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_READ_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "test_source_sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    },
+    "48": {
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "identity": "B",
+      "kind": "raster",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "TILE_LOCAL_EVIDENCE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "KVM_RASTER_CLEANUP": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 16384,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    },
+    "49": {
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "identity": "B",
+      "kind": "library",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_DIRECT_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_DIRECT_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "INDEX_SAVE_PROGRESS": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_INDEX_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_INDEX_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_READ_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "test_source_sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    },
+    "50": {
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "identity": "B",
+      "kind": "raster",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "TILE_LOCAL_EVIDENCE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "KVM_RASTER_CLEANUP": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 16384,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    },
+    "51": {
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "identity": "B",
+      "kind": "library",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_DIRECT_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_DIRECT_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "INDEX_SAVE_PROGRESS": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_INDEX_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_INDEX_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_READ_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "test_source_sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    },
+    "52": {
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "identity": "C1",
+      "kind": "raster",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "TILE_LOCAL_EVIDENCE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "KVM_RASTER_CLEANUP": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 16384,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    },
+    "53": {
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "identity": "C1",
+      "kind": "library",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_DIRECT_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_DIRECT_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "INDEX_SAVE_PROGRESS": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_INDEX_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_INDEX_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_READ_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "test_source_sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    },
+    "54": {
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "identity": "C0",
+      "kind": "raster",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "TILE_LOCAL_EVIDENCE": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        },
+        "KVM_RASTER_CLEANUP": {
+          "min_count": 3,
+          "max_count": 3,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 16384,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    },
+    "55": {
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "identity": "C0",
+      "kind": "library",
+      "marker_policy": "required",
+      "markers": {
+        "KVM_PAIR_FIXTURE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_DIRECT_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_DIRECT_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "INDEX_SAVE_PROGRESS": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_INDEX_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "KVM_INDEX_INTERVALS": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_READ_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "test_source_sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    },
+    "56": {
+      "selection": "org.inkweft.data.HistoryDeletionExposureTest#sameRoomWriterNaturalDeletionExposure",
+      "identity": "C1",
+      "kind": "history",
+      "marker_policy": "required",
+      "markers": {
+        "HISTORY_DELETION_EXPOSURE_TRIAL": {
+          "min_count": 30,
+          "max_count": 30,
+          "payload_max_bytes": 8192
+        },
+        "HISTORY_DELETION_EXPOSURE_SUMMARY": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionExposureTest.kt",
+      "test_source_sha256": "7e98a67eec4f9242fc4c18e6bf662ec1d86c346796ebc28ab0971be1a9f0224f",
+      "connection": "same-room"
+    },
+    "57": {
+      "selection": "org.inkweft.data.HistoryDeletionExposureTest#separateRoomWriterNaturalDeletionExposure",
+      "identity": "C1",
+      "kind": "history",
+      "marker_policy": "required",
+      "markers": {
+        "HISTORY_DELETION_EXPOSURE_TRIAL": {
+          "min_count": 30,
+          "max_count": 30,
+          "payload_max_bytes": 8192
+        },
+        "HISTORY_DELETION_EXPOSURE_SUMMARY": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionExposureTest.kt",
+      "test_source_sha256": "7e98a67eec4f9242fc4c18e6bf662ec1d86c346796ebc28ab0971be1a9f0224f",
+      "connection": "separate-room"
+    },
+    "58": {
+      "selection": "org.inkweft.data.LibraryReadPerformanceTest#coldSearchConcurrentSavesAndShelfReadScale",
+      "identity": "C1",
+      "kind": "stage",
+      "marker_policy": "required",
+      "markers": {
+        "LIBRARY_DIRECT_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "INDEX_SAVE_PROGRESS": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_INDEX_SAVE_CHECKPOINT": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_READ_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 65536
+        },
+        "LIBRARY_STAGE_DIAGNOSTICS": {
+          "min_count": 1,
+          "max_count": 128,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 524288,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryReadPerformanceTest.kt",
+      "test_source_sha256": "7dea89680c6dcf4723b95603796d634bd51088076b9d7ff2277e888b54e663e6"
+    },
+    "59": {
+      "selection": "org.inkweft.data.LibrarySearchCausalTest#profiledContainsPreservesUnicodeAndSourceResults",
+      "identity": "C1",
+      "kind": "unicode",
+      "marker_policy": "required",
+      "markers": {
+        "LIBRARY_CAUSAL_UNICODE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 32768
+        }
+      },
+      "method_payload_max_bytes": 32768,
+      "test_source_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchCausalTest.kt",
+      "test_source_sha256": "8bbf97dc7d31ed93dedbd66a1758973c53df34a2226984f9fa59562bf0b89ebe"
+    },
+    "60": {
+      "selection": "org.inkweft.app.NativeStrokeTileReuseTest#oneNativeShapePerStrokeMatchesPerTileConstructionThroughTransformsAndClips",
+      "identity": "C1",
+      "kind": "native",
+      "marker_policy": "required",
+      "markers": {
+        "NATIVE_STROKE_TILE_EVIDENCE": {
+          "min_count": 4,
+          "max_count": 4,
+          "payload_max_bytes": 4096
+        }
+      },
+      "method_payload_max_bytes": 16384,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt",
+      "test_source_sha256": "33a12420e1a8230cb272f65ada9501ac8ceb12b4be068598c1f1e161e26c44e7"
+    },
+    "61": {
+      "selection": "org.inkweft.app.RasterPerformanceProbe#continuousTransformsAndSeparatedDirtyTiles",
+      "identity": "C1",
+      "kind": "frame",
+      "marker_policy": "required",
+      "markers": {
+        "RASTER_PAIRED_EVIDENCE": {
+          "min_count": 14,
+          "max_count": 14,
+          "payload_max_bytes": 8192
+        },
+        "RASTER_SQLITE_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 65536,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt",
+      "test_source_sha256": "91ceacc2db7557509f923a2046ba0f8d8ccf9691265dbee12e10e674a9ba33c9"
+    },
+    "62": {
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "identity": "C1",
+      "kind": "dense",
+      "marker_policy": "required",
+      "markers": {
+        "STREAMED_FRAME_STAGE": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt",
+      "test_source_sha256": "c5700b11df7e4535aaf248ba074f9952f356a571fe238770887c813fe84dcca2"
+    }
+  },
+  "schemas": {
+    "KVM_PAIR_FIXTURE": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label",
+        "seed",
+        "logicalSha256",
+        "rowCounts",
+        "writerSqlite"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "enum": [
+            "library-before",
+            "raster-1-before",
+            "raster-4-before",
+            "raster-8-before"
+          ],
+          "maxLength": 15
+        },
+        "seed": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "logicalSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "maxLength": 64
+        },
+        "rowCounts": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "notes",
+                "note_revisions",
+                "notebook_workspace",
+                "notebook_pages",
+                "page_search_text",
+                "library_search_pending"
+              ],
+              "properties": {
+                "notes": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "note_revisions": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "notebook_workspace": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "notebook_pages": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "page_search_text": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "library_search_pending": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "notes",
+                "note_revisions",
+                "notebook_workspace",
+                "notebook_pages",
+                "ink_pages",
+                "ink_strokes",
+                "canvas_authoring",
+                "page_layer_memberships"
+              ],
+              "properties": {
+                "notes": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "note_revisions": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "notebook_workspace": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "notebook_pages": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "ink_pages": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "ink_strokes": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "canvas_authoring": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                },
+                "page_layer_memberships": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9223372036854775807
+                }
+              }
+            }
+          ]
+        },
+        "writerSqlite": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "page_size",
+            "auto_vacuum",
+            "journal_mode",
+            "synchronous"
+          ],
+          "properties": {
+            "page_size": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "auto_vacuum": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "journal_mode": {
+              "type": "string",
+              "enum": [
+                "wal"
+              ],
+              "maxLength": 3
+            },
+            "synchronous": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        }
+      }
+    },
+    "KVM_DIRECT_INTERVALS": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coldStartNs",
+        "coldEndNs",
+        "saves"
+      ],
+      "properties": {
+        "coldStartNs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "coldEndNs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saves": {
+          "type": "array",
+          "length": 30,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sample",
+              "startNs",
+              "endNs",
+              "elapsedMs",
+              "checksStart",
+              "checksEnd",
+              "committedRevision",
+              "committed"
+            ],
+            "properties": {
+              "sample": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "startNs": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "endNs": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "elapsedMs": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "checksStart": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "checksEnd": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "committedRevision": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "committed": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "LIBRARY_DIRECT_SAVE_CHECKPOINT": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coldMs",
+        "coldSourceChecks",
+        "saveCount",
+        "saveSamplesMs",
+        "saveP50Ms",
+        "saveP95Ms",
+        "saveMaxMs",
+        "writerCompletedDuringPausedSearch"
+      ],
+      "properties": {
+        "coldMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "coldSourceChecks": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveCount": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveSamplesMs": {
+          "type": "array",
+          "length": 30,
+          "items": {
+            "type": "number",
+            "finite": true,
+            "minimum": 0
+          }
+        },
+        "saveP50Ms": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveP95Ms": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveMaxMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "writerCompletedDuringPausedSearch": {
+          "type": "boolean"
+        }
+      }
+    },
+    "INDEX_SAVE_PROGRESS": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rows",
+        "elapsedMs"
+      ],
+      "properties": {
+        "rows": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "elapsedMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        }
+      }
+    },
+    "LIBRARY_INDEX_SAVE_CHECKPOINT": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "indexRowsBeforeSaves",
+        "indexRowsAfterSaves",
+        "firstCommittedBatchMs",
+        "saveCount",
+        "saveP50Ms",
+        "saveP95Ms",
+        "saveMaxMs",
+        "saveSamplesMs",
+        "saveProgressSamples",
+        "sourceChecksAfterSaves"
+      ],
+      "properties": {
+        "indexRowsBeforeSaves": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "indexRowsAfterSaves": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "firstCommittedBatchMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveCount": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveP50Ms": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveP95Ms": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveMaxMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveSamplesMs": {
+          "type": "array",
+          "length": 30,
+          "items": {
+            "type": "number",
+            "finite": true,
+            "minimum": 0
+          }
+        },
+        "saveProgressSamples": {
+          "type": "array",
+          "length": 30,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sample",
+              "elapsedMs",
+              "startNs",
+              "endNs",
+              "committed",
+              "committedRevision",
+              "indexRowsStart",
+              "indexRowsEnd",
+              "sourceChecksStart",
+              "sourceChecksEnd"
+            ],
+            "properties": {
+              "sample": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "elapsedMs": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "startNs": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "endNs": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "committed": {
+                "type": "boolean"
+              },
+              "committedRevision": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "indexRowsStart": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "indexRowsEnd": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "sourceChecksStart": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "sourceChecksEnd": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "sourceChecksAfterSaves": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        }
+      }
+    },
+    "KVM_INDEX_INTERVALS": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observeStartNs",
+        "batches"
+      ],
+      "properties": {
+        "observeStartNs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "batches": {
+          "type": "array",
+          "length": 313,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "rows",
+              "committedNs"
+            ],
+            "properties": {
+              "rows": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              },
+              "committedNs": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "LIBRARY_READ_EVIDENCE": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "books",
+        "pages",
+        "noteBodyChars",
+        "writerSqlite",
+        "headerReadMs",
+        "headerReturnedBodyChars",
+        "coldMs",
+        "coldSourceChecks",
+        "warmMedianMs",
+        "warmSamplesMs",
+        "saveCount",
+        "saveP50Ms",
+        "saveP95Ms",
+        "saveMaxMs",
+        "saveSamplesMs",
+        "observeIndexConcurrentSaves",
+        "writerCompletedDuringPausedSearch",
+        "shelfReturnedPreviewChars",
+        "shelfDirectoryBodyChars",
+        "projectionRows",
+        "projectionChars",
+        "fullBodyOnDemandMatches"
+      ],
+      "properties": {
+        "books": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "pages": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "noteBodyChars": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "writerSqlite": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "page_size",
+            "auto_vacuum",
+            "journal_mode",
+            "synchronous"
+          ],
+          "properties": {
+            "page_size": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "auto_vacuum": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "journal_mode": {
+              "type": "string",
+              "enum": [
+                "wal"
+              ],
+              "maxLength": 3
+            },
+            "synchronous": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            }
+          }
+        },
+        "headerReadMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "headerReturnedBodyChars": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "coldMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "coldSourceChecks": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "warmMedianMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "warmSamplesMs": {
+          "type": "array",
+          "length": 5,
+          "items": {
+            "type": "number",
+            "finite": true,
+            "minimum": 0
+          }
+        },
+        "saveCount": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveP50Ms": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveP95Ms": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveMaxMs": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "saveSamplesMs": {
+          "type": "array",
+          "length": 30,
+          "items": {
+            "type": "number",
+            "finite": true,
+            "minimum": 0
+          }
+        },
+        "observeIndexConcurrentSaves": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "indexRowsBeforeSaves",
+            "indexRowsAfterSaves",
+            "firstCommittedBatchMs",
+            "saveCount",
+            "saveP50Ms",
+            "saveP95Ms",
+            "saveMaxMs",
+            "saveSamplesMs",
+            "saveProgressSamples",
+            "sourceChecksAfterSaves",
+            "indexRowsFinal",
+            "allIndexRowsCommittedMs",
+            "searchIndexReadyMs",
+            "sourceChecks"
+          ],
+          "properties": {
+            "indexRowsBeforeSaves": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "indexRowsAfterSaves": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "firstCommittedBatchMs": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "saveCount": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "saveP50Ms": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "saveP95Ms": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "saveMaxMs": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "saveSamplesMs": {
+              "type": "array",
+              "length": 30,
+              "items": {
+                "type": "number",
+                "finite": true,
+                "minimum": 0
+              }
+            },
+            "saveProgressSamples": {
+              "type": "array",
+              "length": 30,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "sample",
+                  "elapsedMs",
+                  "startNs",
+                  "endNs",
+                  "committed",
+                  "committedRevision",
+                  "indexRowsStart",
+                  "indexRowsEnd",
+                  "sourceChecksStart",
+                  "sourceChecksEnd"
+                ],
+                "properties": {
+                  "sample": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  },
+                  "elapsedMs": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  },
+                  "startNs": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  },
+                  "endNs": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  },
+                  "committed": {
+                    "type": "boolean"
+                  },
+                  "committedRevision": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  },
+                  "indexRowsStart": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  },
+                  "indexRowsEnd": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  },
+                  "sourceChecksStart": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  },
+                  "sourceChecksEnd": {
+                    "type": "number",
+                    "finite": true,
+                    "minimum": 0
+                  }
+                }
+              }
+            },
+            "sourceChecksAfterSaves": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "indexRowsFinal": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "allIndexRowsCommittedMs": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "searchIndexReadyMs": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            },
+            "sourceChecks": {
+              "type": "number",
+              "finite": true,
+              "minimum": 0
+            }
+          }
+        },
+        "writerCompletedDuringPausedSearch": {
+          "type": "boolean"
+        },
+        "shelfReturnedPreviewChars": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "shelfDirectoryBodyChars": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0
+        },
+        "projectionRows": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0,
+          "nullable": true
+        },
+        "projectionChars": {
+          "type": "number",
+          "finite": true,
+          "minimum": 0,
+          "nullable": true
+        },
+        "fullBodyOnDemandMatches": {
+          "type": "boolean"
+        }
+      }
+    },
+    "TILE_LOCAL_EVIDENCE": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "layers",
+            "initialStrokes",
+            "finalStrokes",
+            "firstCompleteMs",
+            "appendCompleteMs",
+            "forcedFullCompleteMs",
+            "localDecoded",
+            "fullDecoded",
+            "localRebuiltTiles",
+            "fullRebuiltTiles",
+            "metadataMs",
+            "rasterMs",
+            "publicationMs",
+            "pixelsEqual",
+            "bitmapBytes",
+            "nativeStrokeBuilds"
+          ],
+          "properties": {
+            "layers": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "initialStrokes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "finalStrokes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "firstCompleteMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "appendCompleteMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "forcedFullCompleteMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "localDecoded": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "fullDecoded": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "localRebuiltTiles": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "fullRebuiltTiles": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "metadataMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "rasterMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "publicationMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "pixelsEqual": {
+              "type": "boolean"
+            },
+            "bitmapBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "nativeStrokeBuilds": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "layers",
+            "initialStrokes",
+            "finalStrokes",
+            "firstCompleteMs",
+            "appendCompleteMs",
+            "forcedFullCompleteMs",
+            "localDecoded",
+            "fullDecoded",
+            "localRebuiltTiles",
+            "fullRebuiltTiles",
+            "metadataMs",
+            "rasterMs",
+            "publicationMs",
+            "pixelsEqual",
+            "bitmapBytes"
+          ],
+          "properties": {
+            "layers": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "initialStrokes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "finalStrokes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "firstCompleteMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "appendCompleteMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "forcedFullCompleteMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "localDecoded": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "fullDecoded": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "localRebuiltTiles": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "fullRebuiltTiles": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "metadataMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "rasterMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "publicationMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "pixelsEqual": {
+              "type": "boolean"
+            },
+            "bitmapBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        }
+      ]
+    },
+    "KVM_RASTER_CLEANUP": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "layers",
+        "joined",
+        "resources"
+      ],
+      "properties": {
+        "layers": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "joined": {
+          "type": "boolean"
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "totalBytes",
+            "budgetBytes",
+            "peakTrackedBytes",
+            "inFlightJobs",
+            "cancelledJobs",
+            "cacheBytes",
+            "in_flightBytes",
+            "activeBytes",
+            "live_inkBytes"
+          ],
+          "properties": {
+            "totalBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "budgetBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "peakTrackedBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "inFlightJobs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "cancelledJobs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "cacheBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "in_flightBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "activeBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "live_inkBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.image-region": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.export": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.map-source": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.formula-input": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.background-work": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.ink-geometry-reservation": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.image": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.pdf": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.pencil-deposition": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.ocr": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.pencil-tile": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.ink-frame": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.page-frame": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        }
+      }
+    },
+    "LIBRARY_STAGE_DIAGNOSTICS": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "checkpoint",
+        "part",
+        "clock",
+        "originNs",
+        "events",
+        "saves"
+      ],
+      "properties": {
+        "schema": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "checkpoint": {
+          "type": "string",
+          "enum": [
+            "cold",
+            "observe-finished",
+            "observe-saves-finished",
+            "paused-reader",
+            "shelf",
+            "warm-0",
+            "warm-1",
+            "warm-2",
+            "warm-3",
+            "warm-4"
+          ],
+          "maxLength": 22
+        },
+        "part": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "clock": {
+          "type": "string",
+          "enum": [
+            "System.nanoTime"
+          ],
+          "maxLength": 15
+        },
+        "originNs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "events": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 128,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "stage",
+              "generation",
+              "sourceVersion",
+              "readId",
+              "elapsedNs",
+              "count"
+            ],
+            "properties": {
+              "stage": {
+                "type": "string",
+                "enum": [
+                  "card-hits-end",
+                  "card-hits-start",
+                  "connection-closed",
+                  "connection-open",
+                  "drafts-ready",
+                  "hits-ready",
+                  "index-build-completed",
+                  "metadata-end",
+                  "metadata-start",
+                  "observe-debounce-cancel",
+                  "observe-debounce-end",
+                  "observe-debounce-start",
+                  "observe-index-completed",
+                  "observe-index-initial",
+                  "observe-invalidation",
+                  "observe-read-cancel",
+                  "observe-read-end",
+                  "observe-read-error",
+                  "observe-read-start",
+                  "observe-request",
+                  "observe-scheduled",
+                  "page-end",
+                  "page-hits-end",
+                  "page-hits-start",
+                  "page-start",
+                  "pending-end",
+                  "pending-start",
+                  "read-cancel",
+                  "read-end",
+                  "read-error",
+                  "read-requested",
+                  "read-start",
+                  "scope-end",
+                  "scope-start",
+                  "snapshot-closed",
+                  "snapshot-open"
+                ],
+                "maxLength": 23
+              },
+              "generation": {
+                "type": "number",
+                "minimum": -1,
+                "maximum": 9223372036854775807
+              },
+              "sourceVersion": {
+                "type": "number",
+                "minimum": -1,
+                "maximum": 9223372036854775807
+              },
+              "readId": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "elapsedNs": {
+                "type": "number",
+                "minimum": -9223372036854775808,
+                "maximum": 9223372036854775807
+              },
+              "count": {
+                "type": "number",
+                "minimum": -1,
+                "maximum": 9223372036854775807
+              }
+            }
+          }
+        },
+        "saves": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 128,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "phase",
+              "sample",
+              "startNs",
+              "endNs",
+              "committed",
+              "revision",
+              "outcome",
+              "failureClass",
+              "resultClass"
+            ],
+            "properties": {
+              "phase": {
+                "type": "string",
+                "enum": [
+                  "direct",
+                  "observe"
+                ],
+                "maxLength": 7
+              },
+              "sample": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "startNs": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "endNs": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "committed": {
+                "type": "boolean"
+              },
+              "revision": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "outcome": {
+                "type": "string",
+                "enum": [
+                  "committed"
+                ],
+                "maxLength": 9
+              },
+              "failureClass": {
+                "type": "null"
+              },
+              "resultClass": {
+                "type": "string",
+                "enum": [
+                  "org.inkweft.core.SaveResult$Committed"
+                ],
+                "maxLength": 37
+              }
+            }
+          }
+        }
+      }
+    },
+    "HISTORY_DELETION_EXPOSURE_TRIAL": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sample",
+        "connection",
+        "fixtureSourceVersions",
+        "fixtureDetachedSources",
+        "fixtureExplicitRoots",
+        "fixtureLatestRetained",
+        "artificialGates",
+        "committed",
+        "saveOutcome",
+        "saveWatchdogMs",
+        "initialRevision",
+        "writerSqlite",
+        "authorWriterSqlite",
+        "savedRevision",
+        "finalRevision",
+        "contentVerified",
+        "retainedRevisions",
+        "status",
+        "stage",
+        "failureClass",
+        "suppressedFailureClasses",
+        "collectorFailureClass",
+        "collectorStartNs",
+        "collectorEndNs",
+        "saveStartNs",
+        "saveEndNs",
+        "saveMs",
+        "beforeRenameReceiptNs",
+        "firstDeleted",
+        "firstDeferred",
+        "firstRootScans",
+        "firstCommittedBatches",
+        "finishStartNs",
+        "finishEndNs",
+        "finishDeleted",
+        "finishRootScans",
+        "deletionTransactionExposed",
+        "coveredBeforeBatchCommitNs",
+        "phases"
+      ],
+      "properties": {
+        "sample": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "connection": {
+          "type": "string",
+          "enum": [
+            "same-room",
+            "separate-room"
+          ],
+          "maxLength": 13
+        },
+        "fixtureSourceVersions": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "fixtureDetachedSources": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "fixtureExplicitRoots": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "fixtureLatestRetained": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "artificialGates": {
+          "type": "boolean"
+        },
+        "committed": {
+          "type": "boolean"
+        },
+        "saveOutcome": {
+          "type": "string",
+          "enum": [
+            "COMMITTED"
+          ],
+          "maxLength": 9
+        },
+        "saveWatchdogMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "initialRevision": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "writerSqlite": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "page_size",
+            "auto_vacuum",
+            "journal_mode",
+            "synchronous"
+          ],
+          "properties": {
+            "page_size": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "auto_vacuum": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "journal_mode": {
+              "type": "string",
+              "enum": [
+                "wal"
+              ],
+              "maxLength": 3
+            },
+            "synchronous": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        },
+        "authorWriterSqlite": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "page_size",
+            "auto_vacuum",
+            "journal_mode",
+            "synchronous"
+          ],
+          "properties": {
+            "page_size": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "auto_vacuum": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "journal_mode": {
+              "type": "string",
+              "enum": [
+                "wal"
+              ],
+              "maxLength": 3
+            },
+            "synchronous": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        },
+        "savedRevision": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "finalRevision": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "contentVerified": {
+          "type": "boolean"
+        },
+        "retainedRevisions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 9223372036854775807
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PASS"
+          ],
+          "maxLength": 4
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "complete"
+          ],
+          "maxLength": 8
+        },
+        "failureClass": {
+          "type": "null"
+        },
+        "suppressedFailureClasses": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 0,
+          "items": {
+            "type": "null"
+          }
+        },
+        "collectorFailureClass": {
+          "type": "null"
+        },
+        "collectorStartNs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "collectorEndNs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "saveStartNs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "saveEndNs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "saveMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "beforeRenameReceiptNs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "firstDeleted": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "firstDeferred": {
+          "type": "boolean"
+        },
+        "firstRootScans": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "firstCommittedBatches": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "finishStartNs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "finishEndNs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "finishDeleted": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "finishRootScans": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "deletionTransactionExposed": {
+          "type": "boolean"
+        },
+        "coveredBeforeBatchCommitNs": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 30,
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 9223372036854775807
+          }
+        },
+        "phases": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "phase",
+              "atNs"
+            ],
+            "properties": {
+              "phase": {
+                "type": "string",
+                "enum": [
+                  "after-batch",
+                  "after-roots",
+                  "after-scan",
+                  "after-stats",
+                  "before-batch-commit"
+                ],
+                "maxLength": 19
+              },
+              "atNs": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              }
+            }
+          }
+        }
+      }
+    },
+    "HISTORY_DELETION_EXPOSURE_SUMMARY": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "connection",
+        "plannedTrials",
+        "recordedTrials",
+        "passedTrials",
+        "committedSaves",
+        "functionalStatus",
+        "exposureStatus",
+        "minimumExposedSamplesForQuantiles",
+        "latencyAcceptance",
+        "saveWatchdogMs",
+        "watchdogIsLatencyAcceptance",
+        "quantileDefinition",
+        "allSaves",
+        "exposedSaves"
+      ],
+      "properties": {
+        "connection": {
+          "type": "string",
+          "enum": [
+            "same-room",
+            "separate-room"
+          ],
+          "maxLength": 13
+        },
+        "plannedTrials": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "recordedTrials": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "passedTrials": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "committedSaves": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "functionalStatus": {
+          "type": "string",
+          "enum": [
+            "PASS"
+          ],
+          "maxLength": 4
+        },
+        "exposureStatus": {
+          "type": "string",
+          "enum": [
+            "INSUFFICIENT_EXPOSURE",
+            "SUFFICIENT_EXPOSURE"
+          ],
+          "maxLength": 21
+        },
+        "minimumExposedSamplesForQuantiles": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "latencyAcceptance": {
+          "type": "string",
+          "enum": [
+            "NOT_EVALUATED"
+          ],
+          "maxLength": 13
+        },
+        "saveWatchdogMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "watchdogIsLatencyAcceptance": {
+          "type": "boolean"
+        },
+        "quantileDefinition": {
+          "type": "string",
+          "enum": [
+            "nearest rank: ceil(p*n)-1, zero based; n=30 p50=14 p95=28"
+          ],
+          "maxLength": 57
+        },
+        "allSaves": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "count",
+            "sampleIndices",
+            "saveSamplesMs",
+            "maxMs",
+            "p50Ms",
+            "p95Ms"
+          ],
+          "properties": {
+            "count": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "sampleIndices": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 30,
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              }
+            },
+            "saveSamplesMs": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 30,
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              }
+            },
+            "maxMs": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "p50Ms": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "p95Ms": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        },
+        "exposedSaves": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "count",
+            "sampleIndices",
+            "saveSamplesMs",
+            "maxMs",
+            "p50Ms",
+            "p95Ms"
+          ],
+          "properties": {
+            "count": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "sampleIndices": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 30,
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              }
+            },
+            "saveSamplesMs": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 30,
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              }
+            },
+            "maxMs": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "p50Ms": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "p95Ms": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        }
+      }
+    },
+    "HISTORY_DELETE_WRITER_CORRECTNESS": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "connection",
+        "artificialGates",
+        "performanceMeasurement",
+        "firstDeleted",
+        "firstDeferred",
+        "finishDeleted",
+        "authorCommitted",
+        "initialRevision",
+        "finalRevision",
+        "retainedRevisions",
+        "contentVerified"
+      ],
+      "properties": {
+        "connection": {
+          "type": "string",
+          "enum": [
+            "same-room",
+            "separate-room"
+          ],
+          "maxLength": 13
+        },
+        "artificialGates": {
+          "type": "boolean"
+        },
+        "performanceMeasurement": {
+          "type": "boolean"
+        },
+        "firstDeleted": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "firstDeferred": {
+          "type": "boolean"
+        },
+        "finishDeleted": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "authorCommitted": {
+          "type": "boolean"
+        },
+        "initialRevision": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "finalRevision": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "retainedRevisions": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 128,
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 9223372036854775807
+          }
+        },
+        "contentVerified": {
+          "type": "boolean"
+        }
+      }
+    },
+    "TILE_PAN_EVIDENCE": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rebuilt",
+        "tiles",
+        "panPixelsEqual",
+        "zoomPixelsEqual",
+        "previewCaptureReady"
+      ],
+      "properties": {
+        "rebuilt": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "tiles": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "panPixelsEqual": {
+          "type": "boolean"
+        },
+        "zoomPixelsEqual": {
+          "type": "boolean"
+        },
+        "previewCaptureReady": {
+          "type": "boolean"
+        }
+      }
+    },
+    "TILE_PAN_STAGE": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage",
+        "event",
+        "error",
+        "elapsedMs",
+        "pending",
+        "frameReady",
+        "lastCompletedBuild",
+        "resources"
+      ],
+      "properties": {
+        "stage": {
+          "type": "string",
+          "enum": [
+            "initial-cached"
+          ],
+          "maxLength": 14
+        },
+        "event": {
+          "type": "string",
+          "enum": [
+            "failed"
+          ],
+          "maxLength": 6
+        },
+        "error": {
+          "type": "string",
+          "enum": [
+            "InterruptedPanWait"
+          ],
+          "maxLength": 18
+        },
+        "elapsedMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "pending": {
+          "type": "boolean"
+        },
+        "frameReady": {
+          "type": "boolean"
+        },
+        "lastCompletedBuild": {
+          "type": "null"
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "totalBytes",
+            "budgetBytes",
+            "peakTrackedBytes",
+            "inFlightJobs",
+            "cancelledJobs",
+            "cacheBytes",
+            "in_flightBytes",
+            "activeBytes",
+            "live_inkBytes"
+          ],
+          "properties": {
+            "totalBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "budgetBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "peakTrackedBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "inFlightJobs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "cancelledJobs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "cacheBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "in_flightBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "activeBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "live_inkBytes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.image-region": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.export": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.map-source": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.formula-input": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.background-work": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.ink-geometry-reservation": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.image": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.pdf": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.pencil-deposition": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.ocr": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.pencil-tile": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.ink-frame": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "category.page-frame": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        }
+      }
+    },
+    "RASTER_PAIRED_EVIDENCE": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case",
+        "completeMs",
+        "decoded",
+        "snapshotReadRows",
+        "rebuilt",
+        "tiles",
+        "metadataMs",
+        "rasterMs",
+        "publicationMs",
+        "coldMs",
+        "coldDecoded",
+        "coldSnapshotReadRows",
+        "coldRebuilt",
+        "pixelsEqual",
+        "reusedStrokes",
+        "geometryBytes",
+        "nativeStrokeBuilds"
+      ],
+      "properties": {
+        "case": {
+          "type": "string",
+          "enum": [
+            "initial",
+            "separated-append",
+            "transform-0-0",
+            "transform-0-1",
+            "transform-0-2",
+            "transform-0-3",
+            "transform-1-0",
+            "transform-1-1",
+            "transform-1-2",
+            "transform-1-3",
+            "transform-2-0",
+            "transform-2-1",
+            "transform-2-2",
+            "transform-2-3"
+          ],
+          "maxLength": 16
+        },
+        "completeMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "decoded": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "snapshotReadRows": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "rebuilt": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "tiles": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "metadataMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "rasterMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "publicationMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "coldMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "coldDecoded": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "coldSnapshotReadRows": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "coldRebuilt": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "pixelsEqual": {
+          "type": "boolean"
+        },
+        "reusedStrokes": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "geometryBytes": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "nativeStrokeBuilds": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        }
+      }
+    },
+    "RASTER_SQLITE_EVIDENCE": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "writerSqlite"
+      ],
+      "properties": {
+        "writerSqlite": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "page_size",
+            "auto_vacuum",
+            "journal_mode",
+            "synchronous"
+          ],
+          "properties": {
+            "page_size": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "auto_vacuum": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "journal_mode": {
+              "type": "string",
+              "enum": [
+                "wal"
+              ],
+              "maxLength": 3
+            },
+            "synchronous": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        }
+      }
+    },
+    "LIBRARY_CAUSAL_UNICODE": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "enum": [
+            1
+          ]
+        },
+        "scope": {
+          "enum": [
+            "CORRECTNESS_ONLY"
+          ]
+        },
+        "queries": {
+          "enum": [
+            8
+          ]
+        },
+        "comparisons": {
+          "enum": [
+            16
+          ]
+        },
+        "pendingAndIndexed": {
+          "enum": [
+            true
+          ]
+        },
+        "resultEquality": {
+          "enum": [
+            true
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "scope",
+        "queries",
+        "comparisons",
+        "pendingAndIndexed",
+        "resultEquality"
+      ],
+      "additionalProperties": false
+    },
+    "STREAMED_FRAME_STAGE": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "case",
+            "stage",
+            "elapsedMs",
+            "fixtureStrokes",
+            "fixturePoints",
+            "frameDeadlineMs",
+            "windowStrokes",
+            "windowPoints"
+          ],
+          "properties": {
+            "case": {
+              "type": "string",
+              "enum": [
+                "original-dense"
+              ],
+              "maxLength": 14
+            },
+            "stage": {
+              "const": "editor-window-complete"
+            },
+            "elapsedMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "fixtureStrokes": {
+              "const": 1201
+            },
+            "fixturePoints": {
+              "const": 76802
+            },
+            "frameDeadlineMs": {
+              "const": 30000
+            },
+            "windowStrokes": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "windowPoints": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "case",
+            "stage",
+            "elapsedMs",
+            "fixtureStrokes",
+            "fixturePoints",
+            "frameDeadlineMs"
+          ],
+          "properties": {
+            "case": {
+              "type": "string",
+              "enum": [
+                "original-dense"
+              ],
+              "maxLength": 14
+            },
+            "stage": {
+              "const": "fixture-complete"
+            },
+            "elapsedMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "fixtureStrokes": {
+              "const": 1201
+            },
+            "fixturePoints": {
+              "const": 76802
+            },
+            "frameDeadlineMs": {
+              "const": 30000
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "case",
+            "stage",
+            "elapsedMs",
+            "fixtureStrokes",
+            "fixturePoints",
+            "frameDeadlineMs"
+          ],
+          "properties": {
+            "case": {
+              "type": "string",
+              "enum": [
+                "original-dense"
+              ],
+              "maxLength": 14
+            },
+            "stage": {
+              "const": "fixture-start"
+            },
+            "elapsedMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "fixtureStrokes": {
+              "const": 1201
+            },
+            "fixturePoints": {
+              "const": 76802
+            },
+            "frameDeadlineMs": {
+              "const": 30000
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "case",
+            "stage",
+            "elapsedMs",
+            "fixtureStrokes",
+            "fixturePoints",
+            "frameDeadlineMs",
+            "frameElapsedMs",
+            "snapshotReads",
+            "snapshotRows",
+            "changeCallbacks",
+            "publishedStats"
+          ],
+          "properties": {
+            "case": {
+              "type": "string",
+              "enum": [
+                "original-dense"
+              ],
+              "maxLength": 14
+            },
+            "stage": {
+              "const": "frame-complete"
+            },
+            "elapsedMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "fixtureStrokes": {
+              "const": 1201
+            },
+            "fixturePoints": {
+              "const": 76802
+            },
+            "frameDeadlineMs": {
+              "const": 30000
+            },
+            "frameElapsedMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "snapshotReads": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 128,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "frameElapsedMs",
+                  "rows",
+                  "points",
+                  "freezeMs",
+                  "decodeMs"
+                ],
+                "properties": {
+                  "frameElapsedMs": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9223372036854775807
+                  },
+                  "rows": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9223372036854775807
+                  },
+                  "points": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9223372036854775807
+                  },
+                  "freezeMs": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9223372036854775807
+                  },
+                  "decodeMs": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 9223372036854775807
+                  }
+                }
+              }
+            },
+            "snapshotRows": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "changeCallbacks": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "publishedStats": {
+              "type": "string",
+              "maxLength": 1024,
+              "pattern": "^BuildStats\\(tiles=[0-9]+, rebuilt=[0-9]+, decoded=[0-9]+, bitmapBytes=[0-9]+, metadataMs=[0-9]+(?:\\.[0-9]+)?(?:[Ee][+-]?[0-9]+)?, rasterMs=[0-9]+(?:\\.[0-9]+)?(?:[Ee][+-]?[0-9]+)?, publicationMs=[0-9]+(?:\\.[0-9]+)?(?:[Ee][+-]?[0-9]+)?, reusedStrokes=[0-9]+, geometryBytes=[0-9]+, nativeStrokeBuilds=[0-9]+\\)$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "case",
+            "stage",
+            "elapsedMs",
+            "fixtureStrokes",
+            "fixturePoints",
+            "frameDeadlineMs"
+          ],
+          "properties": {
+            "case": {
+              "type": "string",
+              "enum": [
+                "original-dense"
+              ],
+              "maxLength": 14
+            },
+            "stage": {
+              "const": "frame-start"
+            },
+            "elapsedMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "fixtureStrokes": {
+              "const": 1201
+            },
+            "fixturePoints": {
+              "const": 76802
+            },
+            "frameDeadlineMs": {
+              "const": 30000
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "case",
+            "stage",
+            "elapsedMs",
+            "fixtureStrokes",
+            "fixturePoints",
+            "frameDeadlineMs"
+          ],
+          "properties": {
+            "case": {
+              "type": "string",
+              "enum": [
+                "original-dense"
+              ],
+              "maxLength": 14
+            },
+            "stage": {
+              "const": "verified-and-released"
+            },
+            "elapsedMs": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "fixtureStrokes": {
+              "const": 1201
+            },
+            "fixturePoints": {
+              "const": 76802
+            },
+            "frameDeadlineMs": {
+              "const": 30000
+            }
+          }
+        }
+      ]
+    },
+    "NATIVE_STROKE_TILE_EVIDENCE": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase",
+        "nativeStrokeBuilds",
+        "perTileReferenceBuilds",
+        "tiles",
+        "rebuilt",
+        "pixelsEqual"
+      ],
+      "properties": {
+        "phase": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "nativeStrokeBuilds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "perTileReferenceBuilds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "tiles": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 2147483647
+        },
+        "rebuilt": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "pixelsEqual": {
+          "const": true
+        }
+      }
+    }
+  },
+  "library_checks": {
+    "fixture_seed": "exact method-plan seed",
+    "fixture_counts": {
+      "notes": 501,
+      "note_revisions": 501,
+      "notebook_workspace": 501,
+      "notebook_pages": 20001,
+      "page_search_text": 20000,
+      "library_search_pending": 20000
+    },
+    "writerSqlite": {
+      "page_size": 1024,
+      "auto_vacuum": 1,
+      "journal_mode": "wal",
+      "synchronous": 2
+    },
+    "progress_rows": [
+      64,
+      4096,
+      8192,
+      12288,
+      16384,
+      20000
+    ],
+    "save_samples": "exact sample indices 0..29 and identical ordered values in duplicate checkpoints/final evidence",
+    "batches": "exact 313 rows: 64 increments through 19968, then 20000; monotonic committedNs",
+    "booleans": "retain frozen probe/analyzer assertions; booleans are not numeric sample values",
+    "strings": "only fixed enum labels/journal mode and 64-hex logical digest; no arbitrary path/url/message fields"
+  },
+  "publication_limits": {
+    "artifact_bytes": 20971520,
+    "retention_days": 3,
+    "method_payload_sum_max_bytes": 2834432
+  },
+  "notes": [
+    "The publication byte cap is a failure boundary, not a changed fixture/sample/timeout.",
+    "No payload is forwarded until whole-block validation; original raw logs remain unchanged.",
+    "Old successful samples anchor schema field shapes; source-backed unobserved GC/stage/resource variants are explicit.",
+    "NativeReuse60 retains its independent old per-tile oracle and best-effort finally. Do not infer strict join from its four pixel records; original strict-join guards remain unchanged."
+  ]
+}

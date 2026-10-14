@@ -1,0 +1,865 @@
+{
+  "status": "PASS",
+  "scope": "OFFLINE_PREPARATION_ONLY_NO_NEW_NATIVE_EXECUTION",
+  "checks": [
+    {
+      "name": "scope_and_unchanged_functions",
+      "status": "PASS",
+      "detail": "old1..58 exact;62/14groups;unchanged budget/helper/commands/cleanup;UNBOUND guard"
+    },
+    {
+      "name": "current_scope_metadata_bindings",
+      "status": "PASS",
+      "detail": {
+        "live_scope_fields": 3,
+        "stale_field_negative_cases": 3,
+        "source_or_budget_change": false
+      }
+    },
+    {
+      "name": "historical_raw_1",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_2",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_3",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_4",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_5",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_6",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_7",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_8",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_9",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_10",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_11",
+      "status": "PASS",
+      "detail": 1
+    },
+    {
+      "name": "historical_raw_12",
+      "status": "PASS",
+      "detail": 1
+    },
+    {
+      "name": "historical_raw_13",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_14",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_15",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_16",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_17",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_18",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_19",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_20",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_21",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_22",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_23",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_24",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_25",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_26",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_27",
+      "status": "PASS",
+      "detail": 1
+    },
+    {
+      "name": "historical_raw_28",
+      "status": "PASS",
+      "detail": 1
+    },
+    {
+      "name": "historical_raw_29",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_30",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_31",
+      "status": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "historical_raw_32",
+      "status": "PASS",
+      "detail": 9
+    },
+    {
+      "name": "historical_raw_33",
+      "status": "PASS",
+      "detail": 12
+    },
+    {
+      "name": "historical_raw_34",
+      "status": "PASS",
+      "detail": 9
+    },
+    {
+      "name": "historical_raw_35",
+      "status": "PASS",
+      "detail": 12
+    },
+    {
+      "name": "historical_raw_36",
+      "status": "PASS",
+      "detail": 9
+    },
+    {
+      "name": "historical_raw_37",
+      "status": "PASS",
+      "detail": 12
+    },
+    {
+      "name": "historical_raw_38",
+      "status": "PASS",
+      "detail": 9
+    },
+    {
+      "name": "historical_raw_39",
+      "status": "PASS",
+      "detail": 12
+    },
+    {
+      "name": "historical_raw_40",
+      "status": "PASS",
+      "detail": 9
+    },
+    {
+      "name": "historical_raw_41",
+      "status": "PASS",
+      "detail": 12
+    },
+    {
+      "name": "historical_raw_42",
+      "status": "PASS",
+      "detail": 9
+    },
+    {
+      "name": "historical_raw_43",
+      "status": "PASS",
+      "detail": 12
+    },
+    {
+      "name": "historical_raw_44",
+      "status": "PASS",
+      "detail": 9
+    },
+    {
+      "name": "historical_raw_45",
+      "status": "PASS",
+      "detail": 12
+    },
+    {
+      "name": "historical_raw_46",
+      "status": "PASS",
+      "detail": 9
+    },
+    {
+      "name": "historical_raw_47",
+      "status": "PASS",
+      "detail": 12
+    },
+    {
+      "name": "historical_raw_48",
+      "status": "PASS",
+      "detail": 9
+    },
+    {
+      "name": "historical_raw_49",
+      "status": "PASS",
+      "detail": 12
+    },
+    {
+      "name": "historical_raw_50",
+      "status": "PASS",
+      "detail": 9
+    },
+    {
+      "name": "historical_raw_51",
+      "status": "PASS",
+      "detail": 12
+    },
+    {
+      "name": "historical_raw_52",
+      "status": "PASS",
+      "detail": 9
+    },
+    {
+      "name": "historical_raw_53",
+      "status": "PASS",
+      "detail": 12
+    },
+    {
+      "name": "historical_raw_54",
+      "status": "PASS",
+      "detail": 9
+    },
+    {
+      "name": "historical_raw_55",
+      "status": "PASS",
+      "detail": 12
+    },
+    {
+      "name": "historical_raw_56",
+      "status": "PASS",
+      "detail": 31
+    },
+    {
+      "name": "historical_raw_57",
+      "status": "PASS",
+      "detail": 31
+    },
+    {
+      "name": "historical_raw_58",
+      "status": "PASS",
+      "detail": 21
+    },
+    {
+      "name": "historical_frame_payload",
+      "status": "PASS",
+      "detail": 15
+    },
+    {
+      "name": "historical_native_oracle_markers",
+      "status": "PASS",
+      "detail": "Historical NativeReuse raw shape only; no new native execution"
+    },
+    {
+      "name": "native_oracle_relations_and_raw_prefix",
+      "status": "PASS",
+      "detail": {
+        "fault_cases": 5,
+        "raw_parser_native_records": 4,
+        "wrapper": "SYNTHETIC_NOT_NATIVE"
+      }
+    },
+    {
+      "name": "synthetic_dense_success_shape",
+      "status": "PASS",
+      "detail": 6
+    },
+    {
+      "name": "unicode_schema_exact",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "reject_marker_65",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "reject_marker_66",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "reject_marker_67",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "reject_marker_68",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "reject_marker_69",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "reject_marker_70",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "reject_missing",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "reject_duplicate",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "reject_oversize",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "reject_unexpected_in_zero",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "junit_bad_code",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "junit_extra_terminal",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "junit_failed",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "junit_skipped",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "junit_wrong_class",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "junit_bad_final",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "name": "source_bindings",
+      "status": "PASS",
+      "detail": {
+        "test_bindings": 62,
+        "manifest_files": {
+          "B": 947,
+          "C0": 964,
+          "C1": 999
+        },
+        "production_delta": 7
+      }
+    },
+    {
+      "name": "prior_actual_unicode_shape",
+      "status": "PASS",
+      "detail": "Re-serialized prior actual causal8 record for offline schema compatibility only"
+    },
+    {
+      "name": "synthetic_gc_sufficient_exposure",
+      "status": "PASS",
+      "detail": "SYNTHETIC20-exposure positive schema test, not observed native evidence"
+    },
+    {
+      "name": "statistics_unchanged",
+      "status": "PASS",
+      "detail": "Original quantiles/classification/metric and comparison definitions unchanged"
+    },
+    {
+      "name": "installed_apk_hash_readback",
+      "status": "PASS",
+      "detail": {
+        "cases": [
+          "valid",
+          "source-mismatch",
+          "installed-mismatch",
+          "unexpected-location",
+          "split-apk",
+          "install-failed"
+        ],
+        "actual_adb_calls": 0
+      }
+    },
+    {
+      "name": "xmltree_manifest_validation",
+      "status": "PASS",
+      "detail": {
+        "valid": 1,
+        "rejected": 4,
+        "aapt_calls": 0
+      }
+    },
+    {
+      "name": "extended_actual_controller_cases",
+      "status": "PASS",
+      "detail": [
+        {
+          "name": "process_exit_checks",
+          "status": "PASS",
+          "detail": {
+            "cases": [
+              {
+                "case": "absent",
+                "outcome": "NATURAL_EXIT",
+                "exception": null,
+                "am_kill_calls": 0,
+                "synthetic_seconds": 0.03,
+                "observations": 1
+              },
+              {
+                "case": "natural-helper-exit",
+                "outcome": "NATURAL_EXIT",
+                "exception": null,
+                "am_kill_calls": 0,
+                "synthetic_seconds": 0.42,
+                "observations": 4
+              },
+              {
+                "case": "background-helper-exit",
+                "outcome": "AUXILIARY_AM_KILL_CONFIRMED",
+                "exception": null,
+                "am_kill_calls": 1,
+                "synthetic_seconds": 3.06,
+                "observations": 25
+              },
+              {
+                "case": "background-refused",
+                "outcome": "UNCONFIRMED",
+                "exception": "AssertionError",
+                "am_kill_calls": 1,
+                "synthetic_seconds": 4.51,
+                "observations": 36
+              },
+              {
+                "case": "raw-junit-fail",
+                "outcome": "UNCONFIRMED",
+                "exception": "AssertionError",
+                "am_kill_calls": 0,
+                "synthetic_seconds": 2.76,
+                "observations": 22
+              },
+              {
+                "case": "adb-fail",
+                "outcome": "UNCONFIRMED",
+                "exception": "AssertionError",
+                "am_kill_calls": 0,
+                "synthetic_seconds": 2.76,
+                "observations": 22
+              },
+              {
+                "case": "app-active",
+                "outcome": "UNCONFIRMED",
+                "exception": "AssertionError",
+                "am_kill_calls": 0,
+                "synthetic_seconds": 2.76,
+                "observations": 22
+              },
+              {
+                "case": "data-active",
+                "outcome": "UNCONFIRMED",
+                "exception": "AssertionError",
+                "am_kill_calls": 0,
+                "synthetic_seconds": 2.76,
+                "observations": 22
+              },
+              {
+                "case": "wrong-phase",
+                "outcome": "UNCONFIRMED",
+                "exception": "AssertionError",
+                "am_kill_calls": 0,
+                "synthetic_seconds": 2.76,
+                "observations": 22
+              },
+              {
+                "case": "wrong-identity",
+                "outcome": "UNCONFIRMED",
+                "exception": "AssertionError",
+                "am_kill_calls": 0,
+                "synthetic_seconds": 2.76,
+                "observations": 22
+              },
+              {
+                "case": "wrong-selection",
+                "outcome": "UNCONFIRMED",
+                "exception": "AssertionError",
+                "am_kill_calls": 0,
+                "synthetic_seconds": 2.76,
+                "observations": 22
+              },
+              {
+                "case": "wrong-runner",
+                "outcome": "UNCONFIRMED",
+                "exception": "AssertionError",
+                "am_kill_calls": 0,
+                "synthetic_seconds": 2.76,
+                "observations": 22
+              },
+              {
+                "case": "invalid-pid",
+                "outcome": "UNCONFIRMED",
+                "exception": "AssertionError",
+                "am_kill_calls": 0,
+                "synthetic_seconds": 0.02,
+                "observations": 1
+              },
+              {
+                "case": "stderr",
+                "outcome": "UNCONFIRMED",
+                "exception": "AssertionError",
+                "am_kill_calls": 0,
+                "synthetic_seconds": 0.02,
+                "observations": 1
+              },
+              {
+                "case": "bad-exit",
+                "outcome": "UNCONFIRMED",
+                "exception": "AssertionError",
+                "am_kill_calls": 0,
+                "synthetic_seconds": 0.02,
+                "observations": 1
+              },
+              {
+                "case": "kill-error",
+                "outcome": "UNCONFIRMED",
+                "exception": "AssertionError",
+                "am_kill_calls": 1,
+                "synthetic_seconds": 2.77,
+                "observations": 22
+              },
+              {
+                "case": "kill-stderr",
+                "outcome": "UNCONFIRMED",
+                "exception": "AssertionError",
+                "am_kill_calls": 1,
+                "synthetic_seconds": 2.77,
+                "observations": 22
+              },
+              {
+                "case": "phase-expiry",
+                "outcome": "UNCONFIRMED",
+                "exception": "Abort",
+                "am_kill_calls": 0,
+                "synthetic_seconds": 1.0,
+                "observations": 9
+              },
+              {
+                "case": "slow-probe",
+                "outcome": "UNCONFIRMED",
+                "exception": "Abort",
+                "am_kill_calls": 0,
+                "synthetic_seconds": 1,
+                "observations": 1
+              }
+            ],
+            "actual_adb_calls": 0,
+            "count_changes_explicitly_allowlisted": true,
+            "raw_JUnit_and_historical_host_status_unchanged": true
+          }
+        },
+        {
+          "name": "official_dependency_gate_checks",
+          "status": "PASS",
+          "detail": {
+            "cases": [
+              {
+                "case": "valid",
+                "receipt_status": "PASS",
+                "single_call": true
+              },
+              {
+                "case": "redirect",
+                "receipt_status": "FAIL",
+                "single_call": true
+              },
+              {
+                "case": "forbidden",
+                "receipt_status": "FAIL",
+                "single_call": true
+              },
+              {
+                "case": "timeout",
+                "receipt_status": "FAIL",
+                "single_call": true
+              },
+              {
+                "case": "tls_failure",
+                "receipt_status": "FAIL",
+                "single_call": true
+              },
+              {
+                "case": "bad_hash",
+                "receipt_status": "FAIL",
+                "single_call": true
+              },
+              {
+                "case": "bad_size",
+                "receipt_status": "FAIL",
+                "single_call": true
+              },
+              {
+                "case": "outer_deadline",
+                "receipt_status": "FAIL",
+                "single_call": true
+              }
+            ],
+            "setup_main_count_and_reviewed_process_method_changes_only": true,
+            "cleanup_bytes_unchanged": true,
+            "actual_network_calls": 0
+          }
+        },
+        {
+          "name": "phase_boundaries",
+          "status": "PASS",
+          "cases": 12,
+          "cutoffs": [
+            38,
+            41,
+            53,
+            55,
+            60
+          ]
+        },
+        {
+          "name": "workflow_and_first_clock",
+          "status": "PASS",
+          "embedded_python": 2,
+          "first_clock_cases": 3,
+          "actionlint": true,
+          "network_calls": 0
+        },
+        {
+          "name": "actual_package_cases",
+          "status": "PASS",
+          "fresh_cases": 12,
+          "cases": [
+            "complete62-analysis-pending",
+            "missing-raw-incomplete",
+            "cleanup-failed",
+            "PREPARING",
+            "SOURCES_FROZEN",
+            "MEASURING",
+            "interrupted-no-invented-times",
+            "original-failure",
+            "all-methods-pass-but-postcondition-incomplete",
+            "secret-rejected",
+            "oversize-no-truncation",
+            "zero-record-method-still-needs-closure"
+          ],
+          "source_script_sha256": "e9b0fcfa55549dfc71e1737f07b7eaf7a598e09f961145be509d0c0945b6e24a",
+          "fixture_script_only_replaces_UNBOUND_source_hash": true
+        }
+      ]
+    }
+  ],
+  "failures": [],
+  "inputs": [
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/bound-control/ci/pr20-kvm-triple/workflow.proposed.yml",
+      "sha256": "ca8e44642cf2bf6e63156a77f6490ed0690d3003633726d4fffb1a9f2730ced0",
+      "bytes": 10800
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/bound-control/ci/pr20-kvm-triple/budget-revision.json",
+      "sha256": "57466c0df2812dc934a826d65d65b553bb69214d0949bee620994826a72faf5a",
+      "bytes": 8981
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/bound-control/ci/pr20-kvm-triple/run.py",
+      "sha256": "4a3fc95304dfe0dfeeeecfda85a67f9f7ffc288fb904b9608262be5b04d97466",
+      "bytes": 47141
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/bound-control/ci/pr20-kvm-triple/clock-server-receipt.json",
+      "sha256": "c15b6ddd3da0028beba94cdf4668832df94ad9d3dcd334a238bd98e935b035cf",
+      "bytes": 204
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/bound-control/ci/pr20-kvm-triple/package.py",
+      "sha256": "e9b0fcfa55549dfc71e1737f07b7eaf7a598e09f961145be509d0c0945b6e24a",
+      "bytes": 8852
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/bound-control/ci/pr20-kvm-triple/authorization.json",
+      "sha256": "3e40c1a4efcbf0ca92cbb57c0a2d9094415bb061b48695c945f33f379363ec31",
+      "bytes": 3958
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/bound-control/ci/pr20-kvm-triple/markers.py",
+      "sha256": "7dfb88112bdf17b9cc8ff96b9cdf068a79394505cbb0103be4d93819533a2a80",
+      "bytes": 10050
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/bound-control/ci/pr20-kvm-triple/cleanup.py",
+      "sha256": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+      "bytes": 4068
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/bound-control/ci/pr20-kvm-triple/clock-contract.json",
+      "sha256": "e973055dc62a2f3626c119af175f337f82ca6e4e23412e0022c8bc9d652923b6",
+      "bytes": 910
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/frozen-readiness/prior61-source-freeze-receipt.json",
+      "sha256": "58589344167e6ab6c90981c860bca1a7ceadcdc8ca0ec4b1e5def2ee69abbf9d",
+      "bytes": 1036
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/frozen-readiness/PLAN.md",
+      "sha256": "fddc7225de7db0c14048a0d8f364dc749c2779ed9c959527d0ebadd78888f087",
+      "bytes": 2988
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/frozen-readiness/source-spec.json",
+      "sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+      "bytes": 2972
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/frozen-readiness/prepare_sources.py",
+      "sha256": "2b544afa479b81294efc6bad2bf8af910bf39039af4664ab70035fce3e6e0dfb",
+      "bytes": 2972
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/frozen-readiness/C1-source-manifest.json",
+      "sha256": "3c3c2ded6e2fbf30180c129449c3a20815401c21f97b25f01df7f056458eb473",
+      "bytes": 179918
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/frozen-readiness/reconstruction.stdout.log",
+      "sha256": "b8663abb16a9de65cbd57a29b05e3fb45fb2902d5502df95b75cede255dff5ff",
+      "bytes": 428
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/frozen-readiness/candidate-source-delta.json",
+      "sha256": "ae56b1cec436de44997076b97088f436d0f1f89bdad515d682f00b7cf6d3f67e",
+      "bytes": 10726
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/frozen-readiness/reconstruction.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/frozen-readiness/B-source-manifest.json",
+      "sha256": "28ee85b6a27b6b99ed6375f486258894abed840a1e1da4181250b84a8d8cfd75",
+      "bytes": 170777
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/frozen-readiness/analyze.py",
+      "sha256": "fdbf7b76ebbf587bccaede00910209ba2586c0982bbd0da80cb26cb94ce07740",
+      "bytes": 23606
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/frozen-readiness/source-freeze-receipt.json",
+      "sha256": "c7558b6ecd705dd53b57a5e77a2ea6f1b75e5a431a36844d0d41bd22c1fe4755",
+      "bytes": 2121
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/frozen-readiness/original-protocol.json",
+      "sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+      "bytes": 1942
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/frozen-readiness/C0-source-manifest.json",
+      "sha256": "84f6e8ed68c7ac36123f7265bebd90ba34b0a0fa9c69c64024fbb5e9c577c2a1",
+      "bytes": 174223
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/frozen-readiness/method-plan.json",
+      "sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+      "bytes": 46271
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/frozen-readiness/marker-contract.json",
+      "sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+      "bytes": 136903
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/check_preparation.py",
+      "sha256": "771c779abcbc733051f6683b202c2e2773791620f231ca3266a1df856a41809b",
+      "bytes": 18313
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/preparation62/reviewed-final/offline_cases.py",
+      "sha256": "e055f8a4c6181a9ba331dbb91add399abf3523c297752481ff191db8ccd57ba3",
+      "bytes": 11803
+    }
+  ]
+}

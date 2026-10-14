@@ -1,0 +1,85 @@
+{
+  "approved": false,
+  "plan_git": "UNBOUND",
+  "approved_plan_sha256": "fddc7225de7db0c14048a0d8f364dc749c2779ed9c959527d0ebadd78888f087",
+  "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+  "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+  "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+  "approval_utc": "2026-10-13T11:54:51Z",
+  "followup_utc": "2026-10-13T11:55:28Z",
+  "user_approval": "允许",
+  "user_followup": "不必向我申请直接往后进行即可",
+  "source_thread": "01a0f1a6-931e-713a-845e-7e62ceb3300a",
+  "scope": "PREPARATION ONLY, NOT EXECUTION AUTHORIZATION. New matching candidate;62calls=31original correctness+24unchanged common+3unchanged diagnostics+Unicode+3existing raster followup correctness.14groups9APKs;38/41/53/55fromimmutablePRanchor,job60;single standard runner/worker/no-build-cache;originalhelper17/ACL/doublecleanup/20MiB3days unchanged.",
+  "prior_execution_git": "d20b37a00d084ddea8a59698b926d94ce2f1a633",
+  "phase_cutoff_minutes": {
+    "setup": 38,
+    "correctness": 41,
+    "common": 53,
+    "diagnostics": 55
+  },
+  "budget_revision_sha256": "__CLOCK_BUDGET_SHA256__",
+  "continuation": "Root authorized scratch preparation only. Root must separately bind new C1/readiness and immutable clock after review; keep old1..58 fields unchanged, append59Unicode/60NativeReuse/61Frame/62dense. No launch from this template.",
+  "clock_contract_sha256": "__CLOCK_CONTRACT_SHA256__",
+  "server_receipt_sha256": "__CLOCK_RECEIPT_SHA256__",
+  "budget_anchor_epoch": "__CLOCK_ANCHOR_EPOCH__",
+  "clock_status": "__CLOCK_STATUS__",
+  "historical_phase_budget_override": {
+    "kind": "EXPLICIT_USER_AUTHORIZED_PHASE_BUDGET_OVERRIDE",
+    "historical_plan_sha256": "ff2459abb0b8582d20e570c5afb0c4e9a0df5216bed8bc5191e4d008b5c4dacd",
+    "historical_cutoffs_minutes": [
+      32,
+      38,
+      52,
+      55,
+      60
+    ],
+    "replacement_cutoffs_minutes": [
+      38,
+      41,
+      53,
+      55,
+      60
+    ],
+    "terminal_report_git": "9c9e490ee4e579946a744cb1d0555643812b91c7",
+    "user_authorization_quote_as_relayed": "请利用官方日志能证明的退出和清理事实继续合理修复预算/构建安排…保持每轮60分钟总上限、原始样本及正确性门禁，可根据已完成第四轮的实测测试阶段时长重新合理分配预算或评估可信构建缓存…不要盲目同配置重跑。"
+  },
+  "source_method_amendment": {
+    "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+    "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+    "plan_sha256": "fddc7225de7db0c14048a0d8f364dc749c2779ed9c959527d0ebadd78888f087",
+    "parent_run": "38498392929",
+    "terminal_report_git": "UNBOUND",
+    "C0": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+    "C1": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+    "old_methods_preserved": 58,
+    "appended_correctness_ordinals": [
+      59,
+      60,
+      61,
+      62
+    ],
+    "helper_exception_ordinal": 17
+  },
+  "phase_budget_override": {
+    "kind": "CONTINUE_APPROVED_BUDGET3_WITH_NEW_SOURCE_METHOD_SCOPE",
+    "historical_budget_revision_sha256": "0de35f7063e25c9c75daa7f4a1719eb525d40d2bdbc311c380133669dcfd582a",
+    "historical_cutoffs_minutes": [
+      38,
+      41,
+      53,
+      55,
+      60
+    ],
+    "replacement_cutoffs_minutes": [
+      38,
+      41,
+      53,
+      55,
+      60
+    ],
+    "terminal_report_git": "UNBOUND",
+    "scope_reference": "The separately hash-bound source/method amendment changes candidate identities, preserves all original methods1-58 and appends four candidate-only correctness methods59-62; public methods, budget offsets and security/resource limits do not change."
+  },
+  "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0"
+}

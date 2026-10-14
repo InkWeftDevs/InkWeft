@@ -1,0 +1,36 @@
+{
+  "status": "CURRENT_SCOPE_METADATA_ONLY_SOURCE_CLOCK_LAUNCH_UNCHANGED",
+  "previous_snapshot": "/workspace/scratch/pr20-match-candidate-20261014/preparation62",
+  "changes": [
+    {
+      "file": "budget-revision.json",
+      "path": [
+        "phase_budget_amendment",
+        "method_plan_sha256"
+      ],
+      "before": "e1d02f73ed8b417949282a729de8133f16deb2fda47a6ae5ec9f2f3671da9346",
+      "after": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913"
+    },
+    {
+      "file": "budget-revision.json",
+      "path": [
+        "phase_budget_amendment",
+        "authorization_source"
+      ],
+      "before": "Root authorized scratch preparation for an additional SQL-boundary cancellation candidate under existing continuation; actual launch remains separately performed only by root after code/source freeze and independent review.",
+      "after": "Root authorized scratch preparation for the matching and frame-local lazyPencil candidate: preserve original methods1-58 and append59Unicode/60NativeReuse/61Frame/62dense under the unchanged budget. Actual launch remains separately performed only by root after source freeze and independent review."
+    },
+    {
+      "file": "authorization.json",
+      "path": [
+        "phase_budget_override",
+        "scope_reference"
+      ],
+      "before": "The separately hash-bound source/method amendment changes identities and one correctness method; budget offsets and security/resource limits do not change.",
+      "after": "The separately hash-bound source/method amendment changes candidate identities, preserves all original methods1-58 and appends four candidate-only correctness methods59-62; public methods, budget offsets and security/resource limits do not change."
+    }
+  ],
+  "readiness_unchanged": true,
+  "executable_controller_bytes_unchanged": true,
+  "historical_fields_unchanged": true
+}
