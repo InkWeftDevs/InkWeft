@@ -99,13 +99,20 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
         // execSQL has no CancellationSignal overload. Stop between temporary-table steps,
         // including when there are no drafts or matching source rows to run a row check.
         check()
-        sql.execSQL("CREATE TEMP TABLE library_drafts(id TEXT PRIMARY KEY,revision INTEGER,title TEXT,text TEXT,position INTEGER)")
-        request.drafts.values.forEachIndexed{index,draft->check();sql.execSQL("INSERT INTO library_drafts VALUES(?,?,?,?,?)",
-            arrayOf<Any>(draft.base.id,draft.base.revision,draft.title,draft.text,index))}
+        // An empty overlay needs no temporary schema changes. Name every CTE column so
+        // the same shelf queries can use the empty relation and the populated table.
+        val draftsCte=if(request.drafts.isEmpty())
+            "library_drafts(id,revision,title,text,position) AS (SELECT CAST(NULL AS TEXT),CAST(NULL AS INTEGER),CAST(NULL AS TEXT),CAST(NULL AS TEXT),CAST(NULL AS INTEGER) WHERE 0),"
+        else {
+            sql.execSQL("CREATE TEMP TABLE library_drafts(id TEXT PRIMARY KEY,revision INTEGER,title TEXT,text TEXT,position INTEGER)")
+            request.drafts.values.forEachIndexed{index,draft->check();sql.execSQL("INSERT INTO library_drafts VALUES(?,?,?,?,?)",
+                arrayOf<Any>(draft.base.id,draft.base.revision,draft.title,draft.text,index))}
+            ""
+        }
         trace?.event("drafts-ready",request.drafts.size)
         check()
         val shelf="""
-            WITH shelf AS (
+            WITH $draftsCte shelf AS (
                 SELECT n.id,COALESCE(d.revision,n.revision) revision,COALESCE(d.title,n.title) title,
                     n.updatedAt,0 draftPosition,
                     COALESCE(w.world,0) world,COALESCE(w.paper,1) paper,COALESCE(w.folder,'') folder,COALESCE(w.tags,'') tags,

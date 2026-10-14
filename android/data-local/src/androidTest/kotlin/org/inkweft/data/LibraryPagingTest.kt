@@ -37,12 +37,14 @@ class LibraryPagingTest {
         val repo=LibrarySearchRepository(db);val projections=mutableListOf<Pair<Int,Int>>()
         repo.readObserver={kind,count,chars->if(kind=="previews")projections+=count to chars}
         var plan=emptyList<String>();repo.queryPlanObserver={plan=it}
+        for(overlay in listOf(emptyMap<String,NoteDraft>(),drafts))
         for(byTitle in listOf(false,true))for(filter in listOf("all","folder:课程")){
-            val expected=ShelfOrder.arrange(merged.filter{filter=="all"||metadata[it.id]?.folder=="课程"},
+            val expectedNotes=if(overlay.isEmpty())savedOrder else merged
+            val expected=ShelfOrder.arrange(expectedNotes.filter{filter=="all"||metadata[it.id]?.folder=="课程"},
                 {metadata[it.id]?.pinned==true},{it.title},byTitle).map{it.id}
             val seen=mutableListOf<String>();var offset=0
             do{
-                val result=repo.read(LibrarySearchRequest(1,headers,drafts,filter=filter,byTitle=byTitle,offset=offset,pageSize=17))
+                val result=repo.read(LibrarySearchRequest(1,headers,overlay,filter=filter,byTitle=byTitle,offset=offset,pageSize=17))
                 assertTrue(result.items.size<=17);assertTrue(result.active.all{it.text.isEmpty()})
                 seen+=result.items.map{it.note.id};offset=result.nextOffset?:-1
             }while(offset>=0)
