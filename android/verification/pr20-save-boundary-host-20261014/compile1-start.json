@@ -1,0 +1,23 @@
+{
+  "command": [
+    "/workspace/.setup/tools/gradle-9.4.1/bin/gradle",
+    ":data-local:compileDebugKotlin",
+    ":data-local:compileDebugAndroidTestKotlin",
+    "--daemon",
+    "--max-workers=1",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "--offline"
+  ],
+  "source_sha256": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt": "c904a8ebc9b2aed64266a82d24b8f1395621314a9087fd6f0de6298b8865fb47",
+    "android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt": "a9351355ca45af5f6f5db34109fa68d6bf10505d3117ed60a7c68cc000b05e89",
+    "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt": "052467625c685a79f72337379b2d4e70718440c6717e91c6d18677c9c1982581",
+    "android/data-local/src/main/kotlin/org/inkweft/data/SaveBoundaryDiagnostics.kt": "4f489ba5a336ed6c5df388914625b7316e61e96183a8eb20c0c3fcfea3956948",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveBoundaryDiagnosticsTest.kt": "18bc68f410a3f738fc51e2365463cfeccdc5267e0d456de895ba9fb3d7eb31ea"
+  },
+  "started_utc": "2026-10-14T08:36:01.416277+00:00",
+  "native_execution": false,
+  "final_acceptance": false
+}

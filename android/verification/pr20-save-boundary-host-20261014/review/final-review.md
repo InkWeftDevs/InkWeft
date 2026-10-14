@@ -1,0 +1,36 @@
+# Independent final save-boundary source review
+
+**No remaining source-review blocker found in the six-file compile2 snapshot.** The diagnostic background-task completeness finding in `review-compile1.md` is closed. This review is bound to the exact six SHA-256 hashes in `final-review.json` and `compile2-start.json`; the earlier review is preserved unchanged.
+
+The reviewer performed only source/bytecode and stored-evidence reads. No build, native run, network request, CI activation, or source mutation was performed by this reviewer. This is not Android runtime validation or performance acceptance. The root-owned compile2/test results must be read separately after they finish.
+
+## Closed finding and strengthened guards
+
+`LibrarySaveBoundaryDiagnosticsTest.kt:38–56` now tracks every submitted writer task, including sample `-1` and tasks submitted while event recording is disabled. The terminal event is published before removing the task from `pending`. After stopping/joining producers, `awaitWorkers()` waits for all pending tasks and checks that every recorded submit has a recorded terminal event. The paused interval is also drained before resetting the recorder for OBSERVE (`:291`). This closes the specific late background writer-exit gap; it does not claim that every Android coroutine or every query-executor job is globally joined.
+
+The Android guard now explicitly covers a nested save inside an outer Room transaction (`:106–113`), a normal reopen that emits no events into the old diagnostic sink (`:116–122`), executor forwarding exactly once, captured sample propagation, prior sample/task restoration, and delegate submission rejection (`:128–144`). Author-save event checks require one submit/run-enter/run-exit, the same task throughout its Room/SQLite author boundaries, and consistent executor-thread endpoints (`:170–190`). In-body exception and cancellation, cancellation while queued, replay/conflict, subsequent saving and reopen remain covered. These are inspected assertions, not claims that the native tests ran.
+
+The four new JVM tests independently cover: a deferred executor's one submission/one invocation plus thread-context restoration and original command exception; observer faults that preserve successful actions and original BEGIN exceptions; nested depth/outer identity; and failed BEGIN versus failed END state handling. They explicitly do not exercise Room, SQLite, Android clocks, or native scheduling. Their source hash is bound below; root owns execution.
+
+## Production wrapper assessment
+
+- `NoteRepository.kt:21–39`, `NoteDatabase.kt:35–59`, and `PreservingOpenHelperFactory.kt:45–54` keep the default-null path on the original save/Room/executor/database delegate. It performs no diagnostic clock, CPU-counter or ThreadLocal read and introduces no diagnostic SQL, checkpoint, invalidation, queue, or worker. New fields/null checks and cache clearing are small real operations; this is not a claim of literally zero machine instructions of overhead.
+- `SaveBoundaryDiagnostics.kt:32–58` wraps the existing Room serial transaction executor. It submits the original command exactly once and invokes it exactly once if the delegate runs it. Sample/task values are restored or removed in `finally`. Command exceptions now explicitly produce `writer-run-exit` with `outcome=threw` before being rethrown. This probe uses Room's normal asynchronous executor; with an arbitrary inline executor, a synchronous command throw can also reach the outer `execute` catch and emit `writer-submit-failed`, so consumers must not infer a raw-executor scheduling model broader than the actual Room configuration.
+- Observer throwables are isolated and mark the trace invalid. Original begin/success/end failures retain their original identity. Failed BEGIN does not push a frame; failed END invalidates and clears the affected local stack. The test recorder owns bounded storage/overflow and cannot convert a healthy save to a database failure.
+- Each explicit transaction variant calls its corresponding delegate once. All other SupportSQLite operations remain delegated. Yield operations pass through but invalidate evidence because they may internally end and restart a transaction. Corruption handling, sidecar locking, database identity, migration, WAL/FULL setup, and default open/recovery behavior remain unchanged.
+- Room and SQLite have distinct per-thread stacks and outer ordinals. Nested ends are not treated as durable outer commits. `successRequested` records a successful mark, not proof against nested rollback or a power-loss guarantee. The author SQLite interval is selected by its coverage of body entry; an earlier trigger-sync transaction inside Room BEGIN is not mistaken for it.
+- The legacy `saveStageObserver` remains an intentional throwing fault hook; the new diagnostic observer does not change that pre-existing contract. Its default remains null.
+
+## Diagnostic scope and interval meanings
+
+The test retains a separate IDLE arm and a continuous DIRECT → original 750 ms paused-reader save → OBSERVE sequence; the public sequence starts author revisions at 1 and 32 and finishes at 62. Fixture seed/content, 30 ordered saves per arm and result/content checks remain explicit. This is one-seed candidate-only diagnostic evidence. Its observer overhead and different IDLE readiness mean it cannot replace the four-seed public comparisons, close a regression gate, or establish B→C1 causality by itself.
+
+Boundary events contain no SQL text, author IDs, content, exception messages or database paths. Wall/CPU/thread metadata are recorded only inside the opted-in test sink. CPU differences must be null across different thread IDs. Same-thread CPU includes other execution on that thread; it is not automatically exclusive SQL/body CPU. No producer currently subtracts CPU counters.
+
+Submission→worker entry covers Room queue/executor scheduling, not SQLite write-lock time. SQLite BEGIN includes connection acquisition and begin/lock behavior. SQLite END includes COMMIT/ROLLBACK and connection release, not fsync alone. SQLite-end-exit→Room-end-exit covers Room checks and refresh scheduling, not waiting for the refresh job. Room-end-exit→save-returned includes continuation work and scheduling. Executor run-exit may occur after save-returned; do not subtract those as an ordered resume interval.
+
+Cached Room 2.8.5 bytecode confirms these interception points: `RoomDatabase.javap.txt:1266–1324` uses overridable begin/success/end methods, trigger sync before the author SQLite begin, and refresh scheduling after the outer SQLite end. `RoomDatabaseKt__RoomDatabase_androidKt.javap.txt:77–85` calls the transaction-executor getter and execute for the actual legacy `withTransaction` path. The dependency evidence hashes are in `final-review.json`.
+
+## Remaining verification
+
+Read the root-owned compile2 result and actual four JVM outcomes when complete. Then validate the new Room/SQLite guards and boundary capture on Android under the separately frozen diagnostic run plan; a host compile or JVM green result cannot establish native performance or correct runtime boundary coverage. Preserve the existing save/search/raster/GC public results and all open acceptance gaps.

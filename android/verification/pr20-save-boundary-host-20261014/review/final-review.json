@@ -1,0 +1,80 @@
+{
+  "status": "NO_REMAINING_SOURCE_REVIEW_BLOCKER",
+  "source": [
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt",
+      "sha256": "c904a8ebc9b2aed64266a82d24b8f1395621314a9087fd6f0de6298b8865fb47",
+      "compile2_sha256": "c904a8ebc9b2aed64266a82d24b8f1395621314a9087fd6f0de6298b8865fb47",
+      "matches": true
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt",
+      "sha256": "a9351355ca45af5f6f5db34109fa68d6bf10505d3117ed60a7c68cc000b05e89",
+      "compile2_sha256": "a9351355ca45af5f6f5db34109fa68d6bf10505d3117ed60a7c68cc000b05e89",
+      "matches": true
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+      "sha256": "052467625c685a79f72337379b2d4e70718440c6717e91c6d18677c9c1982581",
+      "compile2_sha256": "052467625c685a79f72337379b2d4e70718440c6717e91c6d18677c9c1982581",
+      "matches": true
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/SaveBoundaryDiagnostics.kt",
+      "sha256": "392bf0e25e6f62d77f915eec628eac16f3f374e0de5287fb02435d29c0cecab9",
+      "compile2_sha256": "392bf0e25e6f62d77f915eec628eac16f3f374e0de5287fb02435d29c0cecab9",
+      "matches": true
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveBoundaryDiagnosticsTest.kt",
+      "sha256": "03ef99d05bc814fa19d755b0d3fb534f84da6f04e1af024dc0433c8f367a276a",
+      "compile2_sha256": "03ef99d05bc814fa19d755b0d3fb534f84da6f04e1af024dc0433c8f367a276a",
+      "matches": true
+    },
+    {
+      "path": "android/data-local/src/test/kotlin/org/inkweft/data/SaveBoundaryDiagnosticsTest.kt",
+      "sha256": "d1bd148f6f787bf636d005d5f0932b4e4e02c65c0953ece313eb0e7bbd789dc6",
+      "compile2_sha256": "d1bd148f6f787bf636d005d5f0932b4e4e02c65c0953ece313eb0e7bbd789dc6",
+      "matches": true
+    }
+  ],
+  "compile2_start_sha256": "8e2ff5704b9322d5f12c4c14f30546b5bbfca578e222add119010d9fb1fdc850",
+  "closed_findings": [
+    {
+      "id": "background-writer-exit",
+      "resolution": "Track all pending writer tasks, publish terminal before remove, await and pair all recorded submissions before sealing/resetting"
+    }
+  ],
+  "dependency_evidence": [
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/androidx.room.RoomDatabase.javap.txt",
+      "sha256": "cdb901bca2c7c6bfc0846b417e34363a762cce35aa1efe207f2c9890e005a2f8"
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/androidx.room.RoomDatabaseKt__RoomDatabase_androidKt.javap.txt",
+      "sha256": "6c29a24ed9862d91f6508181e66c296f4aa1fc1896a0b63445a98189a4f25a53"
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/room-runtime-2.8.5-classes.jar",
+      "sha256": "17ac25750e9b7e3f4ef13e69db6493539aa962f541a4ce1570924a68b6c218d7"
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/sqlite-2.6.2-classes.jar",
+      "sha256": "09c3b94cb3046b4a252ee9c42c0f83afaeff057c3b61181b6f9de6f268c1c625"
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/requery-3.49.0-classes.jar",
+      "sha256": "b9f6a7901d3cdc90649542ee116460067e75fe62709a84288e58f53346355580"
+    }
+  ],
+  "native_validation": "NOT_RUN_BY_REVIEWER; required before interpreting new boundary measurements",
+  "build_validation": "ROOT_OWNED_COMPILE2_PENDING_AT_REVIEW",
+  "reviewer_actions": [
+    "read source",
+    "read existing cached bytecode",
+    "read stored compile inputs",
+    "write scratch review only"
+  ],
+  "remaining_source_findings": [],
+  "review_sha256": "08f5adcb806480e28676b52e5cbb7fa741bfc543bf0d9ba2e88ffc2d96c5b09d"
+}

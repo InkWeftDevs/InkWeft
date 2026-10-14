@@ -1,0 +1,85 @@
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/.setup/java-home -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+> Task :core-domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core-domain:compileKotlin UP-TO-DATE
+> Task :core-domain:compileJava NO-SOURCE
+> Task :core-domain:processResources NO-SOURCE
+> Task :core-domain:classes UP-TO-DATE
+> Task :core-domain:jar UP-TO-DATE
+> Task :data-local:preBuild UP-TO-DATE
+> Task :data-local:preDebugBuild UP-TO-DATE
+> Task :data-local:generateDebugResources UP-TO-DATE
+> Task :data-local:packageDebugResources UP-TO-DATE
+> Task :data-local:processDebugNavigationResources UP-TO-DATE
+> Task :data-local:parseDebugLocalResources UP-TO-DATE
+> Task :data-local:generateDebugRFile UP-TO-DATE
+> Task :data-local:kspDebugKotlin
+> Task :data-local:compileDebugKotlin
+w: file:///workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/DocumentRepository.kt:38:47 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt:274:31 Unnecessary safe call on a non-null receiver of type 'List<String>'.
+w: file:///workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/KnowledgeTextRepository.kt:140:34 Condition is always 'true'.
+w: file:///workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/KnowledgeTextRepository.kt:140:65 Condition is always 'true'.
+w: file:///workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt:114:43 Unnecessary safe call on a non-null receiver of type 'Function1<LibrarySearchUdfRead, Unit>'.
+w: file:///workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt:46:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt:51:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt:56:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/OriginalStorage.kt:61:27 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/OriginalStorage.kt:73:44 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt:30:58 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/RecallStudyRepository.kt:37:37 Unnecessary non-null assertion (!!) on a non-null receiver of type 'KnowledgeData.Question'.
+w: file:///workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/StudyRepository.kt:185:51 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StudySourceRow'.
+w: file:///workspace/InkWeft/android/data-local/src/main/kotlin/org/inkweft/data/StudyRepository.kt:185:95 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StudySourceRow'.
+
+> Task :data-local:javaPreCompileDebug UP-TO-DATE
+> Task :data-local:compileDebugJavaWithJavac NO-SOURCE
+> Task :data-local:bundleLibCompileToJarDebug
+> Task :data-local:preDebugAndroidTestBuild UP-TO-DATE
+> Task :data-local:generateDebugAndroidTestResources UP-TO-DATE
+> Task :data-local:packageDebugAndroidTestResources UP-TO-DATE
+> Task :data-local:processDebugAndroidTestNavigationResources UP-TO-DATE
+> Task :data-local:parseDebugAndroidTestLocalResources UP-TO-DATE
+> Task :data-local:generateDebugAndroidTestRFile UP-TO-DATE
+> Task :data-local:kspDebugAndroidTestKotlin
+> Task :data-local:compileDebugAndroidTestKotlin
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/BranchReviewRepositoryTest.kt:206:26 Unnecessary non-null assertion (!!) on a non-null receiver of type 'StudyCommand'.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/BundledSqliteFactoryTest.kt:42:55 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt:117:24 Check for instance is always 'true'.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryCollectionTest.kt:118:52 No cast needed.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionCausalTest.kt:66:79 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Throwable'.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionCausalTest.kt:95:79 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Throwable'.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionExposureTest.kt:78:79 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Throwable'.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryBackupRepositoryTest.kt:259:33 'constructor(p0: String!, p1: Int): FileObserver' is deprecated. Deprecated in Java.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveBoundaryDiagnosticsTest.kt:43:122 'val id: Long' is deprecated. Deprecated in Java.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveBoundaryDiagnosticsTest.kt:242:129 'val id: Long' is deprecated. Deprecated in Java.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveCausalTest.kt:75:104 'val id: Long' is deprecated. Deprecated in Java.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:79:25 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:94:97 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:122:25 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:132:25 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:202:102 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:208:70 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:210:111 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:224:102 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/OriginalStorageRepositoryTest.kt:227:70 Java type mismatch: inferred type is 'String?', but 'String' was expected.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/PageAuthoringRepositoryTest.kt:134:42 The corresponding parameter in the supertype 'Rows' is named 'consume'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/RecallStudyRepositoryTest.kt:206:62 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallLoadedAttempt'.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/RecallStudyRepositoryTest.kt:212:72 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallLoadedAttempt'.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/RecallStudyRepositoryTest.kt:232:61 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallLoadedAttempt'.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/RecallStudyRepositoryTest.kt:233:74 Unnecessary non-null assertion (!!) on a non-null receiver of type 'RecallLoadedAttempt'.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/RecallStudyRepositoryTest.kt:268:102 Unnecessary non-null assertion (!!) on a non-null receiver of type 'KnowledgeData.CardPresentation'.
+w: file:///workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/StudyOrganizationRepositoryTest.kt:135:39 Unnecessary non-null assertion (!!) on a non-null receiver of type 'KnowledgeRow'.
+
+> Task :data-local:bundleLibRuntimeToJarDebug
+> Task :data-local:preDebugUnitTestBuild UP-TO-DATE
+> Task :data-local:generateDebugUnitTestStubRFile UP-TO-DATE
+> Task :data-local:kspDebugUnitTestKotlin
+> Task :data-local:compileDebugUnitTestKotlin
+> Task :data-local:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :data-local:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :data-local:processDebugJavaRes UP-TO-DATE
+> Task :data-local:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :data-local:testDebugUnitTest
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/.setup/java-home -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+
+BUILD SUCCESSFUL in 3m 10s
+26 actionable tasks: 9 executed, 17 up-to-date
