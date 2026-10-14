@@ -1,0 +1,60 @@
+{
+  "kind": "LOCAL_SCREENING_AND_SYNTHETIC_CACHE_FIXTURE_NOT_NATIVE_PERFORMANCE",
+  "immutable_native_execution_git": "d20b37a00d084ddea8a59698b926d94ce2f1a633",
+  "identity_receipts": [
+    {
+      "path": "01-cold-identity.json",
+      "sha256": "3d245d71bbfe7df285e1d5fb75106bc0c14646f90525a71f01108673868fefa7"
+    },
+    {
+      "path": "02-independent-checkout-hit-identity.json",
+      "sha256": "3d245d71bbfe7df285e1d5fb75106bc0c14646f90525a71f01108673868fefa7"
+    },
+    {
+      "path": "03-source-change-identity.json",
+      "sha256": "3d245d71bbfe7df285e1d5fb75106bc0c14646f90525a71f01108673868fefa7"
+    },
+    {
+      "path": "04-dependency-content-change-identity.json",
+      "sha256": "3d245d71bbfe7df285e1d5fb75106bc0c14646f90525a71f01108673868fefa7"
+    },
+    {
+      "path": "05-task-tool-input-change-identity.json",
+      "sha256": "3d245d71bbfe7df285e1d5fb75106bc0c14646f90525a71f01108673868fefa7"
+    },
+    {
+      "path": "06-toolchain-namespace-change-identity.json",
+      "sha256": "3906399f08ed6053954a9d243e76d583ced2e67aae4ee30fcc3652ce79b98332"
+    },
+    {
+      "path": "07-remote-disabled-hit-identity.json",
+      "sha256": "3d245d71bbfe7df285e1d5fb75106bc0c14646f90525a71f01108673868fefa7"
+    },
+    {
+      "path": "08-identity-hash-mismatch-identity.json",
+      "sha256": "3d245d71bbfe7df285e1d5fb75106bc0c14646f90525a71f01108673868fefa7"
+    },
+    {
+      "path": "09-outside-directory-identity.json",
+      "sha256": "3d245d71bbfe7df285e1d5fb75106bc0c14646f90525a71f01108673868fefa7"
+    },
+    {
+      "path": "10-missing-directory-identity.json",
+      "sha256": "3d245d71bbfe7df285e1d5fb75106bc0c14646f90525a71f01108673868fefa7"
+    },
+    {
+      "path": "11-wrong-gradle-identity-identity.json",
+      "sha256": "f43ed3c87f473e9352b3433216c683bd0d34578ec9e6ed5ed3988ce9e6b6af51"
+    },
+    {
+      "path": "12-cache-not-enabled-identity.json",
+      "sha256": "3d245d71bbfe7df285e1d5fb75106bc0c14646f90525a71f01108673868fefa7"
+    }
+  ],
+  "notes": [
+    "No original native artifact ZIP is present.",
+    "The first two screen runs preceded final reporting hardening; Gradle selected source/test inputs were the same.",
+    "The final native-failure status-only repair was checked by isolated Python tests; host verification path is unchanged.",
+    "Caches, binaries, APK/AAR/DB and source workspace copies are excluded."
+  ]
+}

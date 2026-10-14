@@ -1,0 +1,57 @@
+// Opt-in local task cache. The caller verifies frozen sources/dependencies first.
+// Never import or upload this directory; use one fresh directory per owned job.
+import groovy.json.JsonSlurper
+import java.security.MessageDigest
+
+def required = { String name ->
+    def value = System.getenv(name)
+    if (!value?.trim()) throw new GradleException("Missing ${name}")
+    value
+}
+def sha256 = { byte[] value ->
+    MessageDigest.getInstance('SHA-256').digest(value).encodeHex().toString()
+}
+def cacheBase = new File(required('INKWEFT_TASK_CACHE_DIR')).canonicalFile.toPath()
+def allowedRoots = [new File('/workspace/scratch/pr20-build-cache').canonicalFile.toPath()]
+if (System.getenv('RUNNER_TEMP')?.trim()) {
+    allowedRoots.add(new File(System.getenv('RUNNER_TEMP')).canonicalFile.toPath())
+}
+if (!allowedRoots.any { cacheBase != it && cacheBase.startsWith(it) }) {
+    throw new GradleException('Task cache must be below RUNNER_TEMP or /workspace/scratch/pr20-build-cache')
+}
+def identityBytes = new File(required('INKWEFT_TASK_CACHE_IDENTITY_FILE')).bytes
+def identityHash = required('INKWEFT_TASK_CACHE_IDENTITY_SHA256')
+if (!(identityHash ==~ /[0-9a-f]{64}/) || sha256(identityBytes) != identityHash) {
+    throw new GradleException('Task cache identity SHA256 mismatch')
+}
+def identity = new JsonSlurper().parse(identityBytes)
+if (identity.schema != 1 || identity.gradle_version != gradle.gradleVersion ||
+        identity.java_version != System.getProperty('java.version') ||
+        identity.java_vendor != System.getProperty('java.vendor')) {
+    throw new GradleException('Task cache Gradle/JVM identity mismatch')
+}
+['source_spec_sha256', 'probe_manifest_sha256', 'toolchain_sha256', 'dependency_manifest_sha256'].each {
+    if (!(identity[it] instanceof String) || !(identity[it] ==~ /[0-9a-f]{64}/)) {
+        throw new GradleException("Missing task cache fingerprint: ${it}")
+    }
+}
+if (!gradle.startParameter.buildCacheEnabled) {
+    throw new GradleException('Explicit --build-cache is required')
+}
+gradle.settingsEvaluated { settings ->
+    settings.buildCache {
+        local {
+            directory = cacheBase.resolve(identityHash).toFile()
+            enabled = true
+            push = true
+        }
+        if (remote != null) {
+            remote.enabled = false
+            remote.push = false
+        }
+    }
+    if (settings.buildCache.remote?.enabled || settings.buildCache.remote?.push) {
+        throw new GradleException('Remote task cache must remain disabled')
+    }
+    println("INKWEFT_LOCAL_TASK_CACHE identity=${identityHash} remote=false")
+}

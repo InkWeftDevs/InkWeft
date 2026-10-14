@@ -1,0 +1,6 @@
+{
+  "android/verify.py": "c8858920e558c47b097eea19b9e4b366bedd0022cf1ea7bdc24e8562c547a356",
+  "ci/test_android_screen.py": "bd4eefc66353818c93218f9f3978c78ca8caa69725bd8b8681aad33fdece7be0",
+  "ci/pr20_build_cache.init.gradle": "d3e02bb3d9d237530867e04eac9892d526093fb51fdf85fcd2928bdab715e830",
+  "ci/test_pr20_build_cache.py": "5523ae7e35ced537d2c22b15ee7046cbd9b641c203d4418ac6a501fe2c72f35b"
+}

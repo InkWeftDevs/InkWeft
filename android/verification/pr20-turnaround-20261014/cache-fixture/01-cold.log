@@ -1,0 +1,17 @@
+
+Welcome to Gradle 9.4.1!
+
+Here are the highlights of this release:
+ - Java 26 support
+ - Non-class-based JVM tests
+ - Enhanced console progress bar
+
+For more details see https://docs.gradle.org/9.4.1/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+INKWEFT_LOCAL_TASK_CACHE identity=3d245d71bbfe7df285e1d5fb75106bc0c14646f90525a71f01108673868fefa7 remote=false
+> Task :fixtureOutput
+
+BUILD SUCCESSFUL in 13s
+1 actionable task: 1 executed

@@ -1,0 +1,14 @@
+gradle.beforeProject { p ->
+  if (p.path == ':app') p.pluginManager.withPlugin('com.android.application') {
+p.androidComponents.finalizeDsl { a ->
+  a.defaultConfig.applicationId = 'org.inkweft.app.verify'
+  a.defaultConfig.testApplicationId = 'org.inkweft.app.verify.test'
+  a.defaultConfig.manifestPlaceholders['appLabel'] = '墨织开发验证'
+}
+  }
+  if (p.path == ':data-local') p.pluginManager.withPlugin('com.android.library') {
+p.androidComponents.finalizeDsl { a ->
+  a.defaultConfig.testApplicationId = 'org.inkweft.data.verify.test'
+}
+  }
+}
