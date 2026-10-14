@@ -1,0 +1,29 @@
+{
+  "status": "SOURCE_READY_NOT_COMPILED_NOT_NATIVE_TESTED",
+  "path": "android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt",
+  "source_sha256": "c27b9f9d3326a625a9063b8fa8a446cc68296406b527a8254d8993dd41f44731",
+  "patch_sha256": "319b74068afbf561ecdbb45fdd066ecb7911569cea946b8aca9c1f314a4e672c",
+  "changed_behavior": "Skip construction of frame-local PencilTileRenderer unless a PENCIL stroke is actually passed to the dirty-tile painter. Reuse that one worker-local instance across its original batch/finally clears.",
+  "scope_constraints": [
+    "No cross-frame cache",
+    "No renderer factory change",
+    "No SQL, signature, epoch, revision, layer, transform, clipping or callback changes",
+    "No common probe, sample, threshold or assertion changes",
+    "No new instrumentation fields"
+  ],
+  "static_validation": "git diff --check PASS; inspected existing mixed-pencil and all-PEN test paths",
+  "recommended_existing_native_selections": [
+    "org.inkweft.app.NativeStrokeTileReuseTest#oneNativeShapePerStrokeMatchesPerTileConstructionThroughTransformsAndClips",
+    "org.inkweft.app.TileLocalRedrawTest#integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+    "org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources",
+    "org.inkweft.app.TileLocalRedrawTest#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions"
+  ],
+  "validation_limit": "Existing NativeStrokeTileReuse differential test has legacy best-effort cleanup; pair it with TileLocalRedraw strict Job-join coverage. No test was edited.",
+  "performance_claim": "None. The actual diagnostic predates this patch. Static skipped allocation work does not establish runtime latency or old regression causality.",
+  "remaining_validation": [
+    "Parent-controlled compile/review",
+    "Existing native mixed PEN/PENCIL cold pixel comparisons and strict cancellation/resource checks",
+    "Original default-off balanced end-to-end comparison before speedup/acceptance claim",
+    "Continuous/sparse and original dense gates remain separately open"
+  ]
+}

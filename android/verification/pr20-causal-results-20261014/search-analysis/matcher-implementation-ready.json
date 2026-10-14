@@ -1,0 +1,15 @@
+{
+  "status": "SOURCE_FROZEN_PENDING_PARENT_BUILD_NATIVE",
+  "justificationRun": "38514139119",
+  "sourceEdits": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchMatcher.kt": "dca79a9188799f608bec31c1d0c799d82490237347142b7f88c7490275793b3b",
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt": "50089cb11edae66be4339a7258b96c7ac6b866b440255d48220aea7bf2fdb963",
+    "android/data-local/src/test/kotlin/org/inkweft/data/LibrarySearchMatcherTest.kt": "0c97fa38e8b52810fbf0c3d61ca937791baf9191108eaf244fff775592931d8a"
+  },
+  "jvmTestMethods": 5,
+  "gradleOrAndroidExecutedByThisAgent": false,
+  "publicProbeChanged": false,
+  "sqlChanged": false,
+  "saveP50Closed": false,
+  "independentReviewRequested": "/root/integration_review"
+}

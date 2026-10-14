@@ -1,0 +1,426 @@
+{
+  "scope": "HOST_SQLITE_SEMANTICS_ONLY",
+  "sqliteVersion": "3.53.1",
+  "timingsCollected": false,
+  "encodingGuardCases": [
+    {
+      "encoding": "UTF-8",
+      "value": "",
+      "type": "text",
+      "codepointsBeforeNul": 0,
+      "blobBytes": 0,
+      "bareLengthEquality": 1,
+      "typeAndLengthGuard": 1
+    },
+    {
+      "encoding": "UTF-8",
+      "value": "ASCII",
+      "type": "text",
+      "codepointsBeforeNul": 5,
+      "blobBytes": 5,
+      "bareLengthEquality": 1,
+      "typeAndLengthGuard": 1
+    },
+    {
+      "encoding": "UTF-8",
+      "value": "A\u0000B",
+      "type": "text",
+      "codepointsBeforeNul": 1,
+      "blobBytes": 3,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-8",
+      "value": "\u0000",
+      "type": "text",
+      "codepointsBeforeNul": 0,
+      "blobBytes": 1,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-8",
+      "value": "İ",
+      "type": "text",
+      "codepointsBeforeNul": 1,
+      "blobBytes": 2,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-8",
+      "value": "ſ",
+      "type": "text",
+      "codepointsBeforeNul": 1,
+      "blobBytes": 2,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-8",
+      "value": "K",
+      "type": "text",
+      "codepointsBeforeNul": 1,
+      "blobBytes": 3,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-8",
+      "value": "中文",
+      "type": "text",
+      "codepointsBeforeNul": 2,
+      "blobBytes": 6,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-8",
+      "value": "🚀",
+      "type": "text",
+      "codepointsBeforeNul": 1,
+      "blobBytes": 4,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-8",
+      "value": "\u0001",
+      "type": "text",
+      "codepointsBeforeNul": 2,
+      "blobBytes": 2,
+      "bareLengthEquality": 1,
+      "typeAndLengthGuard": 1
+    },
+    {
+      "encoding": "UTF-8",
+      "value": null,
+      "type": "null",
+      "codepointsBeforeNul": null,
+      "blobBytes": null,
+      "bareLengthEquality": null,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-8",
+      "value": "c4b0",
+      "type": "blob",
+      "codepointsBeforeNul": 2,
+      "blobBytes": 2,
+      "bareLengthEquality": 1,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16le",
+      "value": "",
+      "type": "text",
+      "codepointsBeforeNul": 0,
+      "blobBytes": 0,
+      "bareLengthEquality": 1,
+      "typeAndLengthGuard": 1
+    },
+    {
+      "encoding": "UTF-16le",
+      "value": "ASCII",
+      "type": "text",
+      "codepointsBeforeNul": 5,
+      "blobBytes": 10,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16le",
+      "value": "A\u0000B",
+      "type": "text",
+      "codepointsBeforeNul": 1,
+      "blobBytes": 6,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16le",
+      "value": "\u0000",
+      "type": "text",
+      "codepointsBeforeNul": 0,
+      "blobBytes": 2,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16le",
+      "value": "İ",
+      "type": "text",
+      "codepointsBeforeNul": 1,
+      "blobBytes": 2,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16le",
+      "value": "ſ",
+      "type": "text",
+      "codepointsBeforeNul": 1,
+      "blobBytes": 2,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16le",
+      "value": "K",
+      "type": "text",
+      "codepointsBeforeNul": 1,
+      "blobBytes": 2,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16le",
+      "value": "中文",
+      "type": "text",
+      "codepointsBeforeNul": 2,
+      "blobBytes": 4,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16le",
+      "value": "🚀",
+      "type": "text",
+      "codepointsBeforeNul": 1,
+      "blobBytes": 4,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16le",
+      "value": "\u0001",
+      "type": "text",
+      "codepointsBeforeNul": 2,
+      "blobBytes": 4,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16le",
+      "value": null,
+      "type": "null",
+      "codepointsBeforeNul": null,
+      "blobBytes": null,
+      "bareLengthEquality": null,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16le",
+      "value": "c4b0",
+      "type": "blob",
+      "codepointsBeforeNul": 2,
+      "blobBytes": 2,
+      "bareLengthEquality": 1,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16be",
+      "value": "",
+      "type": "text",
+      "codepointsBeforeNul": 0,
+      "blobBytes": 0,
+      "bareLengthEquality": 1,
+      "typeAndLengthGuard": 1
+    },
+    {
+      "encoding": "UTF-16be",
+      "value": "ASCII",
+      "type": "text",
+      "codepointsBeforeNul": 5,
+      "blobBytes": 10,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16be",
+      "value": "A\u0000B",
+      "type": "text",
+      "codepointsBeforeNul": 1,
+      "blobBytes": 6,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16be",
+      "value": "\u0000",
+      "type": "text",
+      "codepointsBeforeNul": 0,
+      "blobBytes": 2,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16be",
+      "value": "İ",
+      "type": "text",
+      "codepointsBeforeNul": 1,
+      "blobBytes": 2,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16be",
+      "value": "ſ",
+      "type": "text",
+      "codepointsBeforeNul": 1,
+      "blobBytes": 2,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16be",
+      "value": "K",
+      "type": "text",
+      "codepointsBeforeNul": 1,
+      "blobBytes": 2,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16be",
+      "value": "中文",
+      "type": "text",
+      "codepointsBeforeNul": 2,
+      "blobBytes": 4,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16be",
+      "value": "🚀",
+      "type": "text",
+      "codepointsBeforeNul": 1,
+      "blobBytes": 4,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16be",
+      "value": "\u0001",
+      "type": "text",
+      "codepointsBeforeNul": 2,
+      "blobBytes": 4,
+      "bareLengthEquality": 0,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16be",
+      "value": null,
+      "type": "null",
+      "codepointsBeforeNul": null,
+      "blobBytes": null,
+      "bareLengthEquality": null,
+      "typeAndLengthGuard": 0
+    },
+    {
+      "encoding": "UTF-16be",
+      "value": "c4b0",
+      "type": "blob",
+      "codepointsBeforeNul": 2,
+      "blobBytes": 2,
+      "bareLengthEquality": 1,
+      "typeAndLengthGuard": 0
+    }
+  ],
+  "correlatedExpressionEvaluations": [
+    {
+      "variant": "original",
+      "result": 1,
+      "source": 1,
+      "fallback": 1,
+      "queryPlan": [
+        "SCAN shelf",
+        "CORRELATED SCALAR SUBQUERY 1",
+        "SEARCH d USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 2",
+        "SEARCH n USING INTEGER PRIMARY KEY (rowid=?)"
+      ]
+    },
+    {
+      "variant": "lengthCase",
+      "result": 1,
+      "source": 3,
+      "fallback": 0,
+      "queryPlan": [
+        "SCAN shelf",
+        "CORRELATED SCALAR SUBQUERY 1",
+        "SEARCH d USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 2",
+        "SEARCH n USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 3",
+        "SEARCH d USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 4",
+        "SEARCH n USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 5",
+        "SEARCH d USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 6",
+        "SEARCH n USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 7",
+        "SEARCH d USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 8",
+        "SEARCH n USING INTEGER PRIMARY KEY (rowid=?)"
+      ]
+    },
+    {
+      "variant": "typedLengthCase",
+      "result": 1,
+      "source": 4,
+      "fallback": 0,
+      "queryPlan": [
+        "SCAN shelf",
+        "CORRELATED SCALAR SUBQUERY 1",
+        "SEARCH d USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 2",
+        "SEARCH n USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 3",
+        "SEARCH d USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 4",
+        "SEARCH n USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 5",
+        "SEARCH d USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 6",
+        "SEARCH n USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 7",
+        "SEARCH d USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 8",
+        "SEARCH n USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 9",
+        "SEARCH d USING INTEGER PRIMARY KEY (rowid=?)",
+        "CORRELATED SCALAR SUBQUERY 10",
+        "SEARCH n USING INTEGER PRIMARY KEY (rowid=?)"
+      ]
+    }
+  ],
+  "malformedTextOutsideProof": [
+    {
+      "hex": "ff",
+      "lengths": [
+        "text",
+        1,
+        1
+      ]
+    },
+    {
+      "hex": "c189",
+      "lengths": [
+        "text",
+        1,
+        2
+      ]
+    },
+    {
+      "hex": "80",
+      "lengths": [
+        "text",
+        1,
+        1
+      ]
+    }
+  ]
+}

@@ -1,0 +1,311 @@
+{
+  "scope": "OFFLINE_BYTECODE_AND_EXISTING_RAW_ONLY",
+  "source": "78a5babeaeb92292026423222d5e08635989198b",
+  "runId": 38514139119,
+  "jobId": 115689021611,
+  "sourceFiles": [
+    {
+      "path": "android/gradle/libs.versions.toml",
+      "measuredSourceSha256": "2bedab1699d8c47afa899674207927a10fce8c8abb93b049a3b659af89483403",
+      "workingTreeSha256": "2bedab1699d8c47afa899674207927a10fce8c8abb93b049a3b659af89483403",
+      "sameAsMeasuredSource": true
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt",
+      "measuredSourceSha256": "e1570c26f61ba352f7a636d934e7acbff6f0b3250985f1e9caf0a55046432c9a",
+      "workingTreeSha256": "e1570c26f61ba352f7a636d934e7acbff6f0b3250985f1e9caf0a55046432c9a",
+      "sameAsMeasuredSource": true
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt",
+      "measuredSourceSha256": "bbead6435e0858be6d1480b6e61d764b6a4177bdb9db564dffb76d3ea588781a",
+      "workingTreeSha256": "bbead6435e0858be6d1480b6e61d764b6a4177bdb9db564dffb76d3ea588781a",
+      "sameAsMeasuredSource": true
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+      "measuredSourceSha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+      "workingTreeSha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+      "sameAsMeasuredSource": true
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchObservation.kt",
+      "measuredSourceSha256": "dc1f3749fa85d62104156a17ae55413762dc5de590a654da272af907c3e246cf",
+      "workingTreeSha256": "dc1f3749fa85d62104156a17ae55413762dc5de590a654da272af907c3e246cf",
+      "sameAsMeasuredSource": true
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveCausalTest.kt",
+      "measuredSourceSha256": "f2faf22c8eff0c5f37c981c389917e17214d86edc38535e68dd9b0ab69a1eb8e",
+      "workingTreeSha256": "f2faf22c8eff0c5f37c981c389917e17214d86edc38535e68dd9b0ab69a1eb8e",
+      "sameAsMeasuredSource": true
+    }
+  ],
+  "roomRuntimeAarSha256": "ab6f951f6e7b63ed419eaf740b34dbe51560532f78289fd9c5dadabf46401dba",
+  "roomClassesSha256": "17ac25750e9b7e3f4ef13e69db6493539aa962f541a4ce1570924a68b6c218d7",
+  "bytecodeArtifacts": [
+    {
+      "path": "androidx.room.InvalidationTracker.javap.txt",
+      "sha256": "c0d814284046967dbe90aae556d3f53ce95093ee1b11cc8564c69de02d2200ab"
+    },
+    {
+      "path": "androidx.room.RoomConnectionManager.javap.txt",
+      "sha256": "d640d642003a776cba4feb490bf584c9c11d2ba64b50e914928c1adabe872a69"
+    },
+    {
+      "path": "androidx.room.RoomDatabase$createConnectionManager$2.javap.txt",
+      "sha256": "ffed963967e2ff33db84e0fae876cae9963d960712b4f298fb26e13c04f4d565"
+    },
+    {
+      "path": "androidx.room.RoomDatabase$createConnectionManager$3.javap.txt",
+      "sha256": "1c9fa1fe6dc920e218a610b7baae83b165c54863a51b91105c292c035a7d0d9d"
+    },
+    {
+      "path": "androidx.room.RoomDatabase.javap.txt",
+      "sha256": "cdb901bca2c7c6bfc0846b417e34363a762cce35aa1efe207f2c9890e005a2f8"
+    },
+    {
+      "path": "androidx.room.RoomDatabaseKt__RoomDatabase_androidKt$startTransactionCoroutine$2$1$1.javap.txt",
+      "sha256": "7478f00c67b363e00dac1763d19e6bcf298d9595f2d45af6395a2d4e6843db19"
+    },
+    {
+      "path": "androidx.room.RoomDatabaseKt__RoomDatabase_androidKt$startTransactionCoroutine$2$1.javap.txt",
+      "sha256": "1618f4c47d1236d172d8d2ec8d7791f4b983a8ba4a99fb2888e4e67d3b4dc9b1"
+    },
+    {
+      "path": "androidx.room.RoomDatabaseKt__RoomDatabase_androidKt$withTransaction$2.javap.txt",
+      "sha256": "893231f680664c23ae97f8ff2a339d4d60fe0e22f9666aa9d9e51a6601df3d89"
+    },
+    {
+      "path": "androidx.room.RoomDatabaseKt__RoomDatabase_androidKt$withTransactionContext$transactionBlock$1.javap.txt",
+      "sha256": "cc7195ffd299b9ebf59d0129cb2989d6a61fc98f1360d2f30ee6705884e4a383"
+    },
+    {
+      "path": "androidx.room.RoomDatabaseKt__RoomDatabase_androidKt.javap.txt",
+      "sha256": "6c29a24ed9862d91f6508181e66c296f4aa1fc1896a0b63445a98189a4f25a53"
+    },
+    {
+      "path": "androidx.room.TransactionElement.javap.txt",
+      "sha256": "aeda66c5326e422cf46a9dd44d92eccd62329f6c69004ea0e7809e52a0d1a1b0"
+    },
+    {
+      "path": "androidx.room.TransactionExecutor.javap.txt",
+      "sha256": "cebff85008f5fb4797ac4f7726b148f713721fad68a68fdf0dacf3e89597c81b"
+    },
+    {
+      "path": "androidx.room.TriggerBasedInvalidationTracker$notifyInvalidation$1.javap.txt",
+      "sha256": "74face1f565838c0dfe3cf723fed543bc0d0a3b558c79496336b1e5ad40bb127"
+    },
+    {
+      "path": "androidx.room.TriggerBasedInvalidationTracker$notifyInvalidation$2$invalidatedTableIds$1$1.javap.txt",
+      "sha256": "fcda0d888cff9c0202191366ea27cd92cc1ded27ec308425aae93fd50eac5b31"
+    },
+    {
+      "path": "androidx.room.TriggerBasedInvalidationTracker$notifyInvalidation$2$invalidatedTableIds$1.javap.txt",
+      "sha256": "bc2319e2baf7759bb45be5d18f88765221c19c5feae2e8bb58ba4e9f90d67a5b"
+    },
+    {
+      "path": "androidx.room.TriggerBasedInvalidationTracker$refreshInvalidationAsync$3.javap.txt",
+      "sha256": "13961bea91575e607ae323e2d150314cfe94923e877266f08f2c4458669af070"
+    },
+    {
+      "path": "androidx.room.TriggerBasedInvalidationTracker.javap.txt",
+      "sha256": "5c8e96dde6d82e54ff4946b60a9c19afe889bf8fac327e11e07b5e19a561bb9f"
+    },
+    {
+      "path": "androidx.room.coroutines.PassthroughConnection$PassthroughTransactor.javap.txt",
+      "sha256": "993de635f7da47e0fec415fde2b2fdca587a822d6dd347920c634f1194036b37"
+    },
+    {
+      "path": "androidx.room.coroutines.PassthroughConnection$WhenMappings.javap.txt",
+      "sha256": "0c5fdce455c477b165549a6749d543c87438bace6e3b952fcb164536ce03899b"
+    },
+    {
+      "path": "androidx.room.coroutines.PassthroughConnection$transaction$1.javap.txt",
+      "sha256": "761bd1794fbdfed1f426a548813d361c41e3cbdfbbea0287ce66500c576d6080"
+    },
+    {
+      "path": "androidx.room.coroutines.PassthroughConnection$usePrepared$1.javap.txt",
+      "sha256": "03aa8309a04a65544bd13455df7fc13b59a7292a1469f61d03c9321ba2c2f788"
+    },
+    {
+      "path": "androidx.room.coroutines.PassthroughConnection$usePrepared$2.javap.txt",
+      "sha256": "8808b4dcee2942897c523b977863b6325e903b09c13189b3b06527fed6497d1b"
+    },
+    {
+      "path": "androidx.room.coroutines.PassthroughConnection$withTransaction$2.javap.txt",
+      "sha256": "77b3e2cddfba2500c4ebe291e164e68dc1be73663f1c89ee0558cc4b01c306d2"
+    },
+    {
+      "path": "androidx.room.coroutines.PassthroughConnection.javap.txt",
+      "sha256": "60f818674299917bc9c93698363292667cc3b7358ae8e7771473ff0304398595"
+    },
+    {
+      "path": "androidx.room.coroutines.PassthroughConnectionPool$ConnectionElement$Key.javap.txt",
+      "sha256": "2814c2ec85ccb6e10ed987f23d39302e603f8c81e29f6b78203d31a05a24c9f8"
+    },
+    {
+      "path": "androidx.room.coroutines.PassthroughConnectionPool$ConnectionElement.javap.txt",
+      "sha256": "65a99b902cf8ad993af717271d6b4bd39e20793a06730c5f645ca78405dd6155"
+    },
+    {
+      "path": "androidx.room.coroutines.PassthroughConnectionPool$useConnection$2.javap.txt",
+      "sha256": "0a4d2797e2bbe8905e3b548a2a6b7dcc93a1ce2b0e14138b6a2e23d9644c3118"
+    },
+    {
+      "path": "androidx.room.coroutines.PassthroughConnectionPool.javap.txt",
+      "sha256": "943691391eacd5f1b318ef43cf5191c784f83d13cc961ed041bd3f355e9d0ac1"
+    },
+    {
+      "path": "androidx.room.coroutines.PassthroughConnectionPoolKt.javap.txt",
+      "sha256": "89f564c1de0b574a549e0092f563d8485dc380ce2c1f9277b978434d2beccdb4"
+    },
+    {
+      "path": "androidx.room.support.AutoClosingRoomOpenHelper$AutoClosingSupportSQLiteDatabase$attachedDbs$1.javap.txt",
+      "sha256": "d2b006abf5a1cb695467a89f54cca3d3da2555b086c0197d7910c19b043fbafe"
+    },
+    {
+      "path": "androidx.room.support.AutoClosingRoomOpenHelper$AutoClosingSupportSQLiteDatabase$inTransaction$1.javap.txt",
+      "sha256": "4a239a6996533b911bf24092e41df8faf3aef597d55d24170a58b7a03f91d64a"
+    },
+    {
+      "path": "androidx.room.support.AutoClosingRoomOpenHelper$AutoClosingSupportSQLiteDatabase$isDatabaseIntegrityOk$1.javap.txt",
+      "sha256": "9f6aef692e4211c6e5e646c7c31ff0ea7eb7c9bf11cd16a4ed87dfed27c23bc7"
+    },
+    {
+      "path": "androidx.room.support.AutoClosingRoomOpenHelper$AutoClosingSupportSQLiteDatabase$isDbLockedByCurrentThread$1.javap.txt",
+      "sha256": "9acd1263b9bf7078eea7e75d4bd0a9605ce801a5fdf5d49bf9978decbb489374"
+    },
+    {
+      "path": "androidx.room.support.AutoClosingRoomOpenHelper$AutoClosingSupportSQLiteDatabase$isReadOnly$1.javap.txt",
+      "sha256": "cdc55b915092a59a5504a59d6ff715b25ab060c1c05fee14dea867e90e633936"
+    },
+    {
+      "path": "androidx.room.support.AutoClosingRoomOpenHelper$AutoClosingSupportSQLiteDatabase$isWriteAheadLoggingEnabled$1.javap.txt",
+      "sha256": "f239cdb5d7f8106f88af384773d2cec0bbed090f30c566c1f1628f1d7f6cdf02"
+    },
+    {
+      "path": "androidx.room.support.AutoClosingRoomOpenHelper$AutoClosingSupportSQLiteDatabase$maximumSize$1.javap.txt",
+      "sha256": "1eaeb8035781c6624134c9957d89794de9d4d3a613052052c531924947a8bfaa"
+    },
+    {
+      "path": "androidx.room.support.AutoClosingRoomOpenHelper$AutoClosingSupportSQLiteDatabase$pageSize$1.javap.txt",
+      "sha256": "c378ac3fad1c509d2a2cbb5eb02ea2c8df1ba2d855e845a37364a77f6a707c1e"
+    },
+    {
+      "path": "androidx.room.support.AutoClosingRoomOpenHelper$AutoClosingSupportSQLiteDatabase$path$1.javap.txt",
+      "sha256": "77ebb5251d1f7df8594d0854f604128b05b2a616dd63938f32119455ed5909a6"
+    },
+    {
+      "path": "androidx.room.support.AutoClosingRoomOpenHelper$AutoClosingSupportSQLiteDatabase$version$1.javap.txt",
+      "sha256": "5551fb882187e30f92dd123e262f9d21eba99b6650366ccedd18aa638e92980c"
+    },
+    {
+      "path": "androidx.room.support.AutoClosingRoomOpenHelper$AutoClosingSupportSQLiteDatabase$yieldIfContendedSafely$1.javap.txt",
+      "sha256": "b84c924bf482fea2614d213e51214e071bfe82b412e63adf3fdb23ecef89932a"
+    },
+    {
+      "path": "androidx.room.support.AutoClosingRoomOpenHelper$AutoClosingSupportSQLiteDatabase$yieldIfContendedSafely$2.javap.txt",
+      "sha256": "91110da473629e1d95ed1758ca2024135ce912c9f200ceee96c6d09e14714440"
+    },
+    {
+      "path": "androidx.room.support.AutoClosingRoomOpenHelper$AutoClosingSupportSQLiteDatabase.javap.txt",
+      "sha256": "5f5a7ea5882ffcbab3edfd87393b8efa443bb2152535a6015271d79ee5011c60"
+    },
+    {
+      "path": "androidx.room.support.AutoClosingRoomOpenHelper$AutoClosingSupportSQLiteStatement$Companion.javap.txt",
+      "sha256": "caeae72c66caba927fd090977ded492c32b0c43963f8e0cfd3a5f9127214629f"
+    },
+    {
+      "path": "androidx.room.support.AutoClosingRoomOpenHelper$AutoClosingSupportSQLiteStatement.javap.txt",
+      "sha256": "34a6f8d99b8aa74c50b882e3126bfed2baac516dd7b2b221b705967ce60910a3"
+    },
+    {
+      "path": "androidx.room.util.DBUtil__DBUtilKt$internalPerform$2$result$1.javap.txt",
+      "sha256": "ad3fe84a4fb98fa2d145c3c35c25c776e24c3192d68b6b80fa0221cde1205a39"
+    },
+    {
+      "path": "androidx.room.util.DBUtil__DBUtilKt$internalPerform$2.javap.txt",
+      "sha256": "2fad1b1875f8eddaf29d60cadff6ea304da33c84721dbe2db1aea3dc714a74a6"
+    },
+    {
+      "path": "androidx.room.util.DBUtil__DBUtil_androidKt$performSuspending$lambda$1$$inlined$internalPerform$1$1.javap.txt",
+      "sha256": "3951779c889487e9987a0f4e6a049a394349c11724963aab2067ef282ee3a640"
+    },
+    {
+      "path": "androidx.room.util.DBUtil__DBUtil_androidKt$performSuspending$lambda$1$$inlined$internalPerform$1.javap.txt",
+      "sha256": "04998c1c39dd13055169da1be2bc885cb63d4a418aa8c278350d5f1efbb577a9"
+    },
+    {
+      "path": "androidx.room.util.DBUtil__DBUtil_androidKt.javap.txt",
+      "sha256": "3958b33353eb74e1d912bf573633bb2d306feadb8f9d124d04fa199d3f7da5fc"
+    },
+    {
+      "path": "androidx.sqlite.driver.SupportSQLiteConnection.javap.txt",
+      "sha256": "f0fd02212c9bc3e8e8f0ae59a008425b5f8c047e63a5f491d8eabd3d57d978d2"
+    },
+    {
+      "path": "androidx.sqlite.driver.SupportSQLiteStatement$Companion$SpecialOperation$JournalModeOperation.javap.txt",
+      "sha256": "f8c8915f090a51ce33326fd986d50a563537c06914d2a05a355656601057d773"
+    },
+    {
+      "path": "androidx.sqlite.driver.SupportSQLiteStatement$Companion$SpecialOperation.javap.txt",
+      "sha256": "14accd7642998fddc1e493b7877d458361009fbf344a2366dd08227c064889fe"
+    },
+    {
+      "path": "androidx.sqlite.driver.SupportSQLiteStatement$Companion$TransactionOperation.javap.txt",
+      "sha256": "8bfe138ee5294e665a25e333603958438045d1ed5e9d3ada4347710bc6143a4e"
+    },
+    {
+      "path": "androidx.sqlite.driver.SupportSQLiteStatement$Companion.javap.txt",
+      "sha256": "898f8191aa971e562c04470b14f148f41afaf8f7dfee3cadac97db22a5041610"
+    },
+    {
+      "path": "androidx.sqlite.driver.SupportSQLiteStatement$JournalModeSetStatement.javap.txt",
+      "sha256": "b24a59a95845c9c88e7590b2357c830c0f980185ffb1cf7af58a1d6d8b3880ac"
+    },
+    {
+      "path": "androidx.sqlite.driver.SupportSQLiteStatement$OtherSQLiteStatement.javap.txt",
+      "sha256": "0859a73e06413c39bf06ea9bb69fbbd325de18f76d60ad06b908fc5e9a1e04c9"
+    },
+    {
+      "path": "androidx.sqlite.driver.SupportSQLiteStatement$RowSQLiteStatement$Companion.javap.txt",
+      "sha256": "fa14cb72fa171960d299fbc6010dd5c95d53d8fa109964deace48ce428957c15"
+    },
+    {
+      "path": "androidx.sqlite.driver.SupportSQLiteStatement$RowSQLiteStatement$ensureCursor$1.javap.txt",
+      "sha256": "02fffb44ec2eb94f969d8d5e448a974206707b2333b6509f8a580377baaf6969"
+    },
+    {
+      "path": "androidx.sqlite.driver.SupportSQLiteStatement$RowSQLiteStatement.javap.txt",
+      "sha256": "d512e30c5dfbf74edf033347dd5fa8d4221b983c33a2466c43745967eb2c5cf7"
+    },
+    {
+      "path": "androidx.sqlite.driver.SupportSQLiteStatement$TransactionSQLiteStatement$WhenMappings.javap.txt",
+      "sha256": "9179a427a64fc1e4504dfcb0cd71611351fb564e2bb9387ad91cdd1ed8fc3712"
+    },
+    {
+      "path": "androidx.sqlite.driver.SupportSQLiteStatement$TransactionSQLiteStatement.javap.txt",
+      "sha256": "c6b44b02662bb031be28854f3c25ed3dd86897719a5b9d10b2e9e5a360e381d7"
+    },
+    {
+      "path": "androidx.sqlite.driver.SupportSQLiteStatement.javap.txt",
+      "sha256": "f3254c11755b3c04077e84edd61ff2c023feef54ef03f98fe5635a65b5cb281e"
+    },
+    {
+      "path": "androidx.sqlite.driver.SupportSQLiteStatement_androidKt.javap.txt",
+      "sha256": "0ebfd7b8c2ac907e440e45cfe582df08604d85be2fb02bbb948ea65d8dca2b28"
+    },
+    {
+      "path": "io.requery.android.database.sqlite.SQLiteDatabase.javap.txt",
+      "sha256": "3b43b691914d7fa5e8ca384258a749525d75a5196fbace405243cba1a4a1e8bb"
+    },
+    {
+      "path": "io.requery.android.database.sqlite.SQLiteSession.javap.txt",
+      "sha256": "f29df9105207308bec61dec7fb3d69761540caee9e5312902d4caad017826270"
+    }
+  ],
+  "rawReviewSha256": "da85c18ed0587a5e3fb27f6b6bf343b99768b36bd73543e377bd611b356b0e24",
+  "noNativeBuildOrNetwork": true,
+  "productionOrTestEdits": false
+}

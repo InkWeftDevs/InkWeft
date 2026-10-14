@@ -1,0 +1,785 @@
+{
+  "scope": "SINGLE_RUN_CONDITIONAL_ARRIVAL_SCOPED_LOG_EVIDENCE",
+  "run_id": "38514139119",
+  "job_id": "115689021611",
+  "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+  "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+  "readiness_git": "b2e1d9f9de66a26f5a4b122ea6754d77198005f8",
+  "scoped_log_receipt_status": "COMPLETE_SCOPED_CAUSAL_LOG_EVIDENCE",
+  "scoped_log_receipt_issues": [],
+  "scoped_log_receipt_sha256": "54a2aa6890b4d36a92bf50c4a536cf8538ad8ed84ed54717ab545785f213bc01",
+  "arithmetic_analysis_sha256": "9db3842e35b8a1ae71294b3427d4057aff936a0a4d5aa89ba58e466a31ff7ce8",
+  "test_source_sha256": "4f80b8ce32e1aa2bae1d919b96c06b1897e7a8500c748822efd05119ba87ec4a",
+  "actual_artifact_bytes_downloaded_or_audited": false,
+  "latency_acceptance": "NOT_EVALUATED",
+  "baseline_pair_available": false,
+  "methods": [
+    {
+      "ordinal": 11,
+      "connection": "same-room",
+      "records_sha256": "d769da6bd7d00fe10f9719ea82997cb2c1c0309d093f1e52eff8cdb4ee4805c7",
+      "committed": 30,
+      "failed": 0,
+      "unknownCommitOutcomes": 0,
+      "saveSamplesMs": [
+        16.344505,
+        15.425405,
+        12.517134,
+        12.272897,
+        14.058766,
+        14.05763,
+        13.441253,
+        10.882611,
+        10.539448,
+        10.400881,
+        11.887079,
+        10.647631,
+        12.546098,
+        12.071339,
+        11.518759,
+        10.817271,
+        10.748322,
+        10.51181,
+        12.973856,
+        10.08492,
+        12.270441,
+        10.945205,
+        9.768529,
+        14.805052,
+        11.223908,
+        11.77104,
+        9.812549,
+        9.947585,
+        9.959629,
+        10.394542
+      ],
+      "quantilesNearestRank": {
+        "p50Ms": 11.223908,
+        "p95Ms": 15.425405,
+        "maxMs": 16.344505
+      },
+      "exposureCounts": {
+        "transactionPoint": 30,
+        "instrumentedDeleteInterval": 30,
+        "saveStartedDuringDelete": 30
+      },
+      "minimumRequiredForSubsetQuantiles": 20,
+      "firstDeletedTotal": 7680,
+      "finishDeletedTotal": 30720,
+      "totalDeleted": 38400,
+      "firstRootScans": 30,
+      "finishRootScans": 30,
+      "firstCollectionTotalMsExactFromNs": "749.079593",
+      "finishCollectionTotalMsExactFromNs": "1118.598952",
+      "firstPlusFinishTotalMsExactFromNs": "1867.678545",
+      "firstDeletionGroupsDescriptiveNotPosthocAcceptance": {
+        "256": {
+          "count": 30,
+          "sampleIndices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29
+          ],
+          "saveSamplesMs": [
+            16.344505,
+            15.425405,
+            12.517134,
+            12.272897,
+            14.058766,
+            14.05763,
+            13.441253,
+            10.882611,
+            10.539448,
+            10.400881,
+            11.887079,
+            10.647631,
+            12.546098,
+            12.071339,
+            11.518759,
+            10.817271,
+            10.748322,
+            10.51181,
+            12.973856,
+            10.08492,
+            12.270441,
+            10.945205,
+            9.768529,
+            14.805052,
+            11.223908,
+            11.77104,
+            9.812549,
+            9.947585,
+            9.959629,
+            10.394542
+          ]
+        }
+      },
+      "firstDeferredCount": 30,
+      "firstCommittedBatchCount": 30,
+      "guardMismatches": [
+        {
+          "sample": 0,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 1,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 2,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 3,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 4,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 5,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 6,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 7,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 8,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 9,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 10,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 11,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 12,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 13,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 14,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 15,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 16,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 17,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 18,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 19,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 20,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 21,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 22,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 23,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 24,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 25,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 26,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 27,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 28,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        },
+        {
+          "sample": 29,
+          "afterSequence": 256,
+          "dataVersionDelta": 0,
+          "changesDelta": 3
+        }
+      ],
+      "largestFiveSaveTimelineObservations": [
+        {
+          "sample": 0,
+          "saveMs": 16.344505,
+          "firstDeleted": 256,
+          "firstDeferred": true,
+          "deleteBatchCount": 1,
+          "lastDeleteEndRelativeSaveStartMs": "6.28816",
+          "lastGcTransactionReturnedRelativeSaveStartMs": "11.204823",
+          "firstGcCallEndRelativeSaveStartMs": "18.395147",
+          "beforeRenameReceiptRelativeSaveStartMs": "13.776299",
+          "afterRenameTransactionRelativeSaveStartMs": "16.26701",
+          "writerEntryNs": null,
+          "pureSqliteLockWaitMs": null
+        },
+        {
+          "sample": 1,
+          "saveMs": 15.425405,
+          "firstDeleted": 256,
+          "firstDeferred": true,
+          "deleteBatchCount": 1,
+          "lastDeleteEndRelativeSaveStartMs": "5.398022",
+          "lastGcTransactionReturnedRelativeSaveStartMs": "9.777574",
+          "firstGcCallEndRelativeSaveStartMs": "17.84618",
+          "beforeRenameReceiptRelativeSaveStartMs": "13.251716",
+          "afterRenameTransactionRelativeSaveStartMs": "15.305341",
+          "writerEntryNs": null,
+          "pureSqliteLockWaitMs": null
+        },
+        {
+          "sample": 23,
+          "saveMs": 14.805052,
+          "firstDeleted": 256,
+          "firstDeferred": true,
+          "deleteBatchCount": 1,
+          "lastDeleteEndRelativeSaveStartMs": "2.933311",
+          "lastGcTransactionReturnedRelativeSaveStartMs": "7.118609",
+          "firstGcCallEndRelativeSaveStartMs": "17.917656",
+          "beforeRenameReceiptRelativeSaveStartMs": "10.891478",
+          "afterRenameTransactionRelativeSaveStartMs": "14.675409",
+          "writerEntryNs": null,
+          "pureSqliteLockWaitMs": null
+        },
+        {
+          "sample": 4,
+          "saveMs": 14.058766,
+          "firstDeleted": 256,
+          "firstDeferred": true,
+          "deleteBatchCount": 1,
+          "lastDeleteEndRelativeSaveStartMs": "4.054476",
+          "lastGcTransactionReturnedRelativeSaveStartMs": "8.235545",
+          "firstGcCallEndRelativeSaveStartMs": "16.69966",
+          "beforeRenameReceiptRelativeSaveStartMs": "11.785737",
+          "afterRenameTransactionRelativeSaveStartMs": "13.936348",
+          "writerEntryNs": null,
+          "pureSqliteLockWaitMs": null
+        },
+        {
+          "sample": 5,
+          "saveMs": 14.05763,
+          "firstDeleted": 256,
+          "firstDeferred": true,
+          "deleteBatchCount": 1,
+          "lastDeleteEndRelativeSaveStartMs": "4.763707",
+          "lastGcTransactionReturnedRelativeSaveStartMs": "9.092095",
+          "firstGcCallEndRelativeSaveStartMs": "15.800856",
+          "beforeRenameReceiptRelativeSaveStartMs": "12.450777",
+          "afterRenameTransactionRelativeSaveStartMs": "13.941012",
+          "writerEntryNs": null,
+          "pureSqliteLockWaitMs": null
+        }
+      ]
+    },
+    {
+      "ordinal": 12,
+      "connection": "separate-room",
+      "records_sha256": "8862c3b0cb7b2dbd12a202befcf3b398062233b3ed5f6e0da382a784a2a46a09",
+      "committed": 30,
+      "failed": 0,
+      "unknownCommitOutcomes": 0,
+      "saveSamplesMs": [
+        38.436459,
+        14.131282,
+        18.110166,
+        15.050667,
+        15.121006,
+        12.898058,
+        13.998147,
+        12.461883,
+        12.39725,
+        57.277407,
+        12.751431,
+        13.385366,
+        12.071372,
+        11.814511,
+        11.80862,
+        11.598385,
+        15.773505,
+        37.076502,
+        11.835909,
+        11.704486,
+        11.420543,
+        36.345268,
+        11.940787,
+        11.521,
+        56.665894,
+        11.765109,
+        12.091048,
+        12.791486,
+        21.2405,
+        21.581106
+      ],
+      "quantilesNearestRank": {
+        "p50Ms": 12.791486,
+        "p95Ms": 56.665894,
+        "maxMs": 57.277407
+      },
+      "exposureCounts": {
+        "transactionPoint": 30,
+        "instrumentedDeleteInterval": 30,
+        "saveStartedDuringDelete": 30
+      },
+      "minimumRequiredForSubsetQuantiles": 20,
+      "firstDeletedTotal": 13312,
+      "finishDeletedTotal": 25088,
+      "totalDeleted": 38400,
+      "firstRootScans": 30,
+      "finishRootScans": 30,
+      "firstCollectionTotalMsExactFromNs": "918.492997",
+      "finishCollectionTotalMsExactFromNs": "958.301233",
+      "firstPlusFinishTotalMsExactFromNs": "1876.79423",
+      "firstDeletionGroupsDescriptiveNotPosthocAcceptance": {
+        "256": {
+          "count": 23,
+          "sampleIndices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            18,
+            19,
+            20,
+            22,
+            23,
+            25,
+            26,
+            27
+          ],
+          "saveSamplesMs": [
+            14.131282,
+            18.110166,
+            15.050667,
+            15.121006,
+            12.898058,
+            13.998147,
+            12.461883,
+            12.39725,
+            12.751431,
+            13.385366,
+            12.071372,
+            11.814511,
+            11.80862,
+            11.598385,
+            15.773505,
+            11.835909,
+            11.704486,
+            11.420543,
+            11.940787,
+            11.521,
+            11.765109,
+            12.091048,
+            12.791486
+          ]
+        },
+        "768": {
+          "count": 3,
+          "sampleIndices": [
+            0,
+            28,
+            29
+          ],
+          "saveSamplesMs": [
+            38.436459,
+            21.2405,
+            21.581106
+          ]
+        },
+        "1280": {
+          "count": 4,
+          "sampleIndices": [
+            9,
+            17,
+            21,
+            24
+          ],
+          "saveSamplesMs": [
+            57.277407,
+            37.076502,
+            36.345268,
+            56.665894
+          ]
+        }
+      },
+      "firstDeferredCount": 26,
+      "firstCommittedBatchCount": 52,
+      "guardMismatches": [
+        {
+          "sample": 0,
+          "afterSequence": 768,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        },
+        {
+          "sample": 1,
+          "afterSequence": 256,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        },
+        {
+          "sample": 2,
+          "afterSequence": 256,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        },
+        {
+          "sample": 3,
+          "afterSequence": 256,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        },
+        {
+          "sample": 4,
+          "afterSequence": 256,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        },
+        {
+          "sample": 5,
+          "afterSequence": 256,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        },
+        {
+          "sample": 6,
+          "afterSequence": 256,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        },
+        {
+          "sample": 7,
+          "afterSequence": 256,
+          "dataVersionDelta": 2,
+          "changesDelta": 0
+        },
+        {
+          "sample": 8,
+          "afterSequence": 256,
+          "dataVersionDelta": 2,
+          "changesDelta": 0
+        },
+        {
+          "sample": 10,
+          "afterSequence": 256,
+          "dataVersionDelta": 2,
+          "changesDelta": 0
+        },
+        {
+          "sample": 11,
+          "afterSequence": 256,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        },
+        {
+          "sample": 12,
+          "afterSequence": 256,
+          "dataVersionDelta": 2,
+          "changesDelta": 0
+        },
+        {
+          "sample": 13,
+          "afterSequence": 256,
+          "dataVersionDelta": 2,
+          "changesDelta": 0
+        },
+        {
+          "sample": 14,
+          "afterSequence": 256,
+          "dataVersionDelta": 2,
+          "changesDelta": 0
+        },
+        {
+          "sample": 15,
+          "afterSequence": 256,
+          "dataVersionDelta": 2,
+          "changesDelta": 0
+        },
+        {
+          "sample": 16,
+          "afterSequence": 256,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        },
+        {
+          "sample": 18,
+          "afterSequence": 256,
+          "dataVersionDelta": 2,
+          "changesDelta": 0
+        },
+        {
+          "sample": 19,
+          "afterSequence": 256,
+          "dataVersionDelta": 2,
+          "changesDelta": 0
+        },
+        {
+          "sample": 20,
+          "afterSequence": 256,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        },
+        {
+          "sample": 22,
+          "afterSequence": 256,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        },
+        {
+          "sample": 23,
+          "afterSequence": 256,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        },
+        {
+          "sample": 25,
+          "afterSequence": 256,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        },
+        {
+          "sample": 26,
+          "afterSequence": 256,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        },
+        {
+          "sample": 27,
+          "afterSequence": 256,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        },
+        {
+          "sample": 28,
+          "afterSequence": 768,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        },
+        {
+          "sample": 29,
+          "afterSequence": 768,
+          "dataVersionDelta": 1,
+          "changesDelta": 0
+        }
+      ],
+      "largestFiveSaveTimelineObservations": [
+        {
+          "sample": 9,
+          "saveMs": 57.277407,
+          "firstDeleted": 1280,
+          "firstDeferred": false,
+          "deleteBatchCount": 5,
+          "lastDeleteEndRelativeSaveStartMs": "33.392766",
+          "lastGcTransactionReturnedRelativeSaveStartMs": "34.575846",
+          "firstGcCallEndRelativeSaveStartMs": "36.503077",
+          "beforeRenameReceiptRelativeSaveStartMs": "56.023985",
+          "afterRenameTransactionRelativeSaveStartMs": "57.209159",
+          "writerEntryNs": null,
+          "pureSqliteLockWaitMs": null
+        },
+        {
+          "sample": 24,
+          "saveMs": 56.665894,
+          "firstDeleted": 1280,
+          "firstDeferred": false,
+          "deleteBatchCount": 5,
+          "lastDeleteEndRelativeSaveStartMs": "33.958673",
+          "lastGcTransactionReturnedRelativeSaveStartMs": "35.026518",
+          "firstGcCallEndRelativeSaveStartMs": "36.751941",
+          "beforeRenameReceiptRelativeSaveStartMs": "55.448901",
+          "afterRenameTransactionRelativeSaveStartMs": "56.559255",
+          "writerEntryNs": null,
+          "pureSqliteLockWaitMs": null
+        },
+        {
+          "sample": 0,
+          "saveMs": 38.436459,
+          "firstDeleted": 768,
+          "firstDeferred": true,
+          "deleteBatchCount": 3,
+          "lastDeleteEndRelativeSaveStartMs": "33.135606",
+          "lastGcTransactionReturnedRelativeSaveStartMs": "34.651799",
+          "firstGcCallEndRelativeSaveStartMs": "41.628572",
+          "beforeRenameReceiptRelativeSaveStartMs": "36.727236",
+          "afterRenameTransactionRelativeSaveStartMs": "38.361459",
+          "writerEntryNs": null,
+          "pureSqliteLockWaitMs": null
+        },
+        {
+          "sample": 17,
+          "saveMs": 37.076502,
+          "firstDeleted": 1280,
+          "firstDeferred": false,
+          "deleteBatchCount": 5,
+          "lastDeleteEndRelativeSaveStartMs": "31.299049",
+          "lastGcTransactionReturnedRelativeSaveStartMs": "32.394425",
+          "firstGcCallEndRelativeSaveStartMs": "34.400735",
+          "beforeRenameReceiptRelativeSaveStartMs": "36.090712",
+          "afterRenameTransactionRelativeSaveStartMs": "36.969402",
+          "writerEntryNs": null,
+          "pureSqliteLockWaitMs": null
+        },
+        {
+          "sample": 21,
+          "saveMs": 36.345268,
+          "firstDeleted": 1280,
+          "firstDeferred": false,
+          "deleteBatchCount": 5,
+          "lastDeleteEndRelativeSaveStartMs": "28.900282",
+          "lastGcTransactionReturnedRelativeSaveStartMs": "30.016327",
+          "firstGcCallEndRelativeSaveStartMs": "31.888763",
+          "beforeRenameReceiptRelativeSaveStartMs": "35.346602",
+          "afterRenameTransactionRelativeSaveStartMs": "36.286869",
+          "writerEntryNs": null,
+          "pureSqliteLockWaitMs": null
+        }
+      ]
+    }
+  ],
+  "findings": [
+    "All 60 saves were committed and content/revision/retained snapshot assertions passed; all three exposure definitions independently recompute to 30/30 per mode.",
+    "Same Room always deleted 256 then deferred; 30 mismatch reads changed changes by +3 and data_version by 0.",
+    "Separate Room deleted 256 in 23 trials, 768 in 3, and all 1280 in 4. 26 deferred; mismatch data_version deltas were +1 or +2 with changes unchanged.",
+    "The four whole-first-pass collections completed while the author call was still outstanding. No committed author write is shown being ignored by the guard.",
+    "Separate-Room high-tail calls span multiple real GC batches. There is no author writer-entry marker, so physical SQLite wait, Room queueing, thread scheduling and SQL/commit costs cannot be separated.",
+    "This single candidate conditional-arrival diagnostic has no equivalent baseline/control pair; it cannot establish regression, improvement, natural arrival probability or formal acceptance.",
+    "No unambiguous minimal production fix is established. Keep guard semantics. The smallest additional attribution measurement, if separately authorized, is a default-off timestamp at the existing rename transaction entry; this is not implemented here."
+  ]
+}

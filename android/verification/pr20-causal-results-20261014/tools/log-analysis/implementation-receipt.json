@@ -1,0 +1,38 @@
+{
+  "status": "READY_OFFLINE_ONLY",
+  "scope": "DIAGNOSTIC_ONLY_LOG_CLOSURE_NOT_NATIVE_RESULT",
+  "files": {
+    "analyze_logs.py": "2c96309f3f8a847f86bdb62cf87f45405461ebcaa76b3659a2cee8181758fa57",
+    "test_analyzer.py": "fbab9d655dbef7387f42cff103106dc8871f4569d7c9e2caaad21a0d0066a4e5",
+    "frozen_markers.py": "3514d2bca1f7b91efe7886ea42763b37eca873c8914938e8ad3dfeb03eaa1592",
+    "README.md": "b616563e988139715b480276b0d16de9c63cbc7fab4ab00dcb68cd0b5aad1248"
+  },
+  "selftest": {
+    "path": "/workspace/scratch/pr20-causal-20261014/log-analysis/check-03/selftest-results.json",
+    "sha256": "17526d63bc687c0090dd5255eb185db748ce59221a7309e8af6db7aff70a1317",
+    "cases": 49,
+    "type": "OFFLINE_SYNTHETIC_NOT_NATIVE"
+  },
+  "frozen_input_hashes": {
+    "approved_plan_sha256": "06ee5e5e86044489226e907729eb7a9b9b1d01bfb82c6d7e81f062c75ef55f11",
+    "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+    "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "marker_contract_sha256": "ac540b3f0321760d202e3ea76f76eb7c2f2afc3c2b532708152d523cb1cea722",
+    "prepare_sources_sha256": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516"
+  },
+  "expected_actual_identity": {
+    "run_id": "38514139119",
+    "job_id": "115689021611",
+    "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+    "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+    "readiness_git": "b2e1d9f9de66a26f5a4b122ea6754d77198005f8"
+  },
+  "remaining": [
+    "Root obtains official terminal decoded log and metadata using already authorized channel",
+    "Root supplies final execution clone/binding then runs analyzer offline",
+    "Domain analyzers consume extracted records only after complete top-level closure"
+  ],
+  "independent_review": "integration_review confirmed no new deterministic blocker for exact analyzer/checker hashes; written review follows separately",
+  "changes": "Only new scratch log-analysis files. Frozen source/controller/protocol unchanged; no build/ADB/network/CI/push."
+}

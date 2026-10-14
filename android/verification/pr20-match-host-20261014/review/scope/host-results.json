@@ -1,0 +1,1249 @@
+{
+  "scope": "HOST_ONLY_NOT_NATIVE_PERFORMANCE",
+  "sqlite_version": "3.53.1",
+  "source_sha256": "50089cb11edae66be4339a7258b96c7ac6b866b440255d48220aea7bf2fdb963",
+  "schema_path": "/workspace/InkWeft/android/data-local/schemas/org.inkweft.data.NoteDatabase/19.json",
+  "schema_sha256": "45aeaac766d03ff5f466b4ef88b638ccecb64d16c39f39b35529d9c5b40df068",
+  "page_size": 4096,
+  "fixture": "synthetic UUID note IDs; author tables in :memory:; temp DEFAULT and MEMORY; balanced order; 8 pairs; 500/20000 rows; create+INSERT SELECT only timed; queries/assertions outside timer",
+  "samples": [
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "pair": 0,
+      "variant": "rowid",
+      "create_ms": 0.084531,
+      "insert_ms": 1.24295,
+      "total_ms": 1.327481,
+      "cpu_ms": 1.299478,
+      "count": 500
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "pair": 0,
+      "variant": "without_rowid",
+      "create_ms": 0.083547,
+      "insert_ms": 0.620555,
+      "total_ms": 0.704102,
+      "cpu_ms": 0.703169,
+      "count": 500
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "pair": 1,
+      "variant": "without_rowid",
+      "create_ms": 0.040372,
+      "insert_ms": 0.764075,
+      "total_ms": 0.804447,
+      "cpu_ms": 0.805631,
+      "count": 500
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "pair": 1,
+      "variant": "rowid",
+      "create_ms": 0.12991,
+      "insert_ms": 0.610884,
+      "total_ms": 0.740794,
+      "cpu_ms": 0.741566,
+      "count": 500
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "pair": 2,
+      "variant": "rowid",
+      "create_ms": 0.039248,
+      "insert_ms": 0.575297,
+      "total_ms": 0.614545,
+      "cpu_ms": 0.614317,
+      "count": 500
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "pair": 2,
+      "variant": "without_rowid",
+      "create_ms": 0.038138,
+      "insert_ms": 0.562875,
+      "total_ms": 0.601013,
+      "cpu_ms": 0.600801,
+      "count": 500
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "pair": 3,
+      "variant": "without_rowid",
+      "create_ms": 0.087071,
+      "insert_ms": 0.73452,
+      "total_ms": 0.821591,
+      "cpu_ms": 0.81683,
+      "count": 500
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "pair": 3,
+      "variant": "rowid",
+      "create_ms": 0.040118,
+      "insert_ms": 0.618308,
+      "total_ms": 0.658426,
+      "cpu_ms": 0.658446,
+      "count": 500
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "pair": 4,
+      "variant": "rowid",
+      "create_ms": 0.036592,
+      "insert_ms": 0.746622,
+      "total_ms": 0.783214,
+      "cpu_ms": 0.784067,
+      "count": 500
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "pair": 4,
+      "variant": "without_rowid",
+      "create_ms": 0.043582,
+      "insert_ms": 0.673392,
+      "total_ms": 0.716974,
+      "cpu_ms": 0.717272,
+      "count": 500
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "pair": 5,
+      "variant": "without_rowid",
+      "create_ms": 0.040574,
+      "insert_ms": 0.59195,
+      "total_ms": 0.632524,
+      "cpu_ms": 0.632144,
+      "count": 500
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "pair": 5,
+      "variant": "rowid",
+      "create_ms": 0.041988,
+      "insert_ms": 0.614837,
+      "total_ms": 0.656825,
+      "cpu_ms": 0.656016,
+      "count": 500
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "pair": 6,
+      "variant": "rowid",
+      "create_ms": 0.108509,
+      "insert_ms": 0.586803,
+      "total_ms": 0.695312,
+      "cpu_ms": 0.695372,
+      "count": 500
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "pair": 6,
+      "variant": "without_rowid",
+      "create_ms": 0.041815,
+      "insert_ms": 0.579442,
+      "total_ms": 0.621257,
+      "cpu_ms": 0.620996,
+      "count": 500
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "pair": 7,
+      "variant": "without_rowid",
+      "create_ms": 0.041538,
+      "insert_ms": 0.590229,
+      "total_ms": 0.631767,
+      "cpu_ms": 0.631079,
+      "count": 500
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "pair": 7,
+      "variant": "rowid",
+      "create_ms": 0.03869,
+      "insert_ms": 0.659826,
+      "total_ms": 0.698516,
+      "cpu_ms": 0.6992,
+      "count": 500
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "pair": 0,
+      "variant": "rowid",
+      "create_ms": 0.086035,
+      "insert_ms": 33.753303,
+      "total_ms": 33.839338,
+      "cpu_ms": 33.840176,
+      "count": 20000
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "pair": 0,
+      "variant": "without_rowid",
+      "create_ms": 0.051948,
+      "insert_ms": 30.323809,
+      "total_ms": 30.375757,
+      "cpu_ms": 30.367283,
+      "count": 20000
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "pair": 1,
+      "variant": "without_rowid",
+      "create_ms": 0.076806,
+      "insert_ms": 37.312293,
+      "total_ms": 37.389099,
+      "cpu_ms": 37.397198,
+      "count": 20000
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "pair": 1,
+      "variant": "rowid",
+      "create_ms": 0.087577,
+      "insert_ms": 35.495213,
+      "total_ms": 35.58279,
+      "cpu_ms": 35.584018,
+      "count": 20000
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "pair": 2,
+      "variant": "rowid",
+      "create_ms": 0.074055,
+      "insert_ms": 33.296359,
+      "total_ms": 33.370414,
+      "cpu_ms": 33.360135,
+      "count": 20000
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "pair": 2,
+      "variant": "without_rowid",
+      "create_ms": 0.050903,
+      "insert_ms": 29.304066,
+      "total_ms": 29.354969,
+      "cpu_ms": 29.346214,
+      "count": 20000
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "pair": 3,
+      "variant": "without_rowid",
+      "create_ms": 0.051729,
+      "insert_ms": 29.547837,
+      "total_ms": 29.599566,
+      "cpu_ms": 29.222141,
+      "count": 20000
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "pair": 3,
+      "variant": "rowid",
+      "create_ms": 0.051369,
+      "insert_ms": 32.140573,
+      "total_ms": 32.191942,
+      "cpu_ms": 32.193724,
+      "count": 20000
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "pair": 4,
+      "variant": "rowid",
+      "create_ms": 0.050596,
+      "insert_ms": 31.55123,
+      "total_ms": 31.601826,
+      "cpu_ms": 31.593559,
+      "count": 20000
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "pair": 4,
+      "variant": "without_rowid",
+      "create_ms": 0.056794,
+      "insert_ms": 29.09784,
+      "total_ms": 29.154634,
+      "cpu_ms": 29.147832,
+      "count": 20000
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "pair": 5,
+      "variant": "without_rowid",
+      "create_ms": 0.051036,
+      "insert_ms": 29.045322,
+      "total_ms": 29.096358,
+      "cpu_ms": 29.096983,
+      "count": 20000
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "pair": 5,
+      "variant": "rowid",
+      "create_ms": 0.050451,
+      "insert_ms": 33.304649,
+      "total_ms": 33.3551,
+      "cpu_ms": 33.030715,
+      "count": 20000
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "pair": 6,
+      "variant": "rowid",
+      "create_ms": 0.048364,
+      "insert_ms": 34.414975,
+      "total_ms": 34.463339,
+      "cpu_ms": 34.426412,
+      "count": 20000
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "pair": 6,
+      "variant": "without_rowid",
+      "create_ms": 0.049349,
+      "insert_ms": 28.710801,
+      "total_ms": 28.76015,
+      "cpu_ms": 28.763708,
+      "count": 20000
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "pair": 7,
+      "variant": "without_rowid",
+      "create_ms": 0.050573,
+      "insert_ms": 27.879885,
+      "total_ms": 27.930458,
+      "cpu_ms": 27.93203,
+      "count": 20000
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "pair": 7,
+      "variant": "rowid",
+      "create_ms": 0.079933,
+      "insert_ms": 31.532033,
+      "total_ms": 31.611966,
+      "cpu_ms": 31.613482,
+      "count": 20000
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "pair": 0,
+      "variant": "rowid",
+      "create_ms": 0.05746,
+      "insert_ms": 0.615016,
+      "total_ms": 0.672476,
+      "cpu_ms": 0.671625,
+      "count": 500
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "pair": 0,
+      "variant": "without_rowid",
+      "create_ms": 0.046356,
+      "insert_ms": 0.632236,
+      "total_ms": 0.678592,
+      "cpu_ms": 0.677958,
+      "count": 500
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "pair": 1,
+      "variant": "without_rowid",
+      "create_ms": 0.04371,
+      "insert_ms": 0.588455,
+      "total_ms": 0.632165,
+      "cpu_ms": 0.631495,
+      "count": 500
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "pair": 1,
+      "variant": "rowid",
+      "create_ms": 0.040114,
+      "insert_ms": 0.648665,
+      "total_ms": 0.688779,
+      "cpu_ms": 0.688697,
+      "count": 500
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "pair": 2,
+      "variant": "rowid",
+      "create_ms": 0.036988,
+      "insert_ms": 0.630101,
+      "total_ms": 0.667089,
+      "cpu_ms": 0.667576,
+      "count": 500
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "pair": 2,
+      "variant": "without_rowid",
+      "create_ms": 0.043481,
+      "insert_ms": 0.592264,
+      "total_ms": 0.635745,
+      "cpu_ms": 0.634888,
+      "count": 500
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "pair": 3,
+      "variant": "without_rowid",
+      "create_ms": 0.03973,
+      "insert_ms": 0.552447,
+      "total_ms": 0.592177,
+      "cpu_ms": 0.592082,
+      "count": 500
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "pair": 3,
+      "variant": "rowid",
+      "create_ms": 0.039697,
+      "insert_ms": 0.625038,
+      "total_ms": 0.664735,
+      "cpu_ms": 0.664832,
+      "count": 500
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "pair": 4,
+      "variant": "rowid",
+      "create_ms": 0.045676,
+      "insert_ms": 0.625294,
+      "total_ms": 0.67097,
+      "cpu_ms": 0.670314,
+      "count": 500
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "pair": 4,
+      "variant": "without_rowid",
+      "create_ms": 0.037525,
+      "insert_ms": 0.597423,
+      "total_ms": 0.634948,
+      "cpu_ms": 0.635002,
+      "count": 500
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "pair": 5,
+      "variant": "without_rowid",
+      "create_ms": 0.039532,
+      "insert_ms": 0.587119,
+      "total_ms": 0.626651,
+      "cpu_ms": 0.626927,
+      "count": 500
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "pair": 5,
+      "variant": "rowid",
+      "create_ms": 0.039945,
+      "insert_ms": 0.627238,
+      "total_ms": 0.667183,
+      "cpu_ms": 0.667297,
+      "count": 500
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "pair": 6,
+      "variant": "rowid",
+      "create_ms": 0.037045,
+      "insert_ms": 0.623009,
+      "total_ms": 0.660054,
+      "cpu_ms": 0.660185,
+      "count": 500
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "pair": 6,
+      "variant": "without_rowid",
+      "create_ms": 0.037273,
+      "insert_ms": 0.579759,
+      "total_ms": 0.617032,
+      "cpu_ms": 0.616994,
+      "count": 500
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "pair": 7,
+      "variant": "without_rowid",
+      "create_ms": 0.03728,
+      "insert_ms": 0.601446,
+      "total_ms": 0.638726,
+      "cpu_ms": 0.638683,
+      "count": 500
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "pair": 7,
+      "variant": "rowid",
+      "create_ms": 0.038011,
+      "insert_ms": 0.629,
+      "total_ms": 0.667011,
+      "cpu_ms": 0.667002,
+      "count": 500
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "pair": 0,
+      "variant": "rowid",
+      "create_ms": 0.160032,
+      "insert_ms": 36.102306,
+      "total_ms": 36.262338,
+      "cpu_ms": 36.258562,
+      "count": 20000
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "pair": 0,
+      "variant": "without_rowid",
+      "create_ms": 0.053693,
+      "insert_ms": 31.051721,
+      "total_ms": 31.105414,
+      "cpu_ms": 31.10723,
+      "count": 20000
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "pair": 1,
+      "variant": "without_rowid",
+      "create_ms": 0.051237,
+      "insert_ms": 30.411853,
+      "total_ms": 30.46309,
+      "cpu_ms": 30.465206,
+      "count": 20000
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "pair": 1,
+      "variant": "rowid",
+      "create_ms": 0.052837,
+      "insert_ms": 35.940762,
+      "total_ms": 35.993599,
+      "cpu_ms": 35.996195,
+      "count": 20000
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "pair": 2,
+      "variant": "rowid",
+      "create_ms": 0.054976,
+      "insert_ms": 41.12195,
+      "total_ms": 41.176926,
+      "cpu_ms": 41.179927,
+      "count": 20000
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "pair": 2,
+      "variant": "without_rowid",
+      "create_ms": 0.051841,
+      "insert_ms": 38.577785,
+      "total_ms": 38.629626,
+      "cpu_ms": 38.632419,
+      "count": 20000
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "pair": 3,
+      "variant": "without_rowid",
+      "create_ms": 0.052101,
+      "insert_ms": 42.48383,
+      "total_ms": 42.535931,
+      "cpu_ms": 42.538546,
+      "count": 20000
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "pair": 3,
+      "variant": "rowid",
+      "create_ms": 0.051784,
+      "insert_ms": 41.060084,
+      "total_ms": 41.111868,
+      "cpu_ms": 41.114801,
+      "count": 20000
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "pair": 4,
+      "variant": "rowid",
+      "create_ms": 0.052801,
+      "insert_ms": 40.937503,
+      "total_ms": 40.990304,
+      "cpu_ms": 40.993117,
+      "count": 20000
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "pair": 4,
+      "variant": "without_rowid",
+      "create_ms": 0.055594,
+      "insert_ms": 39.669728,
+      "total_ms": 39.725322,
+      "cpu_ms": 33.480699,
+      "count": 20000
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "pair": 5,
+      "variant": "without_rowid",
+      "create_ms": 0.054455,
+      "insert_ms": 33.000015,
+      "total_ms": 33.05447,
+      "cpu_ms": 33.034153,
+      "count": 20000
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "pair": 5,
+      "variant": "rowid",
+      "create_ms": 0.054101,
+      "insert_ms": 38.229054,
+      "total_ms": 38.283155,
+      "cpu_ms": 38.28532,
+      "count": 20000
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "pair": 6,
+      "variant": "rowid",
+      "create_ms": 0.054168,
+      "insert_ms": 35.419683,
+      "total_ms": 35.473851,
+      "cpu_ms": 35.476174,
+      "count": 20000
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "pair": 6,
+      "variant": "without_rowid",
+      "create_ms": 0.051604,
+      "insert_ms": 34.951761,
+      "total_ms": 35.003365,
+      "cpu_ms": 35.005798,
+      "count": 20000
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "pair": 7,
+      "variant": "without_rowid",
+      "create_ms": 0.053894,
+      "insert_ms": 32.151803,
+      "total_ms": 32.205697,
+      "cpu_ms": 32.20765,
+      "count": 20000
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "pair": 7,
+      "variant": "rowid",
+      "create_ms": 0.076544,
+      "insert_ms": 40.742856,
+      "total_ms": 40.8194,
+      "cpu_ms": 40.822114,
+      "count": 20000
+    }
+  ],
+  "summary": [
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "rowid_median_ms": 0.696914,
+      "without_rowid_median_ms": 0.6683129999999999,
+      "paired_diff_median_ms": -0.04527049999999999,
+      "paired_relative_median_pct": -6.078613224045625,
+      "faster_pairs": 6,
+      "pairs": 8
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "rowid_median_ms": 33.362757,
+      "without_rowid_median_ms": 29.2548015,
+      "paired_diff_median_ms": -3.5725444999999976,
+      "paired_relative_median_pct": -10.940650233733724,
+      "faster_pairs": 7,
+      "pairs": 8
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "rowid_median_ms": 0.667136,
+      "without_rowid_median_ms": 0.6335565,
+      "paired_diff_median_ms": -0.038277000000000005,
+      "paired_relative_median_pct": -5.721870116514504,
+      "faster_pairs": 7,
+      "pairs": 8
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "rowid_median_ms": 39.5512775,
+      "without_rowid_median_ms": 34.028917500000006,
+      "paired_diff_median_ms": -3.852112,
+      "paired_relative_median_pct": -9.922078815783404,
+      "faster_pairs": 7,
+      "pairs": 8
+    }
+  ],
+  "details": [
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "variant": "rowid",
+      "sqlite_schema": [
+        [
+          "table",
+          "library_scope",
+          "library_scope",
+          4,
+          "CREATE TABLE library_scope(id TEXT PRIMARY KEY)"
+        ],
+        [
+          "index",
+          "sqlite_autoindex_library_scope_1",
+          "library_scope",
+          5,
+          null
+        ]
+      ],
+      "index_list": [
+        [
+          0,
+          "sqlite_autoindex_library_scope_1",
+          1,
+          "pk",
+          0
+        ]
+      ],
+      "physical": [
+        {
+          "name": "library_scope",
+          "pages": 7,
+          "bytes": 28672
+        },
+        {
+          "name": "sqlite_autoindex_library_scope_1",
+          "pages": 7,
+          "bytes": 28672
+        }
+      ],
+      "query_plan": [
+        [
+          8,
+          0,
+          93,
+          "SEARCH notes USING INDEX sqlite_autoindex_notes_1 (id=?)"
+        ],
+        [
+          10,
+          0,
+          0,
+          "USING INDEX sqlite_autoindex_library_scope_1 FOR IN-OPERATOR"
+        ],
+        [
+          28,
+          0,
+          0,
+          "USE TEMP B-TREE FOR ORDER BY"
+        ]
+      ]
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 500,
+      "variant": "without_rowid",
+      "sqlite_schema": [
+        [
+          "table",
+          "library_scope",
+          "library_scope",
+          4,
+          "CREATE TABLE library_scope(id TEXT PRIMARY KEY) WITHOUT ROWID"
+        ]
+      ],
+      "index_list": [
+        [
+          0,
+          "sqlite_autoindex_library_scope_1",
+          1,
+          "pk",
+          0
+        ]
+      ],
+      "physical": [
+        {
+          "name": "library_scope",
+          "pages": 7,
+          "bytes": 28672
+        }
+      ],
+      "query_plan": [
+        [
+          8,
+          0,
+          93,
+          "SEARCH notes USING INDEX sqlite_autoindex_notes_1 (id=?)"
+        ],
+        [
+          10,
+          0,
+          0,
+          "USING INDEX sqlite_autoindex_library_scope_1 FOR IN-OPERATOR"
+        ],
+        [
+          28,
+          0,
+          0,
+          "USE TEMP B-TREE FOR ORDER BY"
+        ]
+      ]
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "variant": "rowid",
+      "sqlite_schema": [
+        [
+          "table",
+          "library_scope",
+          "library_scope",
+          4,
+          "CREATE TABLE library_scope(id TEXT PRIMARY KEY)"
+        ],
+        [
+          "index",
+          "sqlite_autoindex_library_scope_1",
+          "library_scope",
+          5,
+          null
+        ]
+      ],
+      "index_list": [
+        [
+          0,
+          "sqlite_autoindex_library_scope_1",
+          1,
+          "pk",
+          0
+        ]
+      ],
+      "physical": [
+        {
+          "name": "library_scope",
+          "pages": 213,
+          "bytes": 872448
+        },
+        {
+          "name": "sqlite_autoindex_library_scope_1",
+          "pages": 247,
+          "bytes": 1011712
+        }
+      ],
+      "query_plan": [
+        [
+          8,
+          0,
+          93,
+          "SEARCH notes USING INDEX sqlite_autoindex_notes_1 (id=?)"
+        ],
+        [
+          10,
+          0,
+          0,
+          "USING INDEX sqlite_autoindex_library_scope_1 FOR IN-OPERATOR"
+        ],
+        [
+          28,
+          0,
+          0,
+          "USE TEMP B-TREE FOR ORDER BY"
+        ]
+      ]
+    },
+    {
+      "temp_store": "DEFAULT",
+      "rows": 20000,
+      "variant": "without_rowid",
+      "sqlite_schema": [
+        [
+          "table",
+          "library_scope",
+          "library_scope",
+          4,
+          "CREATE TABLE library_scope(id TEXT PRIMARY KEY) WITHOUT ROWID"
+        ]
+      ],
+      "index_list": [
+        [
+          0,
+          "sqlite_autoindex_library_scope_1",
+          1,
+          "pk",
+          0
+        ]
+      ],
+      "physical": [
+        {
+          "name": "library_scope",
+          "pages": 229,
+          "bytes": 937984
+        }
+      ],
+      "query_plan": [
+        [
+          8,
+          0,
+          93,
+          "SEARCH notes USING INDEX sqlite_autoindex_notes_1 (id=?)"
+        ],
+        [
+          10,
+          0,
+          0,
+          "USING INDEX sqlite_autoindex_library_scope_1 FOR IN-OPERATOR"
+        ],
+        [
+          28,
+          0,
+          0,
+          "USE TEMP B-TREE FOR ORDER BY"
+        ]
+      ]
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "variant": "rowid",
+      "sqlite_schema": [
+        [
+          "table",
+          "library_scope",
+          "library_scope",
+          4,
+          "CREATE TABLE library_scope(id TEXT PRIMARY KEY)"
+        ],
+        [
+          "index",
+          "sqlite_autoindex_library_scope_1",
+          "library_scope",
+          5,
+          null
+        ]
+      ],
+      "index_list": [
+        [
+          0,
+          "sqlite_autoindex_library_scope_1",
+          1,
+          "pk",
+          0
+        ]
+      ],
+      "physical": [
+        {
+          "name": "library_scope",
+          "pages": 7,
+          "bytes": 28672
+        },
+        {
+          "name": "sqlite_autoindex_library_scope_1",
+          "pages": 7,
+          "bytes": 28672
+        }
+      ],
+      "query_plan": [
+        [
+          8,
+          0,
+          93,
+          "SEARCH notes USING INDEX sqlite_autoindex_notes_1 (id=?)"
+        ],
+        [
+          10,
+          0,
+          0,
+          "USING INDEX sqlite_autoindex_library_scope_1 FOR IN-OPERATOR"
+        ],
+        [
+          28,
+          0,
+          0,
+          "USE TEMP B-TREE FOR ORDER BY"
+        ]
+      ]
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 500,
+      "variant": "without_rowid",
+      "sqlite_schema": [
+        [
+          "table",
+          "library_scope",
+          "library_scope",
+          4,
+          "CREATE TABLE library_scope(id TEXT PRIMARY KEY) WITHOUT ROWID"
+        ]
+      ],
+      "index_list": [
+        [
+          0,
+          "sqlite_autoindex_library_scope_1",
+          1,
+          "pk",
+          0
+        ]
+      ],
+      "physical": [
+        {
+          "name": "library_scope",
+          "pages": 7,
+          "bytes": 28672
+        }
+      ],
+      "query_plan": [
+        [
+          8,
+          0,
+          93,
+          "SEARCH notes USING INDEX sqlite_autoindex_notes_1 (id=?)"
+        ],
+        [
+          10,
+          0,
+          0,
+          "USING INDEX sqlite_autoindex_library_scope_1 FOR IN-OPERATOR"
+        ],
+        [
+          28,
+          0,
+          0,
+          "USE TEMP B-TREE FOR ORDER BY"
+        ]
+      ]
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "variant": "rowid",
+      "sqlite_schema": [
+        [
+          "table",
+          "library_scope",
+          "library_scope",
+          4,
+          "CREATE TABLE library_scope(id TEXT PRIMARY KEY)"
+        ],
+        [
+          "index",
+          "sqlite_autoindex_library_scope_1",
+          "library_scope",
+          5,
+          null
+        ]
+      ],
+      "index_list": [
+        [
+          0,
+          "sqlite_autoindex_library_scope_1",
+          1,
+          "pk",
+          0
+        ]
+      ],
+      "physical": [
+        {
+          "name": "library_scope",
+          "pages": 213,
+          "bytes": 872448
+        },
+        {
+          "name": "sqlite_autoindex_library_scope_1",
+          "pages": 247,
+          "bytes": 1011712
+        }
+      ],
+      "query_plan": [
+        [
+          8,
+          0,
+          93,
+          "SEARCH notes USING INDEX sqlite_autoindex_notes_1 (id=?)"
+        ],
+        [
+          10,
+          0,
+          0,
+          "USING INDEX sqlite_autoindex_library_scope_1 FOR IN-OPERATOR"
+        ],
+        [
+          28,
+          0,
+          0,
+          "USE TEMP B-TREE FOR ORDER BY"
+        ]
+      ]
+    },
+    {
+      "temp_store": "MEMORY",
+      "rows": 20000,
+      "variant": "without_rowid",
+      "sqlite_schema": [
+        [
+          "table",
+          "library_scope",
+          "library_scope",
+          4,
+          "CREATE TABLE library_scope(id TEXT PRIMARY KEY) WITHOUT ROWID"
+        ]
+      ],
+      "index_list": [
+        [
+          0,
+          "sqlite_autoindex_library_scope_1",
+          1,
+          "pk",
+          0
+        ]
+      ],
+      "physical": [
+        {
+          "name": "library_scope",
+          "pages": 229,
+          "bytes": 937984
+        }
+      ],
+      "query_plan": [
+        [
+          8,
+          0,
+          93,
+          "SEARCH notes USING INDEX sqlite_autoindex_notes_1 (id=?)"
+        ],
+        [
+          10,
+          0,
+          0,
+          "USING INDEX sqlite_autoindex_library_scope_1 FOR IN-OPERATOR"
+        ],
+        [
+          28,
+          0,
+          0,
+          "USE TEMP B-TREE FOR ORDER BY"
+        ]
+      ]
+    }
+  ],
+  "semantics": [
+    {
+      "filter": "trashedAt IS NULL",
+      "rows": 145,
+      "equal": true
+    },
+    {
+      "filter": "trashedAt IS NOT NULL",
+      "rows": 1,
+      "equal": true
+    },
+    {
+      "filter": "trashedAt IS NULL AND library_blank(folder)=1",
+      "rows": 50,
+      "equal": true
+    },
+    {
+      "filter": "trashedAt IS NULL AND folder='课程'",
+      "rows": 95,
+      "equal": true
+    },
+    {
+      "filter": "trashedAt IS NULL AND favorite=1",
+      "rows": 29,
+      "equal": true
+    },
+    {
+      "filter": "trashedAt IS NULL AND instr(char(10)||tags||char(10),char(10)||'复习'||char(10))>0",
+      "rows": 71,
+      "equal": true
+    }
+  ],
+  "null_difference": {
+    "rowid": "accepted",
+    "without_rowid": "rejected_NOT_NULL"
+  },
+  "limits": [
+    "Host SQLite3.53.1 differs from Android Requery3.49.0",
+    "No JNI, Room, cancellation, concurrent writer, WAL, or save latency is measured",
+    "process_time includes this Python host; in-memory main and narrow synthetic fixture only",
+    "Same-connection repeats/cache state are descriptive correlated samples, not independent performance acceptance"
+  ]
+}

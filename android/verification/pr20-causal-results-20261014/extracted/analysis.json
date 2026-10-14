@@ -1,0 +1,2576 @@
+{
+  "schema": 1,
+  "analysis_status": "COMPLETE_SCOPED_CAUSAL_LOG_EVIDENCE",
+  "scope": "DIAGNOSTIC_ONLY",
+  "expected": {
+    "run_id": "38514139119",
+    "job_id": "115689021611",
+    "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+    "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+    "readiness_git": "b2e1d9f9de66a26f5a4b122ea6754d77198005f8"
+  },
+  "issues": [],
+  "state": {
+    "clock": {
+      "status": "PASS",
+      "scope": "DIAGNOSTIC_ONLY",
+      "anchor_kind": "runner_first_step",
+      "budget_anchor_epoch": 1791953894,
+      "first_step_observed_epoch": 1791953894.0391302,
+      "actual_job_started_epoch": null,
+      "deadlines_minutes": [
+        30,
+        45,
+        50,
+        55,
+        60
+      ],
+      "deadline_epochs": {
+        "setup": 1791955694,
+        "data": 1791956594,
+        "raster": 1791956894,
+        "work": 1791957194
+      }
+    },
+    "methods": [
+      {
+        "ordinal": 1,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.NoteRepositoryTest#sameCommandReturnsSameCommittedRevision",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 2,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.NoteRepositoryTest#staleEditorCannotOverwriteNewHead",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 3,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.NoteRepositoryTest#blankTextAndHistorySurviveReopen",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 4,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.NoteRepositoryTest#oldReceiptIsNotReplacedWithCurrentHead",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 5,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.LibraryTextIndexPreparationTest#cancelledFtsWriteRollsBackBeforeClearingPending",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 6,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 7,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 8,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.LibrarySearchCausalTest#profiledContainsPreservesUnicodeAndSourceResults",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 9,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.LibrarySearchCausalTest#warmUdfCostsAndQueryPlanAgainstInMemoryReference",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 10,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.LibrarySaveCausalTest#separateTrackerReaderAndIndexContention",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 11,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.HistoryDeletionCausalTest#sameRoomWriterConditionalDeleteArrival",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 12,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.HistoryDeletionCausalTest#separateRoomWriterConditionalDeleteArrival",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 13,
+        "phase": "raster-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      }
+    ],
+    "observed_method_receipts": [
+      {
+        "ordinal": 1,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.NoteRepositoryTest#sameCommandReturnsSameCommittedRevision",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 2,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.NoteRepositoryTest#staleEditorCannotOverwriteNewHead",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 3,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.NoteRepositoryTest#blankTextAndHistorySurviveReopen",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 4,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.NoteRepositoryTest#oldReceiptIsNotReplacedWithCurrentHead",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 5,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.LibraryTextIndexPreparationTest#cancelledFtsWriteRollsBackBeforeClearingPending",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 6,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 7,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 8,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.LibrarySearchCausalTest#profiledContainsPreservesUnicodeAndSourceResults",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 9,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.LibrarySearchCausalTest#warmUdfCostsAndQueryPlanAgainstInMemoryReference",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 10,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.LibrarySaveCausalTest#separateTrackerReaderAndIndexContention",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 11,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.HistoryDeletionCausalTest#sameRoomWriterConditionalDeleteArrival",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 12,
+        "phase": "data-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.data.HistoryDeletionCausalTest#separateRoomWriterConditionalDeleteArrival",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      },
+      {
+        "ordinal": 13,
+        "phase": "raster-diagnostics",
+        "identity": "C1",
+        "selection": "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "NATURAL_EXIT",
+        "error": null
+      }
+    ],
+    "blocks": [
+      {
+        "context": {
+          "scope": "DIAGNOSTIC_ONLY",
+          "run_id": "38514139119",
+          "run_attempt": "1",
+          "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+          "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+          "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+          "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+          "test_source_sha256": "46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a",
+          "source_manifest_sha256": "0b8edd425820f756686eabf0a4f1cbaeaa555e83512d817024c3c270257d8a7c",
+          "selected_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "signer_sha256": [
+                "efaf3e090c1a16ad7f44243a76729300086f73565286c73aa0445771c546180b"
+              ]
+            }
+          ],
+          "apk_receipt_sha256": "0407261de03c4b675991e86cb38f0a2757ec1705b02cb218593b85ceb6216ce6",
+          "installed_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "source_apk_sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561"
+            }
+          ],
+          "install_log_sha256": "9eebc84fff94b589a9c824a212aeec3f68304fcdd4c1064c89b88963efb59287",
+          "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "ordinal": 1,
+          "identity": "C1",
+          "seed": null,
+          "args": [
+            "adb",
+            "-s",
+            "emulator-5554",
+            "shell",
+            "am",
+            "instrument",
+            "-w",
+            "-r",
+            "-e",
+            "class",
+            "org.inkweft.data.NoteRepositoryTest#sameCommandReturnsSameCommittedRevision",
+            "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+          ],
+          "install_group": "C1-data-diagnostics",
+          "selection": "org.inkweft.data.NoteRepositoryTest#sameCommandReturnsSameCommittedRevision",
+          "raw_log_sha256": "63148ee0db5bde3d1a7d4af6e2179cbe8f6f87a5d7ae67a698e8cf60085301c0",
+          "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT"
+        },
+        "ordered": [],
+        "ended": true,
+        "method_pass": true,
+        "line": 312,
+        "first_receipt_epoch": 1791954615.007109,
+        "end_line": 313,
+        "method_receipt_epoch": 1791954615.008462,
+        "record_count": 0
+      },
+      {
+        "context": {
+          "scope": "DIAGNOSTIC_ONLY",
+          "run_id": "38514139119",
+          "run_attempt": "1",
+          "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+          "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+          "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+          "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+          "test_source_sha256": "46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a",
+          "source_manifest_sha256": "0b8edd425820f756686eabf0a4f1cbaeaa555e83512d817024c3c270257d8a7c",
+          "selected_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "signer_sha256": [
+                "efaf3e090c1a16ad7f44243a76729300086f73565286c73aa0445771c546180b"
+              ]
+            }
+          ],
+          "apk_receipt_sha256": "0407261de03c4b675991e86cb38f0a2757ec1705b02cb218593b85ceb6216ce6",
+          "installed_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "source_apk_sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561"
+            }
+          ],
+          "install_log_sha256": "9eebc84fff94b589a9c824a212aeec3f68304fcdd4c1064c89b88963efb59287",
+          "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "ordinal": 2,
+          "identity": "C1",
+          "seed": null,
+          "args": [
+            "adb",
+            "-s",
+            "emulator-5554",
+            "shell",
+            "am",
+            "instrument",
+            "-w",
+            "-r",
+            "-e",
+            "class",
+            "org.inkweft.data.NoteRepositoryTest#staleEditorCannotOverwriteNewHead",
+            "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+          ],
+          "install_group": "C1-data-diagnostics",
+          "selection": "org.inkweft.data.NoteRepositoryTest#staleEditorCannotOverwriteNewHead",
+          "raw_log_sha256": "f9e2921b5b9b90b4ea20d833545289fc069cb6a2d88848f425731de3f42c2334",
+          "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT"
+        },
+        "ordered": [],
+        "ended": true,
+        "method_pass": true,
+        "line": 315,
+        "first_receipt_epoch": 1791954615.733987,
+        "end_line": 316,
+        "method_receipt_epoch": 1791954615.735899,
+        "record_count": 0
+      },
+      {
+        "context": {
+          "scope": "DIAGNOSTIC_ONLY",
+          "run_id": "38514139119",
+          "run_attempt": "1",
+          "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+          "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+          "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+          "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+          "test_source_sha256": "46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a",
+          "source_manifest_sha256": "0b8edd425820f756686eabf0a4f1cbaeaa555e83512d817024c3c270257d8a7c",
+          "selected_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "signer_sha256": [
+                "efaf3e090c1a16ad7f44243a76729300086f73565286c73aa0445771c546180b"
+              ]
+            }
+          ],
+          "apk_receipt_sha256": "0407261de03c4b675991e86cb38f0a2757ec1705b02cb218593b85ceb6216ce6",
+          "installed_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "source_apk_sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561"
+            }
+          ],
+          "install_log_sha256": "9eebc84fff94b589a9c824a212aeec3f68304fcdd4c1064c89b88963efb59287",
+          "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "ordinal": 3,
+          "identity": "C1",
+          "seed": null,
+          "args": [
+            "adb",
+            "-s",
+            "emulator-5554",
+            "shell",
+            "am",
+            "instrument",
+            "-w",
+            "-r",
+            "-e",
+            "class",
+            "org.inkweft.data.NoteRepositoryTest#blankTextAndHistorySurviveReopen",
+            "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+          ],
+          "install_group": "C1-data-diagnostics",
+          "selection": "org.inkweft.data.NoteRepositoryTest#blankTextAndHistorySurviveReopen",
+          "raw_log_sha256": "a817659625881c13d9e4099a80bc6c637aab43ac07577fc9788233d909e41dde",
+          "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT"
+        },
+        "ordered": [],
+        "ended": true,
+        "method_pass": true,
+        "line": 318,
+        "first_receipt_epoch": 1791954616.752089,
+        "end_line": 319,
+        "method_receipt_epoch": 1791954616.753422,
+        "record_count": 0
+      },
+      {
+        "context": {
+          "scope": "DIAGNOSTIC_ONLY",
+          "run_id": "38514139119",
+          "run_attempt": "1",
+          "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+          "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+          "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+          "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+          "test_source_sha256": "46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a",
+          "source_manifest_sha256": "0b8edd425820f756686eabf0a4f1cbaeaa555e83512d817024c3c270257d8a7c",
+          "selected_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "signer_sha256": [
+                "efaf3e090c1a16ad7f44243a76729300086f73565286c73aa0445771c546180b"
+              ]
+            }
+          ],
+          "apk_receipt_sha256": "0407261de03c4b675991e86cb38f0a2757ec1705b02cb218593b85ceb6216ce6",
+          "installed_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "source_apk_sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561"
+            }
+          ],
+          "install_log_sha256": "9eebc84fff94b589a9c824a212aeec3f68304fcdd4c1064c89b88963efb59287",
+          "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "ordinal": 4,
+          "identity": "C1",
+          "seed": null,
+          "args": [
+            "adb",
+            "-s",
+            "emulator-5554",
+            "shell",
+            "am",
+            "instrument",
+            "-w",
+            "-r",
+            "-e",
+            "class",
+            "org.inkweft.data.NoteRepositoryTest#oldReceiptIsNotReplacedWithCurrentHead",
+            "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+          ],
+          "install_group": "C1-data-diagnostics",
+          "selection": "org.inkweft.data.NoteRepositoryTest#oldReceiptIsNotReplacedWithCurrentHead",
+          "raw_log_sha256": "20434e363e2cd125e334cb054a71cfff0d3d1f4a5925dd41c87a2cc15ec8313e",
+          "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT"
+        },
+        "ordered": [],
+        "ended": true,
+        "method_pass": true,
+        "line": 321,
+        "first_receipt_epoch": 1791954617.416231,
+        "end_line": 322,
+        "method_receipt_epoch": 1791954617.418126,
+        "record_count": 0
+      },
+      {
+        "context": {
+          "scope": "DIAGNOSTIC_ONLY",
+          "run_id": "38514139119",
+          "run_attempt": "1",
+          "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+          "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+          "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+          "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+          "test_source_sha256": "2b0bf878258086f80e349bf6360b833dd3b4c652aa8f5c7fcf6cce6ec892badb",
+          "source_manifest_sha256": "0b8edd425820f756686eabf0a4f1cbaeaa555e83512d817024c3c270257d8a7c",
+          "selected_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "signer_sha256": [
+                "efaf3e090c1a16ad7f44243a76729300086f73565286c73aa0445771c546180b"
+              ]
+            }
+          ],
+          "apk_receipt_sha256": "0407261de03c4b675991e86cb38f0a2757ec1705b02cb218593b85ceb6216ce6",
+          "installed_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "source_apk_sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561"
+            }
+          ],
+          "install_log_sha256": "9eebc84fff94b589a9c824a212aeec3f68304fcdd4c1064c89b88963efb59287",
+          "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "ordinal": 5,
+          "identity": "C1",
+          "seed": null,
+          "args": [
+            "adb",
+            "-s",
+            "emulator-5554",
+            "shell",
+            "am",
+            "instrument",
+            "-w",
+            "-r",
+            "-e",
+            "class",
+            "org.inkweft.data.LibraryTextIndexPreparationTest#cancelledFtsWriteRollsBackBeforeClearingPending",
+            "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+          ],
+          "install_group": "C1-data-diagnostics",
+          "selection": "org.inkweft.data.LibraryTextIndexPreparationTest#cancelledFtsWriteRollsBackBeforeClearingPending",
+          "raw_log_sha256": "046498c2eaf7f09341e18f9be7269476dca4f6e7cfaaf3e451015f4ebfdc0889",
+          "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT"
+        },
+        "ordered": [],
+        "ended": true,
+        "method_pass": true,
+        "line": 324,
+        "first_receipt_epoch": 1791954618.029262,
+        "end_line": 325,
+        "method_receipt_epoch": 1791954618.030444,
+        "record_count": 0
+      },
+      {
+        "context": {
+          "scope": "DIAGNOSTIC_ONLY",
+          "run_id": "38514139119",
+          "run_attempt": "1",
+          "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+          "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+          "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+          "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+          "test_source_sha256": "b05c4c93f2c0ed36204bb548c20f8d95c0dca5a35238e05361ac3655f6f9a061",
+          "source_manifest_sha256": "0b8edd425820f756686eabf0a4f1cbaeaa555e83512d817024c3c270257d8a7c",
+          "selected_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "signer_sha256": [
+                "efaf3e090c1a16ad7f44243a76729300086f73565286c73aa0445771c546180b"
+              ]
+            }
+          ],
+          "apk_receipt_sha256": "0407261de03c4b675991e86cb38f0a2757ec1705b02cb218593b85ceb6216ce6",
+          "installed_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "source_apk_sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561"
+            }
+          ],
+          "install_log_sha256": "9eebc84fff94b589a9c824a212aeec3f68304fcdd4c1064c89b88963efb59287",
+          "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "ordinal": 6,
+          "identity": "C1",
+          "seed": null,
+          "args": [
+            "adb",
+            "-s",
+            "emulator-5554",
+            "shell",
+            "am",
+            "instrument",
+            "-w",
+            "-r",
+            "-e",
+            "class",
+            "org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState",
+            "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+          ],
+          "install_group": "C1-data-diagnostics",
+          "selection": "org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState",
+          "raw_log_sha256": "2e7dfe66b2b2ceac2db7b4d106c5c7e0023fe81ac2b9365de66e24556baffdd5",
+          "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT"
+        },
+        "ordered": [],
+        "ended": true,
+        "method_pass": true,
+        "line": 327,
+        "first_receipt_epoch": 1791954618.794177,
+        "end_line": 328,
+        "method_receipt_epoch": 1791954618.796015,
+        "record_count": 0
+      },
+      {
+        "context": {
+          "scope": "DIAGNOSTIC_ONLY",
+          "run_id": "38514139119",
+          "run_attempt": "1",
+          "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+          "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+          "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+          "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+          "test_source_sha256": "b05c4c93f2c0ed36204bb548c20f8d95c0dca5a35238e05361ac3655f6f9a061",
+          "source_manifest_sha256": "0b8edd425820f756686eabf0a4f1cbaeaa555e83512d817024c3c270257d8a7c",
+          "selected_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "signer_sha256": [
+                "efaf3e090c1a16ad7f44243a76729300086f73565286c73aa0445771c546180b"
+              ]
+            }
+          ],
+          "apk_receipt_sha256": "0407261de03c4b675991e86cb38f0a2757ec1705b02cb218593b85ceb6216ce6",
+          "installed_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "source_apk_sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561"
+            }
+          ],
+          "install_log_sha256": "9eebc84fff94b589a9c824a212aeec3f68304fcdd4c1064c89b88963efb59287",
+          "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "ordinal": 7,
+          "identity": "C1",
+          "seed": null,
+          "args": [
+            "adb",
+            "-s",
+            "emulator-5554",
+            "shell",
+            "am",
+            "instrument",
+            "-w",
+            "-r",
+            "-e",
+            "class",
+            "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+            "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+          ],
+          "install_group": "C1-data-diagnostics",
+          "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+          "raw_log_sha256": "6c2d325f2f78412d6d3788b5309c2b30d155ad86073de8d0c05439290a99187d",
+          "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT"
+        },
+        "ordered": [],
+        "ended": true,
+        "method_pass": true,
+        "line": 330,
+        "first_receipt_epoch": 1791954620.958026,
+        "end_line": 331,
+        "method_receipt_epoch": 1791954620.959245,
+        "record_count": 0
+      },
+      {
+        "context": {
+          "scope": "DIAGNOSTIC_ONLY",
+          "run_id": "38514139119",
+          "run_attempt": "1",
+          "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+          "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+          "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+          "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+          "test_source_sha256": "8bbf97dc7d31ed93dedbd66a1758973c53df34a2226984f9fa59562bf0b89ebe",
+          "source_manifest_sha256": "0b8edd425820f756686eabf0a4f1cbaeaa555e83512d817024c3c270257d8a7c",
+          "selected_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "signer_sha256": [
+                "efaf3e090c1a16ad7f44243a76729300086f73565286c73aa0445771c546180b"
+              ]
+            }
+          ],
+          "apk_receipt_sha256": "0407261de03c4b675991e86cb38f0a2757ec1705b02cb218593b85ceb6216ce6",
+          "installed_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "source_apk_sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561"
+            }
+          ],
+          "install_log_sha256": "9eebc84fff94b589a9c824a212aeec3f68304fcdd4c1064c89b88963efb59287",
+          "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "ordinal": 8,
+          "identity": "C1",
+          "seed": null,
+          "args": [
+            "adb",
+            "-s",
+            "emulator-5554",
+            "shell",
+            "am",
+            "instrument",
+            "-w",
+            "-r",
+            "-e",
+            "class",
+            "org.inkweft.data.LibrarySearchCausalTest#profiledContainsPreservesUnicodeAndSourceResults",
+            "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+          ],
+          "install_group": "C1-data-diagnostics",
+          "selection": "org.inkweft.data.LibrarySearchCausalTest#profiledContainsPreservesUnicodeAndSourceResults",
+          "raw_log_sha256": "bc974658580772b5f2c0d7aac2861c0a304114f13fbd4435c054a6db1965d202",
+          "records_sha256": "98349570bba15821033dcbf9bdb223584d90afe2141a6a38ac5aefd7ae483c82",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT"
+        },
+        "ordered": [
+          {
+            "sequence": 0,
+            "marker": "LIBRARY_CAUSAL_UNICODE",
+            "payload_bytes": 122,
+            "payload_sha256": "f0fdea29e0651d3df62edc29ce4fa7830cb768fac65c16a25a9fc55334971900"
+          }
+        ],
+        "ended": true,
+        "method_pass": true,
+        "line": 333,
+        "first_receipt_epoch": 1791954621.820044,
+        "end_line": 335,
+        "method_receipt_epoch": 1791954621.821462,
+        "record_count": 1
+      },
+      {
+        "context": {
+          "scope": "DIAGNOSTIC_ONLY",
+          "run_id": "38514139119",
+          "run_attempt": "1",
+          "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+          "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+          "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+          "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+          "test_source_sha256": "8bbf97dc7d31ed93dedbd66a1758973c53df34a2226984f9fa59562bf0b89ebe",
+          "source_manifest_sha256": "0b8edd425820f756686eabf0a4f1cbaeaa555e83512d817024c3c270257d8a7c",
+          "selected_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "signer_sha256": [
+                "efaf3e090c1a16ad7f44243a76729300086f73565286c73aa0445771c546180b"
+              ]
+            }
+          ],
+          "apk_receipt_sha256": "0407261de03c4b675991e86cb38f0a2757ec1705b02cb218593b85ceb6216ce6",
+          "installed_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "source_apk_sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561"
+            }
+          ],
+          "install_log_sha256": "9eebc84fff94b589a9c824a212aeec3f68304fcdd4c1064c89b88963efb59287",
+          "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "ordinal": 9,
+          "identity": "C1",
+          "seed": null,
+          "args": [
+            "adb",
+            "-s",
+            "emulator-5554",
+            "shell",
+            "am",
+            "instrument",
+            "-w",
+            "-r",
+            "-e",
+            "libraryCausalDiagnostics",
+            "true",
+            "-e",
+            "class",
+            "org.inkweft.data.LibrarySearchCausalTest#warmUdfCostsAndQueryPlanAgainstInMemoryReference",
+            "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+          ],
+          "install_group": "C1-data-diagnostics",
+          "selection": "org.inkweft.data.LibrarySearchCausalTest#warmUdfCostsAndQueryPlanAgainstInMemoryReference",
+          "raw_log_sha256": "5539dc4cbcb689a0be9500811a01d838f19248270c929d7fea89bf5268ee1ac9",
+          "records_sha256": "fb5aaf476a6d114aacbf3c97d36a69339c05ef3ef2f4c3e1487d22ed31b1ae89",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT"
+        },
+        "ordered": [
+          {
+            "sequence": 0,
+            "marker": "LIBRARY_CAUSAL_WARM",
+            "payload_bytes": 14103,
+            "payload_sha256": "a7ec67808b6afc5a4386fac0d77998f5e7c4fd1490e561d34351c5901d22602b"
+          }
+        ],
+        "ended": true,
+        "method_pass": true,
+        "line": 337,
+        "first_receipt_epoch": 1791954664.336608,
+        "end_line": 339,
+        "method_receipt_epoch": 1791954664.351963,
+        "record_count": 1
+      },
+      {
+        "context": {
+          "scope": "DIAGNOSTIC_ONLY",
+          "run_id": "38514139119",
+          "run_attempt": "1",
+          "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+          "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+          "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+          "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+          "test_source_sha256": "f2faf22c8eff0c5f37c981c389917e17214d86edc38535e68dd9b0ab69a1eb8e",
+          "source_manifest_sha256": "0b8edd425820f756686eabf0a4f1cbaeaa555e83512d817024c3c270257d8a7c",
+          "selected_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "signer_sha256": [
+                "efaf3e090c1a16ad7f44243a76729300086f73565286c73aa0445771c546180b"
+              ]
+            }
+          ],
+          "apk_receipt_sha256": "0407261de03c4b675991e86cb38f0a2757ec1705b02cb218593b85ceb6216ce6",
+          "installed_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "source_apk_sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561"
+            }
+          ],
+          "install_log_sha256": "9eebc84fff94b589a9c824a212aeec3f68304fcdd4c1064c89b88963efb59287",
+          "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "ordinal": 10,
+          "identity": "C1",
+          "seed": null,
+          "args": [
+            "adb",
+            "-s",
+            "emulator-5554",
+            "shell",
+            "am",
+            "instrument",
+            "-w",
+            "-r",
+            "-e",
+            "libraryCausalDiagnostics",
+            "true",
+            "-e",
+            "class",
+            "org.inkweft.data.LibrarySaveCausalTest#separateTrackerReaderAndIndexContention",
+            "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+          ],
+          "install_group": "C1-data-diagnostics",
+          "selection": "org.inkweft.data.LibrarySaveCausalTest#separateTrackerReaderAndIndexContention",
+          "raw_log_sha256": "b8f80c087f7d7bb3a5c40018ae92f6d3880aea5ee9b3a81c3db8182df797c317",
+          "records_sha256": "1bb57986e65d56c4e27ccd65466b0793f7a364e638c93b17b1b00b40bb0e8bd6",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT"
+        },
+        "ordered": [
+          {
+            "sequence": 0,
+            "marker": "LIBRARY_SAVE_CAUSAL_RESULT",
+            "payload_bytes": 5895,
+            "payload_sha256": "23c89ef5d0cd0a2f63791d575598da73960fec1226d922c2ab0577bd1a8fead1"
+          },
+          {
+            "sequence": 1,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14223,
+            "payload_sha256": "6d3000e9821d5eb0dcb291d9a40a284654ae1aad59a53def24dccea514de6544"
+          },
+          {
+            "sequence": 2,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 9442,
+            "payload_sha256": "b9d55e90b043322b8459ecb292ddc6945900c48d6de07ebfa9fc1c5f1abca4b7"
+          },
+          {
+            "sequence": 3,
+            "marker": "LIBRARY_SAVE_CAUSAL_END",
+            "payload_bytes": 181,
+            "payload_sha256": "664acda5dca53fbda7ac4a5448794ae9ee6b68419e0b3e78be894e6a51338b31"
+          },
+          {
+            "sequence": 4,
+            "marker": "LIBRARY_SAVE_CAUSAL_RESULT",
+            "payload_bytes": 5902,
+            "payload_sha256": "98757dd76b58d4b65eae272ee023e2f7a4ec87612ec5a9b1228584c794a81852"
+          },
+          {
+            "sequence": 5,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14384,
+            "payload_sha256": "d5c0fc0f8bc7cb531218547fc9ed71083eccd7a12efff7eb5f58c186b3908413"
+          },
+          {
+            "sequence": 6,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 12949,
+            "payload_sha256": "b0fe440347666afcbe2f56625d4ccf6092ff0d6fec664af03968a2df02ffa9d8"
+          },
+          {
+            "sequence": 7,
+            "marker": "LIBRARY_SAVE_CAUSAL_END",
+            "payload_bytes": 184,
+            "payload_sha256": "66af4fdf1dbf07ee4e161c354d5363f3797e18d34858a7bcb39e4e0589f82c3f"
+          },
+          {
+            "sequence": 8,
+            "marker": "LIBRARY_SAVE_CAUSAL_RESULT",
+            "payload_bytes": 5968,
+            "payload_sha256": "c88e8beae6331ae8fa5677ac14e7df168e281d4692a134c154a5ff48604a661f"
+          },
+          {
+            "sequence": 9,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14439,
+            "payload_sha256": "fa6eed9571b7d7c97f9a932f2a971496573bebaf2985cdd81fccb1c864c077b9"
+          },
+          {
+            "sequence": 10,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 11361,
+            "payload_sha256": "30784c403bc49196b91380204c2ecd89716c259e0be40757179c38c6dfc53f62"
+          },
+          {
+            "sequence": 11,
+            "marker": "LIBRARY_SAVE_CAUSAL_END",
+            "payload_bytes": 187,
+            "payload_sha256": "5dfc712555e7c163fee54199343e8e42a8cb740ab7446031abb87484ce8c369b"
+          },
+          {
+            "sequence": 12,
+            "marker": "LIBRARY_SAVE_CAUSAL_RESULT",
+            "payload_bytes": 5980,
+            "payload_sha256": "024afeb903ba34f6b98b150941b2d6203fc0aec7269f4e6d45eac94fecfbc5e1"
+          },
+          {
+            "sequence": 13,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14591,
+            "payload_sha256": "868a7db35422260a636a240b91ec86f7c3bb8c4430d9ba6f74930292cf2c5965"
+          },
+          {
+            "sequence": 14,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14588,
+            "payload_sha256": "37c2652d1e6c96b3e52b442c06a1aee69ba08011fd6baedadb8fa109aaf451be"
+          },
+          {
+            "sequence": 15,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 1654,
+            "payload_sha256": "3d7934c53210223dcc04d24f2b991c996b88c871da5b5a49ad25c6318bb18196"
+          },
+          {
+            "sequence": 16,
+            "marker": "LIBRARY_SAVE_CAUSAL_END",
+            "payload_bytes": 190,
+            "payload_sha256": "d0fc4a1b953c92e5feaec15b8ba4d35686ca6570cd42be7e7663a877a173cb28"
+          },
+          {
+            "sequence": 17,
+            "marker": "LIBRARY_SAVE_CAUSAL_RESULT",
+            "payload_bytes": 5965,
+            "payload_sha256": "65f4321b002cd286f7c0c71453ab53482adc60cff9d5221f728036160c9b6fb6"
+          },
+          {
+            "sequence": 18,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14250,
+            "payload_sha256": "b685ead9eb9b168ab30ac8043919fad6cbf7997222875e2b9e1613a3278eeb64"
+          },
+          {
+            "sequence": 19,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14444,
+            "payload_sha256": "ccaa75b56f4147dd7e32424f7dacab3ee11f6a90a627957ccea056272c7636c7"
+          },
+          {
+            "sequence": 20,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14455,
+            "payload_sha256": "7f3f5202658ad1e9a5486a86fd14ef856a76d71ff734c1cc696c5452d67eb903"
+          },
+          {
+            "sequence": 21,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 396,
+            "payload_sha256": "d7b415d01757b774160547fcc59b91a122d6c72936a14bfdb07df06e8cb6a9b0"
+          },
+          {
+            "sequence": 22,
+            "marker": "LIBRARY_SAVE_CAUSAL_END",
+            "payload_bytes": 187,
+            "payload_sha256": "d37a11536df6951c98ebba73ea5510ed65b64d115afd674992c79480e6367971"
+          },
+          {
+            "sequence": 23,
+            "marker": "LIBRARY_SAVE_CAUSAL_RESULT",
+            "payload_bytes": 6019,
+            "payload_sha256": "2e11b0559ac623d9cfc38483cca5bb363d42f02c767ffe1a69e7b0794d8977ee"
+          },
+          {
+            "sequence": 24,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14469,
+            "payload_sha256": "c7bddccde3f152cae96f66becbdc78d83ee6148ab42b17e7421df76b2cff7345"
+          },
+          {
+            "sequence": 25,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14385,
+            "payload_sha256": "ed2f51b7a2a7cc1eef7eeed98dd25e0738b4e07e989a160adf8691aa643f8efd"
+          },
+          {
+            "sequence": 26,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14471,
+            "payload_sha256": "4dd846270937f17e1350fc0f374aa7e5246af818620a571d097ff56f3477b076"
+          },
+          {
+            "sequence": 27,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14432,
+            "payload_sha256": "2539ca96f72efcd2dcdc76e8fa9c5283f1829665a61884013835d1fafc25c965"
+          },
+          {
+            "sequence": 28,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 5026,
+            "payload_sha256": "5938257ae3b8134521dd15acb29cf47023e65b603e898897e50c610c9ad6072c"
+          },
+          {
+            "sequence": 29,
+            "marker": "LIBRARY_SAVE_CAUSAL_END",
+            "payload_bytes": 181,
+            "payload_sha256": "2ccecad9c3e14568d1b115f40271336bea2ac3881b290472cd3e37ce45f8c7d3"
+          },
+          {
+            "sequence": 30,
+            "marker": "LIBRARY_SAVE_CAUSAL_RESULT",
+            "payload_bytes": 6051,
+            "payload_sha256": "bd4d1ec92adb30db91ce967b051b4f7a56b90ad0bf4355cd8c1cadabeb4f89be"
+          },
+          {
+            "sequence": 31,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14444,
+            "payload_sha256": "b6762ab66b335e92c9e33cb46f13eadeb374c877e28b316e8198d7e3f9288201"
+          },
+          {
+            "sequence": 32,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14401,
+            "payload_sha256": "cbdd26efad35f8b960f2ffe9f7948f98c2eedefe5cd895966a8ef99a6f342384"
+          },
+          {
+            "sequence": 33,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14486,
+            "payload_sha256": "d7c68fbb50c693ed1ad34c2d126c0309bb9faf7629d57788eeabc205687b069c"
+          },
+          {
+            "sequence": 34,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14515,
+            "payload_sha256": "3c010a0e253a1cdd3eae3e82ba2755d868ba434707719b903757f073cd2229f3"
+          },
+          {
+            "sequence": 35,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 4785,
+            "payload_sha256": "2d34bea0c4d3f1184e87a39d47eed978d3a2f930f918d41b6fea0944d1889790"
+          },
+          {
+            "sequence": 36,
+            "marker": "LIBRARY_SAVE_CAUSAL_END",
+            "payload_bytes": 181,
+            "payload_sha256": "52698c34fde960934e6f9eb3bf60f93444c02ec5d5d0a356c711ea46900e3927"
+          },
+          {
+            "sequence": 37,
+            "marker": "LIBRARY_SAVE_CAUSAL_RESULT",
+            "payload_bytes": 6025,
+            "payload_sha256": "d96d5b553683d889be62ba56264ef1e489186f2406f42fdb9184596b4dc154eb"
+          },
+          {
+            "sequence": 38,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14327,
+            "payload_sha256": "a7a57f6764ca39bdd52b2ec92cb5326d02303582136273479b966677d866d353"
+          },
+          {
+            "sequence": 39,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14430,
+            "payload_sha256": "56f2a709cb04d939310a974a2ee3f6f88c325f75d07c7e8f1b00b346acf8a9c0"
+          },
+          {
+            "sequence": 40,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14441,
+            "payload_sha256": "f3f6518e54340297afd3626a69ccb658f487206cc5730ad85d0343bf9f08f60c"
+          },
+          {
+            "sequence": 41,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 2295,
+            "payload_sha256": "dc69b378cbe194b19c906855fcbbd0f8ced29c640ee46cfccea249060f0c61e7"
+          },
+          {
+            "sequence": 42,
+            "marker": "LIBRARY_SAVE_CAUSAL_END",
+            "payload_bytes": 187,
+            "payload_sha256": "0dfcb2dda5e4b96e4e2ee824e40a4b0c0f460fd13920473fac12b0919d8e63a9"
+          },
+          {
+            "sequence": 43,
+            "marker": "LIBRARY_SAVE_CAUSAL_RESULT",
+            "payload_bytes": 5969,
+            "payload_sha256": "2130fa946af15f76d1fff4041f7164adc9027a9a64b35a39c896da398a704aea"
+          },
+          {
+            "sequence": 44,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14640,
+            "payload_sha256": "8c9eefe6c199c3c88b30854bcdb5bf9359f520d26b8c082ce6f0192fd9d91bf0"
+          },
+          {
+            "sequence": 45,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14708,
+            "payload_sha256": "7e0a55ce5ec10716b1adcbbf633d4df555d28e68e8bf620723e7dc6763d4460d"
+          },
+          {
+            "sequence": 46,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 293,
+            "payload_sha256": "ba58a3c8c2a2481d450cf5664cfe61b5ff306104dac016862c821e4c48440cbf"
+          },
+          {
+            "sequence": 47,
+            "marker": "LIBRARY_SAVE_CAUSAL_END",
+            "payload_bytes": 190,
+            "payload_sha256": "09a73fe7cbe105b8963f292be65fa4a1b8caa3fbcb95c11ace63739a3fbc1ffe"
+          },
+          {
+            "sequence": 48,
+            "marker": "LIBRARY_SAVE_CAUSAL_RESULT",
+            "payload_bytes": 5968,
+            "payload_sha256": "629961eee3b44aa332cc22be2f4a1ca054ed5a73e0bbe48d7f85f3acd2de1c5b"
+          },
+          {
+            "sequence": 49,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14564,
+            "payload_sha256": "29082b63ba4878bd90f6dff5dfb45559c5d18ddf4030cd67c6226859f61e5755"
+          },
+          {
+            "sequence": 50,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 11446,
+            "payload_sha256": "f7e035804a3ae241aaea09d9f9641550d82d618474ac54e1b73766e95d5a2c74"
+          },
+          {
+            "sequence": 51,
+            "marker": "LIBRARY_SAVE_CAUSAL_END",
+            "payload_bytes": 187,
+            "payload_sha256": "29c2bebd0e20bb9828266258233210df86649b3867dc2d9031da82abfccae166"
+          },
+          {
+            "sequence": 52,
+            "marker": "LIBRARY_SAVE_CAUSAL_RESULT",
+            "payload_bytes": 5903,
+            "payload_sha256": "6898f6ff7c0b22925537d73064d3ba1f3e9eb22fdb68d6ae09bf76387cb066dd"
+          },
+          {
+            "sequence": 53,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14617,
+            "payload_sha256": "cce4a2b2efe934c7c0ac1dacadd2a6025e3c261a8eb9a3e45d24c3485df47d18"
+          },
+          {
+            "sequence": 54,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 13021,
+            "payload_sha256": "4a5e0928444d036c51c02fb641be99d097b95247423bfd871f35334bb02d36a8"
+          },
+          {
+            "sequence": 55,
+            "marker": "LIBRARY_SAVE_CAUSAL_END",
+            "payload_bytes": 184,
+            "payload_sha256": "dee244970247bdef42ee64310468f40f6ea23ef107c02af4e4ffc2cffc960fa9"
+          },
+          {
+            "sequence": 56,
+            "marker": "LIBRARY_SAVE_CAUSAL_RESULT",
+            "payload_bytes": 5896,
+            "payload_sha256": "43646643e990ae42bb88203ed8d8210048ed945cd7d131d3c062f50e6974d9e9"
+          },
+          {
+            "sequence": 57,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 14592,
+            "payload_sha256": "792e5cc99313eba31ea46e98a953ec0613d54fc043cd22cae9aef013d1db7ff3"
+          },
+          {
+            "sequence": 58,
+            "marker": "LIBRARY_SAVE_CAUSAL_STAGES",
+            "payload_bytes": 9641,
+            "payload_sha256": "c1178f16a4da66a8cf8e25aa23dcc03aa1d547bd47b400cf6e2b3ec35916f254"
+          },
+          {
+            "sequence": 59,
+            "marker": "LIBRARY_SAVE_CAUSAL_END",
+            "payload_bytes": 181,
+            "payload_sha256": "7e4d438fb33250c8655d5611c4a4a702139ddeb9040d9729d77e2589f2bff787"
+          }
+        ],
+        "ended": true,
+        "method_pass": true,
+        "line": 341,
+        "first_receipt_epoch": 1791954756.891835,
+        "end_line": 402,
+        "method_receipt_epoch": 1791954757.254735,
+        "record_count": 60
+      },
+      {
+        "context": {
+          "scope": "DIAGNOSTIC_ONLY",
+          "run_id": "38514139119",
+          "run_attempt": "1",
+          "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+          "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+          "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+          "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+          "test_source_sha256": "4f80b8ce32e1aa2bae1d919b96c06b1897e7a8500c748822efd05119ba87ec4a",
+          "source_manifest_sha256": "0b8edd425820f756686eabf0a4f1cbaeaa555e83512d817024c3c270257d8a7c",
+          "selected_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "signer_sha256": [
+                "efaf3e090c1a16ad7f44243a76729300086f73565286c73aa0445771c546180b"
+              ]
+            }
+          ],
+          "apk_receipt_sha256": "0407261de03c4b675991e86cb38f0a2757ec1705b02cb218593b85ceb6216ce6",
+          "installed_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "source_apk_sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561"
+            }
+          ],
+          "install_log_sha256": "9eebc84fff94b589a9c824a212aeec3f68304fcdd4c1064c89b88963efb59287",
+          "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "ordinal": 11,
+          "identity": "C1",
+          "seed": null,
+          "args": [
+            "adb",
+            "-s",
+            "emulator-5554",
+            "shell",
+            "am",
+            "instrument",
+            "-w",
+            "-r",
+            "-e",
+            "historyGcContentionDiagnostic",
+            "true",
+            "-e",
+            "class",
+            "org.inkweft.data.HistoryDeletionCausalTest#sameRoomWriterConditionalDeleteArrival",
+            "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+          ],
+          "install_group": "C1-data-diagnostics",
+          "selection": "org.inkweft.data.HistoryDeletionCausalTest#sameRoomWriterConditionalDeleteArrival",
+          "raw_log_sha256": "d26acd50a37049222e34fd884f894bf77d5e60390007bf23b1e92a81d311e764",
+          "records_sha256": "d769da6bd7d00fe10f9719ea82997cb2c1c0309d093f1e52eff8cdb4ee4805c7",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT"
+        },
+        "ordered": [
+          {
+            "sequence": 0,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "5aa5965ba96b371d6cfdf37ed616f653e50a7e6b8b97df599e7521aa0af72a1f"
+          },
+          {
+            "sequence": 1,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3124,
+            "payload_sha256": "1b18566d69e633e195636fa7855a0ea1b89e84f48e476aa7169741b19cea2b55"
+          },
+          {
+            "sequence": 2,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3124,
+            "payload_sha256": "caa2e458df8f71aef61767db4e9b734ebfabe34edeb924a46787b19b33ce4ec4"
+          },
+          {
+            "sequence": 3,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "5c4b62e463d9954b3846b6cfae20db415fb1f90dc87344dd74f07ca41c4c824b"
+          },
+          {
+            "sequence": 4,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "9141031a20f08abbcdab95f03a33b92f236690a9e0a31ffeda40bb19e2aa332f"
+          },
+          {
+            "sequence": 5,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3123,
+            "payload_sha256": "0fa1940f09037a0bcdc593046506b24ce9eb309646781371946e36376fcb4d0d"
+          },
+          {
+            "sequence": 6,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3124,
+            "payload_sha256": "690b67cb7454263ee23c216cb80d31f6d51d0a17f0d4b8e820b0cc49cd2a61b3"
+          },
+          {
+            "sequence": 7,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3124,
+            "payload_sha256": "f6c7bb4253bfb375df9dedc8f781f847dd6e200cfbfdaaddc36bb13978d658de"
+          },
+          {
+            "sequence": 8,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3124,
+            "payload_sha256": "2653e616019e0e87582ac36d5356bc45892e2918663902a1cecfbcde59fdd571"
+          },
+          {
+            "sequence": 9,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3124,
+            "payload_sha256": "3cdcbdc02e771df07de149a80e913e615bd37606747612d50c040c7ed9e45bbc"
+          },
+          {
+            "sequence": 10,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "cce9079bb314de5e7f036eb150e96e6fbef14fe8367432faf7b12dc281983e9d"
+          },
+          {
+            "sequence": 11,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "9a340b5c1a7ac19784368fd4830da9f4f845f602543f068c97979d92971457f5"
+          },
+          {
+            "sequence": 12,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "799b522bd8924a1a128b63ab3f516fe4d94deb661e7ce0edff528d2296864ae4"
+          },
+          {
+            "sequence": 13,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "6085fb9b943955d4db5254105e7bf2bb177637160ee12ee5b692232caf7b710e"
+          },
+          {
+            "sequence": 14,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "728ff6f008955cb69ad64ceb44053210d1d51bdddd70e965a8175eb2209170f6"
+          },
+          {
+            "sequence": 15,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "77c2b5778ff25e5a772960454c6bdcc15ff8555921c3d0b17ccbce54d6bb0ddd"
+          },
+          {
+            "sequence": 16,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "9f0f9cf2431d183822de75a28c84021a00d92e2d2c568bb02402e500b56860d3"
+          },
+          {
+            "sequence": 17,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3124,
+            "payload_sha256": "c2a3db5d707ae9af3512c3bbfffc374d1929632cbdf9eb0593b0eb48cdae3076"
+          },
+          {
+            "sequence": 18,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "c5c596aacdc4918a02203cd9a3e5481e2a241098d0c81dbcc51825b6271880ee"
+          },
+          {
+            "sequence": 19,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3124,
+            "payload_sha256": "8c9c5419dbce6aba228685bee7e74c7bf01f47e8f9ee59e09d643e4b8f618425"
+          },
+          {
+            "sequence": 20,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "87fb044c876de87c6c498c80aa4386ceb0794a8d8d8ab53b5e2060a3c7ebdd41"
+          },
+          {
+            "sequence": 21,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "d47ffb5882b24edbb3b6666dd6a95954ff42dc8a8364f8f96dacc17336c75a98"
+          },
+          {
+            "sequence": 22,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3124,
+            "payload_sha256": "b602d39975970164089230db45cc82b7c13bf876ab422d042675a13c132000b1"
+          },
+          {
+            "sequence": 23,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "89428f5838962b4328be1563ad96d8ddc95dd05b6f740d0c1e6d5580cc84e031"
+          },
+          {
+            "sequence": 24,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "8346b4419c7a6192ce0743784a0b66e77f20f5e2f7973c3f517d9ea763a6f0af"
+          },
+          {
+            "sequence": 25,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "577daac948cc183fd5386b942ea5c7f4a773221f90cb9ed9753c827313fc8498"
+          },
+          {
+            "sequence": 26,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3124,
+            "payload_sha256": "0d717272d75bd8f9d7108401fdc17209f1ab4366b657bf56c5506e9ab952e1fc"
+          },
+          {
+            "sequence": 27,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3124,
+            "payload_sha256": "bf97316c48b0727dd48767e55ef6affe87c73f9d3b13a9b385de3c57832d5560"
+          },
+          {
+            "sequence": 28,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3124,
+            "payload_sha256": "4c21b679dba6a26264c767c98adb1e2546b2f0856aa13b2e87bd0b41e2a805a0"
+          },
+          {
+            "sequence": 29,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3125,
+            "payload_sha256": "8122d16a577d52f0c61237a1020ee71c2439fbdf0d4fd2c53581f052a4bdf573"
+          },
+          {
+            "sequence": 30,
+            "marker": "HISTORY_GC_CAUSAL_SUMMARY",
+            "payload_bytes": 1495,
+            "payload_sha256": "7077773bec04638357113e4ccde731a7785ddc3f3acbe6f007500b3992096baf"
+          }
+        ],
+        "ended": true,
+        "method_pass": true,
+        "line": 404,
+        "first_receipt_epoch": 1791954763.588386,
+        "end_line": 436,
+        "method_receipt_epoch": 1791954763.665519,
+        "record_count": 31
+      },
+      {
+        "context": {
+          "scope": "DIAGNOSTIC_ONLY",
+          "run_id": "38514139119",
+          "run_attempt": "1",
+          "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+          "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+          "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+          "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+          "test_source_sha256": "4f80b8ce32e1aa2bae1d919b96c06b1897e7a8500c748822efd05119ba87ec4a",
+          "source_manifest_sha256": "0b8edd425820f756686eabf0a4f1cbaeaa555e83512d817024c3c270257d8a7c",
+          "selected_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "signer_sha256": [
+                "efaf3e090c1a16ad7f44243a76729300086f73565286c73aa0445771c546180b"
+              ]
+            }
+          ],
+          "apk_receipt_sha256": "0407261de03c4b675991e86cb38f0a2757ec1705b02cb218593b85ceb6216ce6",
+          "installed_apks": [
+            {
+              "package": "org.inkweft.data.test",
+              "sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561",
+              "source_apk_sha256": "9124bcfaea92848b6518d2a4801dde14c5e80cab74220d94b7bdb7e63da36561"
+            }
+          ],
+          "install_log_sha256": "9eebc84fff94b589a9c824a212aeec3f68304fcdd4c1064c89b88963efb59287",
+          "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "ordinal": 12,
+          "identity": "C1",
+          "seed": null,
+          "args": [
+            "adb",
+            "-s",
+            "emulator-5554",
+            "shell",
+            "am",
+            "instrument",
+            "-w",
+            "-r",
+            "-e",
+            "historyGcContentionDiagnostic",
+            "true",
+            "-e",
+            "class",
+            "org.inkweft.data.HistoryDeletionCausalTest#separateRoomWriterConditionalDeleteArrival",
+            "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+          ],
+          "install_group": "C1-data-diagnostics",
+          "selection": "org.inkweft.data.HistoryDeletionCausalTest#separateRoomWriterConditionalDeleteArrival",
+          "raw_log_sha256": "797e80fa4975e1cf374532bbfb8cfb324ea5b7d2218c948077690361ef0d96e2",
+          "records_sha256": "8862c3b0cb7b2dbd12a202befcf3b398062233b3ed5f6e0da382a784a2a46a09",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT"
+        },
+        "ordered": [
+          {
+            "sequence": 0,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 5404,
+            "payload_sha256": "160a883306001973df38432499ce660c3233b377474bcaecbafac1d80dd29baf"
+          },
+          {
+            "sequence": 1,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3128,
+            "payload_sha256": "685a9d066efa2e7b11071a4d546c6354550997bf1883c2587398b83ed5e80372"
+          },
+          {
+            "sequence": 2,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3128,
+            "payload_sha256": "08974b07daf99841698f2253407f5bcdc32e62a0a74c6eae69e78d465c5d4508"
+          },
+          {
+            "sequence": 3,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3128,
+            "payload_sha256": "6b803f3a1e6aa8feb817e1ac5575814f471968bb70b71c836f8788996d530481"
+          },
+          {
+            "sequence": 4,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3128,
+            "payload_sha256": "5c56e7626eac40f18d3ce3b84669defd34b8ca92a4577e69938997b3006dc7f9"
+          },
+          {
+            "sequence": 5,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3128,
+            "payload_sha256": "b00ec5097d27b4930b1faeb7096b7c44fa52c23550963ceb5e73971388ca5b51"
+          },
+          {
+            "sequence": 6,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3128,
+            "payload_sha256": "e1907fd02b0d098aa7754734aa631fdffe7553806ef0c885741bf842af9c0bcf"
+          },
+          {
+            "sequence": 7,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3128,
+            "payload_sha256": "9f807987ba22db789ec9cb5baa14e0908e708e317b0d3b5a20ae3b652d2065aa"
+          },
+          {
+            "sequence": 8,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3128,
+            "payload_sha256": "2349d821a228f2f82773fc5b7b07057580f7c427c857e1a26b31241a556fcd46"
+          },
+          {
+            "sequence": 9,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 7680,
+            "payload_sha256": "c95dfec9e5878474baaf4590a9200694b290ff0f04da1708302141c88dd5fc39"
+          },
+          {
+            "sequence": 10,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3129,
+            "payload_sha256": "c70f642f7abbd3d7fca0205a0ea53d396bb348b8c7e63520df5439246fbf4540"
+          },
+          {
+            "sequence": 11,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3130,
+            "payload_sha256": "7a25d2afb95cd23dde9bd140d342ab098a49a0f7ddbd16cb56ec364b155a04ba"
+          },
+          {
+            "sequence": 12,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3129,
+            "payload_sha256": "8729f65356d342d27ea59d092b3cd56315a56567742b1d513f1a21729407fb92"
+          },
+          {
+            "sequence": 13,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3129,
+            "payload_sha256": "472b3275fd4964888bcf5ff20874e3bcc017392d31a5f89b59aeb8e9faaa05f7"
+          },
+          {
+            "sequence": 14,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3128,
+            "payload_sha256": "0852f2327281af97e238587ad5418fafefe02befde668e0189337431fb785869"
+          },
+          {
+            "sequence": 15,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3129,
+            "payload_sha256": "1dbb9719399cc0f5145b139a4357a51ec452069a752877b1906f87f791a66889"
+          },
+          {
+            "sequence": 16,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3130,
+            "payload_sha256": "99bf3481781e3865652bb1d36221ed4c9081187a11c0ba8c214489552333c428"
+          },
+          {
+            "sequence": 17,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 7681,
+            "payload_sha256": "b288e67b4afccea3d8aec6775aae082efced5cd5de4a6d9a93a965d9465ea86d"
+          },
+          {
+            "sequence": 18,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3129,
+            "payload_sha256": "3767d296e7f1858d7696c3a8f054def530e04cadac83279eafc28e84c0b7ca67"
+          },
+          {
+            "sequence": 19,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3129,
+            "payload_sha256": "ec1430d0b41ea5fd2d551e1de877cbbb2ab1451f20238570d6b6b2e54a4c4aa6"
+          },
+          {
+            "sequence": 20,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3129,
+            "payload_sha256": "db84bf8adf89ccd7c119d01a7bfd7ea9f4570dc39f5c8fc41f0daf1ca6688669"
+          },
+          {
+            "sequence": 21,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 7681,
+            "payload_sha256": "97ddae91dd7ca135f2aaa6ee711b6e31fbf6f7d3f280606c10637ef0853a2293"
+          },
+          {
+            "sequence": 22,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3129,
+            "payload_sha256": "7245acaf75393ca340fddc9b1c7eaedcace15ef4ec6261a3db48aaca889bfd8b"
+          },
+          {
+            "sequence": 23,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3126,
+            "payload_sha256": "188ca7f6c5079ccfa0373c1ebb160d7b5318951438c578c9505285c70531844f"
+          },
+          {
+            "sequence": 24,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 7681,
+            "payload_sha256": "5677d0239bf68c56195ddf45488c9747d39ebbc1a3a02d1a340152d01e024f4b"
+          },
+          {
+            "sequence": 25,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3129,
+            "payload_sha256": "3f29c28ea4fd2f39f5c1cc8018882458b05edb1bed71451bd3da29c4dee37003"
+          },
+          {
+            "sequence": 26,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3129,
+            "payload_sha256": "6ff618a34fcdf4337978440feeb1cd8b313c21677731eab0f1eb470b71ebfa7c"
+          },
+          {
+            "sequence": 27,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 3129,
+            "payload_sha256": "ede09723a56394b1f1777638abd5b375b22bd59c8df703ea6a2931fecfb1ab48"
+          },
+          {
+            "sequence": 28,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 5402,
+            "payload_sha256": "b3aaa67bf61fb3f241d4c8a3195541be72a5388a75ba95acffc67351f4271f83"
+          },
+          {
+            "sequence": 29,
+            "marker": "HISTORY_GC_CAUSAL_TRIAL",
+            "payload_bytes": 5404,
+            "payload_sha256": "642bb2f6e264f62e678f495d178d13b2bec5d8419f2a246f87aa1ace292500f3"
+          },
+          {
+            "sequence": 30,
+            "marker": "HISTORY_GC_CAUSAL_SUMMARY",
+            "payload_bytes": 1501,
+            "payload_sha256": "a1fe21d627c6c4c22cfec27c8487306fbde4dbb891535f030699d24fec4e4939"
+          }
+        ],
+        "ended": true,
+        "method_pass": true,
+        "line": 438,
+        "first_receipt_epoch": 1791954770.634822,
+        "end_line": 470,
+        "method_receipt_epoch": 1791954770.758574,
+        "record_count": 31
+      },
+      {
+        "context": {
+          "scope": "DIAGNOSTIC_ONLY",
+          "run_id": "38514139119",
+          "run_attempt": "1",
+          "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+          "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+          "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+          "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+          "test_source_sha256": "f7a1424cfec939344584c86a1c11005d9f5d70447d31651bc9764907938cccc1",
+          "source_manifest_sha256": "0b8edd425820f756686eabf0a4f1cbaeaa555e83512d817024c3c270257d8a7c",
+          "selected_apks": [
+            {
+              "package": "org.inkweft.app.a0",
+              "sha256": "44474fdff519856a4e3cb6ba148d93e72bec1cb4a7d6ef953a6e8ae39f883a93",
+              "signer_sha256": [
+                "efaf3e090c1a16ad7f44243a76729300086f73565286c73aa0445771c546180b"
+              ]
+            },
+            {
+              "package": "org.inkweft.app.a0.test",
+              "sha256": "4daa78a45ead67f6492d61c83e65af7262300ae8729adb111405a24e0c0f303d",
+              "signer_sha256": [
+                "efaf3e090c1a16ad7f44243a76729300086f73565286c73aa0445771c546180b"
+              ]
+            }
+          ],
+          "apk_receipt_sha256": "0407261de03c4b675991e86cb38f0a2757ec1705b02cb218593b85ceb6216ce6",
+          "installed_apks": [
+            {
+              "package": "org.inkweft.app.a0",
+              "sha256": "44474fdff519856a4e3cb6ba148d93e72bec1cb4a7d6ef953a6e8ae39f883a93",
+              "source_apk_sha256": "44474fdff519856a4e3cb6ba148d93e72bec1cb4a7d6ef953a6e8ae39f883a93"
+            },
+            {
+              "package": "org.inkweft.app.a0.test",
+              "sha256": "4daa78a45ead67f6492d61c83e65af7262300ae8729adb111405a24e0c0f303d",
+              "source_apk_sha256": "4daa78a45ead67f6492d61c83e65af7262300ae8729adb111405a24e0c0f303d"
+            }
+          ],
+          "install_log_sha256": "e512f373cff4167b6ebb6cc69147085dc298a67ae11e487265a2621c16ad88bf",
+          "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+          "ordinal": 13,
+          "identity": "C1",
+          "seed": 4101,
+          "args": [
+            "adb",
+            "-s",
+            "emulator-5554",
+            "shell",
+            "am",
+            "instrument",
+            "-w",
+            "-r",
+            "-e",
+            "rasterCausalDiagnostics",
+            "true",
+            "-e",
+            "pairSeed",
+            "4101",
+            "-e",
+            "class",
+            "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+            "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+          ],
+          "install_group": "C1-raster-diagnostics",
+          "selection": "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+          "raw_log_sha256": "55594d735a7380d155ea70d2132f05f299a85961830a293c67b78e0a9a18bd97",
+          "records_sha256": "79d68d2b578ce0be909b4223858d8f1f62cd3ac49e9cfbdbf181266bd9b2f32f",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT"
+        },
+        "ordered": [
+          {
+            "sequence": 0,
+            "marker": "RASTER_CAUSAL_DIAGNOSTIC",
+            "payload_bytes": 8929,
+            "payload_sha256": "23950fcc3120db9fee8ecf9ce4ba35f6939ed5fb64fe97197b6774aabb096c44"
+          },
+          {
+            "sequence": 1,
+            "marker": "RASTER_CAUSAL_DIAGNOSTIC",
+            "payload_bytes": 29663,
+            "payload_sha256": "b58c616e170f63db10e3101fdf44da5380fd03a6cbe5587a32fb903a12dc57c1"
+          },
+          {
+            "sequence": 2,
+            "marker": "RASTER_CAUSAL_DIAGNOSTIC",
+            "payload_bytes": 57857,
+            "payload_sha256": "e54cf11f501e971cecf1b65189c769c840949f0465d16bedba39a0ea007cab55"
+          }
+        ],
+        "ended": true,
+        "method_pass": true,
+        "line": 502,
+        "first_receipt_epoch": 1791954778.589019,
+        "end_line": 506,
+        "method_receipt_epoch": 1791954778.681853,
+        "record_count": 3
+      }
+    ],
+    "final_observed": {
+      "scope": "DIAGNOSTIC_ONLY",
+      "run_id": "38514139119",
+      "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+      "input_hashes": {
+        "approved_plan_sha256": "06ee5e5e86044489226e907729eb7a9b9b1d01bfb82c6d7e81f062c75ef55f11",
+        "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+        "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+        "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+        "marker_contract_sha256": "ac540b3f0321760d202e3ea76f76eb7c2f2afc3c2b532708152d523cb1cea722",
+        "prepare_sources_sha256": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516"
+      },
+      "status": "EXECUTION_COMPLETE_ANALYSIS_PENDING",
+      "cleanup_verified": true,
+      "cleanup": {
+        "trap": {
+          "emulator": "STOPPED_CONFIRMED",
+          "command_groups": "STOPPED_CONFIRMED",
+          "acl": "RESTORED_EXACT",
+          "error_count": 0,
+          "before_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+          "after_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+          "exact_match": true
+        },
+        "always": {
+          "emulator": "STOPPED_CONFIRMED",
+          "command_groups": "STOPPED_CONFIRMED",
+          "acl": "RESTORED_EXACT",
+          "error_count": 0,
+          "before_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+          "after_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+          "exact_match": true
+        }
+      },
+      "methods": [
+        {
+          "ordinal": 1,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.NoteRepositoryTest#sameCommandReturnsSameCommittedRevision",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "63148ee0db5bde3d1a7d4af6e2179cbe8f6f87a5d7ae67a698e8cf60085301c0"
+        },
+        {
+          "ordinal": 2,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.NoteRepositoryTest#staleEditorCannotOverwriteNewHead",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "f9e2921b5b9b90b4ea20d833545289fc069cb6a2d88848f425731de3f42c2334"
+        },
+        {
+          "ordinal": 3,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.NoteRepositoryTest#blankTextAndHistorySurviveReopen",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "a817659625881c13d9e4099a80bc6c637aab43ac07577fc9788233d909e41dde"
+        },
+        {
+          "ordinal": 4,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.NoteRepositoryTest#oldReceiptIsNotReplacedWithCurrentHead",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "20434e363e2cd125e334cb054a71cfff0d3d1f4a5925dd41c87a2cc15ec8313e"
+        },
+        {
+          "ordinal": 5,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.LibraryTextIndexPreparationTest#cancelledFtsWriteRollsBackBeforeClearingPending",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "046498c2eaf7f09341e18f9be7269476dca4f6e7cfaaf3e451015f4ebfdc0889"
+        },
+        {
+          "ordinal": 6,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "2e7dfe66b2b2ceac2db7b4d106c5c7e0023fe81ac2b9365de66e24556baffdd5"
+        },
+        {
+          "ordinal": 7,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "6c2d325f2f78412d6d3788b5309c2b30d155ad86073de8d0c05439290a99187d"
+        },
+        {
+          "ordinal": 8,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.LibrarySearchCausalTest#profiledContainsPreservesUnicodeAndSourceResults",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "bc974658580772b5f2c0d7aac2861c0a304114f13fbd4435c054a6db1965d202"
+        },
+        {
+          "ordinal": 9,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.LibrarySearchCausalTest#warmUdfCostsAndQueryPlanAgainstInMemoryReference",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "5539dc4cbcb689a0be9500811a01d838f19248270c929d7fea89bf5268ee1ac9"
+        },
+        {
+          "ordinal": 10,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.LibrarySaveCausalTest#separateTrackerReaderAndIndexContention",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "b8f80c087f7d7bb3a5c40018ae92f6d3880aea5ee9b3a81c3db8182df797c317"
+        },
+        {
+          "ordinal": 11,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.HistoryDeletionCausalTest#sameRoomWriterConditionalDeleteArrival",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "d26acd50a37049222e34fd884f894bf77d5e60390007bf23b1e92a81d311e764"
+        },
+        {
+          "ordinal": 12,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.HistoryDeletionCausalTest#separateRoomWriterConditionalDeleteArrival",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "797e80fa4975e1cf374532bbfb8cfb324ea5b7d2218c948077690361ef0d96e2"
+        },
+        {
+          "ordinal": 13,
+          "identity": "C1",
+          "phase": "raster-diagnostics",
+          "selection": "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+          "seed": 4101,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "55594d735a7380d155ea70d2132f05f299a85961830a293c67b78e0a9a18bd97"
+        }
+      ],
+      "install_groups": {
+        "C1-data-diagnostics": {
+          "identity": "C1",
+          "status": "PASS"
+        },
+        "C1-raster-diagnostics": {
+          "identity": "C1",
+          "status": "PASS"
+        }
+      },
+      "device_before_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "device_after_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "missing_files": [],
+      "packaging_complete": true,
+      "manifest_sha256": "05b6738b5386447de4de8659b9a279dadf9b1885000b177a49199e0cbc51af33",
+      "summary_sha256": "c327ce993763e5c4e4a83097ea3a8d9bcc83e9d6fcb664cbcd14e1d9575341c2"
+    },
+    "final": {
+      "scope": "DIAGNOSTIC_ONLY",
+      "run_id": "38514139119",
+      "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+      "input_hashes": {
+        "approved_plan_sha256": "06ee5e5e86044489226e907729eb7a9b9b1d01bfb82c6d7e81f062c75ef55f11",
+        "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+        "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+        "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+        "marker_contract_sha256": "ac540b3f0321760d202e3ea76f76eb7c2f2afc3c2b532708152d523cb1cea722",
+        "prepare_sources_sha256": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516"
+      },
+      "status": "EXECUTION_COMPLETE_ANALYSIS_PENDING",
+      "cleanup_verified": true,
+      "cleanup": {
+        "trap": {
+          "emulator": "STOPPED_CONFIRMED",
+          "command_groups": "STOPPED_CONFIRMED",
+          "acl": "RESTORED_EXACT",
+          "error_count": 0,
+          "before_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+          "after_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+          "exact_match": true
+        },
+        "always": {
+          "emulator": "STOPPED_CONFIRMED",
+          "command_groups": "STOPPED_CONFIRMED",
+          "acl": "RESTORED_EXACT",
+          "error_count": 0,
+          "before_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+          "after_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+          "exact_match": true
+        }
+      },
+      "methods": [
+        {
+          "ordinal": 1,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.NoteRepositoryTest#sameCommandReturnsSameCommittedRevision",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "63148ee0db5bde3d1a7d4af6e2179cbe8f6f87a5d7ae67a698e8cf60085301c0"
+        },
+        {
+          "ordinal": 2,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.NoteRepositoryTest#staleEditorCannotOverwriteNewHead",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "f9e2921b5b9b90b4ea20d833545289fc069cb6a2d88848f425731de3f42c2334"
+        },
+        {
+          "ordinal": 3,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.NoteRepositoryTest#blankTextAndHistorySurviveReopen",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "a817659625881c13d9e4099a80bc6c637aab43ac07577fc9788233d909e41dde"
+        },
+        {
+          "ordinal": 4,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.NoteRepositoryTest#oldReceiptIsNotReplacedWithCurrentHead",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "20434e363e2cd125e334cb054a71cfff0d3d1f4a5925dd41c87a2cc15ec8313e"
+        },
+        {
+          "ordinal": 5,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.LibraryTextIndexPreparationTest#cancelledFtsWriteRollsBackBeforeClearingPending",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "046498c2eaf7f09341e18f9be7269476dca4f6e7cfaaf3e451015f4ebfdc0889"
+        },
+        {
+          "ordinal": 6,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "2e7dfe66b2b2ceac2db7b4d106c5c7e0023fe81ac2b9365de66e24556baffdd5"
+        },
+        {
+          "ordinal": 7,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "6c2d325f2f78412d6d3788b5309c2b30d155ad86073de8d0c05439290a99187d"
+        },
+        {
+          "ordinal": 8,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.LibrarySearchCausalTest#profiledContainsPreservesUnicodeAndSourceResults",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "bc974658580772b5f2c0d7aac2861c0a304114f13fbd4435c054a6db1965d202"
+        },
+        {
+          "ordinal": 9,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.LibrarySearchCausalTest#warmUdfCostsAndQueryPlanAgainstInMemoryReference",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "5539dc4cbcb689a0be9500811a01d838f19248270c929d7fea89bf5268ee1ac9"
+        },
+        {
+          "ordinal": 10,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.LibrarySaveCausalTest#separateTrackerReaderAndIndexContention",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "b8f80c087f7d7bb3a5c40018ae92f6d3880aea5ee9b3a81c3db8182df797c317"
+        },
+        {
+          "ordinal": 11,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.HistoryDeletionCausalTest#sameRoomWriterConditionalDeleteArrival",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "d26acd50a37049222e34fd884f894bf77d5e60390007bf23b1e92a81d311e764"
+        },
+        {
+          "ordinal": 12,
+          "identity": "C1",
+          "phase": "data-diagnostics",
+          "selection": "org.inkweft.data.HistoryDeletionCausalTest#separateRoomWriterConditionalDeleteArrival",
+          "seed": null,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "797e80fa4975e1cf374532bbfb8cfb324ea5b7d2218c948077690361ef0d96e2"
+        },
+        {
+          "ordinal": 13,
+          "identity": "C1",
+          "phase": "raster-diagnostics",
+          "selection": "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+          "seed": 4101,
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "log_sha256": "55594d735a7380d155ea70d2132f05f299a85961830a293c67b78e0a9a18bd97"
+        }
+      ],
+      "install_groups": {
+        "C1-data-diagnostics": {
+          "identity": "C1",
+          "status": "PASS"
+        },
+        "C1-raster-diagnostics": {
+          "identity": "C1",
+          "status": "PASS"
+        }
+      },
+      "device_before_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "device_after_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "missing_files": [],
+      "packaging_complete": true,
+      "manifest_sha256": "05b6738b5386447de4de8659b9a279dadf9b1885000b177a49199e0cbc51af33",
+      "summary_sha256": "c327ce993763e5c4e4a83097ea3a8d9bcc83e9d6fcb664cbcd14e1d9575341c2"
+    },
+    "last_receipt_line": 570,
+    "phase_times": [
+      {
+        "name": "Freeze/reconstruct one source, check official dependency and SDK",
+        "phase": "setup",
+        "start_epoch": 1791953898.0,
+        "end_epoch": 1791953928.0,
+        "seconds": 30.0
+      },
+      {
+        "name": "Build C1 target app and both test APKs, verify signatures/native identities",
+        "phase": "setup",
+        "start_epoch": 1791953928.0,
+        "end_epoch": 1791954579.0,
+        "seconds": 651.0
+      },
+      {
+        "name": "最小临时ACL与同一KVM模拟器",
+        "phase": "setup",
+        "start_epoch": 1791954579.0,
+        "end_epoch": 1791954612.0,
+        "seconds": 33.0
+      },
+      {
+        "name": "Seven existing correctness guards and five opt-in data methods; failure stops the run",
+        "phase": "data",
+        "start_epoch": 1791954612.0,
+        "end_epoch": 1791954770.0,
+        "seconds": 158.0
+      },
+      {
+        "name": "One opt-in raster method: 1/4/8 layers, strict join and pixels",
+        "phase": "raster",
+        "start_epoch": 1791954770.0,
+        "end_epoch": 1791954778.0,
+        "seconds": 8.0
+      }
+    ]
+  },
+  "numeric_acceptance": "NOT_EVALUATED",
+  "limitations": [
+    "Official run/job metadata and decoded-log provenance are supplied externally; no online authenticity check.",
+    "Compact receipts do not independently audit APK binaries, raw JUnit files, native libraries, installed bytes or ACL files.",
+    "records_sha256 is reconstructed exactly; raw_log_sha256 is only linked between CONTEXT and FINAL.",
+    "Group post-environment equality is a bound-controller PASS claim; only its before environment hash is directly forwarded.",
+    "All diagnostics are instrumented observations. No formal gate, product speedup, pure lock-wait or additive causal attribution is claimed."
+  ],
+  "official_statuses": {
+    "run_status": "completed",
+    "run_conclusion": "success",
+    "job_status": "completed",
+    "job_conclusion": "success"
+  },
+  "official_job_span_seconds": 898.0,
+  "input_hashes": {
+    "approved_plan_sha256": "06ee5e5e86044489226e907729eb7a9b9b1d01bfb82c6d7e81f062c75ef55f11",
+    "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+    "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "marker_contract_sha256": "ac540b3f0321760d202e3ea76f76eb7c2f2afc3c2b532708152d523cb1cea722",
+    "prepare_sources_sha256": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516"
+  },
+  "files": {
+    "/workspace/scratch/pr20-causal-execution-20261014/job-decoded.log": {
+      "bytes": 1058264,
+      "sha256": "fd9b4b5b71ecec3f8a59d5875678e6dfb2e43f4056b8916401aba7804ad21287"
+    },
+    "/workspace/scratch/pr20-causal-execution-20261014/binding.json": {
+      "bytes": 1947,
+      "sha256": "69e9d0fdb040f388ec3f09973d00299b23389c7c1b2b176ff0a11cbb8d595d0f"
+    },
+    "/workspace/scratch/pr20-causal-execution-20261014/run-terminal.json": {
+      "bytes": 12669,
+      "sha256": "1abe8c5d1ff46769939a99a310a88694d068aa6c1d25ee77570dc2aadfe82797"
+    },
+    "/workspace/scratch/pr20-causal-execution-20261014/jobs-terminal.json": {
+      "bytes": 4132,
+      "sha256": "9cd751dbc21147883641e5bd97ed6053173751045e9ac09e0ef2b86e9cb92228"
+    }
+  },
+  "analyzer_sha256": "2c96309f3f8a847f86bdb62cf87f45405461ebcaa76b3659a2cee8181758fa57",
+  "frozen_markers_sha256": "3514d2bca1f7b91efe7886ea42763b37eca873c8914938e8ad3dfeb03eaa1592",
+  "extracted_records": [
+    {
+      "ordinal": 1,
+      "path": "method-01-C1-records.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "record_count": 0,
+      "block_closed": true,
+      "method_pass": true,
+      "whole_run_complete": true
+    },
+    {
+      "ordinal": 2,
+      "path": "method-02-C1-records.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "record_count": 0,
+      "block_closed": true,
+      "method_pass": true,
+      "whole_run_complete": true
+    },
+    {
+      "ordinal": 3,
+      "path": "method-03-C1-records.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "record_count": 0,
+      "block_closed": true,
+      "method_pass": true,
+      "whole_run_complete": true
+    },
+    {
+      "ordinal": 4,
+      "path": "method-04-C1-records.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "record_count": 0,
+      "block_closed": true,
+      "method_pass": true,
+      "whole_run_complete": true
+    },
+    {
+      "ordinal": 5,
+      "path": "method-05-C1-records.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "record_count": 0,
+      "block_closed": true,
+      "method_pass": true,
+      "whole_run_complete": true
+    },
+    {
+      "ordinal": 6,
+      "path": "method-06-C1-records.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "record_count": 0,
+      "block_closed": true,
+      "method_pass": true,
+      "whole_run_complete": true
+    },
+    {
+      "ordinal": 7,
+      "path": "method-07-C1-records.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "record_count": 0,
+      "block_closed": true,
+      "method_pass": true,
+      "whole_run_complete": true
+    },
+    {
+      "ordinal": 8,
+      "path": "method-08-C1-records.json",
+      "sha256": "98349570bba15821033dcbf9bdb223584d90afe2141a6a38ac5aefd7ae483c82",
+      "record_count": 1,
+      "block_closed": true,
+      "method_pass": true,
+      "whole_run_complete": true
+    },
+    {
+      "ordinal": 9,
+      "path": "method-09-C1-records.json",
+      "sha256": "fb5aaf476a6d114aacbf3c97d36a69339c05ef3ef2f4c3e1487d22ed31b1ae89",
+      "record_count": 1,
+      "block_closed": true,
+      "method_pass": true,
+      "whole_run_complete": true
+    },
+    {
+      "ordinal": 10,
+      "path": "method-10-C1-records.json",
+      "sha256": "1bb57986e65d56c4e27ccd65466b0793f7a364e638c93b17b1b00b40bb0e8bd6",
+      "record_count": 60,
+      "block_closed": true,
+      "method_pass": true,
+      "whole_run_complete": true
+    },
+    {
+      "ordinal": 11,
+      "path": "method-11-C1-records.json",
+      "sha256": "d769da6bd7d00fe10f9719ea82997cb2c1c0309d093f1e52eff8cdb4ee4805c7",
+      "record_count": 31,
+      "block_closed": true,
+      "method_pass": true,
+      "whole_run_complete": true
+    },
+    {
+      "ordinal": 12,
+      "path": "method-12-C1-records.json",
+      "sha256": "8862c3b0cb7b2dbd12a202befcf3b398062233b3ed5f6e0da382a784a2a46a09",
+      "record_count": 31,
+      "block_closed": true,
+      "method_pass": true,
+      "whole_run_complete": true
+    },
+    {
+      "ordinal": 13,
+      "path": "method-13-C1-records.json",
+      "sha256": "79d68d2b578ce0be909b4223858d8f1f62cd3ac49e9cfbdbf181266bd9b2f32f",
+      "record_count": 3,
+      "block_closed": true,
+      "method_pass": true,
+      "whole_run_complete": true
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "command": [
+    "/workspace/.setup/tools/gradle-9.4.1/bin/gradle",
+    ":data-local:compileDebugAndroidTestKotlin",
+    "--daemon",
+    "--max-workers=1",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "--offline"
+  ],
+  "exitCode": 0,
+  "seconds": 90.21,
+  "nativeCorrectness": "NOT_RUN",
+  "nativePerformance": "NOT_RUN"
+}

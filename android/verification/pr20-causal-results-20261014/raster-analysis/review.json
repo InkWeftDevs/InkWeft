@@ -1,0 +1,743 @@
+{
+  "status": "DIAGNOSTIC_COMPLETE_PERFORMANCE_OPEN",
+  "inputs": {
+    "records": "/workspace/scratch/pr20-causal-execution-20261014/extracted/method-13-C1-records.json",
+    "records_sha256": "79d68d2b578ce0be909b4223858d8f1f62cd3ac49e9cfbdbf181266bd9b2f32f",
+    "integrity_report": "/workspace/scratch/pr20-causal-execution-20261014/extracted/analysis.json",
+    "integrity_report_sha256": "54a2aa6890b4d36a92bf50c4a536cf8538ad8ed84ed54717ab545785f213bc01",
+    "frozen_contract_sha256": "ac540b3f0321760d202e3ea76f76eb7c2f2afc3c2b532708152d523cb1cea722",
+    "frozen_validator_sha256": "3514d2bca1f7b91efe7886ea42763b37eca873c8914938e8ad3dfeb03eaa1592",
+    "analyzer_sha256": "d0960fbe7135a7aac10e3e850aecd9476891fc08a8e1792e7f062dbff2c2b479"
+  },
+  "binding": {
+    "run_id": "38514139119",
+    "job_id": "115689021611",
+    "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+    "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+    "readiness_git": "b2e1d9f9de66a26f5a4b122ea6754d77198005f8"
+  },
+  "measurements": [
+    {
+      "layers": 1,
+      "result": {
+        "layers": 1,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 307.962945,
+        "appendCompleteMs": 52.99367,
+        "forcedFullCompleteMs": 218.939697,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 16.381704,
+        "rasterMs": 18.195993,
+        "publicationMs": 0.498692,
+        "pixelsEqual": true,
+        "bitmapBytes": 14371200,
+        "nativeStrokeBuilds": 13
+      },
+      "local": {
+        "role": "active",
+        "phase": "local",
+        "layers": 1,
+        "phaseFrameSpanMs": 51.367483,
+        "accumulatedLayerWallMs": {
+          "requestToWorkerMs": 0.388476,
+          "workerToMetadataMs": 0.267039,
+          "metadataMs": 16.382135,
+          "rasterMs": 18.196343,
+          "prepareMs": 0.01073,
+          "prepareEndToMainEntryMs": 0.142366,
+          "mainPublicationMs": 0.348471,
+          "publishedToReadyDrawMs": 13.180674,
+          "readyDrawMs": 2.451249,
+          "requestToReadyEndMs": 51.367483,
+          "requestToWorkerFinallyMs": 36.146828,
+          "publishedToFirstEnqueueMs": 0.004458,
+          "enqueueToCallbackMs": 11.506897,
+          "callbackToReadyDrawSignedMs": 1.669319
+        },
+        "nativeAttempts": 13,
+        "nativeCompleted": 13,
+        "nativePreparationAndBuildWallMs": 2.916043,
+        "nativePreparationAndBuildThreadCpuMs": 2.916566,
+        "nativeCpuUnavailableFrames": 0,
+        "metadata": {
+          "regions": 24,
+          "preparationBatches": 0,
+          "preparationRows": 0,
+          "queryBatches": 3,
+          "metadataRows": 321,
+          "admissionAndPreparationNanos": 1045853,
+          "queryAndDigestNanos": 14134235,
+          "queryAndDigestThreadCpuNanos": 14096875,
+          "hexAndResultNanos": 295442,
+          "hexAndResultThreadCpuNanos": 294530
+        },
+        "readBatches": 1,
+        "reads": {
+          "freezeNanos": 2655971,
+          "decodeNanos": 118843,
+          "entries": 1,
+          "payloadBytes": 140,
+          "decodedPoints": 2,
+          "candidateRows": 1
+        },
+        "notifications": {
+          "notificationRequests": 2,
+          "notificationCallbacks": 1,
+          "notificationsSuperseded": 0
+        },
+        "missingCallbackFrames": 0,
+        "callbackAfterReadyFrames": 0
+      },
+      "resources": {
+        "totalBytes": 0,
+        "budgetBytes": 134217728,
+        "peakTrackedBytes": 30839552,
+        "inFlightJobs": 0,
+        "cancelledJobs": 0,
+        "cacheBytes": 0,
+        "in_flightBytes": 0,
+        "activeBytes": 0,
+        "live_inkBytes": 0,
+        "geometryReservationBytes": 0
+      },
+      "joined": true,
+      "local_frames": [
+        {
+          "role": "active",
+          "phase": "local",
+          "layer": 0,
+          "wall": {
+            "requestToWorkerMs": 0.388476,
+            "workerToMetadataMs": 0.267039,
+            "metadataMs": 16.382135,
+            "rasterMs": 18.196343,
+            "prepareMs": 0.01073,
+            "prepareEndToMainEntryMs": 0.142366,
+            "mainPublicationMs": 0.348471,
+            "publishedToReadyDrawMs": 13.180674,
+            "readyDrawMs": 2.451249,
+            "requestToReadyEndMs": 51.367483,
+            "requestToWorkerFinallyMs": 36.146828,
+            "publishedToFirstEnqueueMs": 0.004458,
+            "enqueueToCallbackMs": 11.506897,
+            "callbackToReadyDrawSignedMs": 1.669319
+          },
+          "native": {
+            "attempts": 13,
+            "completed": 13,
+            "preparationAndBuildWallMs": 2.916043,
+            "preparationAndBuildThreadCpuMs": 2.916566
+          },
+          "notification": {
+            "notificationRequests": 2,
+            "notificationCallbacks": 1,
+            "notificationsSuperseded": 0
+          },
+          "callbackAfterReady": false
+        }
+      ]
+    },
+    {
+      "layers": 4,
+      "result": {
+        "layers": 4,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 265.418642,
+        "appendCompleteMs": 108.530612,
+        "forcedFullCompleteMs": 209.268495,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 24,
+        "metadataMs": 40.921736,
+        "rasterMs": 55.959141,
+        "publicationMs": 93.941487,
+        "pixelsEqual": true,
+        "bitmapBytes": 12147408,
+        "nativeStrokeBuilds": 21
+      },
+      "local": {
+        "role": "active",
+        "phase": "local",
+        "layers": 4,
+        "phaseFrameSpanMs": 106.765977,
+        "accumulatedLayerWallMs": {
+          "requestToWorkerMs": 8.658375999999999,
+          "workerToMetadataMs": 0.265719,
+          "metadataMs": 40.922418,
+          "rasterMs": 55.959793000000005,
+          "prepareMs": 0.026188,
+          "prepareEndToMainEntryMs": 93.419381,
+          "mainPublicationMs": 0.505725,
+          "publishedToReadyDrawMs": 56.503216,
+          "readyDrawMs": 32.160983,
+          "requestToReadyEndMs": 288.421799,
+          "requestToWorkerFinallyMs": 235.181058,
+          "publishedToFirstEnqueueMs": 0.014217,
+          "enqueueToCallbackMs": 36.821238,
+          "callbackToReadyDrawSignedMs": 19.667761
+        },
+        "nativeAttempts": 21,
+        "nativeCompleted": 21,
+        "nativePreparationAndBuildWallMs": 3.221538,
+        "nativePreparationAndBuildThreadCpuMs": 3.218191,
+        "nativeCpuUnavailableFrames": 0,
+        "metadata": {
+          "regions": 24,
+          "preparationBatches": 0,
+          "preparationRows": 0,
+          "queryBatches": 8,
+          "metadataRows": 321,
+          "admissionAndPreparationNanos": 14750436,
+          "queryAndDigestNanos": 17910930,
+          "queryAndDigestThreadCpuNanos": 15076328,
+          "hexAndResultNanos": 485126,
+          "hexAndResultThreadCpuNanos": 481619
+        },
+        "readBatches": 1,
+        "reads": {
+          "freezeNanos": 2637407,
+          "decodeNanos": 80690,
+          "entries": 1,
+          "payloadBytes": 140,
+          "decodedPoints": 2,
+          "candidateRows": 1
+        },
+        "notifications": {
+          "notificationRequests": 8,
+          "notificationCallbacks": 7,
+          "notificationsSuperseded": 0
+        },
+        "missingCallbackFrames": 0,
+        "callbackAfterReadyFrames": 1
+      },
+      "resources": {
+        "totalBytes": 0,
+        "budgetBytes": 134217728,
+        "peakTrackedBytes": 32683424,
+        "inFlightJobs": 0,
+        "cancelledJobs": 0,
+        "cacheBytes": 0,
+        "in_flightBytes": 0,
+        "activeBytes": 0,
+        "live_inkBytes": 0,
+        "geometryReservationBytes": 0
+      },
+      "joined": true,
+      "local_frames": [
+        {
+          "role": "active",
+          "phase": "local",
+          "layer": 0,
+          "wall": {
+            "requestToWorkerMs": 0.317787,
+            "workerToMetadataMs": 0.080561,
+            "metadataMs": 5.151373,
+            "rasterMs": 39.049812,
+            "prepareMs": 0.007463,
+            "prepareEndToMainEntryMs": 28.297241,
+            "mainPublicationMs": 0.152996,
+            "publishedToReadyDrawMs": 1.688835,
+            "readyDrawMs": 8.411614,
+            "requestToReadyEndMs": 83.157682,
+            "requestToWorkerFinallyMs": 73.629052,
+            "publishedToFirstEnqueueMs": 0.003527,
+            "enqueueToCallbackMs": 0.329425,
+            "callbackToReadyDrawSignedMs": 1.355883
+          },
+          "native": {
+            "attempts": 21,
+            "completed": 21,
+            "preparationAndBuildWallMs": 3.221538,
+            "preparationAndBuildThreadCpuMs": 3.218191
+          },
+          "notification": {
+            "notificationRequests": 2,
+            "notificationCallbacks": 2,
+            "notificationsSuperseded": 0
+          },
+          "callbackAfterReady": false
+        },
+        {
+          "role": "active",
+          "phase": "local",
+          "layer": 1,
+          "wall": {
+            "requestToWorkerMs": 1.203911,
+            "workerToMetadataMs": 0.063199,
+            "metadataMs": 14.938767,
+            "rasterMs": 2.81516,
+            "prepareMs": 0.00533,
+            "prepareEndToMainEntryMs": 9.174696,
+            "mainPublicationMs": 0.118933,
+            "publishedToReadyDrawMs": 10.76487,
+            "readyDrawMs": 8.076108,
+            "requestToReadyEndMs": 47.160974,
+            "requestToWorkerFinallyMs": 28.615738,
+            "publishedToFirstEnqueueMs": 0.004198,
+            "enqueueToCallbackMs": 35.73063,
+            "callbackToReadyDrawSignedMs": -24.969958
+          },
+          "native": {
+            "attempts": 0,
+            "completed": 0,
+            "preparationAndBuildWallMs": 0.0,
+            "preparationAndBuildThreadCpuMs": 0.0
+          },
+          "notification": {
+            "notificationRequests": 2,
+            "notificationCallbacks": 1,
+            "notificationsSuperseded": 0
+          },
+          "callbackAfterReady": true
+        },
+        {
+          "role": "active",
+          "phase": "local",
+          "layer": 2,
+          "wall": {
+            "requestToWorkerMs": 6.891277,
+            "workerToMetadataMs": 0.057668,
+            "metadataMs": 8.142161,
+            "rasterMs": 9.292289,
+            "prepareMs": 0.006683,
+            "prepareEndToMainEntryMs": 29.08344,
+            "mainPublicationMs": 0.124291,
+            "publishedToReadyDrawMs": 18.300509,
+            "readyDrawMs": 7.913814,
+            "requestToReadyEndMs": 79.812132,
+            "requestToWorkerFinallyMs": 54.314018,
+            "publishedToFirstEnqueueMs": 0.003908,
+            "enqueueToCallbackMs": 0.603838,
+            "callbackToReadyDrawSignedMs": 17.692763
+          },
+          "native": {
+            "attempts": 0,
+            "completed": 0,
+            "preparationAndBuildWallMs": 0.0,
+            "preparationAndBuildThreadCpuMs": 0.0
+          },
+          "notification": {
+            "notificationRequests": 2,
+            "notificationCallbacks": 2,
+            "notificationsSuperseded": 0
+          },
+          "callbackAfterReady": false
+        },
+        {
+          "role": "active",
+          "phase": "local",
+          "layer": 3,
+          "wall": {
+            "requestToWorkerMs": 0.245401,
+            "workerToMetadataMs": 0.064291,
+            "metadataMs": 12.690117,
+            "rasterMs": 4.802532,
+            "prepareMs": 0.006712,
+            "prepareEndToMainEntryMs": 26.864004,
+            "mainPublicationMs": 0.109505,
+            "publishedToReadyDrawMs": 25.749002,
+            "readyDrawMs": 7.759447,
+            "requestToReadyEndMs": 78.291011,
+            "requestToWorkerFinallyMs": 78.62225,
+            "publishedToFirstEnqueueMs": 0.002584,
+            "enqueueToCallbackMs": 0.157345,
+            "callbackToReadyDrawSignedMs": 25.589073
+          },
+          "native": {
+            "attempts": 0,
+            "completed": 0,
+            "preparationAndBuildWallMs": 0.0,
+            "preparationAndBuildThreadCpuMs": 0.0
+          },
+          "notification": {
+            "notificationRequests": 2,
+            "notificationCallbacks": 2,
+            "notificationsSuperseded": 0
+          },
+          "callbackAfterReady": false
+        }
+      ]
+    },
+    {
+      "layers": 8,
+      "result": {
+        "layers": 8,
+        "initialStrokes": 320,
+        "finalStrokes": 321,
+        "firstCompleteMs": 275.522921,
+        "appendCompleteMs": 142.719236,
+        "forcedFullCompleteMs": 337.269194,
+        "localDecoded": 1,
+        "fullDecoded": 321,
+        "localRebuiltTiles": 1,
+        "fullRebuiltTiles": 48,
+        "metadataMs": 54.748578,
+        "rasterMs": 56.068385,
+        "publicationMs": 217.65960900000002,
+        "pixelsEqual": true,
+        "bitmapBytes": 24294816,
+        "nativeStrokeBuilds": 11
+      },
+      "local": {
+        "role": "active",
+        "phase": "local",
+        "layers": 8,
+        "phaseFrameSpanMs": 140.993298,
+        "accumulatedLayerWallMs": {
+          "requestToWorkerMs": 3.12486,
+          "workerToMetadataMs": 0.498563,
+          "metadataMs": 54.749801,
+          "rasterMs": 56.069507,
+          "prepareMs": 0.041617,
+          "prepareEndToMainEntryMs": 216.989871,
+          "mainPublicationMs": 0.641636,
+          "publishedToReadyDrawMs": 246.51937,
+          "readyDrawMs": 66.009225,
+          "requestToReadyEndMs": 644.64445,
+          "requestToWorkerFinallyMs": 878.418378,
+          "publishedToFirstEnqueueMs": 0.02085,
+          "enqueueToCallbackMs": 548.826667,
+          "callbackToReadyDrawSignedMs": -302.328147
+        },
+        "nativeAttempts": 11,
+        "nativeCompleted": 11,
+        "nativePreparationAndBuildWallMs": 4.831345,
+        "nativePreparationAndBuildThreadCpuMs": 1.603106,
+        "nativeCpuUnavailableFrames": 0,
+        "metadata": {
+          "regions": 48,
+          "preparationBatches": 0,
+          "preparationRows": 0,
+          "queryBatches": 16,
+          "metadataRows": 321,
+          "admissionAndPreparationNanos": 14331385,
+          "queryAndDigestNanos": 31212218,
+          "queryAndDigestThreadCpuNanos": 24718490,
+          "hexAndResultNanos": 809604,
+          "hexAndResultThreadCpuNanos": 803551
+        },
+        "readBatches": 1,
+        "reads": {
+          "freezeNanos": 3276301,
+          "decodeNanos": 81833,
+          "entries": 1,
+          "payloadBytes": 140,
+          "decodedPoints": 2,
+          "candidateRows": 1
+        },
+        "notifications": {
+          "notificationRequests": 16,
+          "notificationCallbacks": 8,
+          "notificationsSuperseded": 0
+        },
+        "missingCallbackFrames": 0,
+        "callbackAfterReadyFrames": 8
+      },
+      "resources": {
+        "totalBytes": 0,
+        "budgetBytes": 134217728,
+        "peakTrackedBytes": 65366848,
+        "inFlightJobs": 0,
+        "cancelledJobs": 0,
+        "cacheBytes": 0,
+        "in_flightBytes": 0,
+        "activeBytes": 0,
+        "live_inkBytes": 0,
+        "geometryReservationBytes": 0
+      },
+      "joined": true,
+      "local_frames": [
+        {
+          "role": "active",
+          "phase": "local",
+          "layer": 0,
+          "wall": {
+            "requestToWorkerMs": 0.319788,
+            "workerToMetadataMs": 0.07501,
+            "metadataMs": 4.936022,
+            "rasterMs": 31.938706,
+            "prepareMs": 0.0054,
+            "prepareEndToMainEntryMs": 35.675537,
+            "mainPublicationMs": 0.076323,
+            "publishedToReadyDrawMs": 1.821593,
+            "readyDrawMs": 8.144685,
+            "requestToReadyEndMs": 82.993064,
+            "requestToWorkerFinallyMs": 141.415327,
+            "publishedToFirstEnqueueMs": 0.002344,
+            "enqueueToCallbackMs": 68.765626,
+            "callbackToReadyDrawSignedMs": -66.946377
+          },
+          "native": {
+            "attempts": 11,
+            "completed": 11,
+            "preparationAndBuildWallMs": 4.831345,
+            "preparationAndBuildThreadCpuMs": 1.603106
+          },
+          "notification": {
+            "notificationRequests": 2,
+            "notificationCallbacks": 1,
+            "notificationsSuperseded": 0
+          },
+          "callbackAfterReady": true
+        },
+        {
+          "role": "active",
+          "phase": "local",
+          "layer": 1,
+          "wall": {
+            "requestToWorkerMs": 0.24621,
+            "workerToMetadataMs": 0.056566,
+            "metadataMs": 13.847299,
+            "rasterMs": 5.874154,
+            "prepareMs": 0.004919,
+            "prepareEndToMainEntryMs": 43.807991,
+            "mainPublicationMs": 0.094165,
+            "publishedToReadyDrawMs": 10.367969,
+            "readyDrawMs": 8.358044,
+            "requestToReadyEndMs": 82.657317,
+            "requestToWorkerFinallyMs": 132.563891,
+            "publishedToFirstEnqueueMs": 0.004038,
+            "enqueueToCallbackMs": 69.0898,
+            "callbackToReadyDrawSignedMs": -58.725869
+          },
+          "native": {
+            "attempts": 0,
+            "completed": 0,
+            "preparationAndBuildWallMs": 0.0,
+            "preparationAndBuildThreadCpuMs": 0.0
+          },
+          "notification": {
+            "notificationRequests": 2,
+            "notificationCallbacks": 1,
+            "notificationsSuperseded": 0
+          },
+          "callbackAfterReady": true
+        },
+        {
+          "role": "active",
+          "phase": "local",
+          "layer": 2,
+          "wall": {
+            "requestToWorkerMs": 1.233033,
+            "workerToMetadataMs": 0.051998,
+            "metadataMs": 8.765184,
+            "rasterMs": 8.514457,
+            "prepareMs": 0.004719,
+            "prepareEndToMainEntryMs": 36.901197,
+            "mainPublicationMs": 0.079528,
+            "publishedToReadyDrawMs": 18.497106,
+            "readyDrawMs": 7.968236,
+            "requestToReadyEndMs": 82.015458,
+            "requestToWorkerFinallyMs": 124.008537,
+            "publishedToFirstEnqueueMs": 0.002645,
+            "enqueueToCallbackMs": 68.870331,
+            "callbackToReadyDrawSignedMs": -50.37587
+          },
+          "native": {
+            "attempts": 0,
+            "completed": 0,
+            "preparationAndBuildWallMs": 0.0,
+            "preparationAndBuildThreadCpuMs": 0.0
+          },
+          "notification": {
+            "notificationRequests": 2,
+            "notificationCallbacks": 1,
+            "notificationsSuperseded": 0
+          },
+          "callbackAfterReady": true
+        },
+        {
+          "role": "active",
+          "phase": "local",
+          "layer": 3,
+          "wall": {
+            "requestToWorkerMs": 0.281165,
+            "workerToMetadataMs": 0.05828,
+            "metadataMs": 8.271232,
+            "rasterMs": 3.913461,
+            "prepareMs": 0.004879,
+            "prepareEndToMainEntryMs": 34.626948,
+            "mainPublicationMs": 0.108753,
+            "publishedToReadyDrawMs": 26.20206,
+            "readyDrawMs": 8.288184,
+            "requestToReadyEndMs": 81.754962,
+            "requestToWorkerFinallyMs": 115.555076,
+            "publishedToFirstEnqueueMs": 0.002836,
+            "enqueueToCallbackMs": 68.627166,
+            "callbackToReadyDrawSignedMs": -42.427942
+          },
+          "native": {
+            "attempts": 0,
+            "completed": 0,
+            "preparationAndBuildWallMs": 0.0,
+            "preparationAndBuildThreadCpuMs": 0.0
+          },
+          "notification": {
+            "notificationRequests": 2,
+            "notificationCallbacks": 1,
+            "notificationsSuperseded": 0
+          },
+          "callbackAfterReady": true
+        },
+        {
+          "role": "active",
+          "phase": "local",
+          "layer": 4,
+          "wall": {
+            "requestToWorkerMs": 0.245319,
+            "workerToMetadataMs": 0.081472,
+            "metadataMs": 5.573292,
+            "rasterMs": 1.493029,
+            "prepareMs": 0.005309,
+            "prepareEndToMainEntryMs": 28.959872,
+            "mainPublicationMs": 0.071864,
+            "publishedToReadyDrawMs": 34.384386,
+            "readyDrawMs": 9.561402,
+            "requestToReadyEndMs": 80.375945,
+            "requestToWorkerFinallyMs": 104.655132,
+            "publishedToFirstEnqueueMs": 0.002224,
+            "enqueueToCallbackMs": 68.520047,
+            "callbackToReadyDrawSignedMs": -34.137885
+          },
+          "native": {
+            "attempts": 0,
+            "completed": 0,
+            "preparationAndBuildWallMs": 0.0,
+            "preparationAndBuildThreadCpuMs": 0.0
+          },
+          "notification": {
+            "notificationRequests": 2,
+            "notificationCallbacks": 1,
+            "notificationsSuperseded": 0
+          },
+          "callbackAfterReady": true
+        },
+        {
+          "role": "active",
+          "phase": "local",
+          "layer": 5,
+          "wall": {
+            "requestToWorkerMs": 0.33143,
+            "workerToMetadataMs": 0.061695,
+            "metadataMs": 4.422762,
+            "rasterMs": 1.595601,
+            "prepareMs": 0.005961,
+            "prepareEndToMainEntryMs": 21.263975,
+            "mainPublicationMs": 0.066073,
+            "publishedToReadyDrawMs": 43.848576,
+            "readyDrawMs": 8.079514,
+            "requestToReadyEndMs": 79.675587,
+            "requestToWorkerFinallyMs": 95.914023,
+            "publishedToFirstEnqueueMs": 0.002134,
+            "enqueueToCallbackMs": 68.420841,
+            "callbackToReadyDrawSignedMs": -24.574399
+          },
+          "native": {
+            "attempts": 0,
+            "completed": 0,
+            "preparationAndBuildWallMs": 0.0,
+            "preparationAndBuildThreadCpuMs": 0.0
+          },
+          "notification": {
+            "notificationRequests": 2,
+            "notificationCallbacks": 1,
+            "notificationsSuperseded": 0
+          },
+          "callbackAfterReady": true
+        },
+        {
+          "role": "active",
+          "phase": "local",
+          "layer": 6,
+          "wall": {
+            "requestToWorkerMs": 0.221715,
+            "workerToMetadataMs": 0.054211,
+            "metadataMs": 4.547896,
+            "rasterMs": 1.409764,
+            "prepareMs": 0.005501,
+            "prepareEndToMainEntryMs": 12.240897,
+            "mainPublicationMs": 0.084197,
+            "publishedToReadyDrawMs": 51.818045,
+            "readyDrawMs": 7.853983,
+            "requestToReadyEndMs": 78.236209,
+            "requestToWorkerFinallyMs": 86.660036,
+            "publishedToFirstEnqueueMs": 0.002405,
+            "enqueueToCallbackMs": 68.310936,
+            "callbackToReadyDrawSignedMs": -16.495296
+          },
+          "native": {
+            "attempts": 0,
+            "completed": 0,
+            "preparationAndBuildWallMs": 0.0,
+            "preparationAndBuildThreadCpuMs": 0.0
+          },
+          "notification": {
+            "notificationRequests": 2,
+            "notificationCallbacks": 1,
+            "notificationsSuperseded": 0
+          },
+          "callbackAfterReady": true
+        },
+        {
+          "role": "active",
+          "phase": "local",
+          "layer": 7,
+          "wall": {
+            "requestToWorkerMs": 0.2462,
+            "workerToMetadataMs": 0.059331,
+            "metadataMs": 4.386114,
+            "rasterMs": 1.330335,
+            "prepareMs": 0.004929,
+            "prepareEndToMainEntryMs": 3.513454,
+            "mainPublicationMs": 0.060733,
+            "publishedToReadyDrawMs": 59.579635,
+            "readyDrawMs": 7.755177,
+            "requestToReadyEndMs": 76.935908,
+            "requestToWorkerFinallyMs": 77.646356,
+            "publishedToFirstEnqueueMs": 0.002224,
+            "enqueueToCallbackMs": 68.22192,
+            "callbackToReadyDrawSignedMs": -8.644509
+          },
+          "native": {
+            "attempts": 0,
+            "completed": 0,
+            "preparationAndBuildWallMs": 0.0,
+            "preparationAndBuildThreadCpuMs": 0.0
+          },
+          "notification": {
+            "notificationRequests": 2,
+            "notificationCallbacks": 1,
+            "notificationsSuperseded": 0
+          },
+          "callbackAfterReady": true
+        }
+      ]
+    }
+  ],
+  "new_thresholds": false,
+  "pooled_with_prior_samples": false,
+  "production_fix_at_review_time": "NOT_YET_IMPLEMENTED",
+  "recommended_minimal_candidate": "Initialize only the frame-local PencilTileRenderer at first actual PENCIL draw; keep batch/finally cleanup.",
+  "static_work_not_runtime_measurement": {
+    "all_pen_successful_frames": 65,
+    "eager_pencil_constructions_implied": 65,
+    "grain_bytes_per_instance": 4096,
+    "pixel_int_array_element_bytes_per_instance": 16384,
+    "total_array_element_bytes_implied": 1331200,
+    "includes_object_headers": false,
+    "measured_heap_or_latency_saving": false
+  },
+  "unclosed": [
+    "old C0-C1 single-layer regression",
+    "formal default-off end-to-end paired thresholds",
+    "latest continuous-transform and sparse-update paired performance",
+    "original dense 30-second gate"
+  ],
+  "review_sha256": "fc0909df25c3878a249cba910d44f54bc9b7ce853732af15b26d86ee1e92d919"
+}

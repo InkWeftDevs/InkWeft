@@ -1,0 +1,41 @@
+{
+  "status": "HYPOTHESES_ONLY_NOT_SELECTED",
+  "scope": "HOST_SEMANTICS_AND_STATIC_REVIEW_ONLY",
+  "productionEdited": false,
+  "nativePerformanceMeasured": false,
+  "hostStringOracle": {
+    "scope": "HOST_SEMANTICS_ONLY",
+    "javaVersion": "17.0.16",
+    "kotlinVersion": "2.3.10",
+    "cases": 626137,
+    "prefixMismatches": 0,
+    "lowerMismatches": 0,
+    "mixedPrefixExampleResult": false,
+    "mixedPrefixExampleRegionVerifications": 4
+  },
+  "hostSqliteVersion": "3.53.1",
+  "sqlGuardCases": 36,
+  "correlatedSourceEvaluationCounts": {
+    "original": 1,
+    "lengthCase": 3,
+    "typedLengthCase": 4
+  },
+  "lowestChangeSurfaceCandidate": "ASCII-first-character rejection followed by original regionMatches verification; conditional on native evidence",
+  "requiredEvidenceBeforeChoice": [
+    "Complete native causal input with contains CPU attribution",
+    "Original Unicode/NUL/nullable/draft/snapshot/cancellation semantics",
+    "Original public thresholds with no changed fixture or omitted samples"
+  ],
+  "sources": [
+    "https://www.sqlite.org/lang_corefunc.html",
+    "https://www.sqlite.org/lang_expr.html",
+    "https://www.sqlite.org/c3ref/interrupt.html",
+    "https://www.sqlite.org/pragma.html#pragma_encoding"
+  ],
+  "filesSha256": {
+    "AsciiSemantics.java": "bf5ec836a18e3c038246bd358fa191a8051143ab4f822ab3f320730a259886d8",
+    "host-sqlite-semantics.json": "bbe9c23faa73031666785cb94cb32945fec412c78ce2d1b1296aa681fdfd9302",
+    "host-string-semantics.json": "5630e561b2a5a9e142fbd6a9f2dc0237e84aa96d76f23033fc4ef56622d2ec44",
+    "sqlite_semantics.py": "a1cc0ee04325bdf90ef1fc386579e25aa07c4a9ec4ff79c7b950690f40e89d27"
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "scope": "OFFLINE_RECOMPUTATION_NOT_NEW_NATIVE_EVIDENCE",
+  "status": "PASS",
+  "run_id": "38514139119",
+  "records_exact_matches": [
+    {
+      "file": "method-01-C1-records.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "exact_match": true
+    },
+    {
+      "file": "method-02-C1-records.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "exact_match": true
+    },
+    {
+      "file": "method-03-C1-records.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "exact_match": true
+    },
+    {
+      "file": "method-04-C1-records.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "exact_match": true
+    },
+    {
+      "file": "method-05-C1-records.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "exact_match": true
+    },
+    {
+      "file": "method-06-C1-records.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "exact_match": true
+    },
+    {
+      "file": "method-07-C1-records.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "exact_match": true
+    },
+    {
+      "file": "method-08-C1-records.json",
+      "bytes": 168,
+      "sha256": "98349570bba15821033dcbf9bdb223584d90afe2141a6a38ac5aefd7ae483c82",
+      "exact_match": true
+    },
+    {
+      "file": "method-09-C1-records.json",
+      "bytes": 14146,
+      "sha256": "fb5aaf476a6d114aacbf3c97d36a69339c05ef3ef2f4c3e1487d22ed31b1ae89",
+      "exact_match": true
+    },
+    {
+      "file": "method-10-C1-records.json",
+      "bytes": 506212,
+      "sha256": "1bb57986e65d56c4e27ccd65466b0793f7a364e638c93b17b1b00b40bb0e8bd6",
+      "exact_match": true
+    },
+    {
+      "file": "method-11-C1-records.json",
+      "bytes": 96630,
+      "sha256": "d769da6bd7d00fe10f9719ea82997cb2c1c0309d093f1e52eff8cdb4ee4805c7",
+      "exact_match": true
+    },
+    {
+      "file": "method-12-C1-records.json",
+      "bytes": 121790,
+      "sha256": "8862c3b0cb7b2dbd12a202befcf3b398062233b3ed5f6e0da382a784a2a46a09",
+      "exact_match": true
+    },
+    {
+      "file": "method-13-C1-records.json",
+      "bytes": 96589,
+      "sha256": "79d68d2b578ce0be909b4223858d8f1f62cd3ac49e9cfbdbf181266bd9b2f32f",
+      "exact_match": true
+    }
+  ],
+  "csv_exact_matches": [
+    {
+      "file": "warm-udf.csv",
+      "bytes": 1819,
+      "sha256": "b36935437808a4774b07c9c011ece67e91904f6fca89a0025420acd02db153ec",
+      "exact_match": true
+    },
+    {
+      "file": "save-samples.csv",
+      "bytes": 36175,
+      "sha256": "b35a1a62e8fd6b11437925dabadcf5a2aa6a36e28382dc02457d3ec155333fcf",
+      "exact_match": true
+    },
+    {
+      "file": "save-phases.csv",
+      "bytes": 258061,
+      "sha256": "424382e04ab68635504054f19baf251e6c775475f7b3c2e016bdcea9572e1181",
+      "exact_match": true
+    },
+    {
+      "file": "original-events.csv",
+      "bytes": 238918,
+      "sha256": "cd1483060ee455cd5175d331cd5a5a6a62568247988357e569cc0292aeedd5f5",
+      "exact_match": true
+    }
+  ],
+  "archive_outputs_unchanged": true,
+  "controller_scripts_executed": false,
+  "network_or_native_execution": false,
+  "note": "Derived JSON input-path/provenance hashes change with local paths; original compact records and numerical CSVs must match byte-for-byte."
+}

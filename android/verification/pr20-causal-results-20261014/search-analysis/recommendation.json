@@ -1,0 +1,2735 @@
+{
+  "scope": "COMPLETE_SCOPED_CAUSAL_RUN_NOT_ACCEPTANCE",
+  "run": {
+    "run_id": "38514139119",
+    "job_id": "115689021611",
+    "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+    "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+    "readiness_git": "b2e1d9f9de66a26f5a4b122ea6754d77198005f8"
+  },
+  "issues": [],
+  "warm": {
+    "bodyContainsPageCpuPercent": [
+      91.48585971552458,
+      91.58209133489812,
+      91.5199126128453
+    ],
+    "bodyContainsCpuMs": [
+      572.012532,
+      564.928443,
+      572.703112
+    ],
+    "bodyConversionCpuMs": [
+      26.223482,
+      25.801384,
+      25.737401
+    ],
+    "firstAsciiFilterSupportedAsMinimalCandidate": true,
+    "performanceImprovementAlreadyProven": false
+  },
+  "saves": {
+    "allSamples": 360,
+    "allCommitted": true,
+    "modeCases": [
+      {
+        "block": 0,
+        "mode": "IDLE",
+        "readiness": "fixture-ready",
+        "saveMs": {
+          "n": 30,
+          "p50": 2.550575,
+          "p95": 5.190518,
+          "max": 5.382075,
+          "sum": 79.529777
+        },
+        "savePhases": {
+          "enteredBody": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.149738,
+              "p95": 2.626406,
+              "max": 3.722013,
+              "sum": 39.095525
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 1.1511,
+              "p95": 2.025292,
+              "max": 2.093824,
+              "sum": 36.212085
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "enteredThroughReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 2.090595,
+              "p95": 3.881774,
+              "max": 4.673581,
+              "sum": 64.420324
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "entryToHeadRead": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.802389,
+              "p95": 2.002721,
+              "max": 2.931937,
+              "sum": 27.718293
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.802509,
+              "p95": 1.235467,
+              "max": 1.470459,
+              "sum": 25.449141
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headReadToWrite": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.159538,
+              "p95": 0.54051,
+              "max": 0.88295,
+              "sum": 6.344743
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.159668,
+              "p95": 0.314928,
+              "max": 0.54092,
+              "sum": 5.749414
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headWriteToRevision": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.083917,
+              "p95": 0.144751,
+              "max": 0.180247,
+              "sum": 2.807914
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.083286,
+              "p95": 0.144741,
+              "max": 0.179705,
+              "sum": 2.790474
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "receiptToReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.888609,
+              "p95": 1.181204,
+              "max": 1.255368,
+              "sum": 25.324799
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "requestToEntry": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.387664,
+              "p95": 0.780595,
+              "max": 1.079985,
+              "sum": 13.091677
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "revisionToReceipt": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.063589,
+              "p95": 0.151092,
+              "max": 0.18707,
+              "sum": 2.224575
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.063469,
+              "p95": 0.151573,
+              "max": 0.18718,
+              "sum": 2.223056
+            },
+            "unavailableCpuIntervals": 0
+          }
+        },
+        "readerCounts": {
+          "traced": 0,
+          "started": 0,
+          "completed": 0,
+          "cancelled": 0,
+          "errored": 0,
+          "noTerminal": 0,
+          "lastWorkBeforeCancel": {}
+        },
+        "phaseSaveWindowOverlapMs": {}
+      },
+      {
+        "block": 0,
+        "mode": "TRACKER",
+        "readiness": "tracker-registered",
+        "saveMs": {
+          "n": 30,
+          "p50": 2.602983,
+          "p95": 3.086596,
+          "max": 4.07859,
+          "sum": 78.185783
+        },
+        "savePhases": {
+          "enteredBody": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.116787,
+              "p95": 1.509741,
+              "max": 1.572508,
+              "sum": 34.425734
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 1.096198,
+              "p95": 1.369888,
+              "max": 1.572698,
+              "sum": 33.62139
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "enteredThroughReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.994507,
+              "p95": 2.525058,
+              "max": 3.599314,
+              "sum": 62.320484
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "entryToHeadRead": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.747216,
+              "p95": 1.063566,
+              "max": 1.075188,
+              "sum": 23.698625
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.727248,
+              "p95": 0.934185,
+              "max": 1.036527,
+              "sum": 23.04845
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headReadToWrite": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.171761,
+              "p95": 0.272258,
+              "max": 0.311532,
+              "sum": 5.655604
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.17178,
+              "p95": 0.261659,
+              "max": 0.272449,
+              "sum": 5.565594
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headWriteToRevision": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.078828,
+              "p95": 0.135533,
+              "max": 0.175498,
+              "sum": 2.614393
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.078186,
+              "p95": 0.135172,
+              "max": 0.169326,
+              "sum": 2.589637
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "receiptToReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.903799,
+              "p95": 1.083334,
+              "max": 2.585842,
+              "sum": 27.89475
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "requestToEntry": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.397483,
+              "p95": 0.681683,
+              "max": 0.697534,
+              "sum": 13.983743
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "revisionToReceipt": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.062357,
+              "p95": 0.154148,
+              "max": 0.207117,
+              "sum": 2.457112
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.062306,
+              "p95": 0.154468,
+              "max": 0.167543,
+              "sum": 2.417709
+            },
+            "unavailableCpuIntervals": 0
+          }
+        },
+        "readerCounts": {
+          "traced": 0,
+          "started": 0,
+          "completed": 0,
+          "cancelled": 0,
+          "errored": 0,
+          "noTerminal": 0,
+          "lastWorkBeforeCancel": {}
+        },
+        "phaseSaveWindowOverlapMs": {}
+      },
+      {
+        "block": 0,
+        "mode": "INDEX_ONLY",
+        "readiness": "first-index-commit",
+        "saveMs": {
+          "n": 30,
+          "p50": 2.758493,
+          "p95": 9.267573,
+          "max": 11.525792,
+          "sum": 104.013544
+        },
+        "savePhases": {
+          "enteredBody": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.105225,
+              "p95": 3.271542,
+              "max": 3.697537,
+              "sum": 39.700096
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 1.090969,
+              "p95": 1.287928,
+              "max": 1.440911,
+              "sum": 33.586834
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "enteredThroughReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 2.305217,
+              "p95": 8.874949,
+              "max": 11.028504,
+              "sum": 90.089208
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "entryToHeadRead": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.738019,
+              "p95": 1.152363,
+              "max": 1.395307,
+              "sum": 23.993914
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.736275,
+              "p95": 0.946419,
+              "max": 0.988987,
+              "sum": 22.850055
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headReadToWrite": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.190817,
+              "p95": 2.407026,
+              "max": 2.570271,
+              "sum": 10.552033
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.190606,
+              "p95": 0.246159,
+              "max": 0.250898,
+              "sum": 5.885516
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headWriteToRevision": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.079799,
+              "p95": 0.14452,
+              "max": 0.158395,
+              "sum": 2.751729
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.078998,
+              "p95": 0.141133,
+              "max": 0.144049,
+              "sum": 2.666842
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "receiptToReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.087622,
+              "p95": 7.827122,
+              "max": 9.20104,
+              "sum": 50.389112
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "requestToEntry": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.389337,
+              "p95": 0.684159,
+              "max": 0.762144,
+              "sum": 12.341277
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "revisionToReceipt": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.062246,
+              "p95": 0.182851,
+              "max": 0.188562,
+              "sum": 2.40242
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.062206,
+              "p95": 0.116096,
+              "max": 0.140783,
+              "sum": 2.184421
+            },
+            "unavailableCpuIntervals": 0
+          }
+        },
+        "readerCounts": {
+          "traced": 0,
+          "started": 0,
+          "completed": 0,
+          "cancelled": 0,
+          "errored": 0,
+          "noTerminal": 0,
+          "lastWorkBeforeCancel": {}
+        },
+        "phaseSaveWindowOverlapMs": {
+          "index.bodyToReturn": 0.0,
+          "index.enteredBody": 0.0,
+          "index.enteredThroughReturn": 0.0,
+          "index.prepare": 0.0,
+          "index.requestToEntry": 0.0
+        }
+      },
+      {
+        "block": 0,
+        "mode": "INDEX_TRACKER",
+        "readiness": "first-index-commit",
+        "saveMs": {
+          "n": 30,
+          "p50": 3.269979,
+          "p95": 10.97955,
+          "max": 21.044074,
+          "sum": 144.758437
+        },
+        "savePhases": {
+          "enteredBody": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.146742,
+              "p95": 3.868285,
+              "max": 4.876921,
+              "sum": 44.203374000000004
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 1.101517,
+              "p95": 1.352807,
+              "max": 1.363308,
+              "sum": 33.8558
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "enteredThroughReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 2.682511,
+              "p95": 8.475754,
+              "max": 10.293648,
+              "sum": 107.338848
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "entryToHeadRead": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.749932,
+              "p95": 0.997192,
+              "max": 3.278875,
+              "sum": 25.791251
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.733601,
+              "p95": 0.887277,
+              "max": 0.972908,
+              "sum": 22.387727
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headReadToWrite": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.198571,
+              "p95": 0.560928,
+              "max": 2.999732,
+              "sum": 9.306723999999999
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.198932,
+              "p95": 0.261178,
+              "max": 0.306152,
+              "sum": 6.140521
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headWriteToRevision": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.083817,
+              "p95": 0.517136,
+              "max": 3.438063,
+              "sum": 6.756844
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.083005,
+              "p95": 0.179104,
+              "max": 0.272309,
+              "sum": 2.984826
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "receiptToReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.317882,
+              "p95": 6.692192,
+              "max": 7.354599,
+              "sum": 63.135474
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "requestToEntry": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.418302,
+              "p95": 1.261216,
+              "max": 18.947117,
+              "sum": 33.081596999999995
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "revisionToReceipt": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.063368,
+              "p95": 0.131977,
+              "max": 0.169577,
+              "sum": 2.348555
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.063349,
+              "p95": 0.131946,
+              "max": 0.170498,
+              "sum": 2.342726
+            },
+            "unavailableCpuIntervals": 0
+          }
+        },
+        "readerCounts": {
+          "traced": 0,
+          "started": 0,
+          "completed": 0,
+          "cancelled": 0,
+          "errored": 0,
+          "noTerminal": 0,
+          "lastWorkBeforeCancel": {}
+        },
+        "phaseSaveWindowOverlapMs": {
+          "index.bodyToReturn": 1.91609,
+          "index.enteredBody": 19.092428,
+          "index.enteredThroughReturn": 21.008518,
+          "index.prepare": 97.573304,
+          "index.requestToEntry": 1.243663
+        }
+      },
+      {
+        "block": 0,
+        "mode": "READS_ONLY",
+        "readiness": "first-source-check",
+        "saveMs": {
+          "n": 30,
+          "p50": 3.822479,
+          "p95": 7.099947,
+          "max": 7.482048,
+          "sum": 128.278624
+        },
+        "savePhases": {
+          "enteredBody": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.287415,
+              "p95": 3.883575,
+              "max": 4.302708,
+              "sum": 49.869499
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 1.094754,
+              "p95": 1.320967,
+              "max": 1.679719,
+              "sum": 33.986209
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "enteredThroughReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 3.299484,
+              "p95": 5.323796,
+              "max": 7.106636,
+              "sum": 107.968983
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "entryToHeadRead": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.746966,
+              "p95": 2.45582,
+              "max": 3.98792,
+              "sum": 30.350216
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.742326,
+              "p95": 0.846942,
+              "max": 1.101608,
+              "sum": 22.408513
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headReadToWrite": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.188021,
+              "p95": 0.547383,
+              "max": 2.231239,
+              "sum": 8.731059
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.188142,
+              "p95": 0.295813,
+              "max": 0.301984,
+              "sum": 6.050207
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headWriteToRevision": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.084358,
+              "p95": 0.587477,
+              "max": 0.870746,
+              "sum": 4.608129
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.083846,
+              "p95": 0.167252,
+              "max": 0.20419,
+              "sum": 2.8777850000000003
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "receiptToReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.660791,
+              "p95": 3.223061,
+              "max": 4.087225,
+              "sum": 58.099484
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "requestToEntry": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.457295,
+              "p95": 1.587827,
+              "max": 2.647959,
+              "sum": 18.848115
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "revisionToReceipt": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.065862,
+              "p95": 0.834679,
+              "max": 2.922589,
+              "sum": 6.180095
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.065672,
+              "p95": 0.177132,
+              "max": 0.227446,
+              "sum": 2.649704
+            },
+            "unavailableCpuIntervals": 0
+          }
+        },
+        "readerCounts": {
+          "traced": 28,
+          "started": 21,
+          "completed": 0,
+          "cancelled": 21,
+          "errored": 0,
+          "noTerminal": 7,
+          "lastWorkBeforeCancel": {
+            "page-hits-start": 1,
+            "drafts-ready": 6,
+            "scope-end": 11,
+            "scope-start": 1,
+            "connection-open": 2
+          }
+        },
+        "phaseSaveWindowOverlapMs": {
+          "reader.dispatch": 3.92162,
+          "reader.drafts": 22.084163,
+          "reader.hitTables": 0.0,
+          "reader.ioRead": 109.206531,
+          "reader.open": 6.443827,
+          "reader.pageHits": 0.0,
+          "reader.registerAndBegin": 2.439568,
+          "reader.scope": 46.202946,
+          "reader.snapshot": 89.754353
+        }
+      },
+      {
+        "block": 0,
+        "mode": "FULL",
+        "readiness": "first-index-commit",
+        "saveMs": {
+          "n": 30,
+          "p50": 5.926872,
+          "p95": 15.977829,
+          "max": 31.924389,
+          "sum": 223.586338
+        },
+        "savePhases": {
+          "enteredBody": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.404564,
+              "p95": 4.799376,
+              "max": 5.093916,
+              "sum": 62.837696
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 1.119861,
+              "p95": 1.456281,
+              "max": 1.752384,
+              "sum": 35.519243
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "enteredThroughReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 5.129723,
+              "p95": 10.827878,
+              "max": 14.753063,
+              "sum": 169.679869
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "entryToHeadRead": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.778093,
+              "p95": 3.787426,
+              "max": 3.975898,
+              "sum": 33.833537
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.758212,
+              "p95": 1.044672,
+              "max": 1.147645,
+              "sum": 23.814433
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headReadToWrite": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.212717,
+              "p95": 2.512234,
+              "max": 2.638379,
+              "sum": 19.161167
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.206213,
+              "p95": 0.297887,
+              "max": 0.315028,
+              "sum": 6.550612
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headWriteToRevision": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.083657,
+              "p95": 1.039031,
+              "max": 1.750299,
+              "sum": 5.534358
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.082915,
+              "p95": 0.159421,
+              "max": 0.270104,
+              "sum": 2.9076880000000003
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "receiptToReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 3.042345,
+              "p95": 7.724019,
+              "max": 12.261228,
+              "sum": 106.842173
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "requestToEntry": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.475846,
+              "p95": 2.109,
+              "max": 30.175421,
+              "sum": 51.956915
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "revisionToReceipt": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.063539,
+              "p95": 0.78703,
+              "max": 1.531421,
+              "sum": 4.308634
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.063439,
+              "p95": 0.134051,
+              "max": 0.157244,
+              "sum": 2.24651
+            },
+            "unavailableCpuIntervals": 0
+          }
+        },
+        "readerCounts": {
+          "traced": 30,
+          "started": 23,
+          "completed": 0,
+          "cancelled": 23,
+          "errored": 0,
+          "noTerminal": 7,
+          "lastWorkBeforeCancel": {
+            "scope-end": 11,
+            "connection-open": 3,
+            "drafts-ready": 4,
+            "page-hits-start": 4,
+            "scope-start": 1
+          }
+        },
+        "phaseSaveWindowOverlapMs": {
+          "reader.dispatch": 7.818688,
+          "reader.drafts": 25.856585,
+          "reader.hitTables": 2.309165,
+          "reader.ioRead": 183.30348,
+          "reader.open": 5.855542,
+          "reader.pageHits": 0.0,
+          "reader.registerAndBegin": 2.394262,
+          "reader.scope": 73.293822,
+          "reader.snapshot": 161.211122,
+          "index.bodyToReturn": 3.222001,
+          "index.enteredBody": 28.211965,
+          "index.enteredThroughReturn": 31.433966,
+          "index.prepare": 110.243971,
+          "index.requestToEntry": 7.160607
+        }
+      },
+      {
+        "block": 1,
+        "mode": "FULL",
+        "readiness": "first-index-commit",
+        "saveMs": {
+          "n": 30,
+          "p50": 5.606635,
+          "p95": 15.387647,
+          "max": 41.530293,
+          "sum": 231.706499
+        },
+        "savePhases": {
+          "enteredBody": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.171769,
+              "p95": 4.340188,
+              "max": 7.563844,
+              "sum": 60.931982
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 1.120788,
+              "p95": 1.629736,
+              "max": 1.865905,
+              "sum": 35.411613
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "enteredThroughReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 4.96744,
+              "p95": 10.778777,
+              "max": 11.582939,
+              "sum": 166.60674
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "entryToHeadRead": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.730204,
+              "p95": 3.3136,
+              "max": 7.189454,
+              "sum": 38.346843
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.729413,
+              "p95": 1.040747,
+              "max": 1.492318,
+              "sum": 23.464265
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headReadToWrite": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.200804,
+              "p95": 0.555197,
+              "max": 2.952686,
+              "sum": 10.039649
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.200625,
+              "p95": 0.341628,
+              "max": 0.348701,
+              "sum": 6.723823
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headWriteToRevision": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.083968,
+              "p95": 1.351758,
+              "max": 2.589197,
+              "sum": 6.943004
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.083385,
+              "p95": 0.158416,
+              "max": 0.170568,
+              "sum": 2.881844
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "receiptToReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 2.68186,
+              "p95": 9.413977,
+              "max": 9.445716,
+              "sum": 105.674758
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "requestToEntry": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.491118,
+              "p95": 6.07028,
+              "max": 38.057174,
+              "sum": 62.948916000000004
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "revisionToReceipt": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.068689,
+              "p95": 0.184826,
+              "max": 3.359125,
+              "sum": 5.602486
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.068638,
+              "p95": 0.11824,
+              "max": 0.185105,
+              "sum": 2.341681
+            },
+            "unavailableCpuIntervals": 0
+          }
+        },
+        "readerCounts": {
+          "traced": 30,
+          "started": 23,
+          "completed": 0,
+          "cancelled": 23,
+          "errored": 0,
+          "noTerminal": 7,
+          "lastWorkBeforeCancel": {
+            "scope-end": 8,
+            "connection-open": 3,
+            "scope-start": 1,
+            "page-hits-start": 4,
+            "hits-ready": 2,
+            "drafts-ready": 5
+          }
+        },
+        "phaseSaveWindowOverlapMs": {
+          "reader.dispatch": 3.61196,
+          "reader.drafts": 36.688309,
+          "reader.hitTables": 4.563157,
+          "reader.ioRead": 210.38135,
+          "reader.open": 10.055173,
+          "reader.pageHits": 0.0,
+          "reader.registerAndBegin": 3.147283,
+          "reader.scope": 68.747477,
+          "reader.snapshot": 181.279315,
+          "index.bodyToReturn": 8.349792,
+          "index.enteredBody": 28.414072,
+          "index.enteredThroughReturn": 36.763864,
+          "index.prepare": 111.733049,
+          "index.requestToEntry": 7.237568
+        }
+      },
+      {
+        "block": 1,
+        "mode": "READS_ONLY",
+        "readiness": "first-source-check",
+        "saveMs": {
+          "n": 30,
+          "p50": 2.855565,
+          "p95": 9.483978,
+          "max": 10.37931,
+          "sum": 105.852082
+        },
+        "savePhases": {
+          "enteredBody": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.0276,
+              "p95": 2.374136,
+              "max": 3.551365,
+              "sum": 38.190786
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 1.012842,
+              "p95": 1.186347,
+              "max": 1.570333,
+              "sum": 31.04891
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "enteredThroughReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 2.319823,
+              "p95": 8.925965,
+              "max": 9.96671,
+              "sum": 89.516783
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "entryToHeadRead": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.662016,
+              "p95": 2.042416,
+              "max": 3.234042,
+              "sum": 24.927522
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.662357,
+              "p95": 0.869675,
+              "max": 0.905621,
+              "sum": 20.504665
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headReadToWrite": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.18156,
+              "p95": 0.370161,
+              "max": 0.544036,
+              "sum": 6.305751
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.180798,
+              "p95": 0.252733,
+              "max": 0.456533,
+              "sum": 5.800629
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headWriteToRevision": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.07531,
+              "p95": 0.78672,
+              "max": 0.861479,
+              "sum": 4.712974
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.074799,
+              "p95": 0.114253,
+              "max": 0.126606,
+              "sum": 2.481726
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "receiptToReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.292785,
+              "p95": 5.3746,
+              "max": 8.308772,
+              "sum": 51.325997
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "requestToEntry": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.429182,
+              "p95": 1.026066,
+              "max": 1.485856,
+              "sum": 15.058572
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "revisionToReceipt": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.062967,
+              "p95": 0.143518,
+              "max": 0.16096,
+              "sum": 2.244539
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.062868,
+              "p95": 0.136175,
+              "max": 0.188272,
+              "sum": 2.26189
+            },
+            "unavailableCpuIntervals": 0
+          }
+        },
+        "readerCounts": {
+          "traced": 28,
+          "started": 23,
+          "completed": 0,
+          "cancelled": 23,
+          "errored": 0,
+          "noTerminal": 5,
+          "lastWorkBeforeCancel": {
+            "page-hits-start": 2,
+            "drafts-ready": 7,
+            "scope-end": 10,
+            "hits-ready": 1,
+            "connection-open": 2,
+            "scope-start": 1
+          }
+        },
+        "phaseSaveWindowOverlapMs": {
+          "reader.dispatch": 2.233059,
+          "reader.drafts": 25.084901,
+          "reader.hitTables": 1.138346,
+          "reader.ioRead": 95.13531,
+          "reader.open": 4.074545,
+          "reader.pageHits": 0.0,
+          "reader.registerAndBegin": 2.368665,
+          "reader.scope": 35.186133,
+          "reader.snapshot": 82.150418
+        }
+      },
+      {
+        "block": 1,
+        "mode": "INDEX_TRACKER",
+        "readiness": "first-index-commit",
+        "saveMs": {
+          "n": 30,
+          "p50": 2.666992,
+          "p95": 7.250645,
+          "max": 10.564366,
+          "sum": 99.578046
+        },
+        "savePhases": {
+          "enteredBody": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.012031,
+              "p95": 1.308194,
+              "max": 1.57969,
+              "sum": 32.147023
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 1.001661,
+              "p95": 1.244405,
+              "max": 1.308143,
+              "sum": 30.577441
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "enteredThroughReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 2.285961,
+              "p95": 6.854366,
+              "max": 9.766946,
+              "sum": 86.118929
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "entryToHeadRead": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.662999,
+              "p95": 1.024935,
+              "max": 1.065671,
+              "sum": 21.341787
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.661606,
+              "p95": 0.778223,
+              "max": 0.821865,
+              "sum": 20.389494
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headReadToWrite": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.178494,
+              "p95": 0.273381,
+              "max": 0.435423,
+              "sum": 5.935513
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.178564,
+              "p95": 0.245959,
+              "max": 0.273742,
+              "sum": 5.649166
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headWriteToRevision": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.073217,
+              "p95": 0.213048,
+              "max": 0.216776,
+              "sum": 2.71368
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.072466,
+              "p95": 0.139742,
+              "max": 0.177802,
+              "sum": 2.53233
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "receiptToReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.281985,
+              "p95": 5.825344,
+              "max": 8.754915,
+              "sum": 53.971906
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "requestToEntry": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.363429,
+              "p95": 0.76017,
+              "max": 0.760761,
+              "sum": 12.258188
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "revisionToReceipt": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.060322,
+              "p95": 0.120805,
+              "max": 0.23012,
+              "sum": 2.156043
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.060233,
+              "p95": 0.106298,
+              "max": 0.121266,
+              "sum": 2.006451
+            },
+            "unavailableCpuIntervals": 0
+          }
+        },
+        "readerCounts": {
+          "traced": 0,
+          "started": 0,
+          "completed": 0,
+          "cancelled": 0,
+          "errored": 0,
+          "noTerminal": 0,
+          "lastWorkBeforeCancel": {}
+        },
+        "phaseSaveWindowOverlapMs": {
+          "index.bodyToReturn": 0.0,
+          "index.enteredBody": 0.0,
+          "index.enteredThroughReturn": 0.0,
+          "index.prepare": 0.0,
+          "index.requestToEntry": 0.0
+        }
+      },
+      {
+        "block": 1,
+        "mode": "INDEX_ONLY",
+        "readiness": "first-index-commit",
+        "saveMs": {
+          "n": 30,
+          "p50": 2.553644,
+          "p95": 7.144086,
+          "max": 11.612343,
+          "sum": 96.729902
+        },
+        "savePhases": {
+          "enteredBody": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.008223,
+              "p95": 2.454075,
+              "max": 4.457647,
+              "sum": 36.827085
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 1.008003,
+              "p95": 1.501725,
+              "max": 2.203736,
+              "sum": 32.515266
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "enteredThroughReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 2.155446,
+              "p95": 6.840679,
+              "max": 11.343802,
+              "sum": 85.484512
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "entryToHeadRead": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.669881,
+              "p95": 1.01213,
+              "max": 1.955474,
+              "sum": 22.50915
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.660324,
+              "p95": 1.012371,
+              "max": 1.705765,
+              "sum": 21.932904
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headReadToWrite": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.171861,
+              "p95": 0.365101,
+              "max": 3.541376,
+              "sum": 9.308209
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.171942,
+              "p95": 0.307675,
+              "max": 0.318906,
+              "sum": 5.947245
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headWriteToRevision": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.074749,
+              "p95": 0.124303,
+              "max": 0.384919,
+              "sum": 2.81624
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.074209,
+              "p95": 0.115576,
+              "max": 0.124002,
+              "sum": 2.518427
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "receiptToReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.126404,
+              "p95": 4.599733,
+              "max": 10.281838,
+              "sum": 48.657427
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "requestToEntry": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.316822,
+              "p95": 0.461702,
+              "max": 0.469508,
+              "sum": 9.847922
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "revisionToReceipt": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.060202,
+              "p95": 0.12841,
+              "max": 0.191497,
+              "sum": 2.193486
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.060122,
+              "p95": 0.116306,
+              "max": 0.12856,
+              "sum": 2.11669
+            },
+            "unavailableCpuIntervals": 0
+          }
+        },
+        "readerCounts": {
+          "traced": 0,
+          "started": 0,
+          "completed": 0,
+          "cancelled": 0,
+          "errored": 0,
+          "noTerminal": 0,
+          "lastWorkBeforeCancel": {}
+        },
+        "phaseSaveWindowOverlapMs": {
+          "index.bodyToReturn": 0.0,
+          "index.enteredBody": 0.0,
+          "index.enteredThroughReturn": 0.0,
+          "index.prepare": 0.0,
+          "index.requestToEntry": 0.0
+        }
+      },
+      {
+        "block": 1,
+        "mode": "TRACKER",
+        "readiness": "tracker-registered",
+        "saveMs": {
+          "n": 30,
+          "p50": 2.096276,
+          "p95": 3.049226,
+          "max": 5.359753,
+          "sum": 67.629553
+        },
+        "savePhases": {
+          "enteredBody": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.90511,
+              "p95": 1.295361,
+              "max": 1.988715,
+              "sum": 29.289206
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.904379,
+              "p95": 1.251367,
+              "max": 1.29525,
+              "sum": 28.510601
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "enteredThroughReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.664973,
+              "p95": 2.709061,
+              "max": 5.037621,
+              "sum": 54.357551
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "entryToHeadRead": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.617723,
+              "p95": 0.874113,
+              "max": 0.909379,
+              "sum": 19.437415
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.617614,
+              "p95": 0.874073,
+              "max": 0.874282,
+              "sum": 19.408325
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headReadToWrite": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.140954,
+              "p95": 0.202539,
+              "max": 0.245349,
+              "sum": 4.640744
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.141154,
+              "p95": 0.202588,
+              "max": 0.245277,
+              "sum": 4.643455
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headWriteToRevision": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.067737,
+              "p95": 0.132407,
+              "max": 0.833006,
+              "sum": 3.0228260000000002
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.067195,
+              "p95": 0.130805,
+              "max": 0.132117,
+              "sum": 2.3068940000000002
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "receiptToReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.76446,
+              "p95": 1.039532,
+              "max": 4.050707,
+              "sum": 25.068345
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "requestToEntry": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.375211,
+              "p95": 0.659843,
+              "max": 0.6849,
+              "sum": 11.8964
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "revisionToReceipt": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.057838,
+              "p95": 0.147847,
+              "max": 0.199633,
+              "sum": 2.188221
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.057868,
+              "p95": 0.147626,
+              "max": 0.164884,
+              "sum": 2.151927
+            },
+            "unavailableCpuIntervals": 0
+          }
+        },
+        "readerCounts": {
+          "traced": 0,
+          "started": 0,
+          "completed": 0,
+          "cancelled": 0,
+          "errored": 0,
+          "noTerminal": 0,
+          "lastWorkBeforeCancel": {}
+        },
+        "phaseSaveWindowOverlapMs": {}
+      },
+      {
+        "block": 1,
+        "mode": "IDLE",
+        "readiness": "fixture-ready",
+        "saveMs": {
+          "n": 30,
+          "p50": 1.751062,
+          "p95": 2.207735,
+          "max": 2.673494,
+          "sum": 55.19475
+        },
+        "savePhases": {
+          "enteredBody": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.891426,
+              "p95": 1.08109,
+              "max": 1.218887,
+              "sum": 27.552305
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.891115,
+              "p95": 1.040043,
+              "max": 1.218977,
+              "sum": 27.222687
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "enteredThroughReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 1.510032,
+              "p95": 1.906301,
+              "max": 2.058175,
+              "sum": 45.906371
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "entryToHeadRead": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.58908,
+              "p95": 0.726878,
+              "max": 0.803421,
+              "sum": 18.305542
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.589321,
+              "p95": 0.717299,
+              "max": 0.727238,
+              "sum": 18.048026
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headReadToWrite": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.13926,
+              "p95": 0.223087,
+              "max": 0.256359,
+              "sum": 4.680211
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.13928,
+              "p95": 0.219159,
+              "max": 0.223188,
+              "sum": 4.645721
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "headWriteToRevision": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.072996,
+              "p95": 0.125103,
+              "max": 0.16026,
+              "sum": 2.39959
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.072596,
+              "p95": 0.125205,
+              "max": 0.136405,
+              "sum": 2.362374
+            },
+            "unavailableCpuIntervals": 0
+          },
+          "receiptToReturn": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.54578,
+              "p95": 0.839288,
+              "max": 0.849247,
+              "sum": 18.354066
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "requestToEntry": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.261288,
+              "p95": 0.406559,
+              "max": 0.56704,
+              "sum": 8.269617
+            },
+            "sameThreadCpuMs": {
+              "n": 0,
+              "p50": null,
+              "p95": null,
+              "max": null,
+              "sum": 0
+            },
+            "unavailableCpuIntervals": 30
+          },
+          "revisionToReceipt": {
+            "completeIntervals": 30,
+            "incompleteIntervals": 0,
+            "wallMs": {
+              "n": 30,
+              "p50": 0.062486,
+              "p95": 0.117019,
+              "max": 0.169396,
+              "sum": 2.166962
+            },
+            "sameThreadCpuMs": {
+              "n": 30,
+              "p50": 0.062546,
+              "p95": 0.1176,
+              "max": 0.169446,
+              "sum": 2.166566
+            },
+            "unavailableCpuIntervals": 0
+          }
+        },
+        "readerCounts": {
+          "traced": 0,
+          "started": 0,
+          "completed": 0,
+          "cancelled": 0,
+          "errored": 0,
+          "noTerminal": 0,
+          "lastWorkBeforeCancel": {}
+        },
+        "phaseSaveWindowOverlapMs": {}
+      }
+    ],
+    "full": [
+      {
+        "block": 0,
+        "saveMs": {
+          "n": 30,
+          "p50": 5.926872,
+          "p95": 15.977829,
+          "max": 31.924389,
+          "sum": 223.586338
+        },
+        "noIndexBodyOverlap": {
+          "sampleIds": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29
+          ],
+          "saveMs": {
+            "n": 29,
+            "p50": 5.926872,
+            "p95": 11.5836,
+            "max": 15.977829,
+            "sum": 191.661949
+          },
+          "exploratoryOnly": true
+        },
+        "warmPageStarts": 0,
+        "cancelledIOReads": 23,
+        "worstSample": {
+          "sample": 20,
+          "raw": {
+            "sample": 20,
+            "startNs": 5553650699,
+            "endNs": 5585575088,
+            "elapsedMs": 31.924389,
+            "committed": true,
+            "revision": 22,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 150
+          },
+          "events": [
+            {
+              "owner": "save",
+              "stage": "waiting-writer",
+              "sample": 20,
+              "wallNs": 5553687908,
+              "threadCpuNs": 2242581734,
+              "threadId": 52,
+              "originalEventOrdinal": 361
+            },
+            {
+              "owner": "save",
+              "stage": "writer-acquired",
+              "sample": 20,
+              "wallNs": 5583863329,
+              "threadCpuNs": 6455551605,
+              "threadId": 46,
+              "originalEventOrdinal": 383
+            },
+            {
+              "owner": "save",
+              "stage": "head-read",
+              "sample": 20,
+              "wallNs": 5584619011,
+              "threadCpuNs": 6456307577,
+              "threadId": 46,
+              "originalEventOrdinal": 384
+            },
+            {
+              "owner": "save",
+              "stage": "head-written",
+              "sample": 20,
+              "wallNs": 5584807563,
+              "threadCpuNs": 6456495849,
+              "threadId": 46,
+              "originalEventOrdinal": 385
+            },
+            {
+              "owner": "save",
+              "stage": "revision-written",
+              "sample": 20,
+              "wallNs": 5584889356,
+              "threadCpuNs": 6456577081,
+              "threadId": 46,
+              "originalEventOrdinal": 386
+            },
+            {
+              "owner": "save",
+              "stage": "receipt-written",
+              "sample": 20,
+              "wallNs": 5584951722,
+              "threadCpuNs": 6456639367,
+              "threadId": 46,
+              "originalEventOrdinal": 387
+            },
+            {
+              "owner": "save",
+              "stage": "transaction-returned",
+              "sample": 20,
+              "wallNs": 5585564619,
+              "threadCpuNs": 3327683,
+              "threadId": 57,
+              "originalEventOrdinal": 390
+            }
+          ],
+          "phases": {
+            "requestToEntry": {
+              "startNs": 5553687908,
+              "endNs": 5583863329,
+              "wallNs": 30175421,
+              "startThreadId": 52,
+              "endThreadId": 46,
+              "sameThread": false,
+              "threadCpuDeltaNs": null,
+              "cpuUnavailableReason": "different-thread",
+              "cpuIsExclusiveWork": false
+            },
+            "entryToHeadRead": {
+              "startNs": 5583863329,
+              "endNs": 5584619011,
+              "wallNs": 755682,
+              "startThreadId": 46,
+              "endThreadId": 46,
+              "sameThread": true,
+              "threadCpuDeltaNs": 755972,
+              "cpuUnavailableReason": null,
+              "cpuIsExclusiveWork": false
+            },
+            "headReadToWrite": {
+              "startNs": 5584619011,
+              "endNs": 5584807563,
+              "wallNs": 188552,
+              "startThreadId": 46,
+              "endThreadId": 46,
+              "sameThread": true,
+              "threadCpuDeltaNs": 188272,
+              "cpuUnavailableReason": null,
+              "cpuIsExclusiveWork": false
+            },
+            "headWriteToRevision": {
+              "startNs": 5584807563,
+              "endNs": 5584889356,
+              "wallNs": 81793,
+              "startThreadId": 46,
+              "endThreadId": 46,
+              "sameThread": true,
+              "threadCpuDeltaNs": 81232,
+              "cpuUnavailableReason": null,
+              "cpuIsExclusiveWork": false
+            },
+            "revisionToReceipt": {
+              "startNs": 5584889356,
+              "endNs": 5584951722,
+              "wallNs": 62366,
+              "startThreadId": 46,
+              "endThreadId": 46,
+              "sameThread": true,
+              "threadCpuDeltaNs": 62286,
+              "cpuUnavailableReason": null,
+              "cpuIsExclusiveWork": false
+            },
+            "receiptToReturn": {
+              "startNs": 5584951722,
+              "endNs": 5585564619,
+              "wallNs": 612897,
+              "startThreadId": 46,
+              "endThreadId": 57,
+              "sameThread": false,
+              "threadCpuDeltaNs": null,
+              "cpuUnavailableReason": "different-thread",
+              "cpuIsExclusiveWork": false
+            },
+            "enteredBody": {
+              "startNs": 5583863329,
+              "endNs": 5584951722,
+              "wallNs": 1088393,
+              "startThreadId": 46,
+              "endThreadId": 46,
+              "sameThread": true,
+              "threadCpuDeltaNs": 1087762,
+              "cpuUnavailableReason": null,
+              "cpuIsExclusiveWork": false
+            },
+            "enteredThroughReturn": {
+              "startNs": 5583863329,
+              "endNs": 5585564619,
+              "wallNs": 1701290,
+              "startThreadId": 46,
+              "endThreadId": 57,
+              "sameThread": false,
+              "threadCpuDeltaNs": null,
+              "cpuUnavailableReason": "different-thread",
+              "cpuIsExclusiveWork": false
+            }
+          },
+          "overlap": {
+            "readerIOOverlapMs": 31.585217,
+            "readerSnapshotOverlapMs": 30.958276,
+            "indexPrepareOverlapMs": 0.0,
+            "indexRequestToEntryOverlapMs": 0.159065,
+            "indexEnteredBodyOverlapMs": 28.211965,
+            "indexEnteredThroughReturnOverlapMs": 31.433966,
+            "saveRequestToEntryIndexBodyOverlapMs": 28.211965,
+            "indexCommittedRowEvents": [
+              {
+                "wallNs": 5585261543,
+                "rows": 128
+              }
+            ],
+            "rowsAdvanced": 64,
+            "sourceChecksAdvanced": 150,
+            "indexCommitCountsProveWriterHold": false
+          }
+        },
+        "receiptToReturnSameThreadCpuPairs": 0
+      },
+      {
+        "block": 1,
+        "saveMs": {
+          "n": 30,
+          "p50": 5.606635,
+          "p95": 15.387647,
+          "max": 41.530293,
+          "sum": 231.706499
+        },
+        "noIndexBodyOverlap": {
+          "sampleIds": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29
+          ],
+          "saveMs": {
+            "n": 29,
+            "p50": 5.606635,
+            "p95": 11.962999,
+            "max": 15.387647,
+            "sum": 190.176206
+          },
+          "exploratoryOnly": true
+        },
+        "warmPageStarts": 0,
+        "cancelledIOReads": 23,
+        "worstSample": {
+          "sample": 19,
+          "raw": {
+            "sample": 19,
+            "startNs": 5585617207,
+            "endNs": 5627147500,
+            "elapsedMs": 41.530293,
+            "committed": true,
+            "revision": 21,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 18,
+            "sourceChecksEnd": 275
+          },
+          "events": [
+            {
+              "owner": "save",
+              "stage": "waiting-writer",
+              "sample": 19,
+              "wallNs": 5585665197,
+              "threadCpuNs": 210263579,
+              "threadId": 49,
+              "originalEventOrdinal": 335
+            },
+            {
+              "owner": "save",
+              "stage": "writer-acquired",
+              "sample": 19,
+              "wallNs": 5623722371,
+              "threadCpuNs": 15868380424,
+              "threadId": 43,
+              "originalEventOrdinal": 358
+            },
+            {
+              "owner": "save",
+              "stage": "head-read",
+              "sample": 19,
+              "wallNs": 5624440272,
+              "threadCpuNs": 15869098155,
+              "threadId": 43,
+              "originalEventOrdinal": 359
+            },
+            {
+              "owner": "save",
+              "stage": "head-written",
+              "sample": 19,
+              "wallNs": 5624658500,
+              "threadCpuNs": 15869316402,
+              "threadId": 43,
+              "originalEventOrdinal": 360
+            },
+            {
+              "owner": "save",
+              "stage": "revision-written",
+              "sample": 19,
+              "wallNs": 5624824249,
+              "threadCpuNs": 15869418553,
+              "threadId": 43,
+              "originalEventOrdinal": 361
+            },
+            {
+              "owner": "save",
+              "stage": "receipt-written",
+              "sample": 19,
+              "wallNs": 5624894140,
+              "threadCpuNs": 15869488284,
+              "threadId": 43,
+              "originalEventOrdinal": 362
+            },
+            {
+              "owner": "save",
+              "stage": "transaction-returned",
+              "sample": 19,
+              "wallNs": 5627141789,
+              "threadCpuNs": 210558160,
+              "threadId": 49,
+              "originalEventOrdinal": 364
+            }
+          ],
+          "phases": {
+            "requestToEntry": {
+              "startNs": 5585665197,
+              "endNs": 5623722371,
+              "wallNs": 38057174,
+              "startThreadId": 49,
+              "endThreadId": 43,
+              "sameThread": false,
+              "threadCpuDeltaNs": null,
+              "cpuUnavailableReason": "different-thread",
+              "cpuIsExclusiveWork": false
+            },
+            "entryToHeadRead": {
+              "startNs": 5623722371,
+              "endNs": 5624440272,
+              "wallNs": 717901,
+              "startThreadId": 43,
+              "endThreadId": 43,
+              "sameThread": true,
+              "threadCpuDeltaNs": 717731,
+              "cpuUnavailableReason": null,
+              "cpuIsExclusiveWork": false
+            },
+            "headReadToWrite": {
+              "startNs": 5624440272,
+              "endNs": 5624658500,
+              "wallNs": 218228,
+              "startThreadId": 43,
+              "endThreadId": 43,
+              "sameThread": true,
+              "threadCpuDeltaNs": 218247,
+              "cpuUnavailableReason": null,
+              "cpuIsExclusiveWork": false
+            },
+            "headWriteToRevision": {
+              "startNs": 5624658500,
+              "endNs": 5624824249,
+              "wallNs": 165749,
+              "startThreadId": 43,
+              "endThreadId": 43,
+              "sameThread": true,
+              "threadCpuDeltaNs": 102151,
+              "cpuUnavailableReason": null,
+              "cpuIsExclusiveWork": false
+            },
+            "revisionToReceipt": {
+              "startNs": 5624824249,
+              "endNs": 5624894140,
+              "wallNs": 69891,
+              "startThreadId": 43,
+              "endThreadId": 43,
+              "sameThread": true,
+              "threadCpuDeltaNs": 69731,
+              "cpuUnavailableReason": null,
+              "cpuIsExclusiveWork": false
+            },
+            "receiptToReturn": {
+              "startNs": 5624894140,
+              "endNs": 5627141789,
+              "wallNs": 2247649,
+              "startThreadId": 43,
+              "endThreadId": 49,
+              "sameThread": false,
+              "threadCpuDeltaNs": null,
+              "cpuUnavailableReason": "different-thread",
+              "cpuIsExclusiveWork": false
+            },
+            "enteredBody": {
+              "startNs": 5623722371,
+              "endNs": 5624894140,
+              "wallNs": 1171769,
+              "startThreadId": 43,
+              "endThreadId": 43,
+              "sameThread": true,
+              "threadCpuDeltaNs": 1107860,
+              "cpuUnavailableReason": null,
+              "cpuIsExclusiveWork": false
+            },
+            "enteredThroughReturn": {
+              "startNs": 5623722371,
+              "endNs": 5627141789,
+              "wallNs": 3419418,
+              "startThreadId": 43,
+              "endThreadId": 49,
+              "sameThread": false,
+              "threadCpuDeltaNs": null,
+              "cpuUnavailableReason": "different-thread",
+              "cpuIsExclusiveWork": false
+            }
+          },
+          "overlap": {
+            "readerIOOverlapMs": 40.865711,
+            "readerSnapshotOverlapMs": 39.74619,
+            "indexPrepareOverlapMs": 0.0,
+            "indexRequestToEntryOverlapMs": 0.823696,
+            "indexEnteredBodyOverlapMs": 28.414072,
+            "indexEnteredThroughReturnOverlapMs": 36.763864,
+            "saveRequestToEntryIndexBodyOverlapMs": 28.414072,
+            "indexCommittedRowEvents": [
+              {
+                "wallNs": 5623223712,
+                "rows": 128
+              }
+            ],
+            "rowsAdvanced": 64,
+            "sourceChecksAdvanced": 257,
+            "indexCommitCountsProveWriterHold": false
+          }
+        },
+        "receiptToReturnSameThreadCpuPairs": 0
+      }
+    ]
+  },
+  "recommendedProductionScope": "Matching helper only; preserve original String.regionMatches verifier and Unicode fallback; save p50 remains unresolved."
+}

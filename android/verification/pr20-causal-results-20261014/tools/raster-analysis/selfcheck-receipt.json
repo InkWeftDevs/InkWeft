@@ -1,0 +1,86 @@
+{
+  "kind": "SYNTHETIC_HOST_ARITHMETIC_ONLY_NOT_NATIVE",
+  "checks": [
+    {
+      "name": "65 frame arithmetic and local read count",
+      "result": "PASS"
+    },
+    {
+      "name": "missing callback remains null",
+      "result": "PASS"
+    },
+    {
+      "name": "callback after ready keeps negative signed interval",
+      "result": "PASS"
+    },
+    {
+      "name": "unavailable native CPU remains null",
+      "result": "PASS"
+    },
+    {
+      "name": "missing marker",
+      "result": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "name": "duplicate phase frame",
+      "result": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "name": "missing metadata",
+      "result": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "name": "invalid cross-thread metadata CPU",
+      "result": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "name": "native count mismatch",
+      "result": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "name": "backwards required stage",
+      "result": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "name": "pixel mismatch",
+      "result": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "name": "synthetic completed report binding",
+      "result": "PASS"
+    },
+    {
+      "name": "whole run incomplete despite method PASS",
+      "result": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "name": "extraction whole run false",
+      "result": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "name": "wrong records hash",
+      "result": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "name": "duplicate method13 block",
+      "result": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "name": "wrong source",
+      "result": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "name": "terminal packaging incomplete",
+      "result": "REJECTED_AS_REQUIRED"
+    },
+    {
+      "name": "terminal cleanup failed",
+      "result": "REJECTED_AS_REQUIRED"
+    }
+  ],
+  "passed": 19,
+  "analyzer_sha256": "d0960fbe7135a7aac10e3e850aecd9476891fc08a8e1792e7f062dbff2c2b479",
+  "selfcheck_sha256": "f3d388fe5f0478010041c14e8d0c1705c3962094280d2feb960c5eff9a481c74",
+  "real_records_analyzed": false,
+  "performance_acceptance": "NOT_EVALUATED"
+}

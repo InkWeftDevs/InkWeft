@@ -1,0 +1,64 @@
+{
+  "scope": "SYNTHETIC_ANALYZER_CHECKS_NOT_NATIVE_EVIDENCE",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "synthetic-complete-trial",
+      "status": "PASS"
+    },
+    {
+      "name": "precommit-only-is-not-delete-overlap",
+      "status": "PASS"
+    },
+    {
+      "name": "original-threshold-0",
+      "status": "PASS"
+    },
+    {
+      "name": "original-threshold-19",
+      "status": "PASS"
+    },
+    {
+      "name": "original-threshold-20",
+      "status": "PASS"
+    },
+    {
+      "name": "original-threshold-30",
+      "status": "PASS"
+    },
+    {
+      "name": "timing-mismatch-detected",
+      "status": "PASS"
+    },
+    {
+      "name": "duplicate-json-rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "nonfinite-json-rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "closed-shape-rejects-extra",
+      "status": "PASS"
+    },
+    {
+      "name": "missing-input-is-incomplete",
+      "status": "PASS"
+    },
+    {
+      "name": "terminal-records-only-complete",
+      "status": "PASS"
+    },
+    {
+      "name": "terminal-partial-not-complete",
+      "status": "PASS"
+    },
+    {
+      "name": "terminal-records-hash-tamper-rejected",
+      "status": "PASS"
+    }
+  ],
+  "analyzerSha256": "c04cbc33dec1fa62e4a7a243360a53853f9d9664a34e4cbbe476bab3b8d4b10f",
+  "schemaSha256": "d0e000115bdccb617e0a44af8eaa2789a02d4f49a8c95100febb844cba28e901"
+}

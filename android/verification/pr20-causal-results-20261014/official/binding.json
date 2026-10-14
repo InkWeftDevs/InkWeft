@@ -1,0 +1,32 @@
+{
+  "scope": "DIAGNOSTIC_ONLY",
+  "run_id": "38514139119",
+  "job_id": "115689021611",
+  "run_attempt": "1",
+  "workflow_sha": "d4a107dd84c6e309b5dbbbfb3a57d69371024408",
+  "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+  "readiness_git": "b2e1d9f9de66a26f5a4b122ea6754d77198005f8",
+  "prep_sha": "cedffff8ff652189715f69eb4dac5e0ba22e5a7d",
+  "input_hashes": {
+    "approved_plan_sha256": "06ee5e5e86044489226e907729eb7a9b9b1d01bfb82c6d7e81f062c75ef55f11",
+    "source_spec_sha256": "e52d5022029e2c2544205c187e5d5f7a754242a88adc13ddc08db8942a41a6d7",
+    "method_plan_sha256": "9fc6445a521080b8357c5b4d00a8a74f19a23d1c8c12f7e82c531497ef07f3ab",
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "marker_contract_sha256": "ac540b3f0321760d202e3ea76f76eb7c2f2afc3c2b532708152d523cb1cea722",
+    "prepare_sources_sha256": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516"
+  },
+  "control_hashes": {
+    "ci/pr20-causal/run.py": "dca82cebb22e9a9d1eb7b27e433ea5433ab62dc6850507b71aad789d328a7cda",
+    "ci/pr20-causal/markers.py": "3514d2bca1f7b91efe7886ea42763b37eca873c8914938e8ad3dfeb03eaa1592",
+    "ci/pr20-causal/package.py": "11a673d67db815a04967c368d5984450189d3e07f4e05b1faadaa6db72552816",
+    "ci/pr20-causal/cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "ci/pr20-causal/authorization.json": "87bf8c1f688d37edef1359368a6530a06cb1c2cf20b2d04920ab3300f89efd58",
+    "ci/pr20-causal/workflow.proposed.yml": "01be6b6f2e06d1e858bc5c633ef6b3b3a82588c213dfd20a459a5cbf0222bfb3",
+    "ci/pr20-causal/EXECUTION_SHA256SUMS": "ff0938d46fbb1be4eeea85a23526d6b473e41f699371fce0ea0c737e61afb084",
+    ".github/workflows/pr20-causal.yml": "affdabacbf5bd8c709e729c26d7f7dfbc428c6bd031c55518d2ddcf9abd53ccc"
+  },
+  "run_status": "completed",
+  "run_conclusion": "success",
+  "job_status": "completed",
+  "job_conclusion": "success"
+}

@@ -1,0 +1,862 @@
+{
+  "format": "JSON_SCHEMA_2020_12",
+  "status": "STATIC_SOURCE_CONTRACT_NOT_NATIVE_EVIDENCE",
+  "methods": {
+    "org.inkweft.data.HistoryDeletionCausalTest#sameRoomWriterConditionalDeleteArrival": {
+      "connection": "same-room",
+      "trials": 30
+    },
+    "org.inkweft.data.HistoryDeletionCausalTest#separateRoomWriterConditionalDeleteArrival": {
+      "connection": "separate-room",
+      "trials": 30
+    }
+  },
+  "instrumentationArguments": {
+    "historyGcContentionDiagnostic": "true"
+  },
+  "markerLineMaxBytes": 65536,
+  "markers": {
+    "HISTORY_GC_CAUSAL_TRIAL": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sample": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 29
+        },
+        "scenario": {
+          "const": "CONDITIONAL_DELETE_ARRIVAL",
+          "type": "string"
+        },
+        "replacesNaturalAcceptance": {
+          "const": false,
+          "type": "boolean"
+        },
+        "connection": {
+          "type": "string",
+          "enum": [
+            "same-room",
+            "separate-room"
+          ]
+        },
+        "fixtureSourceVersions": {
+          "const": 1281,
+          "type": "integer"
+        },
+        "fixtureDetachedSources": {
+          "const": 1280,
+          "type": "integer"
+        },
+        "fixtureExplicitRoots": {
+          "const": 0,
+          "type": "integer"
+        },
+        "fixtureLatestRetained": {
+          "const": 1,
+          "type": "integer"
+        },
+        "batchLimit": {
+          "const": 256,
+          "type": "integer"
+        },
+        "artificialGates": {
+          "const": false,
+          "type": "boolean"
+        },
+        "committed": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "saveOutcome": {
+          "type": "string",
+          "enum": [
+            "NOT_STARTED",
+            "THREW",
+            "COMMITTED",
+            "Conflict",
+            "ReusedCommandId",
+            "OutcomeUnknown"
+          ]
+        },
+        "saveWatchdogMs": {
+          "const": 5000,
+          "type": "integer"
+        },
+        "eventCapacity": {
+          "const": 64,
+          "type": "integer"
+        },
+        "phaseCapacity": {
+          "const": 32,
+          "type": "integer"
+        },
+        "writerEntryNs": {
+          "type": "null"
+        },
+        "pureSqliteLockWaitMs": {
+          "type": "null"
+        },
+        "initialRevision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "writerSqlite": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "page_size": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            },
+            "auto_vacuum": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2
+            },
+            "journal_mode": {
+              "type": "string",
+              "enum": [
+                "delete",
+                "truncate",
+                "persist",
+                "memory",
+                "wal",
+                "off"
+              ]
+            },
+            "synchronous": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3
+            }
+          },
+          "required": [
+            "page_size",
+            "auto_vacuum",
+            "journal_mode",
+            "synchronous"
+          ]
+        },
+        "authorWriterSqlite": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "page_size": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            },
+            "auto_vacuum": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2
+            },
+            "journal_mode": {
+              "type": "string",
+              "enum": [
+                "delete",
+                "truncate",
+                "persist",
+                "memory",
+                "wal",
+                "off"
+              ]
+            },
+            "synchronous": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3
+            }
+          },
+          "required": [
+            "page_size",
+            "auto_vacuum",
+            "journal_mode",
+            "synchronous"
+          ]
+        },
+        "savedRevision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "finalRevision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "contentVerified": {
+          "const": true,
+          "type": "boolean"
+        },
+        "retainedRevisions": {
+          "type": "array",
+          "items": {
+            "const": 1281,
+            "type": "integer"
+          },
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "open-fixture",
+            "create-fixture",
+            "await-author-ready",
+            "collect-and-author",
+            "finish-collection",
+            "verify",
+            "complete"
+          ]
+        },
+        "authorStage": {
+          "type": "string",
+          "enum": [
+            "not-started",
+            "waiting-for-delete",
+            "rename",
+            "complete"
+          ]
+        },
+        "failureClass": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Za-z0-9_$]*$",
+          "maxLength": 256
+        },
+        "suppressedFailureClasses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_$]*$",
+            "maxLength": 256
+          },
+          "minItems": 0,
+          "maxItems": 64
+        },
+        "collectorFailureClass": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Za-z0-9_$]*$",
+          "maxLength": 256
+        },
+        "authorReadyNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "notificationNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "collectorStartNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "collectorEndNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "saveStartNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "saveEndNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "saveMs": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 9.223372036854776e+18
+        },
+        "beforeRenameReceiptNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "afterRenameTransactionNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "firstDeleted": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1280
+        },
+        "firstDeferred": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "firstRootScans": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "firstCommittedBatches": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "finishStartNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "finishEndNs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "finishDeleted": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1280
+        },
+        "finishDeferred": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "finishRootScans": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "deletionTransactionExposed": {
+          "type": "boolean"
+        },
+        "coveredBeforeBatchCommitNs": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -9223372036854775808,
+            "maximum": 9223372036854775807
+          },
+          "minItems": 0,
+          "maxItems": 5
+        },
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "phase": {
+                "type": "string",
+                "enum": [
+                  "after-roots",
+                  "after-stats",
+                  "after-scan",
+                  "before-batch-commit",
+                  "after-batch"
+                ]
+              },
+              "atNs": {
+                "type": "integer",
+                "minimum": -9223372036854775808,
+                "maximum": 9223372036854775807
+              }
+            },
+            "required": [
+              "phase",
+              "atNs"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 32
+        },
+        "batchEvents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "phase": {
+                "type": "string",
+                "enum": [
+                  "guard-checked",
+                  "before-delete",
+                  "after-delete",
+                  "transaction-returned"
+                ]
+              },
+              "atNs": {
+                "type": "integer",
+                "minimum": -9223372036854775808,
+                "maximum": 9223372036854775807
+              },
+              "callbackNs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "afterSequence": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1280
+              },
+              "candidates": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 256
+              },
+              "expectedDataVersion": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "expectedChanges": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "observedDataVersion": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "observedChanges": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "guardMatched": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "phase",
+              "atNs",
+              "callbackNs",
+              "afterSequence",
+              "candidates",
+              "expectedDataVersion",
+              "expectedChanges",
+              "observedDataVersion",
+              "observedChanges",
+              "guardMatched"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 64
+        },
+        "deleteIntervals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "afterSequence": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1024
+              },
+              "candidates": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 256
+              },
+              "deleteStartNs": {
+                "type": "integer",
+                "minimum": -9223372036854775808,
+                "maximum": 9223372036854775807
+              },
+              "deleteEndNs": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": -9223372036854775808,
+                "maximum": 9223372036854775807
+              },
+              "transactionReturnedNs": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": -9223372036854775808,
+                "maximum": 9223372036854775807
+              },
+              "saveStartedDuringDelete": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "afterSequence",
+              "candidates",
+              "deleteStartNs",
+              "deleteEndNs",
+              "transactionReturnedNs",
+              "saveStartedDuringDelete"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 5
+        }
+      },
+      "required": [
+        "sample",
+        "scenario",
+        "replacesNaturalAcceptance",
+        "connection",
+        "fixtureSourceVersions",
+        "fixtureDetachedSources",
+        "fixtureExplicitRoots",
+        "fixtureLatestRetained",
+        "batchLimit",
+        "artificialGates",
+        "committed",
+        "saveOutcome",
+        "saveWatchdogMs",
+        "eventCapacity",
+        "phaseCapacity",
+        "writerEntryNs",
+        "pureSqliteLockWaitMs",
+        "status",
+        "stage",
+        "authorStage",
+        "failureClass",
+        "suppressedFailureClasses",
+        "collectorFailureClass",
+        "authorReadyNs",
+        "notificationNs",
+        "collectorStartNs",
+        "collectorEndNs",
+        "saveStartNs",
+        "saveEndNs",
+        "saveMs",
+        "beforeRenameReceiptNs",
+        "afterRenameTransactionNs",
+        "firstDeleted",
+        "firstDeferred",
+        "firstRootScans",
+        "firstCommittedBatches",
+        "finishStartNs",
+        "finishEndNs",
+        "finishDeleted",
+        "finishDeferred",
+        "finishRootScans",
+        "deletionTransactionExposed",
+        "coveredBeforeBatchCommitNs",
+        "phases",
+        "batchEvents",
+        "deleteIntervals"
+      ]
+    },
+    "HISTORY_GC_CAUSAL_SUMMARY": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scenario": {
+          "const": "CONDITIONAL_DELETE_ARRIVAL",
+          "type": "string"
+        },
+        "replacesNaturalAcceptance": {
+          "const": false,
+          "type": "boolean"
+        },
+        "connection": {
+          "type": "string",
+          "enum": [
+            "same-room",
+            "separate-room"
+          ]
+        },
+        "plannedTrials": {
+          "const": 30,
+          "type": "integer"
+        },
+        "recordedTrials": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "passedTrials": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "committedSaves": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "failedTrials": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "unknownCommitOutcomes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "notStartedSaves": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "functionalStatus": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "FAILED_INCOMPLETE"
+          ]
+        },
+        "exposureStatus": {
+          "type": "string",
+          "enum": [
+            "RUN_INCOMPLETE",
+            "INSUFFICIENT_EXPOSURE",
+            "SUFFICIENT_EXPOSURE"
+          ]
+        },
+        "minimumExposedSamplesForQuantiles": {
+          "const": 20,
+          "type": "integer"
+        },
+        "latencyAcceptance": {
+          "const": "NOT_EVALUATED",
+          "type": "string"
+        },
+        "saveWatchdogMs": {
+          "const": 5000,
+          "type": "integer"
+        },
+        "watchdogIsLatencyAcceptance": {
+          "const": false,
+          "type": "boolean"
+        },
+        "quantileDefinition": {
+          "const": "nearest rank: ceil(p*n)-1, zero based; n=30 p50=14 p95=28",
+          "type": "string"
+        },
+        "allSaves": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 30
+            },
+            "sampleIndices": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 29
+              },
+              "minItems": 0,
+              "maxItems": 30
+            },
+            "saveSamplesMs": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9.223372036854776e+18
+              },
+              "minItems": 0,
+              "maxItems": 30
+            },
+            "maxMs": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9.223372036854776e+18
+            },
+            "p50Ms": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9.223372036854776e+18
+            },
+            "p95Ms": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9.223372036854776e+18
+            }
+          },
+          "required": [
+            "count",
+            "sampleIndices",
+            "saveSamplesMs",
+            "maxMs",
+            "p50Ms",
+            "p95Ms"
+          ]
+        },
+        "exposedSaves": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 30
+            },
+            "sampleIndices": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 29
+              },
+              "minItems": 0,
+              "maxItems": 30
+            },
+            "saveSamplesMs": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 9.223372036854776e+18
+              },
+              "minItems": 0,
+              "maxItems": 30
+            },
+            "maxMs": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9.223372036854776e+18
+            },
+            "p50Ms": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9.223372036854776e+18
+            },
+            "p95Ms": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 9.223372036854776e+18
+            }
+          },
+          "required": [
+            "count",
+            "sampleIndices",
+            "saveSamplesMs",
+            "maxMs",
+            "p50Ms",
+            "p95Ms"
+          ]
+        }
+      },
+      "required": [
+        "scenario",
+        "replacesNaturalAcceptance",
+        "connection",
+        "plannedTrials",
+        "recordedTrials",
+        "passedTrials",
+        "committedSaves",
+        "failedTrials",
+        "unknownCommitOutcomes",
+        "notStartedSaves",
+        "functionalStatus",
+        "exposureStatus",
+        "minimumExposedSamplesForQuantiles",
+        "latencyAcceptance",
+        "saveWatchdogMs",
+        "watchdogIsLatencyAcceptance",
+        "quantileDefinition",
+        "allSaves",
+        "exposedSaves"
+      ]
+    }
+  },
+  "sourceSha256": {
+    "HistoryStorage.kt": "b96890478129bbb7b0bbb538c3cf8d5f2e97f2b8b5e2e34d8057c855c9ec6ca9",
+    "HistoryDeletionCausalTest.kt": "4f80b8ce32e1aa2bae1d919b96c06b1897e7a8500c748822efd05119ba87ec4a"
+  },
+  "notes": [
+    "All schemas are closed; no unknown properties or non-finite numbers. Reject duplicate JSON keys before schema validation.",
+    "On failure preserve raw text; marker/schema failure is evidence incomplete, never discard a trial or convert JUnit failure to success.",
+    "Seven optional trial keys are phase-dependent. PASS additionally requires all seven, fixed writer settings, revisions 2/3/3 and functional relationships documented in gc-diagnostic-implementation.md.",
+    "The bounds 64 events and 32 phases are actual preallocated buffer capacities. Complete fixture topology permits at most 22 events, 13 phases, 5 DELETE intervals.",
+    "No timestamp upper performance threshold. Signed integer ns preserve Java nanoTime origin. 5s is a save watchdog, not latency acceptance.",
+    "No archive/run identity is invented here; runner must bind test source and installed APK separately."
+  ]
+}

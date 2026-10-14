@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.data.LibrarySearchMatcherTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-14T05:27:17.249Z" hostname="76a5c7c0bfe8" time="0.3">
+  <properties/>
+  <testcase name="longMixedTextKeepsLastStartAndUnicodeMatches" classname="org.inkweft.data.LibrarySearchMatcherTest" time="0.071"/>
+  <testcase name="everyAsciiCharacterKeepsLiteralCaseInsensitiveSemantics" classname="org.inkweft.data.LibrarySearchMatcherTest" time="0.029"/>
+  <testcase name="everyBmpCandidateStillUsesOriginalUnicodeVerification" classname="org.inkweft.data.LibrarySearchMatcherTest" time="0.143"/>
+  <testcase name="emptyLongerNulAndSurrogateQueriesKeepTheirBoundaries" classname="org.inkweft.data.LibrarySearchMatcherTest" time="0.001"/>
+  <testcase name="nonAsciiQueryStartsAndMixedRandomStringsKeepOriginalResults" classname="org.inkweft.data.LibrarySearchMatcherTest" time="0.049"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
