@@ -14,7 +14,7 @@ jobs:
   screen:
     name: SCREENING_ONLY two data APKs / 18 methods
     if: github.event_name == 'push' && github.ref == 'refs/heads/codex/kvm-pr20-search-screen-20261014' && github.event.created == false && github.event.before
-      == '0000000000000000000000000000000000000000' && github.run_attempt == 1
+      == '5cd3eb9b95a1cf5816ed345c3e71b2d5b408a01e' && github.run_attempt == 1
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
