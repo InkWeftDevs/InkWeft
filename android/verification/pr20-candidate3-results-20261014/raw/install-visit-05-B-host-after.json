@@ -1,0 +1,23 @@
+{
+  "epoch": 1791944895.2097948,
+  "uid": 1001,
+  "cpu_count": 4,
+  "kernel": "6.17.0-1022-azure",
+  "load_1_5_15": [
+    2.68408203125,
+    2.49365234375,
+    2.400390625
+  ],
+  "cpu_model": "AMD EPYC 7763 64-Core Processor",
+  "memory": {
+    "MemTotal": "16373448 kB",
+    "MemAvailable": "11846624 kB",
+    "SwapTotal": "3145724 kB",
+    "SwapFree": "3145704 kB"
+  },
+  "disk_bytes": {
+    "total": 154894188544,
+    "used": 75226439680,
+    "free": 79650971648
+  }
+}

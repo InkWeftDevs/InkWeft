@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "anchor_kind": "github_pull_request_updated_at",
+  "updated_at": "2026-10-14T01:53:21Z",
+  "clock_contract_sha256": "8347651ad2991dbe062e7b1b612284b3e4968809ffafbcb4d7f3172f317cff36",
+  "server_receipt_sha256": "25a5fa4eb2d5297390503eb25296c6cffefd40d3917fb57f66b3e8081cec1de8",
+  "actual_job_started_epoch": null,
+  "first_step_observed_epoch": 1791942989.7145495,
+  "budget_anchor_epoch": 1791942801,
+  "deadlines_minutes": [
+    38,
+    41,
+    53,
+    55,
+    60
+  ],
+  "deadline_epochs": {
+    "KVM_BUDGET_ANCHOR": 1791942801,
+    "KVM_SETUP_CUTOFF": 1791945081,
+    "KVM_CORRECTNESS_CUTOFF": 1791945261,
+    "KVM_COMMON_CUTOFF": 1791945981,
+    "KVM_WORK_DEADLINE": 1791946101
+  }
+}

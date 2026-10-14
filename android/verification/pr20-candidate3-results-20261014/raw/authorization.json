@@ -1,0 +1,84 @@
+{
+  "approved": true,
+  "plan_git": "445654c90a4c78893f158fdc4eca4313f3320a7f",
+  "approved_plan_sha256": "16eeca6375758fe70e3ae5b5787ed87e4103ef7baed9e64e86d37ee61781e1ff",
+  "source_spec_sha256": "d8ba1042334d8a6386ed6d1d54fbaad4a00fc6d76acc7fbb39005e6bcf897ba3",
+  "method_plan_sha256": "e1d02f73ed8b417949282a729de8133f16deb2fda47a6ae5ec9f2f3671da9346",
+  "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+  "approval_utc": "2026-10-13T11:54:51Z",
+  "followup_utc": "2026-10-13T11:55:28Z",
+  "user_approval": "允许",
+  "user_followup": "不必向我申请直接往后进行即可",
+  "source_thread": "01a0f1a6-931e-713a-845e-7e62ceb3300a",
+  "scope": "One standard ubuntu-24.04 runner, <=60 minutes, nine APKs, 58 exact calls (31 correctness, 24 unchanged common, 3 unchanged diagnostics); cumulative 38/41/53/55 minute deadlines from the immutable earlier conservative PR server anchor; 60 minute actual job hard timeout; minimal temporary UID-only KVM ACL if needed, exact restore and double cleanup; <=20 MiB whitelisted text, retention3days. No paid runner, credentials/security expansion, main merge or deployment. No automatic retries within this attempt.",
+  "prior_execution_git": "6b180ef65fa0d966f42967fe6a592f7bfe0a8ae5",
+  "phase_cutoff_minutes": {
+    "setup": 38,
+    "correctness": 41,
+    "common": 53,
+    "diagnostics": 55
+  },
+  "budget_revision_sha256": "48a834da006ae0061f94c131b25de1526c9281bce07f31ef9063e7fdf9eaa038",
+  "continuation": "Existing continuation authorizes ordinary fixes and bounded validation. This new source/method plan tests SQL-boundary cancellation: B originala128; C0 previous45b; C1 newly frozen candidate. Preserve all57 prior selections/args, insert one six-boundary correctness method at31 for58 calls/31correctness;24common/3diagnostics/four seeds/thresholds unchanged. Continue budget3 cumulative38/41/53/55 and actualjob60, single standard runner, single worker, no-build-cache, nine real APKs, method17-only helper exception and exact double cleanup. Root alone freezes the new PR-server clock after independent review and controls a single isolated activation; this template is not a run.",
+  "clock_contract_sha256": "8347651ad2991dbe062e7b1b612284b3e4968809ffafbcb4d7f3172f317cff36",
+  "server_receipt_sha256": "25a5fa4eb2d5297390503eb25296c6cffefd40d3917fb57f66b3e8081cec1de8",
+  "budget_anchor_epoch": 1791942801,
+  "clock_status": "FROZEN",
+  "historical_phase_budget_override": {
+    "kind": "EXPLICIT_USER_AUTHORIZED_PHASE_BUDGET_OVERRIDE",
+    "historical_plan_sha256": "ff2459abb0b8582d20e570c5afb0c4e9a0df5216bed8bc5191e4d008b5c4dacd",
+    "historical_cutoffs_minutes": [
+      32,
+      38,
+      52,
+      55,
+      60
+    ],
+    "replacement_cutoffs_minutes": [
+      38,
+      41,
+      53,
+      55,
+      60
+    ],
+    "terminal_report_git": "9c9e490ee4e579946a744cb1d0555643812b91c7",
+    "user_authorization_quote_as_relayed": "请利用官方日志能证明的退出和清理事实继续合理修复预算/构建安排…保持每轮60分钟总上限、原始样本及正确性门禁，可根据已完成第四轮的实测测试阶段时长重新合理分配预算或评估可信构建缓存…不要盲目同配置重跑。"
+  },
+  "source_method_amendment": {
+    "source_spec_sha256": "d8ba1042334d8a6386ed6d1d54fbaad4a00fc6d76acc7fbb39005e6bcf897ba3",
+    "method_plan_sha256": "e1d02f73ed8b417949282a729de8133f16deb2fda47a6ae5ec9f2f3671da9346",
+    "plan_sha256": "16eeca6375758fe70e3ae5b5787ed87e4103ef7baed9e64e86d37ee61781e1ff",
+    "parent_run": "38441089594",
+    "terminal_report_git": "da1b0838d1d0f38d7ede8116f0eaf1da885a2391",
+    "C0": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+    "C1": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+    "methods": [
+      31,
+      24,
+      3
+    ],
+    "old_methods_preserved": 57,
+    "new_method_ordinal": 31,
+    "helper_exception_ordinal": 17
+  },
+  "phase_budget_override": {
+    "kind": "CONTINUE_APPROVED_BUDGET3_WITH_NEW_SOURCE_METHOD_SCOPE",
+    "historical_budget_revision_sha256": "0de35f7063e25c9c75daa7f4a1719eb525d40d2bdbc311c380133669dcfd582a",
+    "historical_cutoffs_minutes": [
+      38,
+      41,
+      53,
+      55,
+      60
+    ],
+    "replacement_cutoffs_minutes": [
+      38,
+      41,
+      53,
+      55,
+      60
+    ],
+    "terminal_report_git": "da1b0838d1d0f38d7ede8116f0eaf1da885a2391",
+    "scope_reference": "The separately hash-bound source/method amendment changes identities and one correctness method; budget offsets and security/resource limits do not change."
+  }
+}

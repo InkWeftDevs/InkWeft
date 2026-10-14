@@ -1,0 +1,12 @@
+{"package": "org.inkweft.app.a0", "presence_exit": 0, "stdout": "package:/data/app/~~MgTNP63RnAMjY0bO3PqRAQ==/org.inkweft.app.a0-0Eot9BjPmSMbwfrCbZEyrg==/base.apk\n", "stderr": ""}
+org.inkweft.app.a0: Success
+{"package": "org.inkweft.app.a0.test", "presence_exit": 0, "stdout": "package:/data/app/~~TUbuwAkInhdyHpF7mFQM1A==/org.inkweft.app.a0.test-frpePPUmMQn8Sp9PA7fVgQ==/base.apk\n", "stderr": ""}
+org.inkweft.app.a0.test: Success
+{"package": "org.inkweft.data.test", "presence_exit": 0, "stdout": "package:/data/app/~~Qt3inGzN1phaGOd8Q4UCRQ==/org.inkweft.data.test-LSkVW_FfJADtsU_4xmCsZg==/base.apk\n", "stderr": ""}
+org.inkweft.data.test: Success
+app/build/outputs/apk/debug/app-debug.apk: Performing Streamed Install
+Success
+app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk: Performing Streamed Install
+Success
+data-local/build/outputs/apk/androidTest/debug/data-local-debug-androidTest.apk: Performing Streamed Install
+Success

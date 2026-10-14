@@ -1,0 +1,5854 @@
+[
+  {
+    "marker": "LIBRARY_STAGE_DIAGNOSTICS",
+    "data": {
+      "schema": 1,
+      "checkpoint": "cold",
+      "part": 0,
+      "clock": "System.nanoTime",
+      "originNs": 705084579652,
+      "events": [
+        {
+          "stage": "read-requested",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 2578002,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 2920411,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 4241970,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 4765367,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 5784440,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 6140265,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 9319603,
+          "count": -1
+        },
+        {
+          "stage": "hits-ready",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 14285138,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 14322629,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 1404789259,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 1404802464,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 1405117582,
+          "count": -1
+        },
+        {
+          "stage": "page-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 1405154131,
+          "count": -1
+        },
+        {
+          "stage": "page-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 1990087563,
+          "count": 1
+        },
+        {
+          "stage": "metadata-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 1990135823,
+          "count": -1
+        },
+        {
+          "stage": "metadata-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 1999879782,
+          "count": 501
+        },
+        {
+          "stage": "pending-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 1999886484,
+          "count": -1
+        },
+        {
+          "stage": "pending-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 2000687420,
+          "count": 20000
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 2001324030,
+          "count": -1
+        },
+        {
+          "stage": "connection-closed",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 2002388007,
+          "count": -1
+        },
+        {
+          "stage": "read-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 1,
+          "elapsedNs": 2002879174,
+          "count": 1
+        }
+      ],
+      "saves": [
+        {
+          "phase": "direct",
+          "sample": 0,
+          "startNs": 705106390043,
+          "endNs": 705114473030,
+          "committed": true,
+          "revision": 2,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 1,
+          "startNs": 705114628520,
+          "endNs": 705117959152,
+          "committed": true,
+          "revision": 3,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 2,
+          "startNs": 705117968198,
+          "endNs": 705119976329,
+          "committed": true,
+          "revision": 4,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 3,
+          "startNs": 705119984524,
+          "endNs": 705122724081,
+          "committed": true,
+          "revision": 5,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 4,
+          "startNs": 705122732567,
+          "endNs": 705125571730,
+          "committed": true,
+          "revision": 6,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 5,
+          "startNs": 705125580075,
+          "endNs": 705127828906,
+          "committed": true,
+          "revision": 7,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 6,
+          "startNs": 705127837542,
+          "endNs": 705132910529,
+          "committed": true,
+          "revision": 8,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 7,
+          "startNs": 705132920457,
+          "endNs": 705135720467,
+          "committed": true,
+          "revision": 9,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 8,
+          "startNs": 705135729314,
+          "endNs": 705138339269,
+          "committed": true,
+          "revision": 10,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 9,
+          "startNs": 705138347334,
+          "endNs": 705140366415,
+          "committed": true,
+          "revision": 11,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 10,
+          "startNs": 705140374580,
+          "endNs": 705143098818,
+          "committed": true,
+          "revision": 12,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 11,
+          "startNs": 705143114257,
+          "endNs": 705145967006,
+          "committed": true,
+          "revision": 13,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 12,
+          "startNs": 705145979669,
+          "endNs": 705148168818,
+          "committed": true,
+          "revision": 14,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 13,
+          "startNs": 705148176943,
+          "endNs": 705150807396,
+          "committed": true,
+          "revision": 15,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 14,
+          "startNs": 705150817284,
+          "endNs": 705153532767,
+          "committed": true,
+          "revision": 16,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 15,
+          "startNs": 705153541303,
+          "endNs": 705155816732,
+          "committed": true,
+          "revision": 17,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 16,
+          "startNs": 705155828264,
+          "endNs": 705158539488,
+          "committed": true,
+          "revision": 18,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 17,
+          "startNs": 705158547453,
+          "endNs": 705160656973,
+          "committed": true,
+          "revision": 19,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 18,
+          "startNs": 705160665108,
+          "endNs": 705163186587,
+          "committed": true,
+          "revision": 20,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 19,
+          "startNs": 705163194622,
+          "endNs": 705165724387,
+          "committed": true,
+          "revision": 21,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 20,
+          "startNs": 705165733204,
+          "endNs": 705168147103,
+          "committed": true,
+          "revision": 22,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 21,
+          "startNs": 705168155909,
+          "endNs": 705170652522,
+          "committed": true,
+          "revision": 23,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 22,
+          "startNs": 705170661268,
+          "endNs": 705173517954,
+          "committed": true,
+          "revision": 24,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 23,
+          "startNs": 705173529345,
+          "endNs": 705181090047,
+          "committed": true,
+          "revision": 25,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 24,
+          "startNs": 705181134219,
+          "endNs": 705186506433,
+          "committed": true,
+          "revision": 26,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 25,
+          "startNs": 705186521201,
+          "endNs": 705189415246,
+          "committed": true,
+          "revision": 27,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 26,
+          "startNs": 705189424403,
+          "endNs": 705191747472,
+          "committed": true,
+          "revision": 28,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 27,
+          "startNs": 705191755998,
+          "endNs": 705194536611,
+          "committed": true,
+          "revision": 29,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 28,
+          "startNs": 705194545538,
+          "endNs": 705196705793,
+          "committed": true,
+          "revision": 30,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "direct",
+          "sample": 29,
+          "startNs": 705196715250,
+          "endNs": 705199395918,
+          "committed": true,
+          "revision": 31,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        }
+      ]
+    }
+  },
+  {
+    "marker": "LIBRARY_DIRECT_SAVE_CHECKPOINT",
+    "data": {
+      "coldMs": 2002.729915,
+      "coldSourceChecks": 20000,
+      "saveCount": 30,
+      "saveSamplesMs": [
+        8.082987,
+        3.330632,
+        2.008131,
+        2.739557,
+        2.839163,
+        2.248831,
+        5.072987,
+        2.80001,
+        2.609955,
+        2.019081,
+        2.724238,
+        2.852749,
+        2.189149,
+        2.630453,
+        2.715483,
+        2.275429,
+        2.711224,
+        2.10952,
+        2.521479,
+        2.529765,
+        2.413899,
+        2.496613,
+        2.856686,
+        7.560702,
+        5.372214,
+        2.894045,
+        2.323069,
+        2.780613,
+        2.160255,
+        2.680668
+      ],
+      "saveP50Ms": 2.711224,
+      "saveP95Ms": 7.560702,
+      "saveMaxMs": 8.082987,
+      "writerCompletedDuringPausedSearch": true
+    }
+  },
+  {
+    "marker": "LIBRARY_STAGE_DIAGNOSTICS",
+    "data": {
+      "schema": 1,
+      "checkpoint": "paused-reader",
+      "part": 1,
+      "clock": "System.nanoTime",
+      "originNs": 705084579652,
+      "events": [
+        {
+          "stage": "read-requested",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 2008495604,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 2008542492,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 2008866827,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 2008973237,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 2009972663,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 2010050518,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 2013237140,
+          "count": -1
+        },
+        {
+          "stage": "hits-ready",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 2013716956,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 2013724961,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 3319701024,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 3319711233,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 3319942626,
+          "count": -1
+        },
+        {
+          "stage": "page-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 3319968835,
+          "count": -1
+        },
+        {
+          "stage": "page-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 3907165805,
+          "count": 1
+        },
+        {
+          "stage": "metadata-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 3907235325,
+          "count": -1
+        },
+        {
+          "stage": "metadata-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 3916402547,
+          "count": 501
+        },
+        {
+          "stage": "pending-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 3916409149,
+          "count": -1
+        },
+        {
+          "stage": "pending-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 3917117873,
+          "count": 20000
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 3917404187,
+          "count": -1
+        },
+        {
+          "stage": "connection-closed",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 3917937102,
+          "count": -1
+        },
+        {
+          "stage": "read-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 2,
+          "elapsedNs": 3918591137,
+          "count": 1
+        }
+      ],
+      "saves": []
+    }
+  },
+  {
+    "marker": "INDEX_SAVE_PROGRESS",
+    "data": {
+      "rows": 64,
+      "elapsedMs": 115.57236
+    }
+  },
+  {
+    "marker": "LIBRARY_INDEX_SAVE_CHECKPOINT",
+    "data": {
+      "indexRowsBeforeSaves": 64,
+      "indexRowsAfterSaves": 128,
+      "firstCommittedBatchMs": 115.48662,
+      "saveCount": 30,
+      "saveP50Ms": 6.607141,
+      "saveP95Ms": 13.751264,
+      "saveMaxMs": 30.772934,
+      "saveSamplesMs": [
+        2.661571,
+        13.751264,
+        8.017144,
+        5.836519,
+        6.607141,
+        7.937095,
+        8.646148,
+        6.202344,
+        4.919249,
+        6.962036,
+        9.683116,
+        4.302964,
+        5.665282,
+        3.590165,
+        5.046245,
+        7.13187,
+        5.480887,
+        5.559152,
+        8.442499,
+        6.689023,
+        4.466733,
+        6.773951,
+        7.905989,
+        30.772934,
+        4.963461,
+        3.632547,
+        7.556452,
+        4.965003,
+        5.526331,
+        6.639171
+      ],
+      "saveProgressSamples": [
+        {
+          "sample": 0,
+          "elapsedMs": 2.661571,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 1,
+          "elapsedMs": 13.751264,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 2,
+          "elapsedMs": 8.017144,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 3,
+          "elapsedMs": 5.836519,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 4,
+          "elapsedMs": 6.607141,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 5,
+          "elapsedMs": 7.937095,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 6,
+          "elapsedMs": 8.646148,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 7,
+          "elapsedMs": 6.202344,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 8,
+          "elapsedMs": 4.919249,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 9,
+          "elapsedMs": 6.962036,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 10,
+          "elapsedMs": 9.683116,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 11,
+          "elapsedMs": 4.302964,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 12,
+          "elapsedMs": 5.665282,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 13,
+          "elapsedMs": 3.590165,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 14,
+          "elapsedMs": 5.046245,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 15,
+          "elapsedMs": 7.13187,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 16,
+          "elapsedMs": 5.480887,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 17,
+          "elapsedMs": 5.559152,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 18,
+          "elapsedMs": 8.442499,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 19,
+          "elapsedMs": 6.689023,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 20,
+          "elapsedMs": 4.466733,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 21,
+          "elapsedMs": 6.773951,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 22,
+          "elapsedMs": 7.905989,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 64,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 0
+        },
+        {
+          "sample": 23,
+          "elapsedMs": 30.772934,
+          "indexRowsStart": 64,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 0,
+          "sourceChecksEnd": 184
+        },
+        {
+          "sample": 24,
+          "elapsedMs": 4.963461,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 185,
+          "sourceChecksEnd": 195
+        },
+        {
+          "sample": 25,
+          "elapsedMs": 3.632547,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 195,
+          "sourceChecksEnd": 195
+        },
+        {
+          "sample": 26,
+          "elapsedMs": 7.556452,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 195,
+          "sourceChecksEnd": 195
+        },
+        {
+          "sample": 27,
+          "elapsedMs": 4.965003,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 195,
+          "sourceChecksEnd": 195
+        },
+        {
+          "sample": 28,
+          "elapsedMs": 5.526331,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 195,
+          "sourceChecksEnd": 195
+        },
+        {
+          "sample": 29,
+          "elapsedMs": 6.639171,
+          "indexRowsStart": 128,
+          "indexRowsEnd": 128,
+          "sourceChecksStart": 195,
+          "sourceChecksEnd": 195
+        }
+      ],
+      "sourceChecksAfterSaves": 195
+    }
+  },
+  {
+    "marker": "LIBRARY_STAGE_DIAGNOSTICS",
+    "data": {
+      "schema": 1,
+      "checkpoint": "observe-saves-finished",
+      "part": 2,
+      "clock": "System.nanoTime",
+      "originNs": 705084579652,
+      "events": [
+        {
+          "stage": "observe-request",
+          "generation": 2,
+          "sourceVersion": -1,
+          "readId": 0,
+          "elapsedNs": 3929861044,
+          "count": -1
+        },
+        {
+          "stage": "observe-index-initial",
+          "generation": -1,
+          "sourceVersion": -1,
+          "readId": 0,
+          "elapsedNs": 3930460914,
+          "count": 0
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 1,
+          "readId": 0,
+          "elapsedNs": 3932536501,
+          "count": 6
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 1,
+          "readId": 3,
+          "elapsedNs": 3932669930,
+          "count": -1
+        },
+        {
+          "stage": "observe-debounce-start",
+          "generation": 2,
+          "sourceVersion": 1,
+          "readId": 3,
+          "elapsedNs": 3932678666,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 2,
+          "readId": 0,
+          "elapsedNs": 4043212917,
+          "count": 1
+        },
+        {
+          "stage": "observe-debounce-cancel",
+          "generation": 2,
+          "sourceVersion": 1,
+          "readId": 3,
+          "elapsedNs": 4043743208,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 2,
+          "readId": 4,
+          "elapsedNs": 4043975271,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 2,
+          "readId": 4,
+          "elapsedNs": 4043989909,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 2,
+          "readId": 4,
+          "elapsedNs": 4044000157,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 2,
+          "readId": 4,
+          "elapsedNs": 4044218067,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 2,
+          "readId": 4,
+          "elapsedNs": 4044545579,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 2,
+          "readId": 4,
+          "elapsedNs": 4044702221,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 2,
+          "readId": 4,
+          "elapsedNs": 4047653854,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 2,
+          "readId": 4,
+          "elapsedNs": 4047722142,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 2,
+          "readId": 4,
+          "elapsedNs": 4052652551,
+          "count": -1
+        },
+        {
+          "stage": "hits-ready",
+          "generation": 2,
+          "sourceVersion": 2,
+          "readId": 4,
+          "elapsedNs": 4053297325,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-start",
+          "generation": 2,
+          "sourceVersion": 2,
+          "readId": 4,
+          "elapsedNs": 4053306843,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 3,
+          "readId": 0,
+          "elapsedNs": 4058224605,
+          "count": 1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 2,
+          "readId": 4,
+          "elapsedNs": 4060435517,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 2,
+          "readId": 4,
+          "elapsedNs": 4060775512,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 2,
+          "readId": 4,
+          "elapsedNs": 4061073877,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 3,
+          "readId": 5,
+          "elapsedNs": 4061251700,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 3,
+          "readId": 5,
+          "elapsedNs": 4061256068,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 3,
+          "readId": 5,
+          "elapsedNs": 4061260496,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 3,
+          "readId": 5,
+          "elapsedNs": 4062230210,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 3,
+          "readId": 5,
+          "elapsedNs": 4062427378,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 3,
+          "readId": 5,
+          "elapsedNs": 4062545418,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 4,
+          "readId": 0,
+          "elapsedNs": 4062985097,
+          "count": 1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 3,
+          "readId": 5,
+          "elapsedNs": 4063573969,
+          "count": 0
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 3,
+          "readId": 5,
+          "elapsedNs": 4063691539,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 3,
+          "readId": 5,
+          "elapsedNs": 4063823886,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 3,
+          "readId": 5,
+          "elapsedNs": 4065790066,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 4,
+          "readId": 6,
+          "elapsedNs": 4066031557,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 4,
+          "readId": 6,
+          "elapsedNs": 4066035745,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 4,
+          "readId": 6,
+          "elapsedNs": 4066039662,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 4,
+          "readId": 6,
+          "elapsedNs": 4066461212,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 4,
+          "readId": 6,
+          "elapsedNs": 4068771435,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 4,
+          "readId": 6,
+          "elapsedNs": 4068867554,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 4,
+          "readId": 6,
+          "elapsedNs": 4069781632,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 4,
+          "readId": 6,
+          "elapsedNs": 4069821045,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 5,
+          "readId": 0,
+          "elapsedNs": 4069911607,
+          "count": 1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 4,
+          "readId": 6,
+          "elapsedNs": 4071592243,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 4,
+          "readId": 6,
+          "elapsedNs": 4071770245,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 4,
+          "readId": 6,
+          "elapsedNs": 4071892677,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 5,
+          "readId": 7,
+          "elapsedNs": 4072021057,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 5,
+          "readId": 7,
+          "elapsedNs": 4072024172,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 5,
+          "readId": 7,
+          "elapsedNs": 4072027659,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 5,
+          "readId": 7,
+          "elapsedNs": 4072707075,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 5,
+          "readId": 7,
+          "elapsedNs": 4072893223,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 5,
+          "readId": 7,
+          "elapsedNs": 4073000343,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 5,
+          "readId": 7,
+          "elapsedNs": 4073895856,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 5,
+          "readId": 7,
+          "elapsedNs": 4073935109,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 6,
+          "readId": 0,
+          "elapsedNs": 4077037384,
+          "count": 1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 5,
+          "readId": 7,
+          "elapsedNs": 4080754556,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 5,
+          "readId": 7,
+          "elapsedNs": 4080986850,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 5,
+          "readId": 7,
+          "elapsedNs": 4081321595,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 5,
+          "readId": 7,
+          "elapsedNs": 4081804186,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 6,
+          "readId": 8,
+          "elapsedNs": 4081969956,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 6,
+          "readId": 8,
+          "elapsedNs": 4081973873,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 6,
+          "readId": 8,
+          "elapsedNs": 4081977871,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 6,
+          "readId": 8,
+          "elapsedNs": 4082338194,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 6,
+          "readId": 8,
+          "elapsedNs": 4082624238,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 6,
+          "readId": 8,
+          "elapsedNs": 4082788966,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 6,
+          "readId": 8,
+          "elapsedNs": 4083774527,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 6,
+          "readId": 8,
+          "elapsedNs": 4083813249,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 7,
+          "readId": 0,
+          "elapsedNs": 4084829858,
+          "count": 1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 6,
+          "readId": 8,
+          "elapsedNs": 4085653125,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 6,
+          "readId": 8,
+          "elapsedNs": 4085809898,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 6,
+          "readId": 8,
+          "elapsedNs": 4085921326,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 7,
+          "readId": 9,
+          "elapsedNs": 4086045197,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 7,
+          "readId": 9,
+          "elapsedNs": 4086049726,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 7,
+          "readId": 9,
+          "elapsedNs": 4086053504,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 7,
+          "readId": 9,
+          "elapsedNs": 4086246266,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 7,
+          "readId": 9,
+          "elapsedNs": 4086531979,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 7,
+          "readId": 9,
+          "elapsedNs": 4086623791,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 7,
+          "readId": 9,
+          "elapsedNs": 4087770162,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 7,
+          "readId": 9,
+          "elapsedNs": 4087810096,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 8,
+          "readId": 0,
+          "elapsedNs": 4095250070,
+          "count": 1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 7,
+          "readId": 9,
+          "elapsedNs": 4095294185,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 7,
+          "readId": 9,
+          "elapsedNs": 4097116749,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 7,
+          "readId": 9,
+          "elapsedNs": 4097497781,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 7,
+          "readId": 9,
+          "elapsedNs": 4097678015,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 8,
+          "readId": 10,
+          "elapsedNs": 4097911732,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 8,
+          "readId": 10,
+          "elapsedNs": 4097916390,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 8,
+          "readId": 10,
+          "elapsedNs": 4097920177,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 8,
+          "readId": 10,
+          "elapsedNs": 4098417215,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 8,
+          "readId": 10,
+          "elapsedNs": 4098598414,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 8,
+          "readId": 10,
+          "elapsedNs": 4098696157,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 8,
+          "readId": 10,
+          "elapsedNs": 4101584541,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 8,
+          "readId": 10,
+          "elapsedNs": 4101624135,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 9,
+          "readId": 0,
+          "elapsedNs": 4105315600,
+          "count": 1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 8,
+          "readId": 10,
+          "elapsedNs": 4106221793,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 8,
+          "readId": 10,
+          "elapsedNs": 4106401989,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 8,
+          "readId": 10,
+          "elapsedNs": 4106691119,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 8,
+          "readId": 10,
+          "elapsedNs": 4107067913,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 9,
+          "readId": 11,
+          "elapsedNs": 4107232169,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 9,
+          "readId": 11,
+          "elapsedNs": 4107235295,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 9,
+          "readId": 11,
+          "elapsedNs": 4107238251,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 9,
+          "readId": 11,
+          "elapsedNs": 4107423798,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 9,
+          "readId": 11,
+          "elapsedNs": 4107661262,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 9,
+          "readId": 11,
+          "elapsedNs": 4107745799,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 9,
+          "readId": 11,
+          "elapsedNs": 4108869387,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 9,
+          "readId": 11,
+          "elapsedNs": 4108906206,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 10,
+          "readId": 0,
+          "elapsedNs": 4111502946,
+          "count": 1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 9,
+          "readId": 11,
+          "elapsedNs": 4118066155,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 9,
+          "readId": 11,
+          "elapsedNs": 4118329036,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 9,
+          "readId": 11,
+          "elapsedNs": 4118677718,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 9,
+          "readId": 11,
+          "elapsedNs": 4119853353,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 10,
+          "readId": 12,
+          "elapsedNs": 4120657515,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 10,
+          "readId": 12,
+          "elapsedNs": 4120660791,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 10,
+          "readId": 12,
+          "elapsedNs": 4120663536,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 10,
+          "readId": 12,
+          "elapsedNs": 4121998832,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 10,
+          "readId": 12,
+          "elapsedNs": 4122148783,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 10,
+          "readId": 12,
+          "elapsedNs": 4122270380,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 10,
+          "readId": 12,
+          "elapsedNs": 4123094810,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 10,
+          "readId": 12,
+          "elapsedNs": 4123128794,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 11,
+          "readId": 0,
+          "elapsedNs": 4123714825,
+          "count": 1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 12,
+          "readId": 0,
+          "elapsedNs": 4125069556,
+          "count": 1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 10,
+          "readId": 12,
+          "elapsedNs": 4126012099,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 10,
+          "readId": 12,
+          "elapsedNs": 4126230997,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 10,
+          "readId": 12,
+          "elapsedNs": 4126539153,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 10,
+          "readId": 12,
+          "elapsedNs": 4126660377,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 11,
+          "readId": 13,
+          "elapsedNs": 4126779379,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 11,
+          "readId": 13,
+          "elapsedNs": 4126781473,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 11,
+          "readId": 13,
+          "elapsedNs": 4126784408,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 11,
+          "readId": 13,
+          "elapsedNs": 4127960555,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 12,
+          "readId": 14,
+          "elapsedNs": 4128125764,
+          "count": -1
+        }
+      ],
+      "saves": [
+        {
+          "phase": "observe",
+          "sample": 0,
+          "startNs": 709124076251,
+          "endNs": 709126737822,
+          "committed": true,
+          "revision": 33,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 1,
+          "startNs": 709126815407,
+          "endNs": 709140566671,
+          "committed": true,
+          "revision": 34,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 2,
+          "startNs": 709140587169,
+          "endNs": 709148604313,
+          "committed": true,
+          "revision": 35,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 3,
+          "startNs": 709148619982,
+          "endNs": 709154456501,
+          "committed": true,
+          "revision": 36,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 4,
+          "startNs": 709154469435,
+          "endNs": 709161076576,
+          "committed": true,
+          "revision": 37,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 5,
+          "startNs": 709161090161,
+          "endNs": 709169027256,
+          "committed": true,
+          "revision": 38,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 6,
+          "startNs": 709169041122,
+          "endNs": 709177687270,
+          "committed": true,
+          "revision": 39,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 7,
+          "startNs": 709177779704,
+          "endNs": 709183982048,
+          "committed": true,
+          "revision": 40,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 8,
+          "startNs": 709184002706,
+          "endNs": 709188921955,
+          "committed": true,
+          "revision": 41,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 9,
+          "startNs": 709188936281,
+          "endNs": 709195898317,
+          "committed": true,
+          "revision": 42,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 10,
+          "startNs": 709195913185,
+          "endNs": 709205596301,
+          "committed": true,
+          "revision": 43,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 11,
+          "startNs": 709205610467,
+          "endNs": 709209913431,
+          "committed": true,
+          "revision": 44,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 12,
+          "startNs": 709209928018,
+          "endNs": 709215593300,
+          "committed": true,
+          "revision": 45,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 13,
+          "startNs": 709215608649,
+          "endNs": 709219198814,
+          "committed": true,
+          "revision": 46,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 14,
+          "startNs": 709219213712,
+          "endNs": 709224259957,
+          "committed": true,
+          "revision": 47,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 15,
+          "startNs": 709224272861,
+          "endNs": 709231404731,
+          "committed": true,
+          "revision": 48,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 16,
+          "startNs": 709231419950,
+          "endNs": 709236900837,
+          "committed": true,
+          "revision": 49,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 17,
+          "startNs": 709236914573,
+          "endNs": 709242473725,
+          "committed": true,
+          "revision": 50,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 18,
+          "startNs": 709242486640,
+          "endNs": 709250929139,
+          "committed": true,
+          "revision": 51,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 19,
+          "startNs": 709250941762,
+          "endNs": 709257630785,
+          "committed": true,
+          "revision": 52,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 20,
+          "startNs": 709257651073,
+          "endNs": 709262117806,
+          "committed": true,
+          "revision": 53,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 21,
+          "startNs": 709262151700,
+          "endNs": 709268925651,
+          "committed": true,
+          "revision": 54,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 22,
+          "startNs": 709268940449,
+          "endNs": 709276846438,
+          "committed": true,
+          "revision": 55,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 23,
+          "startNs": 709276863219,
+          "endNs": 709307636153,
+          "committed": true,
+          "revision": 56,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 24,
+          "startNs": 709307651532,
+          "endNs": 709312614993,
+          "committed": true,
+          "revision": 57,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 25,
+          "startNs": 709312633968,
+          "endNs": 709316266515,
+          "committed": true,
+          "revision": 58,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 26,
+          "startNs": 709316280130,
+          "endNs": 709323836582,
+          "committed": true,
+          "revision": 59,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 27,
+          "startNs": 709323851610,
+          "endNs": 709328816613,
+          "committed": true,
+          "revision": 60,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 28,
+          "startNs": 709328831411,
+          "endNs": 709334357742,
+          "committed": true,
+          "revision": 61,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        },
+        {
+          "phase": "observe",
+          "sample": 29,
+          "startNs": 709334372931,
+          "endNs": 709341012102,
+          "committed": true,
+          "revision": 62,
+          "outcome": "committed",
+          "failureClass": null,
+          "resultClass": "org.inkweft.core.SaveResult$Committed"
+        }
+      ]
+    }
+  },
+  {
+    "marker": "LIBRARY_STAGE_DIAGNOSTICS",
+    "data": {
+      "schema": 1,
+      "checkpoint": "observe-saves-finished",
+      "part": 3,
+      "clock": "System.nanoTime",
+      "originNs": 705084579652,
+      "events": [
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 12,
+          "readId": 14,
+          "elapsedNs": 4128128089,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 12,
+          "readId": 14,
+          "elapsedNs": 4128130843,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 12,
+          "readId": 14,
+          "elapsedNs": 4128305048,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 12,
+          "readId": 14,
+          "elapsedNs": 4128533165,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 12,
+          "readId": 14,
+          "elapsedNs": 4128636257,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 12,
+          "readId": 14,
+          "elapsedNs": 4129575101,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 12,
+          "readId": 14,
+          "elapsedNs": 4129608082,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 13,
+          "readId": 0,
+          "elapsedNs": 4131376516,
+          "count": 1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 14,
+          "readId": 0,
+          "elapsedNs": 4134841126,
+          "count": 1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 12,
+          "readId": 14,
+          "elapsedNs": 4138571567,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 12,
+          "readId": 14,
+          "elapsedNs": 4139806252,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 12,
+          "readId": 14,
+          "elapsedNs": 4140078331,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 15,
+          "readId": 0,
+          "elapsedNs": 4141266187,
+          "count": 1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 12,
+          "readId": 14,
+          "elapsedNs": 4141318054,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 13,
+          "readId": 15,
+          "elapsedNs": 4141434641,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 13,
+          "readId": 15,
+          "elapsedNs": 4141437427,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 13,
+          "readId": 15,
+          "elapsedNs": 4141440412,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 13,
+          "readId": 15,
+          "elapsedNs": 4141726126,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 15,
+          "readId": 16,
+          "elapsedNs": 4141813179,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 15,
+          "readId": 16,
+          "elapsedNs": 4141814912,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 15,
+          "readId": 16,
+          "elapsedNs": 4141817667,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 15,
+          "readId": 16,
+          "elapsedNs": 4141912965,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 15,
+          "readId": 16,
+          "elapsedNs": 4142060070,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 15,
+          "readId": 16,
+          "elapsedNs": 4142157422,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 15,
+          "readId": 16,
+          "elapsedNs": 4143109009,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 15,
+          "readId": 16,
+          "elapsedNs": 4143141630,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 15,
+          "readId": 16,
+          "elapsedNs": 4145392644,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 16,
+          "readId": 0,
+          "elapsedNs": 4147083111,
+          "count": 1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 15,
+          "readId": 16,
+          "elapsedNs": 4149163307,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 15,
+          "readId": 16,
+          "elapsedNs": 4149553255,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 15,
+          "readId": 16,
+          "elapsedNs": 4149633565,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 16,
+          "readId": 17,
+          "elapsedNs": 4149715498,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 16,
+          "readId": 17,
+          "elapsedNs": 4149717422,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 16,
+          "readId": 17,
+          "elapsedNs": 4149720077,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 16,
+          "readId": 17,
+          "elapsedNs": 4149848045,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 16,
+          "readId": 17,
+          "elapsedNs": 4149987887,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 16,
+          "readId": 17,
+          "elapsedNs": 4150069018,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 16,
+          "readId": 17,
+          "elapsedNs": 4150968118,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 16,
+          "readId": 17,
+          "elapsedNs": 4151002222,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 17,
+          "readId": 0,
+          "elapsedNs": 4153213451,
+          "count": 1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 16,
+          "readId": 17,
+          "elapsedNs": 4156141560,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 16,
+          "readId": 17,
+          "elapsedNs": 4156535085,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 16,
+          "readId": 17,
+          "elapsedNs": 4156968245,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 16,
+          "readId": 17,
+          "elapsedNs": 4157713106,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 17,
+          "readId": 18,
+          "elapsedNs": 4157803414,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 17,
+          "readId": 18,
+          "elapsedNs": 4157805358,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 17,
+          "readId": 18,
+          "elapsedNs": 4157808233,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 18,
+          "readId": 0,
+          "elapsedNs": 4158117231,
+          "count": 1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 17,
+          "readId": 18,
+          "elapsedNs": 4158456695,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 18,
+          "readId": 19,
+          "elapsedNs": 4158534320,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 18,
+          "readId": 19,
+          "elapsedNs": 4158536243,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 18,
+          "readId": 19,
+          "elapsedNs": 4158538848,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 18,
+          "readId": 19,
+          "elapsedNs": 4158658512,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 18,
+          "readId": 19,
+          "elapsedNs": 4158793083,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 18,
+          "readId": 19,
+          "elapsedNs": 4158878973,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 18,
+          "readId": 19,
+          "elapsedNs": 4159920559,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 18,
+          "readId": 19,
+          "elapsedNs": 4159954212,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 18,
+          "readId": 19,
+          "elapsedNs": 4164382595,
+          "count": -1
+        },
+        {
+          "stage": "hits-ready",
+          "generation": 2,
+          "sourceVersion": 18,
+          "readId": 19,
+          "elapsedNs": 4164823679,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-start",
+          "generation": 2,
+          "sourceVersion": 18,
+          "readId": 19,
+          "elapsedNs": 4164829330,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 19,
+          "readId": 0,
+          "elapsedNs": 4167345246,
+          "count": 1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 18,
+          "readId": 19,
+          "elapsedNs": 4169115485,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 18,
+          "readId": 19,
+          "elapsedNs": 4169725394,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 18,
+          "readId": 19,
+          "elapsedNs": 4169801376,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 19,
+          "readId": 20,
+          "elapsedNs": 4169880765,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 19,
+          "readId": 20,
+          "elapsedNs": 4169882648,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 19,
+          "readId": 20,
+          "elapsedNs": 4169885484,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 19,
+          "readId": 20,
+          "elapsedNs": 4169992593,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 19,
+          "readId": 20,
+          "elapsedNs": 4170228244,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 19,
+          "readId": 20,
+          "elapsedNs": 4170337187,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 19,
+          "readId": 20,
+          "elapsedNs": 4171137001,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 19,
+          "readId": 20,
+          "elapsedNs": 4171240163,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 19,
+          "readId": 20,
+          "elapsedNs": 4173572039,
+          "count": -1
+        },
+        {
+          "stage": "hits-ready",
+          "generation": 2,
+          "sourceVersion": 19,
+          "readId": 20,
+          "elapsedNs": 4174261036,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-start",
+          "generation": 2,
+          "sourceVersion": 19,
+          "readId": 20,
+          "elapsedNs": 4174269432,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 20,
+          "readId": 0,
+          "elapsedNs": 4174647284,
+          "count": 1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 19,
+          "readId": 20,
+          "elapsedNs": 4176535363,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 19,
+          "readId": 20,
+          "elapsedNs": 4176774120,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 19,
+          "readId": 20,
+          "elapsedNs": 4176871398,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 20,
+          "readId": 21,
+          "elapsedNs": 4176998716,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 20,
+          "readId": 21,
+          "elapsedNs": 4177000800,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 20,
+          "readId": 21,
+          "elapsedNs": 4177003946,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 20,
+          "readId": 21,
+          "elapsedNs": 4177412941,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 21,
+          "readId": 0,
+          "elapsedNs": 4178502265,
+          "count": 1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 20,
+          "readId": 21,
+          "elapsedNs": 4180501609,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 20,
+          "readId": 21,
+          "elapsedNs": 4180752788,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 20,
+          "readId": 21,
+          "elapsedNs": 4183691129,
+          "count": 0
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 20,
+          "readId": 21,
+          "elapsedNs": 4184411955,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 20,
+          "readId": 21,
+          "elapsedNs": 4184521289,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 20,
+          "readId": 21,
+          "elapsedNs": 4184924179,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 21,
+          "readId": 22,
+          "elapsedNs": 4185019577,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 21,
+          "readId": 22,
+          "elapsedNs": 4185021461,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 21,
+          "readId": 22,
+          "elapsedNs": 4185024056,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 21,
+          "readId": 22,
+          "elapsedNs": 4185241432,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 21,
+          "readId": 22,
+          "elapsedNs": 4185421308,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 21,
+          "readId": 22,
+          "elapsedNs": 4185521705,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 21,
+          "readId": 22,
+          "elapsedNs": 4186347408,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 21,
+          "readId": 22,
+          "elapsedNs": 4186406959,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 21,
+          "readId": 22,
+          "elapsedNs": 4193485179,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 22,
+          "readId": 0,
+          "elapsedNs": 4193716701,
+          "count": 1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 21,
+          "readId": 22,
+          "elapsedNs": 4195673086,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 21,
+          "readId": 22,
+          "elapsedNs": 4195953660,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 21,
+          "readId": 22,
+          "elapsedNs": 4196099271,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 22,
+          "readId": 23,
+          "elapsedNs": 4196223714,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 22,
+          "readId": 23,
+          "elapsedNs": 4196238291,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 22,
+          "readId": 23,
+          "elapsedNs": 4196241127,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 22,
+          "readId": 23,
+          "elapsedNs": 4196666504,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 22,
+          "readId": 23,
+          "elapsedNs": 4198425319,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 22,
+          "readId": 23,
+          "elapsedNs": 4198508814,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 22,
+          "readId": 23,
+          "elapsedNs": 4199404327,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 22,
+          "readId": 23,
+          "elapsedNs": 4199479788,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 22,
+          "readId": 23,
+          "elapsedNs": 4202140558,
+          "count": -1
+        },
+        {
+          "stage": "hits-ready",
+          "generation": 2,
+          "sourceVersion": 22,
+          "readId": 23,
+          "elapsedNs": 4202656481,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-start",
+          "generation": 2,
+          "sourceVersion": 22,
+          "readId": 23,
+          "elapsedNs": 4202661832,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 23,
+          "readId": 0,
+          "elapsedNs": 4223657253,
+          "count": 1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 22,
+          "readId": 23,
+          "elapsedNs": 4225743873,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 22,
+          "readId": 23,
+          "elapsedNs": 4226202199,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 22,
+          "readId": 23,
+          "elapsedNs": 4226305340,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 23,
+          "readId": 24,
+          "elapsedNs": 4226398393,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 23,
+          "readId": 24,
+          "elapsedNs": 4226400226,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 23,
+          "readId": 24,
+          "elapsedNs": 4226402751,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 23,
+          "readId": 24,
+          "elapsedNs": 4226491199,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 23,
+          "readId": 24,
+          "elapsedNs": 4226643954,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 23,
+          "readId": 24,
+          "elapsedNs": 4226727630,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 23,
+          "readId": 24,
+          "elapsedNs": 4228137664,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 23,
+          "readId": 24,
+          "elapsedNs": 4228205781,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 24,
+          "readId": 0,
+          "elapsedNs": 4228398209,
+          "count": 1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 23,
+          "readId": 24,
+          "elapsedNs": 4231021400,
+          "count": -1
+        }
+      ],
+      "saves": []
+    }
+  },
+  {
+    "marker": "LIBRARY_STAGE_DIAGNOSTICS",
+    "data": {
+      "schema": 1,
+      "checkpoint": "observe-saves-finished",
+      "part": 4,
+      "clock": "System.nanoTime",
+      "originNs": 705084579652,
+      "events": [
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 23,
+          "readId": 24,
+          "elapsedNs": 4231247352,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 23,
+          "readId": 24,
+          "elapsedNs": 4231601724,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 23,
+          "readId": 24,
+          "elapsedNs": 4232076769,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 24,
+          "readId": 25,
+          "elapsedNs": 4232205188,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 24,
+          "readId": 25,
+          "elapsedNs": 4232209808,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 24,
+          "readId": 25,
+          "elapsedNs": 4232212943,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 24,
+          "readId": 25,
+          "elapsedNs": 4232292282,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 24,
+          "readId": 25,
+          "elapsedNs": 4232504748,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 24,
+          "readId": 25,
+          "elapsedNs": 4232633178,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 24,
+          "readId": 25,
+          "elapsedNs": 4233475511,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 24,
+          "readId": 25,
+          "elapsedNs": 4233508292,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 25,
+          "readId": 0,
+          "elapsedNs": 4236124070,
+          "count": 1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 24,
+          "readId": 25,
+          "elapsedNs": 4236739588,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 24,
+          "readId": 25,
+          "elapsedNs": 4236967443,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 24,
+          "readId": 25,
+          "elapsedNs": 4237313460,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 24,
+          "readId": 25,
+          "elapsedNs": 4237399931,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 25,
+          "readId": 26,
+          "elapsedNs": 4237482966,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 25,
+          "readId": 26,
+          "elapsedNs": 4237485070,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 25,
+          "readId": 26,
+          "elapsedNs": 4237487916,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 25,
+          "readId": 26,
+          "elapsedNs": 4237576111,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 25,
+          "readId": 26,
+          "elapsedNs": 4237736840,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 25,
+          "readId": 26,
+          "elapsedNs": 4237819535,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 25,
+          "readId": 26,
+          "elapsedNs": 4238682797,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 25,
+          "readId": 26,
+          "elapsedNs": 4238713074,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 26,
+          "readId": 0,
+          "elapsedNs": 4239813469,
+          "count": 1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 25,
+          "readId": 26,
+          "elapsedNs": 4242389471,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 25,
+          "readId": 26,
+          "elapsedNs": 4242562353,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 25,
+          "readId": 26,
+          "elapsedNs": 4242827929,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 25,
+          "readId": 26,
+          "elapsedNs": 4242929720,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 26,
+          "readId": 27,
+          "elapsedNs": 4243029176,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 26,
+          "readId": 27,
+          "elapsedNs": 4243031660,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 26,
+          "readId": 27,
+          "elapsedNs": 4243034115,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 26,
+          "readId": 27,
+          "elapsedNs": 4243192330,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 26,
+          "readId": 27,
+          "elapsedNs": 4243356737,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 26,
+          "readId": 27,
+          "elapsedNs": 4243658811,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 26,
+          "readId": 27,
+          "elapsedNs": 4245034000,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 26,
+          "readId": 27,
+          "elapsedNs": 4245068905,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 27,
+          "readId": 0,
+          "elapsedNs": 4245360399,
+          "count": 1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 26,
+          "readId": 27,
+          "elapsedNs": 4248094837,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 26,
+          "readId": 27,
+          "elapsedNs": 4248304208,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 26,
+          "readId": 27,
+          "elapsedNs": 4248541571,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 26,
+          "readId": 27,
+          "elapsedNs": 4248619236,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 27,
+          "readId": 28,
+          "elapsedNs": 4248695819,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 27,
+          "readId": 28,
+          "elapsedNs": 4248697663,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 27,
+          "readId": 28,
+          "elapsedNs": 4248700097,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 27,
+          "readId": 28,
+          "elapsedNs": 4248786769,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 27,
+          "readId": 28,
+          "elapsedNs": 4248918525,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 27,
+          "readId": 28,
+          "elapsedNs": 4249003695,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 28,
+          "readId": 0,
+          "elapsedNs": 4251517710,
+          "count": 1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 27,
+          "readId": 28,
+          "elapsedNs": 4252255157,
+          "count": 0
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 27,
+          "readId": 28,
+          "elapsedNs": 4252399026,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 27,
+          "readId": 28,
+          "elapsedNs": 4252531914,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 27,
+          "readId": 28,
+          "elapsedNs": 4252863413,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 28,
+          "readId": 29,
+          "elapsedNs": 4253012271,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 28,
+          "readId": 29,
+          "elapsedNs": 4253014806,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 28,
+          "readId": 29,
+          "elapsedNs": 4253017120,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 28,
+          "readId": 29,
+          "elapsedNs": 4253095417,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 28,
+          "readId": 29,
+          "elapsedNs": 4253289238,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 28,
+          "readId": 29,
+          "elapsedNs": 4253380319,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 28,
+          "readId": 29,
+          "elapsedNs": 4254161788,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 28,
+          "readId": 29,
+          "elapsedNs": 4254225397,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 28,
+          "readId": 29,
+          "elapsedNs": 4257358691,
+          "count": -1
+        },
+        {
+          "stage": "hits-ready",
+          "generation": 2,
+          "sourceVersion": 28,
+          "readId": 29,
+          "elapsedNs": 4259636436,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-start",
+          "generation": 2,
+          "sourceVersion": 28,
+          "readId": 29,
+          "elapsedNs": 4259642668,
+          "count": -1
+        },
+        {
+          "stage": "observe-invalidation",
+          "generation": -1,
+          "sourceVersion": 29,
+          "readId": 0,
+          "elapsedNs": 4263953597,
+          "count": 1
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 28,
+          "readId": 29,
+          "elapsedNs": 4265562574,
+          "count": -1
+        },
+        {
+          "stage": "read-cancel",
+          "generation": 2,
+          "sourceVersion": 28,
+          "readId": 29,
+          "elapsedNs": 4265861052,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-cancel",
+          "generation": 2,
+          "sourceVersion": 28,
+          "readId": 29,
+          "elapsedNs": 4267495315,
+          "count": -1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 4267826082,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 4267829259,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 4267831893,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 4267917370,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 4268076879,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 4268221990,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 4269220585,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 4269257133,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 4277288053,
+          "count": -1
+        }
+      ],
+      "saves": []
+    }
+  },
+  {
+    "marker": "INDEX_SAVE_PROGRESS",
+    "data": {
+      "rows": 4096,
+      "elapsedMs": 6518.715457
+    }
+  },
+  {
+    "marker": "INDEX_SAVE_PROGRESS",
+    "data": {
+      "rows": 8192,
+      "elapsedMs": 12390.598898
+    }
+  },
+  {
+    "marker": "INDEX_SAVE_PROGRESS",
+    "data": {
+      "rows": 12288,
+      "elapsedMs": 18249.219695
+    }
+  },
+  {
+    "marker": "INDEX_SAVE_PROGRESS",
+    "data": {
+      "rows": 16384,
+      "elapsedMs": 24046.567507
+    }
+  },
+  {
+    "marker": "INDEX_SAVE_PROGRESS",
+    "data": {
+      "rows": 20000,
+      "elapsedMs": 29207.758706
+    }
+  },
+  {
+    "marker": "LIBRARY_STAGE_DIAGNOSTICS",
+    "data": {
+      "schema": 1,
+      "checkpoint": "observe-finished",
+      "part": 5,
+      "clock": "System.nanoTime",
+      "originNs": 705084579652,
+      "events": [
+        {
+          "stage": "hits-ready",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 4281061199,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-start",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 4281067241,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-end",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 5654156527,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-start",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 5654187535,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-end",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 5654420431,
+          "count": -1
+        },
+        {
+          "stage": "page-start",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 5654436621,
+          "count": -1
+        },
+        {
+          "stage": "page-end",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 6298680691,
+          "count": 1
+        },
+        {
+          "stage": "metadata-start",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 6298696751,
+          "count": -1
+        },
+        {
+          "stage": "metadata-end",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 6305786643,
+          "count": 501
+        },
+        {
+          "stage": "pending-start",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 6305790730,
+          "count": -1
+        },
+        {
+          "stage": "pending-end",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 6306811968,
+          "count": 19872
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 6307128299,
+          "count": -1
+        },
+        {
+          "stage": "connection-closed",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 6308059077,
+          "count": -1
+        },
+        {
+          "stage": "read-end",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 6308397988,
+          "count": 1
+        },
+        {
+          "stage": "observe-read-end",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 30,
+          "elapsedNs": 6308470415,
+          "count": 1
+        },
+        {
+          "stage": "index-build-completed",
+          "generation": -1,
+          "sourceVersion": -1,
+          "readId": 0,
+          "elapsedNs": 33141655421,
+          "count": 1
+        },
+        {
+          "stage": "observe-index-completed",
+          "generation": -1,
+          "sourceVersion": -1,
+          "readId": 0,
+          "elapsedNs": 33141777945,
+          "count": 1
+        },
+        {
+          "stage": "observe-scheduled",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33141877551,
+          "count": -1
+        },
+        {
+          "stage": "observe-read-start",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33141880256,
+          "count": -1
+        },
+        {
+          "stage": "read-requested",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33141883873,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33141921438,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33142183668,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33142282953,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33143429976,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33143520605,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33146644760,
+          "count": -1
+        },
+        {
+          "stage": "hits-ready",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33147116150,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-start",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33147122192,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-end",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33147751377,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-start",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33147753842,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-end",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33148069070,
+          "count": -1
+        },
+        {
+          "stage": "page-start",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33148087475,
+          "count": -1
+        },
+        {
+          "stage": "page-end",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33721598192,
+          "count": 1
+        },
+        {
+          "stage": "metadata-start",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33721612729,
+          "count": -1
+        },
+        {
+          "stage": "metadata-end",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33726813393,
+          "count": 501
+        },
+        {
+          "stage": "pending-start",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33726816178,
+          "count": -1
+        },
+        {
+          "stage": "pending-end",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33726898973,
+          "count": 0
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33727137418,
+          "count": -1
+        },
+        {
+          "stage": "connection-closed",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33727472164,
+          "count": -1
+        },
+        {
+          "stage": "read-end",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33727751295,
+          "count": 1
+        },
+        {
+          "stage": "observe-read-end",
+          "generation": 2,
+          "sourceVersion": 29,
+          "readId": 31,
+          "elapsedNs": 33727838592,
+          "count": 1
+        }
+      ],
+      "saves": []
+    }
+  },
+  {
+    "marker": "LIBRARY_STAGE_DIAGNOSTICS",
+    "data": {
+      "schema": 1,
+      "checkpoint": "warm-0",
+      "part": 6,
+      "clock": "System.nanoTime",
+      "originNs": 705084579652,
+      "events": [
+        {
+          "stage": "read-requested",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 33731189236,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 33731328656,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 33731716551,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 33731815646,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 33732838146,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 33732872550,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 33735311966,
+          "count": -1
+        },
+        {
+          "stage": "hits-ready",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 33735754723,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 33735759692,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 33736520854,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 33736523319,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 33736779076,
+          "count": -1
+        },
+        {
+          "stage": "page-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 33736794976,
+          "count": -1
+        },
+        {
+          "stage": "page-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 34317469283,
+          "count": 1
+        },
+        {
+          "stage": "metadata-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 34317484742,
+          "count": -1
+        },
+        {
+          "stage": "metadata-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 34322710002,
+          "count": 501
+        },
+        {
+          "stage": "pending-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 34322713107,
+          "count": -1
+        },
+        {
+          "stage": "pending-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 34322795421,
+          "count": 0
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 34323150995,
+          "count": -1
+        },
+        {
+          "stage": "connection-closed",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 34323510707,
+          "count": -1
+        },
+        {
+          "stage": "read-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 32,
+          "elapsedNs": 34323788926,
+          "count": 1
+        }
+      ],
+      "saves": []
+    }
+  },
+  {
+    "marker": "LIBRARY_STAGE_DIAGNOSTICS",
+    "data": {
+      "schema": 1,
+      "checkpoint": "warm-1",
+      "part": 7,
+      "clock": "System.nanoTime",
+      "originNs": 705084579652,
+      "events": [
+        {
+          "stage": "read-requested",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34324954809,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34325177310,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34325452424,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34325542602,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34326452251,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34326485162,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34328907397,
+          "count": -1
+        },
+        {
+          "stage": "hits-ready",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34329343081,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34329348040,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34329812989,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34329815202,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34330105695,
+          "count": -1
+        },
+        {
+          "stage": "page-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34330122857,
+          "count": -1
+        },
+        {
+          "stage": "page-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34914309344,
+          "count": 1
+        },
+        {
+          "stage": "metadata-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34914321847,
+          "count": -1
+        },
+        {
+          "stage": "metadata-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34919860071,
+          "count": 501
+        },
+        {
+          "stage": "pending-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34919863117,
+          "count": -1
+        },
+        {
+          "stage": "pending-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34919951322,
+          "count": 0
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34920168087,
+          "count": -1
+        },
+        {
+          "stage": "connection-closed",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34920445706,
+          "count": -1
+        },
+        {
+          "stage": "read-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 33,
+          "elapsedNs": 34920845502,
+          "count": 1
+        }
+      ],
+      "saves": []
+    }
+  },
+  {
+    "marker": "LIBRARY_STAGE_DIAGNOSTICS",
+    "data": {
+      "schema": 1,
+      "checkpoint": "warm-2",
+      "part": 8,
+      "clock": "System.nanoTime",
+      "originNs": 705084579652,
+      "events": [
+        {
+          "stage": "read-requested",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 34922111689,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 34922217557,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 34922454199,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 34922547443,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 34923532644,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 34923566196,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 34925938567,
+          "count": -1
+        },
+        {
+          "stage": "hits-ready",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 34926366887,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 34926371696,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 34926834891,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 34926837145,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 34927126606,
+          "count": -1
+        },
+        {
+          "stage": "page-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 34927143458,
+          "count": -1
+        },
+        {
+          "stage": "page-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 35511688036,
+          "count": 1
+        },
+        {
+          "stage": "metadata-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 35511714716,
+          "count": -1
+        },
+        {
+          "stage": "metadata-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 35516705458,
+          "count": 501
+        },
+        {
+          "stage": "pending-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 35516708172,
+          "count": -1
+        },
+        {
+          "stage": "pending-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 35516793882,
+          "count": 0
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 35517026967,
+          "count": -1
+        },
+        {
+          "stage": "connection-closed",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 35517310878,
+          "count": -1
+        },
+        {
+          "stage": "read-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 34,
+          "elapsedNs": 35517586132,
+          "count": 1
+        }
+      ],
+      "saves": []
+    }
+  },
+  {
+    "marker": "LIBRARY_STAGE_DIAGNOSTICS",
+    "data": {
+      "schema": 1,
+      "checkpoint": "warm-3",
+      "part": 9,
+      "clock": "System.nanoTime",
+      "originNs": 705084579652,
+      "events": [
+        {
+          "stage": "read-requested",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 35518713625,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 35518809925,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 35519109666,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 35519209412,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 35520172791,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 35520206103,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 35522558527,
+          "count": -1
+        },
+        {
+          "stage": "hits-ready",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 35522941182,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 35522945921,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 35523512388,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 35523514863,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 35523774047,
+          "count": -1
+        },
+        {
+          "stage": "page-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 35523790027,
+          "count": -1
+        },
+        {
+          "stage": "page-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 36102387405,
+          "count": 1
+        },
+        {
+          "stage": "metadata-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 36102400480,
+          "count": -1
+        },
+        {
+          "stage": "metadata-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 36107673649,
+          "count": 501
+        },
+        {
+          "stage": "pending-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 36107676674,
+          "count": -1
+        },
+        {
+          "stage": "pending-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 36107764138,
+          "count": 0
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 36107964451,
+          "count": -1
+        },
+        {
+          "stage": "connection-closed",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 36108277146,
+          "count": -1
+        },
+        {
+          "stage": "read-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 35,
+          "elapsedNs": 36108583277,
+          "count": 1
+        }
+      ],
+      "saves": []
+    }
+  },
+  {
+    "marker": "LIBRARY_STAGE_DIAGNOSTICS",
+    "data": {
+      "schema": 1,
+      "checkpoint": "warm-4",
+      "part": 10,
+      "clock": "System.nanoTime",
+      "originNs": 705084579652,
+      "events": [
+        {
+          "stage": "read-requested",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36109848909,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36110078517,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36110505816,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36110597347,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36111537072,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36111570414,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36115747706,
+          "count": -1
+        },
+        {
+          "stage": "hits-ready",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36116588808,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36116603806,
+          "count": -1
+        },
+        {
+          "stage": "page-hits-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36117153883,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36117156167,
+          "count": -1
+        },
+        {
+          "stage": "card-hits-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36117410532,
+          "count": -1
+        },
+        {
+          "stage": "page-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36117426392,
+          "count": -1
+        },
+        {
+          "stage": "page-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36694895343,
+          "count": 1
+        },
+        {
+          "stage": "metadata-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36694909489,
+          "count": -1
+        },
+        {
+          "stage": "metadata-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36699897354,
+          "count": 501
+        },
+        {
+          "stage": "pending-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36699900501,
+          "count": -1
+        },
+        {
+          "stage": "pending-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36700032637,
+          "count": 0
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36700272245,
+          "count": -1
+        },
+        {
+          "stage": "connection-closed",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36700565984,
+          "count": -1
+        },
+        {
+          "stage": "read-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 36,
+          "elapsedNs": 36700835597,
+          "count": 1
+        }
+      ],
+      "saves": []
+    }
+  },
+  {
+    "marker": "LIBRARY_STAGE_DIAGNOSTICS",
+    "data": {
+      "schema": 1,
+      "checkpoint": "shelf",
+      "part": 11,
+      "clock": "System.nanoTime",
+      "originNs": 705084579652,
+      "events": [
+        {
+          "stage": "read-requested",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36702040260,
+          "count": -1
+        },
+        {
+          "stage": "read-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36702215865,
+          "count": -1
+        },
+        {
+          "stage": "connection-open",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36702417051,
+          "count": -1
+        },
+        {
+          "stage": "snapshot-open",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36702505256,
+          "count": -1
+        },
+        {
+          "stage": "drafts-ready",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36703419814,
+          "count": 0
+        },
+        {
+          "stage": "scope-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36703500505,
+          "count": -1
+        },
+        {
+          "stage": "scope-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36706109728,
+          "count": -1
+        },
+        {
+          "stage": "hits-ready",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36706374753,
+          "count": -1
+        },
+        {
+          "stage": "page-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36706393608,
+          "count": -1
+        },
+        {
+          "stage": "page-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36710147880,
+          "count": 61
+        },
+        {
+          "stage": "metadata-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36710166294,
+          "count": -1
+        },
+        {
+          "stage": "metadata-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36715297117,
+          "count": 501
+        },
+        {
+          "stage": "pending-start",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36715304712,
+          "count": -1
+        },
+        {
+          "stage": "pending-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36715394440,
+          "count": 0
+        },
+        {
+          "stage": "snapshot-closed",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36715610754,
+          "count": -1
+        },
+        {
+          "stage": "connection-closed",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36715811669,
+          "count": -1
+        },
+        {
+          "stage": "read-end",
+          "generation": 1,
+          "sourceVersion": -1,
+          "readId": 37,
+          "elapsedNs": 36716117340,
+          "count": 60
+        }
+      ],
+      "saves": []
+    }
+  },
+  {
+    "marker": "LIBRARY_READ_EVIDENCE",
+    "data": {
+      "books": 500,
+      "pages": 20000,
+      "noteBodyChars": 20020,
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      },
+      "headerReadMs": 27.843334,
+      "headerReturnedBodyChars": 0,
+      "coldMs": 2002.729915,
+      "coldSourceChecks": 20000,
+      "warmMedianMs": 592.658936,
+      "warmSamplesMs": [
+        592.658936,
+        595.975364,
+        595.543269,
+        589.929582,
+        591.034357
+      ],
+      "stageDiagnosticsEnabled": true,
+      "saveCount": 30,
+      "saveP50Ms": 2.711224,
+      "saveP95Ms": 7.560702,
+      "saveMaxMs": 8.082987,
+      "saveSamplesMs": [
+        8.082987,
+        3.330632,
+        2.008131,
+        2.739557,
+        2.839163,
+        2.248831,
+        5.072987,
+        2.80001,
+        2.609955,
+        2.019081,
+        2.724238,
+        2.852749,
+        2.189149,
+        2.630453,
+        2.715483,
+        2.275429,
+        2.711224,
+        2.10952,
+        2.521479,
+        2.529765,
+        2.413899,
+        2.496613,
+        2.856686,
+        7.560702,
+        5.372214,
+        2.894045,
+        2.323069,
+        2.780613,
+        2.160255,
+        2.680668
+      ],
+      "observeIndexConcurrentSaves": {
+        "indexRowsBeforeSaves": 64,
+        "indexRowsAfterSaves": 128,
+        "firstCommittedBatchMs": 115.48662,
+        "saveCount": 30,
+        "saveP50Ms": 6.607141,
+        "saveP95Ms": 13.751264,
+        "saveMaxMs": 30.772934,
+        "saveSamplesMs": [
+          2.661571,
+          13.751264,
+          8.017144,
+          5.836519,
+          6.607141,
+          7.937095,
+          8.646148,
+          6.202344,
+          4.919249,
+          6.962036,
+          9.683116,
+          4.302964,
+          5.665282,
+          3.590165,
+          5.046245,
+          7.13187,
+          5.480887,
+          5.559152,
+          8.442499,
+          6.689023,
+          4.466733,
+          6.773951,
+          7.905989,
+          30.772934,
+          4.963461,
+          3.632547,
+          7.556452,
+          4.965003,
+          5.526331,
+          6.639171
+        ],
+        "saveProgressSamples": [
+          {
+            "sample": 0,
+            "elapsedMs": 2.661571,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 1,
+            "elapsedMs": 13.751264,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 2,
+            "elapsedMs": 8.017144,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 3,
+            "elapsedMs": 5.836519,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 4,
+            "elapsedMs": 6.607141,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 5,
+            "elapsedMs": 7.937095,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 6,
+            "elapsedMs": 8.646148,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 7,
+            "elapsedMs": 6.202344,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 8,
+            "elapsedMs": 4.919249,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 9,
+            "elapsedMs": 6.962036,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 10,
+            "elapsedMs": 9.683116,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 11,
+            "elapsedMs": 4.302964,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 12,
+            "elapsedMs": 5.665282,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 13,
+            "elapsedMs": 3.590165,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 14,
+            "elapsedMs": 5.046245,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 15,
+            "elapsedMs": 7.13187,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 16,
+            "elapsedMs": 5.480887,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 17,
+            "elapsedMs": 5.559152,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 18,
+            "elapsedMs": 8.442499,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 19,
+            "elapsedMs": 6.689023,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 20,
+            "elapsedMs": 4.466733,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 21,
+            "elapsedMs": 6.773951,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 22,
+            "elapsedMs": 7.905989,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 64,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 0
+          },
+          {
+            "sample": 23,
+            "elapsedMs": 30.772934,
+            "indexRowsStart": 64,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 0,
+            "sourceChecksEnd": 184
+          },
+          {
+            "sample": 24,
+            "elapsedMs": 4.963461,
+            "indexRowsStart": 128,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 185,
+            "sourceChecksEnd": 195
+          },
+          {
+            "sample": 25,
+            "elapsedMs": 3.632547,
+            "indexRowsStart": 128,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 195,
+            "sourceChecksEnd": 195
+          },
+          {
+            "sample": 26,
+            "elapsedMs": 7.556452,
+            "indexRowsStart": 128,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 195,
+            "sourceChecksEnd": 195
+          },
+          {
+            "sample": 27,
+            "elapsedMs": 4.965003,
+            "indexRowsStart": 128,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 195,
+            "sourceChecksEnd": 195
+          },
+          {
+            "sample": 28,
+            "elapsedMs": 5.526331,
+            "indexRowsStart": 128,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 195,
+            "sourceChecksEnd": 195
+          },
+          {
+            "sample": 29,
+            "elapsedMs": 6.639171,
+            "indexRowsStart": 128,
+            "indexRowsEnd": 128,
+            "sourceChecksStart": 195,
+            "sourceChecksEnd": 195
+          }
+        ],
+        "sourceChecksAfterSaves": 195,
+        "indexRowsFinal": 20000,
+        "allIndexRowsCommittedMs": 29207.712471,
+        "searchIndexReadyMs": 29804.959997,
+        "sourceChecks": 20068
+      },
+      "writerCompletedDuringPausedSearch": true,
+      "shelfReturnedPreviewChars": 35425,
+      "shelfDirectoryBodyChars": 0,
+      "projectionRows": 61,
+      "projectionChars": 36025,
+      "fullBodyOnDemandMatches": true
+    }
+  }
+]

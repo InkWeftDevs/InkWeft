@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "status": "FROZEN_SOURCE_ONLY_UNDER_CONTINUATION_NOT_RUN",
+  "materialized_scope": [
+    "android",
+    "ci"
+  ],
+  "excluded_from_build_inputs": [
+    "android/verification"
+  ],
+  "identities": {
+    "B": {
+      "git": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+      "tree": "2eefbf879679d29f5ae4b1d6b9715a4cef14d5d9",
+      "production_overrides": [
+        {
+          "from_git": "7949011ca2b84492f6438d275a09d28faef3b472",
+          "from_path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+          "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+          "bytes": 4426,
+          "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d"
+        }
+      ],
+      "canonical_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+      "file_count": 947
+    },
+    "C0": {
+      "git": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+      "tree": "9df9003679881668bf90db98d3f5efce750afe1d",
+      "production_overrides": [],
+      "canonical_manifest_sha256": "7592c7990537bde681d0179539f58e1cd79822695bfcfd4b19882d9e1f738e90",
+      "file_count": 964
+    },
+    "C1": {
+      "git": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+      "tree": "e773d660abbc15fd727000eb60631d3b72a19a92",
+      "production_overrides": [],
+      "canonical_manifest_sha256": "06e7cea253c061891e10f658400143a7da34ba23f6ec95224bee31f5c0d13eb6",
+      "file_count": 964
+    }
+  },
+  "common_probes": [
+    {
+      "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+      "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLibraryPairProbe.kt",
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+      "bytes": 18281,
+      "sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+    },
+    {
+      "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+      "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLocalAppendPairProbe.kt",
+      "path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+      "bytes": 12932,
+      "sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+    }
+  ],
+  "native_execution": "NOT_RUN",
+  "notes": [
+    "B retains originala128 with established common writer factory and probes only.",
+    "C0 in this plan is45b4861, the prior run38441089594 C1; historicalC0=ebb is not this run C0.",
+    "C1 is this committed SQL-boundary cancellation candidate.",
+    "Common probes, four seeds, original samples and thresholds remain byte-identical; add only one correctness method.",
+    "No build/network/native operation is performed by source freezing."
+  ],
+  "version_aliases": {
+    "B": "controlled-original-baseline-a128bb0",
+    "C0": "previous-candidate-45b4861",
+    "C1": "sql-boundary-cancellation-candidate"
+  }
+}

@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources" tests="1" failures="0" errors="0" time="0.9591004848480225"><testcase classname="org.inkweft.app.TileLocalRedrawTest" name="interruptedPanWaitJoinsItsWorkerBeforeClosingResources" time="0.9591004848480225" /></testsuite>
