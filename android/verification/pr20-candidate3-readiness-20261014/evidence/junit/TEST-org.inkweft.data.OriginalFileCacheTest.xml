@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.inkweft.data.OriginalFileCacheTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-14T01:45:41.373Z" hostname="76a5c7c0bfe8" time="0.051">
+  <properties/>
+  <testcase name="incompleteOrCancelledCopiesAreNeverPublished" classname="org.inkweft.data.OriginalFileCacheTest" time="0.023"/>
+  <testcase name="leasedFilesSurviveTrimAndLruEvictsOnlyReleasedFiles" classname="org.inkweft.data.OriginalFileCacheTest" time="0.012"/>
+  <testcase name="sourceChunksRejectMissingAndWrongFinalBlock" classname="org.inkweft.data.OriginalFileCacheTest" time="0.003"/>
+  <testcase name="restartReusesVerifiedFilesAndRebuildsTamperedBytes" classname="org.inkweft.data.OriginalFileCacheTest" time="0.01"/>
+  <testcase name="cacheCanBeClearedAfterRestartBeforeAnyOriginalIsOpened" classname="org.inkweft.data.OriginalFileCacheTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

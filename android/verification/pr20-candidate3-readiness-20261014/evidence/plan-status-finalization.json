@@ -1,0 +1,5 @@
+{
+  "before_sha256": "3ace8338e59fe9be3fe78c01f25795dfea07c894c3e9f774de97180e12f8b4fa",
+  "after_sha256": "16eeca6375758fe70e3ae5b5787ed87e4103ef7baed9e64e86d37ee61781e1ff",
+  "change": "Only status sentence updated from source-materialization-only to completed final-input local checks; methods, sources, thresholds, budgets and authorization unchanged."
+}

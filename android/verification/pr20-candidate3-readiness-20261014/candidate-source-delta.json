@@ -1,0 +1,27 @@
+{
+  "scope": "All frozen android/ci input differences from prior45b; review every change before launch.",
+  "from_git": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+  "to_git": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+  "file_deltas": {
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibraryPagingTest.kt": {
+      "before": {
+        "bytes": 8035,
+        "sha256": "b0c5b0b9f33b1dbe83cdc9b9f754884b221fba16c1fdc6c98754c59e756b807a"
+      },
+      "after": {
+        "bytes": 10501,
+        "sha256": "4deefcf739ebbdd1ead6e4e2259b72e4b5af07a122d2ff766ccff311f3e188de"
+      }
+    },
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt": {
+      "before": {
+        "bytes": 16444,
+        "sha256": "744cda25180c3f8411b2816d5025b65c5b5ab122f5a0b83bb0597b379c935522"
+      },
+      "after": {
+        "bytes": 16836,
+        "sha256": "33b4e9cc4fcf3fac593f0abc5dc6e2c070e10603a179979ec57be2d554198f48"
+      }
+    }
+  }
+}
