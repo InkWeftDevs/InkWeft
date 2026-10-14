@@ -1,0 +1,247 @@
+{
+  "status": "PASS",
+  "scope": "OFFLINE_ONLY_NO_NEW_NATIVE_NO_NETWORK_NO_BUILD",
+  "groups": [
+    {
+      "name": "unbound isolation and exact scope",
+      "status": "PASS",
+      "details": {
+        "methods": 10,
+        "groups": 1,
+        "source_identities": 1,
+        "apk_count": 1,
+        "execution_binding": "REAL_READINESS_MATCH",
+        "copied_functions": [
+          "write_json",
+          "save",
+          "seconds",
+          "digest",
+          "owned",
+          "run",
+          "capture",
+          "shell",
+          "phase",
+          "host",
+          "environment",
+          "source_manifest",
+          "junit"
+        ],
+        "cleanup_byte_identical": true
+      }
+    },
+    {
+      "name": "workflow syntax and isolated real first-step clock",
+      "status": "PASS",
+      "details": {
+        "actionlint": 0,
+        "phase_wrappers": 4,
+        "actual_clock_lines": 8,
+        "second_clock_rejected": true
+      }
+    },
+    {
+      "name": "phase/work absolute deadline boundaries",
+      "status": "PASS",
+      "details": {
+        "phase_boundaries": 9
+      }
+    },
+    {
+      "name": "strict original JUnit parser and skipped/fault cases",
+      "status": "PASS",
+      "details": {
+        "prior_raw_junit": 58,
+        "failure_or_skipped_variants": 10,
+        "new_native": 0
+      }
+    },
+    {
+      "name": "closed boundary schemas and whole-method loss/order/count fault refusal",
+      "status": "PASS",
+      "details": {
+        "synthetic_complete_methods": 10,
+        "whole_method_fault_cases": 24,
+        "author_endpoint_deleted_and_recounted": 22,
+        "author_endpoint_duplicated_and_recounted": 22,
+        "thread_task_txn_depth_cpu_order_faults": 8,
+        "background_fragment_positive": 1,
+        "run_exit_after_return_positive": 1,
+        "closed_object_schemas": 4,
+        "native_results": 0
+      }
+    },
+    {
+      "name": "actual fixture, source hashes, capacities and stage allowlist",
+      "status": "PASS",
+      "details": {
+        "source_hashes_match": true,
+        "fixture_pages": 20001,
+        "actual_stage_literals": 50,
+        "boundary_capacity_per_arm": 4096,
+        "read_capacity_per_arm": 2048
+      }
+    },
+    {
+      "name": "all-three package natural isolation and no cleanup fallback",
+      "status": "PASS",
+      "details": [
+        "gone",
+        "app_alive",
+        "test_alive",
+        "data_alive",
+        "transport"
+      ]
+    },
+    {
+      "name": "instrumentation manifest uses xmltree and exact target package",
+      "status": "PASS",
+      "details": {
+        "prior_actual_data_manifest": 1,
+        "synthetic_app_target": 1,
+        "mismatches": 4
+      }
+    },
+    {
+      "name": "data-only build receipt: four ABI APK/AAR match and negative source cases",
+      "status": "PASS",
+      "details": [
+        {
+          "case": "match",
+          "native_executions": 0,
+          "gradle_executions": 0
+        },
+        {
+          "case": "missing_apk_abi",
+          "native_executions": 0,
+          "gradle_executions": 0
+        },
+        {
+          "case": "different_aar_native",
+          "native_executions": 0,
+          "gradle_executions": 0
+        },
+        {
+          "case": "wrong_aar_version",
+          "native_executions": 0,
+          "gradle_executions": 0
+        }
+      ]
+    },
+    {
+      "name": "data install group binds exact installed APK bytes; wrong path/hash stop",
+      "status": "PASS",
+      "details": [
+        {
+          "group": "C1-data-diagnostics",
+          "case": "match",
+          "commands": 3
+        },
+        {
+          "group": "C1-data-diagnostics",
+          "case": "wrong_hash",
+          "commands": 3
+        },
+        {
+          "group": "C1-data-diagnostics",
+          "case": "wrong_path",
+          "commands": 2
+        }
+      ]
+    },
+    {
+      "name": "malformed extra marker preserves raw JUnit PASS but host INCOMPLETE",
+      "status": "PASS",
+      "details": {
+        "junit": "PASS",
+        "host": "INCOMPLETE",
+        "unvalidated_payload_forwarded": false,
+        "raw_preserved": true
+      }
+    },
+    {
+      "name": "actual new packager: partial, missing raw, failure, limits and privacy",
+      "status": "PASS",
+      "details": [
+        {
+          "case": "running",
+          "exit": 0
+        },
+        {
+          "case": "installed",
+          "exit": 0
+        },
+        {
+          "case": "between_steps",
+          "exit": 0
+        },
+        {
+          "case": "pass_preserved",
+          "exit": 0
+        },
+        {
+          "case": "fail_preserved",
+          "exit": 0
+        },
+        {
+          "case": "notrun_preserved",
+          "exit": 0
+        },
+        {
+          "case": "cleanup_failure",
+          "exit": 0
+        },
+        {
+          "case": "all10_complete",
+          "exit": 0
+        },
+        {
+          "case": "all10_missing_raw",
+          "exit": 0
+        },
+        {
+          "case": "oversize",
+          "exit": 1
+        },
+        {
+          "case": "secret",
+          "exit": 1
+        },
+        {
+          "case": "excluded_binary",
+          "exit": 0
+        },
+        {
+          "case": "no_summary",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "name": "bounded maximum shapes plus three MiB other text reserve",
+      "status": "PASS",
+      "details": {
+        "raw_plus_records_upper_bytes": 9115485,
+        "official_record_envelopes_upper_bytes": 4931709,
+        "other_text_reserved_bytes": 3145728,
+        "final_real_total_checked_by_packager": true
+      }
+    }
+  ],
+  "inputs": {
+    "/workspace/InkWeft/android/verification/pr20-save-boundary-20261014/C1-source-manifest.json": "e7f223dd6afb3fadd928076c1b14591fa60523864d7fc86ca3a2e680f8d61265",
+    "/workspace/InkWeft/android/verification/pr20-save-boundary-20261014/PLAN.md": "91cce81651d39bca66a1674cfcac1219205ea20acc9685522c77fff2c5649f0d",
+    "/workspace/InkWeft/android/verification/pr20-save-boundary-20261014/SHA256SUMS": "4de5514b6cc53af44649b9848323758dc928d0fc7c0fa1f3a70cfc6707e9a126",
+    "/workspace/InkWeft/android/verification/pr20-save-boundary-20261014/marker-contract.json": "01cce067e685b392205e24518d337f90281f3462f37e325f16f6eac4de683ac5",
+    "/workspace/InkWeft/android/verification/pr20-save-boundary-20261014/method-plan.json": "cf5800f39b55524ccded154d72ab94421323b34861b8dea3d03e454c3d07117a",
+    "/workspace/InkWeft/android/verification/pr20-save-boundary-20261014/original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "/workspace/InkWeft/android/verification/pr20-save-boundary-20261014/prepare_sources.py": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516",
+    "/workspace/InkWeft/android/verification/pr20-save-boundary-20261014/source-spec.json": "de95eee21d1bc3fcbe662d063b99908ec94aeec785068c9c36f698f25d5abe93",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/bound-control/authorization.json": "382237a0bcd4689348ce3284bc1032d65c521f0e5a5cc4542c9390d0ca32b082",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/bound-control/cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/bound-control/markers.py": "d27e19a7ae5b090436b8e70d5a2d914119e343eeb40e01352359d27f30215857",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/bound-control/package.py": "ed57ea7dc9bed44a150d84721fc6b20b000a21f2373f89eb951917722e986d82",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/bound-control/run.py": "f6309c34d9e8ab34bacc343008aff84c6a2cc508ccb7cfb46e3615943a805aa3",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/bound-control/workflow.proposed.yml": "785c1b6adac26b99c87a38d547e34b619afe23e543da221e7112143d19e33bfe"
+  },
+  "checker_sha256": "0456bc5ccd5896d89c385a33e7fa7f1a9442f73e8c99921aaffb8d5ba358172c"
+}

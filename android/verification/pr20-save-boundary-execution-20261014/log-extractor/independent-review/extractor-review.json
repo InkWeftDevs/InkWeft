@@ -1,0 +1,61 @@
+{
+  "status": "PASS_NO_REMAINING_EXTRACTOR_REVIEW_FINDING",
+  "scope": "STATIC_AND_LOCAL_REPARSE_PLUS_SYNTHETIC_NOT_NEW_NATIVE",
+  "extractor_manifest_sha256": "61d18ebcab3e383c9e4d1043965075f924a98cb969046d74924634a34f491deb",
+  "extractor_files_sha256": {
+    "analyze_logs.py": "68a43811251215250f6125e31b249f85ec96b3bdace17c8d6de5f5536b577a7d",
+    "frozen_markers.py": "d27e19a7ae5b090436b8e70d5a2d914119e343eeb40e01352359d27f30215857",
+    "test_analyzer.py": "d7ccf1ef6bf491483468cbc251e414086daa2fdc0b828ba81336cf898bb06a0c",
+    "binding.template.json": "7dd0939a2461399b9a9782c127d7e7e3423ddaf0e7f62e499a7f6b891a95d66d",
+    "local-git-binding.json": "7f097b2d884cfa8b47b48a080c4e282cc818a44e4019b5df763406ad66b54151",
+    "README.md": "cc82f43f3229b243903fb2bf1c3864a2752eee2b32d4d282ab258978f490162d",
+    "check-03/selftest-results.json": "84a2eeed970ba42474db43ebabf879f1ff40b0123ca7ce5c48b5a3428001826e",
+    "check-03/synthetic-independent-diagnostic.json": "62a0a2e7d47815b02b4fc78ba5d26813f2c96abff3492c74eb6c6b8a65e54b7c"
+  },
+  "review_report_sha256": "8652b4cf4a4ad844e7879c735379a0374bd10617180606346159e6bc6ce5fb7e",
+  "owner_selftests": {
+    "cases": 83,
+    "scope": "OFFLINE_SYNTHETIC_NOT_NATIVE",
+    "reviewer_reran": false,
+    "receipt_sha256": "84a2eeed970ba42474db43ebabf879f1ff40b0123ca7ce5c48b5a3428001826e"
+  },
+  "independent_synthetic_checks": {
+    "cases": 13,
+    "status": "PASS",
+    "receipt_sha256": "b70d69f56e26cb33dac07efa85aa5f9654ebca71083be27a166d1dff975e2d95"
+  },
+  "synthetic_export_cross_validation": {
+    "status": "COMPLETE_DIAGNOSTIC_TRACE_ONLY",
+    "save_count": 90,
+    "wall_segments_per_arm": 12,
+    "native": false,
+    "receipt_sha256": "62a0a2e7d47815b02b4fc78ba5d26813f2c96abff3492c74eb6c6b8a65e54b7c",
+    "independent_analyzer_sha256": "fd1c22004bb91e7e6673a6ac59eb0f2c2413c9f8ef454a00b2950c0581bbd1b7"
+  },
+  "existing_official_failure_reparse": {
+    "run_id": 38540498244,
+    "job_id": 115773755321,
+    "exit_code": 1,
+    "analysis_status": "INCOMPLETE",
+    "pass_closures": 7,
+    "observed_failure_ordinal": 8,
+    "methods_9_10": "NOT_RUN in original FINAL; not extracted",
+    "diagnostic_samples_available": 0,
+    "extractor_receipt_sha256": "e271c874d9e88731f2107f614fd294c7995d7c5395aed8c5050de048d58fc7ec",
+    "last_receipt_line": 327,
+    "later_FINAL_not_promoted": true
+  },
+  "actual_input_sha256": {
+    "/workspace/scratch/pr20-save-boundary-execution-20261014/official-job.log": "b15e22948657efe1b8193a0b428f2634edde646c3f4c039e92fa3f73e455cdfb",
+    "/workspace/scratch/pr20-save-boundary-execution-20261014/official-terminal-run.json": "86175fbdd26b5fbac5714631264a77252e8f4186c536059e45d4bdfcd36136f5",
+    "/workspace/scratch/pr20-save-boundary-execution-20261014/official-terminal-jobs.json": "4b1af2bd9d4d6cecb38cf8653dea0169997f7458c1cdf8cfb43681afeb3aa957",
+    "/workspace/scratch/pr20-save-boundary-log-analysis-20261014/actual-terminal-binding.json": "2e5d2259eaf86498392186b967608c22532fc0b06783e9bc3515f0e8adb709c2"
+  },
+  "remaining_findings": [],
+  "limits": [
+    "External metadata authenticity not verified online.",
+    "Compact receipts do not independently inspect binary artifacts or original JUnit/ACL files.",
+    "Failed original JUnit stack unavailable; UUID fixture correction is separate static evidence.",
+    "No method10 native observations, performance conclusion, rerun, source/controller/readiness mutation or artifact route."
+  ]
+}

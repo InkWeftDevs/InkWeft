@@ -1,0 +1,427 @@
+﻿2026-10-14T09:11:17.2892648Z Current runner version: '2.337.0'
+2026-10-14T09:11:17.2907776Z ##[group]Runner Image Provisioner
+2026-10-14T09:11:17.2908400Z Hosted Compute Agent
+2026-10-14T09:11:17.2908757Z Version: 20261002.596
+2026-10-14T09:11:17.2909167Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-14T09:11:17.2909609Z Build Date: 2026-10-02T22:28:27Z
+2026-10-14T09:11:17.2910019Z Worker ID: {13dfa046-6eb6-4d2a-9f69-bbb8b1ec67e8}
+2026-10-14T09:11:17.2910439Z Region: southcentralus
+2026-10-14T09:11:17.2910772Z Cloud: Azure
+2026-10-14T09:11:17.2911116Z ##[endgroup]
+2026-10-14T09:11:17.2911877Z ##[group]Operating System
+2026-10-14T09:11:17.2912212Z Ubuntu
+2026-10-14T09:11:17.2912563Z 24.04.5
+2026-10-14T09:11:17.2912895Z LTS
+2026-10-14T09:11:17.2913225Z ##[endgroup]
+2026-10-14T09:11:17.2913570Z ##[group]Runner Image
+2026-10-14T09:11:17.2913899Z Image: ubuntu-24.04
+2026-10-14T09:11:17.2914267Z Version: 20261004.327.1
+2026-10-14T09:11:17.2914967Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-14T09:11:17.2915876Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-14T09:11:17.2916395Z ##[endgroup]
+2026-10-14T09:11:17.2917073Z ##[group]GITHUB_TOKEN Permissions
+2026-10-14T09:11:17.2918465Z Contents: read
+2026-10-14T09:11:17.2918895Z Metadata: read
+2026-10-14T09:11:17.2919216Z ##[endgroup]
+2026-10-14T09:11:17.2920432Z Secret source: Actions
+2026-10-14T09:11:17.2920978Z Cache mode: write
+2026-10-14T09:11:17.2921389Z Prepare workflow directory
+2026-10-14T09:11:17.3126211Z Prepare all required actions
+2026-10-14T09:11:17.3162155Z Getting action download info
+2026-10-14T09:11:17.5753577Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-14T09:11:17.6580106Z Download action repository 'actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3' (SHA:cf277c60eb25467037889841efdb72551f06f6c3)
+2026-10-14T09:11:18.3782349Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-14T09:11:18.6089812Z Complete job name: DIAGNOSTIC_ONLY one source / one data APK / ten methods
+2026-10-14T09:11:18.6537367Z ##[group]Run set -euo pipefail
+2026-10-14T09:11:18.6538052Z [36;1mset -euo pipefail[0m
+2026-10-14T09:11:18.6538747Z [36;1mexport KVM_ONCE="$RUNNER_TEMP/pr20-save-boundary"[0m
+2026-10-14T09:11:18.6539558Z [36;1mexport ANDROID_AVD_HOME="$KVM_ONCE/avd"[0m
+2026-10-14T09:11:18.6540360Z [36;1mexport ANDROID_USER_HOME="$KVM_ONCE/android-user"[0m
+2026-10-14T09:11:18.6541238Z [36;1mexport ANDROID_EMULATOR_HOME="$KVM_ONCE/android-user"[0m
+2026-10-14T09:11:18.6541996Z [36;1mpython3 - <<'PYCODE'[0m
+2026-10-14T09:11:18.6542575Z [36;1mimport json,os,pathlib,time[0m
+2026-10-14T09:11:18.6543244Z [36;1mobserved=time.time();start=int(observed)[0m
+2026-10-14T09:11:18.6543985Z [36;1mroot=pathlib.Path(os.environ['KVM_ONCE'])[0m
+2026-10-14T09:11:18.6545052Z [36;1massert not root.exists(),'Owned screen directory must be new; do not reuse state or clock'[0m
+2026-10-14T09:11:18.6546075Z [36;1m(root/'evidence').mkdir(parents=True)[0m
+2026-10-14T09:11:18.6546965Z [36;1mcutoffs={k:start+v*60 for k,v in [('setup',30),('data',45),('work',55)]}[0m
+2026-10-14T09:11:18.6548597Z [36;1mvalues={'KVM_BUDGET_ANCHOR':start,'KVM_SETUP_CUTOFF':cutoffs['setup'],'KVM_DATA_CUTOFF':cutoffs['data'],'KVM_WORK_DEADLINE':cutoffs['work']}[0m
+2026-10-14T09:11:18.6551117Z [36;1mclock={'status':'PASS','scope':'DIAGNOSTIC_ONLY','anchor_kind':'runner_first_step','budget_anchor_epoch':start,'first_step_observed_epoch':observed,'actual_job_started_epoch':None,'deadlines_minutes':[30,45,55,60],'deadline_epochs':cutoffs}[0m
+2026-10-14T09:11:18.6553282Z [36;1mwith (root/'evidence/clock.json').open('x') as f:f.write(json.dumps(clock,indent=2)+'\n')[0m
+2026-10-14T09:11:18.6554316Z [36;1mwith open(os.environ['GITHUB_ENV'],'a') as f:[0m
+2026-10-14T09:11:18.6555492Z [36;1m    for k in ['KVM_ONCE','ANDROID_AVD_HOME','ANDROID_USER_HOME','ANDROID_EMULATOR_HOME']:f.write(k+'='+os.environ[k]+'\n')[0m
+2026-10-14T09:11:18.6556887Z [36;1m    for k,v in values.items():f.write(k+'='+str(v)+'\n')[0m
+2026-10-14T09:11:18.6557927Z [36;1mprint('INKWEFT_CAUSAL_CLOCK '+json.dumps(clock,separators=(',',':')))[0m
+2026-10-14T09:11:18.6558737Z [36;1mPYCODE[0m
+2026-10-14T09:11:18.6755697Z shell: /usr/bin/bash -e {0}
+2026-10-14T09:11:18.6756390Z ##[endgroup]
+2026-10-14T09:11:18.7015693Z INKWEFT_CAUSAL_CLOCK {"status":"PASS","scope":"DIAGNOSTIC_ONLY","anchor_kind":"runner_first_step","budget_anchor_epoch":1791969078,"first_step_observed_epoch":1791969078.7003121,"actual_job_started_epoch":null,"deadlines_minutes":[30,45,55,60],"deadline_epochs":{"setup":1791970878,"data":1791971778,"work":1791972378}}
+2026-10-14T09:11:18.7210039Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-10-14T09:11:18.7210825Z with:
+2026-10-14T09:11:18.7211282Z   persist-credentials: false
+2026-10-14T09:11:18.7211831Z   path: control
+2026-10-14T09:11:18.7212319Z   repository: InkWeftDevs/InkWeft
+2026-10-14T09:11:18.7216806Z   token: ***
+2026-10-14T09:11:18.7217379Z   ssh-strict: true
+2026-10-14T09:11:18.7217840Z   ssh-user: git
+2026-10-14T09:11:18.7218368Z   clean: true
+2026-10-14T09:11:18.7218839Z   sparse-checkout-cone-mode: true
+2026-10-14T09:11:18.7219391Z   fetch-depth: 1
+2026-10-14T09:11:18.7219846Z   fetch-tags: false
+2026-10-14T09:11:18.7220318Z   show-progress: true
+2026-10-14T09:11:18.7220788Z   lfs: false
+2026-10-14T09:11:18.7221217Z   submodules: false
+2026-10-14T09:11:18.7221688Z   set-safe-directory: true
+2026-10-14T09:11:18.7222228Z   allow-unsafe-pr-checkout: false
+2026-10-14T09:11:18.7222770Z env:
+2026-10-14T09:11:18.7223273Z   KVM_ONCE: /home/runner/work/_temp/pr20-save-boundary
+2026-10-14T09:11:18.7224105Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-save-boundary/avd
+2026-10-14T09:11:18.7225036Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:11:18.7226050Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:11:18.7226869Z   KVM_BUDGET_ANCHOR: 1791969078
+2026-10-14T09:11:18.7227483Z   KVM_SETUP_CUTOFF: 1791970878
+2026-10-14T09:11:18.7228008Z   KVM_DATA_CUTOFF: 1791971778
+2026-10-14T09:11:18.7228534Z   KVM_WORK_DEADLINE: 1791972378
+2026-10-14T09:11:18.7229047Z ##[endgroup]
+2026-10-14T09:11:18.7822463Z Syncing repository: InkWeftDevs/InkWeft
+2026-10-14T09:11:18.7824025Z ##[group]Getting Git version info
+2026-10-14T09:11:18.7824824Z Working directory is '/home/runner/work/InkWeft/InkWeft/control'
+2026-10-14T09:11:18.7825872Z [command]/usr/bin/git version
+2026-10-14T09:11:18.7874099Z git version 2.55.0
+2026-10-14T09:11:18.7892247Z ##[endgroup]
+2026-10-14T09:11:18.7896745Z Temporarily overriding HOME='/home/runner/work/_temp/e62ce072-dc00-4c7d-9839-a80fc6b734e1' before making global git config changes
+2026-10-14T09:11:18.7898422Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-14T09:11:18.7901756Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/InkWeft/InkWeft/control
+2026-10-14T09:11:18.7939916Z ##[group]Initializing the repository
+2026-10-14T09:11:18.7942894Z [command]/usr/bin/git init /home/runner/work/InkWeft/InkWeft/control
+2026-10-14T09:11:18.8028665Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-14T09:11:18.8030458Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-14T09:11:18.8031985Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-14T09:11:18.8033188Z hint: call:
+2026-10-14T09:11:18.8033827Z hint:
+2026-10-14T09:11:18.8034672Z hint: 	git config --global init.defaultBranch <name>
+2026-10-14T09:11:18.8035677Z hint:
+2026-10-14T09:11:18.8036640Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-14T09:11:18.8038522Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-14T09:11:18.8039999Z hint:
+2026-10-14T09:11:18.8040686Z hint: 	git branch -m <name>
+2026-10-14T09:11:18.8041449Z hint:
+2026-10-14T09:11:18.8042467Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-14T09:11:18.8044407Z Initialized empty Git repository in /home/runner/work/InkWeft/InkWeft/control/.git/
+2026-10-14T09:11:18.8048092Z [command]/usr/bin/git remote add origin https://github.com/InkWeftDevs/InkWeft
+2026-10-14T09:11:18.8096740Z ##[endgroup]
+2026-10-14T09:11:18.8160723Z ##[group]Disabling automatic garbage collection
+2026-10-14T09:11:18.8162885Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-14T09:11:18.8165070Z ##[endgroup]
+2026-10-14T09:11:18.8165875Z ##[group]Setting up auth
+2026-10-14T09:11:18.8167428Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-14T09:11:18.8170872Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-14T09:11:18.8431027Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-14T09:11:18.8460817Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-14T09:11:18.8628142Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-14T09:11:18.8655920Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-14T09:11:18.8819371Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-14T09:11:18.8849610Z ##[endgroup]
+2026-10-14T09:11:18.8850412Z ##[group]Fetching the repository
+2026-10-14T09:11:18.8855577Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +81fe788cb26413279d4867b92ad3517a60b69c36:refs/remotes/origin/codex/kvm-pr20-save-boundary-20261014
+2026-10-14T09:11:22.9871084Z From https://github.com/InkWeftDevs/InkWeft
+2026-10-14T09:11:22.9871757Z  * [new ref]         81fe788cb26413279d4867b92ad3517a60b69c36 -> origin/codex/kvm-pr20-save-boundary-20261014
+2026-10-14T09:11:22.9874999Z ##[endgroup]
+2026-10-14T09:11:22.9875467Z ##[group]Determining the checkout info
+2026-10-14T09:11:22.9877403Z ##[endgroup]
+2026-10-14T09:11:22.9883987Z [command]/usr/bin/git sparse-checkout disable
+2026-10-14T09:11:22.9927596Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-14T09:11:22.9962283Z ##[group]Checking out the ref
+2026-10-14T09:11:22.9965953Z [command]/usr/bin/git checkout --progress --force -B codex/kvm-pr20-save-boundary-20261014 refs/remotes/origin/codex/kvm-pr20-save-boundary-20261014
+2026-10-14T09:11:23.7285271Z Switched to a new branch 'codex/kvm-pr20-save-boundary-20261014'
+2026-10-14T09:11:23.7287023Z branch 'codex/kvm-pr20-save-boundary-20261014' set up to track 'origin/codex/kvm-pr20-save-boundary-20261014'.
+2026-10-14T09:11:23.7319105Z ##[endgroup]
+2026-10-14T09:11:23.7356971Z [command]/usr/bin/git log -1 --format=%H
+2026-10-14T09:11:23.7378616Z 81fe788cb26413279d4867b92ad3517a60b69c36
+2026-10-14T09:11:23.7385443Z ##[group]Removing auth
+2026-10-14T09:11:23.7388048Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-14T09:11:23.7413980Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-14T09:11:23.7590086Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-14T09:11:23.7612817Z http.https://github.com/.extraheader
+2026-10-14T09:11:23.7617284Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-14T09:11:23.7643710Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-14T09:11:23.7811081Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-14T09:11:23.7834822Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-14T09:11:23.8000031Z ##[endgroup]
+2026-10-14T09:11:23.8145236Z ##[group]Run actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+2026-10-14T09:11:23.8145463Z with:
+2026-10-14T09:11:23.8145580Z   distribution: temurin
+2026-10-14T09:11:23.8145697Z   java-version: 17
+2026-10-14T09:11:23.8145807Z   java-package: jdk
+2026-10-14T09:11:23.8145938Z   check-latest: false
+2026-10-14T09:11:23.8146087Z   server-id: github
+2026-10-14T09:11:23.8146206Z   server-username: GITHUB_ACTOR
+2026-10-14T09:11:23.8146353Z   server-password: GITHUB_TOKEN
+2026-10-14T09:11:23.8146490Z   overwrite-settings: true
+2026-10-14T09:11:23.8146614Z   job-status: success
+2026-10-14T09:11:23.8148157Z   token: ***
+2026-10-14T09:11:23.8148264Z env:
+2026-10-14T09:11:23.8148393Z   KVM_ONCE: /home/runner/work/_temp/pr20-save-boundary
+2026-10-14T09:11:23.8148601Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-save-boundary/avd
+2026-10-14T09:11:23.8148837Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:11:23.8149115Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:11:23.8149315Z   KVM_BUDGET_ANCHOR: 1791969078
+2026-10-14T09:11:23.8149445Z   KVM_SETUP_CUTOFF: 1791970878
+2026-10-14T09:11:23.8149575Z   KVM_DATA_CUTOFF: 1791971778
+2026-10-14T09:11:23.8149703Z   KVM_WORK_DEADLINE: 1791972378
+2026-10-14T09:11:23.8149828Z ##[endgroup]
+2026-10-14T09:11:23.9138026Z ##[warning]setup-java v4 is deprecated and will no longer receive updates. Please migrate to actions/setup-java@v5.
+2026-10-14T09:11:23.9143110Z ##[group]Installed distributions
+2026-10-14T09:11:23.9159904Z Resolved Java 17.0.20+1 from tool-cache
+2026-10-14T09:11:23.9160146Z Setting Java 17.0.20+1 as the default
+2026-10-14T09:11:23.9165476Z (node:2194) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-14T09:11:23.9165832Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-14T09:11:23.9167921Z Creating toolchains.xml for JDK version 17 from temurin
+2026-10-14T09:11:23.9207527Z Writing to /home/runner/.m2/toolchains.xml
+2026-10-14T09:11:23.9208101Z 
+2026-10-14T09:11:23.9208253Z Java configuration:
+2026-10-14T09:11:23.9208481Z   Distribution: temurin
+2026-10-14T09:11:23.9208681Z   Version: 17.0.20+1
+2026-10-14T09:11:23.9208985Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-14T09:11:23.9209222Z 
+2026-10-14T09:11:23.9209477Z ##[endgroup]
+2026-10-14T09:11:23.9223414Z Creating settings.xml with server-id: github
+2026-10-14T09:11:23.9253906Z Writing to /home/runner/.m2/settings.xml
+2026-10-14T09:11:23.9430171Z ##[group]Run set -euo pipefail
+2026-10-14T09:11:23.9430368Z [36;1mset -euo pipefail[0m
+2026-10-14T09:11:23.9430502Z [36;1mcleanup_on_failure() {[0m
+2026-10-14T09:11:23.9430642Z [36;1m  code=$?[0m
+2026-10-14T09:11:23.9430768Z [36;1m  trap - EXIT INT TERM[0m
+2026-10-14T09:11:23.9430911Z [36;1m  if test "$code" -ne 0; then[0m
+2026-10-14T09:11:23.9431184Z [36;1m    timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-save-boundary/cleanup.py trap || code=1[0m
+2026-10-14T09:11:23.9431452Z [36;1m  fi[0m
+2026-10-14T09:11:23.9431564Z [36;1m  exit "$code"[0m
+2026-10-14T09:11:23.9431683Z [36;1m}[0m
+2026-10-14T09:11:23.9431797Z [36;1mtrap cleanup_on_failure EXIT[0m
+2026-10-14T09:11:23.9431944Z [36;1mtrap 'exit 130' INT[0m
+2026-10-14T09:11:23.9432104Z [36;1mtrap 'exit 143' TERM[0m
+2026-10-14T09:11:23.9432360Z [36;1mremaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))[0m
+2026-10-14T09:11:23.9432785Z [36;1mtest "$remaining" -gt 0[0m
+2026-10-14T09:11:23.9433212Z [36;1mtimeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-save-boundary/run.py setup[0m
+2026-10-14T09:11:23.9497537Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-14T09:11:23.9497753Z env:
+2026-10-14T09:11:23.9497909Z   KVM_ONCE: /home/runner/work/_temp/pr20-save-boundary
+2026-10-14T09:11:23.9498124Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-save-boundary/avd
+2026-10-14T09:11:23.9498363Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:11:23.9498621Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:11:23.9498833Z   KVM_BUDGET_ANCHOR: 1791969078
+2026-10-14T09:11:23.9498972Z   KVM_SETUP_CUTOFF: 1791970878
+2026-10-14T09:11:23.9499106Z   KVM_DATA_CUTOFF: 1791971778
+2026-10-14T09:11:23.9499272Z   KVM_WORK_DEADLINE: 1791972378
+2026-10-14T09:11:23.9499515Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-14T09:11:23.9499786Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-14T09:11:23.9499986Z ##[endgroup]
+2026-10-14T09:11:57.5838370Z ##[group]Run set -euo pipefail
+2026-10-14T09:11:57.5838577Z [36;1mset -euo pipefail[0m
+2026-10-14T09:11:57.5838711Z [36;1mcleanup_on_failure() {[0m
+2026-10-14T09:11:57.5838846Z [36;1m  code=$?[0m
+2026-10-14T09:11:57.5838960Z [36;1m  trap - EXIT INT TERM[0m
+2026-10-14T09:11:57.5839100Z [36;1m  if test "$code" -ne 0; then[0m
+2026-10-14T09:11:57.5839373Z [36;1m    timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-save-boundary/cleanup.py trap || code=1[0m
+2026-10-14T09:11:57.5839634Z [36;1m  fi[0m
+2026-10-14T09:11:57.5839742Z [36;1m  exit "$code"[0m
+2026-10-14T09:11:57.5839857Z [36;1m}[0m
+2026-10-14T09:11:57.5839966Z [36;1mtrap cleanup_on_failure EXIT[0m
+2026-10-14T09:11:57.5840108Z [36;1mtrap 'exit 130' INT[0m
+2026-10-14T09:11:57.5840233Z [36;1mtrap 'exit 143' TERM[0m
+2026-10-14T09:11:57.5840406Z [36;1mremaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))[0m
+2026-10-14T09:11:57.5840578Z [36;1mtest "$remaining" -gt 0[0m
+2026-10-14T09:11:57.5840846Z [36;1mtimeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-save-boundary/run.py build C1[0m
+2026-10-14T09:11:57.5892611Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-14T09:11:57.5892781Z env:
+2026-10-14T09:11:57.5892915Z   KVM_ONCE: /home/runner/work/_temp/pr20-save-boundary
+2026-10-14T09:11:57.5893123Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-save-boundary/avd
+2026-10-14T09:11:57.5893360Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:11:57.5893613Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:11:57.5893816Z   KVM_BUDGET_ANCHOR: 1791969078
+2026-10-14T09:11:57.5893952Z   KVM_SETUP_CUTOFF: 1791970878
+2026-10-14T09:11:57.5894081Z   KVM_DATA_CUTOFF: 1791971778
+2026-10-14T09:11:57.5894214Z   KVM_WORK_DEADLINE: 1791972378
+2026-10-14T09:11:57.5894395Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-14T09:11:57.5894645Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-14T09:11:57.5894846Z ##[endgroup]
+2026-10-14T09:15:23.3125890Z ##[group]Run set -euo pipefail
+2026-10-14T09:15:23.3126094Z [36;1mset -euo pipefail[0m
+2026-10-14T09:15:23.3126225Z [36;1mcleanup_on_failure() {[0m
+2026-10-14T09:15:23.3126354Z [36;1m  code=$?[0m
+2026-10-14T09:15:23.3126466Z [36;1m  trap - EXIT INT TERM[0m
+2026-10-14T09:15:23.3126599Z [36;1m  if test "$code" -ne 0; then[0m
+2026-10-14T09:15:23.3126867Z [36;1m    timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-save-boundary/cleanup.py trap || code=1[0m
+2026-10-14T09:15:23.3127282Z [36;1m  fi[0m
+2026-10-14T09:15:23.3127432Z [36;1m  exit "$code"[0m
+2026-10-14T09:15:23.3127543Z [36;1m}[0m
+2026-10-14T09:15:23.3127648Z [36;1mtrap cleanup_on_failure EXIT[0m
+2026-10-14T09:15:23.3127928Z [36;1mtrap 'exit 130' INT[0m
+2026-10-14T09:15:23.3128051Z [36;1mtrap 'exit 143' TERM[0m
+2026-10-14T09:15:23.3128204Z [36;1mremaining=$((KVM_SETUP_CUTOFF - $(date +%s) - 2))[0m
+2026-10-14T09:15:23.3128375Z [36;1mtest "$remaining" -gt 0[0m
+2026-10-14T09:15:23.3128642Z [36;1mtimeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-save-boundary/run.py emulator[0m
+2026-10-14T09:15:23.3178058Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-14T09:15:23.3178223Z env:
+2026-10-14T09:15:23.3178368Z   KVM_ONCE: /home/runner/work/_temp/pr20-save-boundary
+2026-10-14T09:15:23.3178572Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-save-boundary/avd
+2026-10-14T09:15:23.3178805Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:15:23.3179069Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:15:23.3179268Z   KVM_BUDGET_ANCHOR: 1791969078
+2026-10-14T09:15:23.3179402Z   KVM_SETUP_CUTOFF: 1791970878
+2026-10-14T09:15:23.3179528Z   KVM_DATA_CUTOFF: 1791971778
+2026-10-14T09:15:23.3179651Z   KVM_WORK_DEADLINE: 1791972378
+2026-10-14T09:15:23.3179826Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-14T09:15:23.3180074Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-14T09:15:23.3180264Z ##[endgroup]
+2026-10-14T09:15:46.3359096Z ##[group]Run set -euo pipefail
+2026-10-14T09:15:46.3359394Z [36;1mset -euo pipefail[0m
+2026-10-14T09:15:46.3359600Z [36;1mcleanup_on_failure() {[0m
+2026-10-14T09:15:46.3359807Z [36;1m  code=$?[0m
+2026-10-14T09:15:46.3359984Z [36;1m  trap - EXIT INT TERM[0m
+2026-10-14T09:15:46.3360197Z [36;1m  if test "$code" -ne 0; then[0m
+2026-10-14T09:15:46.3360618Z [36;1m    timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-save-boundary/cleanup.py trap || code=1[0m
+2026-10-14T09:15:46.3361032Z [36;1m  fi[0m
+2026-10-14T09:15:46.3361198Z [36;1m  exit "$code"[0m
+2026-10-14T09:15:46.3361390Z [36;1m}[0m
+2026-10-14T09:15:46.3361580Z [36;1mtrap cleanup_on_failure EXIT[0m
+2026-10-14T09:15:46.3361802Z [36;1mtrap 'exit 130' INT[0m
+2026-10-14T09:15:46.3361998Z [36;1mtrap 'exit 143' TERM[0m
+2026-10-14T09:15:46.3362241Z [36;1mremaining=$((KVM_DATA_CUTOFF - $(date +%s) - 2))[0m
+2026-10-14T09:15:46.3362498Z [36;1mtest "$remaining" -gt 0[0m
+2026-10-14T09:15:46.3362917Z [36;1mtimeout --signal=TERM --kill-after=2 "${remaining}s" python3 control/ci/pr20-save-boundary/run.py methods data[0m
+2026-10-14T09:15:46.3433887Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-14T09:15:46.3434169Z env:
+2026-10-14T09:15:46.3434407Z   KVM_ONCE: /home/runner/work/_temp/pr20-save-boundary
+2026-10-14T09:15:46.3434772Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-save-boundary/avd
+2026-10-14T09:15:46.3435202Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:15:46.3435653Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:15:46.3436001Z   KVM_BUDGET_ANCHOR: 1791969078
+2026-10-14T09:15:46.3436201Z   KVM_SETUP_CUTOFF: 1791970878
+2026-10-14T09:15:46.3436391Z   KVM_DATA_CUTOFF: 1791971778
+2026-10-14T09:15:46.3436578Z   KVM_WORK_DEADLINE: 1791972378
+2026-10-14T09:15:46.3436843Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-14T09:15:46.3437323Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-14T09:15:46.3437776Z ##[endgroup]
+2026-10-14T09:15:47.4469540Z INKWEFT_CAUSAL_CONTEXT {"scope":"DIAGNOSTIC_ONLY","run_id":"38540498244","run_attempt":"1","workflow_sha":"81fe788cb26413279d4867b92ad3517a60b69c36","source_commit":"4f41a501127dbed6dbef3519f93233a105b5d618","source_spec_sha256":"de95eee21d1bc3fcbe662d063b99908ec94aeec785068c9c36f698f25d5abe93","method_plan_sha256":"cf5800f39b55524ccded154d72ab94421323b34861b8dea3d03e454c3d07117a","test_source_sha256":"46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a","source_manifest_sha256":"76bb502e5520b17df393044f58715986feb6a074538ebf2349a9bc38d83ce881","selected_apks":[{"package":"org.inkweft.data.test","sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10","signer_sha256":["76dff35c5f86776f43ee01052a4549a11f0c67f038beb492903bf6b55498bf1f"]}],"apk_receipt_sha256":"39291926f90251aedadeb325161e73b12d2f5791d63a74702e86910a72c8ae74","installed_apks":[{"package":"org.inkweft.data.test","sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10","source_apk_sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10"}],"install_log_sha256":"509dd327080a46993ca31ff601114f2fb74e30391bfaa2b15188ade07399e5da","environment_sha256":"bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba","ordinal":1,"identity":"C1","seed":null,"args":["adb","-s","emulator-5554","shell","am","instrument","-w","-r","-e","class","org.inkweft.data.NoteRepositoryTest#sameCommandReturnsSameCommittedRevision","org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"],"install_group":"C1-data-diagnostics","selection":"org.inkweft.data.NoteRepositoryTest#sameCommandReturnsSameCommittedRevision","raw_log_sha256":"41b52cc78c5acb93eca0889de28f37017c5cbb03502bd158df1753bb3a5c7d00","records_sha256":"37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570","junit_status":"PASS","adb_exit":0,"process_exit_outcome":"NATURAL_EXIT"}
+2026-10-14T09:15:47.4474144Z INKWEFT_CAUSAL_END {"ordinal":1,"identity":"C1","count":0,"ordered_payloads":[],"ordered_payloads_sha256":"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"}
+2026-10-14T09:15:47.4478295Z INKWEFT_CAUSAL_METHOD {"ordinal": 1, "phase": "data-diagnostics", "identity": "C1", "selection": "org.inkweft.data.NoteRepositoryTest#sameCommandReturnsSameCommittedRevision", "status": "PASS", "junit_status": "PASS", "adb_exit": 0, "process_exit_outcome": "NATURAL_EXIT", "error": null}
+2026-10-14T09:15:47.9417753Z INKWEFT_CAUSAL_CONTEXT {"scope":"DIAGNOSTIC_ONLY","run_id":"38540498244","run_attempt":"1","workflow_sha":"81fe788cb26413279d4867b92ad3517a60b69c36","source_commit":"4f41a501127dbed6dbef3519f93233a105b5d618","source_spec_sha256":"de95eee21d1bc3fcbe662d063b99908ec94aeec785068c9c36f698f25d5abe93","method_plan_sha256":"cf5800f39b55524ccded154d72ab94421323b34861b8dea3d03e454c3d07117a","test_source_sha256":"46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a","source_manifest_sha256":"76bb502e5520b17df393044f58715986feb6a074538ebf2349a9bc38d83ce881","selected_apks":[{"package":"org.inkweft.data.test","sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10","signer_sha256":["76dff35c5f86776f43ee01052a4549a11f0c67f038beb492903bf6b55498bf1f"]}],"apk_receipt_sha256":"39291926f90251aedadeb325161e73b12d2f5791d63a74702e86910a72c8ae74","installed_apks":[{"package":"org.inkweft.data.test","sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10","source_apk_sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10"}],"install_log_sha256":"509dd327080a46993ca31ff601114f2fb74e30391bfaa2b15188ade07399e5da","environment_sha256":"bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba","ordinal":2,"identity":"C1","seed":null,"args":["adb","-s","emulator-5554","shell","am","instrument","-w","-r","-e","class","org.inkweft.data.NoteRepositoryTest#staleEditorCannotOverwriteNewHead","org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"],"install_group":"C1-data-diagnostics","selection":"org.inkweft.data.NoteRepositoryTest#staleEditorCannotOverwriteNewHead","raw_log_sha256":"e60399bdb6c8ec2e7c0d9892152819b65532c43729dff873b4e1a9f7cebe3c40","records_sha256":"37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570","junit_status":"PASS","adb_exit":0,"process_exit_outcome":"NATURAL_EXIT"}
+2026-10-14T09:15:47.9421674Z INKWEFT_CAUSAL_END {"ordinal":2,"identity":"C1","count":0,"ordered_payloads":[],"ordered_payloads_sha256":"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"}
+2026-10-14T09:15:47.9422593Z INKWEFT_CAUSAL_METHOD {"ordinal": 2, "phase": "data-diagnostics", "identity": "C1", "selection": "org.inkweft.data.NoteRepositoryTest#staleEditorCannotOverwriteNewHead", "status": "PASS", "junit_status": "PASS", "adb_exit": 0, "process_exit_outcome": "NATURAL_EXIT", "error": null}
+2026-10-14T09:15:48.4909242Z INKWEFT_CAUSAL_CONTEXT {"scope":"DIAGNOSTIC_ONLY","run_id":"38540498244","run_attempt":"1","workflow_sha":"81fe788cb26413279d4867b92ad3517a60b69c36","source_commit":"4f41a501127dbed6dbef3519f93233a105b5d618","source_spec_sha256":"de95eee21d1bc3fcbe662d063b99908ec94aeec785068c9c36f698f25d5abe93","method_plan_sha256":"cf5800f39b55524ccded154d72ab94421323b34861b8dea3d03e454c3d07117a","test_source_sha256":"46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a","source_manifest_sha256":"76bb502e5520b17df393044f58715986feb6a074538ebf2349a9bc38d83ce881","selected_apks":[{"package":"org.inkweft.data.test","sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10","signer_sha256":["76dff35c5f86776f43ee01052a4549a11f0c67f038beb492903bf6b55498bf1f"]}],"apk_receipt_sha256":"39291926f90251aedadeb325161e73b12d2f5791d63a74702e86910a72c8ae74","installed_apks":[{"package":"org.inkweft.data.test","sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10","source_apk_sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10"}],"install_log_sha256":"509dd327080a46993ca31ff601114f2fb74e30391bfaa2b15188ade07399e5da","environment_sha256":"bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba","ordinal":3,"identity":"C1","seed":null,"args":["adb","-s","emulator-5554","shell","am","instrument","-w","-r","-e","class","org.inkweft.data.NoteRepositoryTest#blankTextAndHistorySurviveReopen","org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"],"install_group":"C1-data-diagnostics","selection":"org.inkweft.data.NoteRepositoryTest#blankTextAndHistorySurviveReopen","raw_log_sha256":"47b108cc74af8d473751a5e3fc4745b11b0de66444f40619ddc1486730098935","records_sha256":"37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570","junit_status":"PASS","adb_exit":0,"process_exit_outcome":"NATURAL_EXIT"}
+2026-10-14T09:15:48.4917954Z INKWEFT_CAUSAL_END {"ordinal":3,"identity":"C1","count":0,"ordered_payloads":[],"ordered_payloads_sha256":"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"}
+2026-10-14T09:15:48.4920769Z INKWEFT_CAUSAL_METHOD {"ordinal": 3, "phase": "data-diagnostics", "identity": "C1", "selection": "org.inkweft.data.NoteRepositoryTest#blankTextAndHistorySurviveReopen", "status": "PASS", "junit_status": "PASS", "adb_exit": 0, "process_exit_outcome": "NATURAL_EXIT", "error": null}
+2026-10-14T09:15:48.9343691Z INKWEFT_CAUSAL_CONTEXT {"scope":"DIAGNOSTIC_ONLY","run_id":"38540498244","run_attempt":"1","workflow_sha":"81fe788cb26413279d4867b92ad3517a60b69c36","source_commit":"4f41a501127dbed6dbef3519f93233a105b5d618","source_spec_sha256":"de95eee21d1bc3fcbe662d063b99908ec94aeec785068c9c36f698f25d5abe93","method_plan_sha256":"cf5800f39b55524ccded154d72ab94421323b34861b8dea3d03e454c3d07117a","test_source_sha256":"46b05ed501cf4f62d65ad7f178fa3f7989e3d169da5dbdc1c1a7795061d9479a","source_manifest_sha256":"76bb502e5520b17df393044f58715986feb6a074538ebf2349a9bc38d83ce881","selected_apks":[{"package":"org.inkweft.data.test","sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10","signer_sha256":["76dff35c5f86776f43ee01052a4549a11f0c67f038beb492903bf6b55498bf1f"]}],"apk_receipt_sha256":"39291926f90251aedadeb325161e73b12d2f5791d63a74702e86910a72c8ae74","installed_apks":[{"package":"org.inkweft.data.test","sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10","source_apk_sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10"}],"install_log_sha256":"509dd327080a46993ca31ff601114f2fb74e30391bfaa2b15188ade07399e5da","environment_sha256":"bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba","ordinal":4,"identity":"C1","seed":null,"args":["adb","-s","emulator-5554","shell","am","instrument","-w","-r","-e","class","org.inkweft.data.NoteRepositoryTest#oldReceiptIsNotReplacedWithCurrentHead","org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"],"install_group":"C1-data-diagnostics","selection":"org.inkweft.data.NoteRepositoryTest#oldReceiptIsNotReplacedWithCurrentHead","raw_log_sha256":"ab9f877bfeea254f4528b82364a3e47c3b92dfcc8f7bb5ebdd271336a05ea88e","records_sha256":"37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570","junit_status":"PASS","adb_exit":0,"process_exit_outcome":"NATURAL_EXIT"}
+2026-10-14T09:15:48.9348713Z INKWEFT_CAUSAL_END {"ordinal":4,"identity":"C1","count":0,"ordered_payloads":[],"ordered_payloads_sha256":"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"}
+2026-10-14T09:15:48.9349465Z INKWEFT_CAUSAL_METHOD {"ordinal": 4, "phase": "data-diagnostics", "identity": "C1", "selection": "org.inkweft.data.NoteRepositoryTest#oldReceiptIsNotReplacedWithCurrentHead", "status": "PASS", "junit_status": "PASS", "adb_exit": 0, "process_exit_outcome": "NATURAL_EXIT", "error": null}
+2026-10-14T09:15:49.3781442Z INKWEFT_CAUSAL_CONTEXT {"scope":"DIAGNOSTIC_ONLY","run_id":"38540498244","run_attempt":"1","workflow_sha":"81fe788cb26413279d4867b92ad3517a60b69c36","source_commit":"4f41a501127dbed6dbef3519f93233a105b5d618","source_spec_sha256":"de95eee21d1bc3fcbe662d063b99908ec94aeec785068c9c36f698f25d5abe93","method_plan_sha256":"cf5800f39b55524ccded154d72ab94421323b34861b8dea3d03e454c3d07117a","test_source_sha256":"2b0bf878258086f80e349bf6360b833dd3b4c652aa8f5c7fcf6cce6ec892badb","source_manifest_sha256":"76bb502e5520b17df393044f58715986feb6a074538ebf2349a9bc38d83ce881","selected_apks":[{"package":"org.inkweft.data.test","sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10","signer_sha256":["76dff35c5f86776f43ee01052a4549a11f0c67f038beb492903bf6b55498bf1f"]}],"apk_receipt_sha256":"39291926f90251aedadeb325161e73b12d2f5791d63a74702e86910a72c8ae74","installed_apks":[{"package":"org.inkweft.data.test","sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10","source_apk_sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10"}],"install_log_sha256":"509dd327080a46993ca31ff601114f2fb74e30391bfaa2b15188ade07399e5da","environment_sha256":"bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba","ordinal":5,"identity":"C1","seed":null,"args":["adb","-s","emulator-5554","shell","am","instrument","-w","-r","-e","class","org.inkweft.data.LibraryTextIndexPreparationTest#cancelledFtsWriteRollsBackBeforeClearingPending","org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"],"install_group":"C1-data-diagnostics","selection":"org.inkweft.data.LibraryTextIndexPreparationTest#cancelledFtsWriteRollsBackBeforeClearingPending","raw_log_sha256":"7143b3b5f603091f17126121a0e5c18671a3a148fd4c7824c394b7e049e5fe15","records_sha256":"37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570","junit_status":"PASS","adb_exit":0,"process_exit_outcome":"NATURAL_EXIT"}
+2026-10-14T09:15:49.3787533Z INKWEFT_CAUSAL_END {"ordinal":5,"identity":"C1","count":0,"ordered_payloads":[],"ordered_payloads_sha256":"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"}
+2026-10-14T09:15:49.3788933Z INKWEFT_CAUSAL_METHOD {"ordinal": 5, "phase": "data-diagnostics", "identity": "C1", "selection": "org.inkweft.data.LibraryTextIndexPreparationTest#cancelledFtsWriteRollsBackBeforeClearingPending", "status": "PASS", "junit_status": "PASS", "adb_exit": 0, "process_exit_outcome": "NATURAL_EXIT", "error": null}
+2026-10-14T09:15:49.9722068Z INKWEFT_CAUSAL_CONTEXT {"scope":"DIAGNOSTIC_ONLY","run_id":"38540498244","run_attempt":"1","workflow_sha":"81fe788cb26413279d4867b92ad3517a60b69c36","source_commit":"4f41a501127dbed6dbef3519f93233a105b5d618","source_spec_sha256":"de95eee21d1bc3fcbe662d063b99908ec94aeec785068c9c36f698f25d5abe93","method_plan_sha256":"cf5800f39b55524ccded154d72ab94421323b34861b8dea3d03e454c3d07117a","test_source_sha256":"b05c4c93f2c0ed36204bb548c20f8d95c0dca5a35238e05361ac3655f6f9a061","source_manifest_sha256":"76bb502e5520b17df393044f58715986feb6a074538ebf2349a9bc38d83ce881","selected_apks":[{"package":"org.inkweft.data.test","sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10","signer_sha256":["76dff35c5f86776f43ee01052a4549a11f0c67f038beb492903bf6b55498bf1f"]}],"apk_receipt_sha256":"39291926f90251aedadeb325161e73b12d2f5791d63a74702e86910a72c8ae74","installed_apks":[{"package":"org.inkweft.data.test","sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10","source_apk_sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10"}],"install_log_sha256":"509dd327080a46993ca31ff601114f2fb74e30391bfaa2b15188ade07399e5da","environment_sha256":"bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba","ordinal":6,"identity":"C1","seed":null,"args":["adb","-s","emulator-5554","shell","am","instrument","-w","-r","-e","class","org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState","org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"],"install_group":"C1-data-diagnostics","selection":"org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState","raw_log_sha256":"27ed7944784d1e6008a3456f2634bab0c9c362315c3f09f517df8dff165cdfd8","records_sha256":"37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570","junit_status":"PASS","adb_exit":0,"process_exit_outcome":"NATURAL_EXIT"}
+2026-10-14T09:15:49.9726447Z INKWEFT_CAUSAL_END {"ordinal":6,"identity":"C1","count":0,"ordered_payloads":[],"ordered_payloads_sha256":"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"}
+2026-10-14T09:15:49.9727425Z INKWEFT_CAUSAL_METHOD {"ordinal": 6, "phase": "data-diagnostics", "identity": "C1", "selection": "org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState", "status": "PASS", "junit_status": "PASS", "adb_exit": 0, "process_exit_outcome": "NATURAL_EXIT", "error": null}
+2026-10-14T09:15:51.1796717Z INKWEFT_CAUSAL_CONTEXT {"scope":"DIAGNOSTIC_ONLY","run_id":"38540498244","run_attempt":"1","workflow_sha":"81fe788cb26413279d4867b92ad3517a60b69c36","source_commit":"4f41a501127dbed6dbef3519f93233a105b5d618","source_spec_sha256":"de95eee21d1bc3fcbe662d063b99908ec94aeec785068c9c36f698f25d5abe93","method_plan_sha256":"cf5800f39b55524ccded154d72ab94421323b34861b8dea3d03e454c3d07117a","test_source_sha256":"b05c4c93f2c0ed36204bb548c20f8d95c0dca5a35238e05361ac3655f6f9a061","source_manifest_sha256":"76bb502e5520b17df393044f58715986feb6a074538ebf2349a9bc38d83ce881","selected_apks":[{"package":"org.inkweft.data.test","sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10","signer_sha256":["76dff35c5f86776f43ee01052a4549a11f0c67f038beb492903bf6b55498bf1f"]}],"apk_receipt_sha256":"39291926f90251aedadeb325161e73b12d2f5791d63a74702e86910a72c8ae74","installed_apks":[{"package":"org.inkweft.data.test","sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10","source_apk_sha256":"21899a7890795d2473527c5fa7eb388cbbc0657b613eae171751a23ec0d5ee10"}],"install_log_sha256":"509dd327080a46993ca31ff601114f2fb74e30391bfaa2b15188ade07399e5da","environment_sha256":"bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba","ordinal":7,"identity":"C1","seed":null,"args":["adb","-s","emulator-5554","shell","am","instrument","-w","-r","-e","class","org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews","org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"],"install_group":"C1-data-diagnostics","selection":"org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews","raw_log_sha256":"d17710b7a37ae050e1d0022632fcb41bc2314b0f4e13daa26b10831a7431996b","records_sha256":"37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570","junit_status":"PASS","adb_exit":0,"process_exit_outcome":"NATURAL_EXIT"}
+2026-10-14T09:15:51.1803548Z INKWEFT_CAUSAL_END {"ordinal":7,"identity":"C1","count":0,"ordered_payloads":[],"ordered_payloads_sha256":"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"}
+2026-10-14T09:15:51.1805239Z INKWEFT_CAUSAL_METHOD {"ordinal": 7, "phase": "data-diagnostics", "identity": "C1", "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews", "status": "PASS", "junit_status": "PASS", "adb_exit": 0, "process_exit_outcome": "NATURAL_EXIT", "error": null}
+2026-10-14T09:15:51.5762754Z INKWEFT_CAUSAL_METHOD {"ordinal": 8, "phase": "data-diagnostics", "identity": "C1", "selection": "org.inkweft.data.LibrarySaveBoundaryDiagnosticsTest#boundariesPreserveCommitRollbackReplayAndRecovery", "status": "FAIL", "junit_status": "FAIL", "adb_exit": 0, "process_exit_outcome": "NATURAL_EXIT", "error": "Original method/JUnit failed; stop without retry"}
+2026-10-14T09:15:51.5776996Z {"status": "BLOCKED_OR_FAILED", "error": "AssertionError: Original method/JUnit failed; stop without retry"}
+2026-10-14T09:16:03.3524355Z {"emulator": "STOPPED_CONFIRMED", "command_groups": "STOPPED_CONFIRMED", "acl": "RESTORED_EXACT", "errors": []}
+2026-10-14T09:16:03.3572485Z ##[error]Process completed with exit code 1.
+2026-10-14T09:16:03.5063004Z ##[group]Run if test -f control/ci/pr20-save-boundary/cleanup.py; then
+2026-10-14T09:16:03.5063523Z [36;1mif test -f control/ci/pr20-save-boundary/cleanup.py; then[0m
+2026-10-14T09:16:03.5064011Z [36;1m  timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-save-boundary/cleanup.py always[0m
+2026-10-14T09:16:03.5064418Z [36;1melse[0m
+2026-10-14T09:16:03.5064616Z [36;1m  mkdir -p "$KVM_ONCE/evidence"[0m
+2026-10-14T09:16:03.5065148Z [36;1m  echo '{"emulator":"NOT_STARTED","command_groups":"NOT_STARTED","acl":"NOT_TOUCHED","errors":[]}' > "$KVM_ONCE/evidence/cleanup-always.json"[0m
+2026-10-14T09:16:03.5065660Z [36;1mfi[0m
+2026-10-14T09:16:03.5133254Z shell: /usr/bin/bash -e {0}
+2026-10-14T09:16:03.5133461Z env:
+2026-10-14T09:16:03.5133667Z   KVM_ONCE: /home/runner/work/_temp/pr20-save-boundary
+2026-10-14T09:16:03.5134038Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-save-boundary/avd
+2026-10-14T09:16:03.5134499Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:16:03.5134951Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:16:03.5135302Z   KVM_BUDGET_ANCHOR: 1791969078
+2026-10-14T09:16:03.5135523Z   KVM_SETUP_CUTOFF: 1791970878
+2026-10-14T09:16:03.5135738Z   KVM_DATA_CUTOFF: 1791971778
+2026-10-14T09:16:03.5135953Z   KVM_WORK_DEADLINE: 1791972378
+2026-10-14T09:16:03.5136263Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-14T09:16:03.5136701Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-14T09:16:03.5137034Z ##[endgroup]
+2026-10-14T09:16:04.4397479Z {"emulator": "STOPPED_CONFIRMED", "command_groups": "STOPPED_CONFIRMED", "acl": "RESTORED_EXACT", "errors": []}
+2026-10-14T09:16:04.5425146Z ##[group]Run if test -f control/ci/pr20-save-boundary/package.py; then
+2026-10-14T09:16:04.5425446Z [36;1mif test -f control/ci/pr20-save-boundary/package.py; then[0m
+2026-10-14T09:16:04.5425724Z [36;1m  timeout --signal=TERM --kill-after=2 45s python3 control/ci/pr20-save-boundary/package.py[0m
+2026-10-14T09:16:04.5425952Z [36;1melse[0m
+2026-10-14T09:16:04.5426073Z [36;1m  mkdir -p "$KVM_ONCE/upload"[0m
+2026-10-14T09:16:04.5426348Z [36;1m  if test -f "$KVM_ONCE/evidence/clock.json"; then cp "$KVM_ONCE/evidence/clock.json" "$KVM_ONCE/upload/clock.json"; fi[0m
+2026-10-14T09:16:04.5426765Z [36;1m  echo '{"status":"SETUP_BLOCKED_BEFORE_SOURCE_CHECKOUT","tests":"NOT_RUN","kvm":"NOT_TOUCHED"}' > "$KVM_ONCE/upload/setup-failure.json"[0m
+2026-10-14T09:16:04.5427050Z [36;1mfi[0m
+2026-10-14T09:16:04.5477452Z shell: /usr/bin/bash -e {0}
+2026-10-14T09:16:04.5477583Z env:
+2026-10-14T09:16:04.5477716Z   KVM_ONCE: /home/runner/work/_temp/pr20-save-boundary
+2026-10-14T09:16:04.5477970Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-save-boundary/avd
+2026-10-14T09:16:04.5478355Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:16:04.5478609Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:16:04.5478813Z   KVM_BUDGET_ANCHOR: 1791969078
+2026-10-14T09:16:04.5478945Z   KVM_SETUP_CUTOFF: 1791970878
+2026-10-14T09:16:04.5479075Z   KVM_DATA_CUTOFF: 1791971778
+2026-10-14T09:16:04.5479203Z   KVM_WORK_DEADLINE: 1791972378
+2026-10-14T09:16:04.5479381Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-14T09:16:04.5479623Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-14T09:16:04.5479820Z ##[endgroup]
+2026-10-14T09:16:04.7913231Z {"files": 71, "bytes": 556027, "omitted": 0, "truncated": 0}
+2026-10-14T09:16:04.7929152Z INKWEFT_CAUSAL_FINAL {"scope":"DIAGNOSTIC_ONLY","run_id":"38540498244","workflow_sha":"81fe788cb26413279d4867b92ad3517a60b69c36","input_hashes":{"approved_plan_sha256":"91cce81651d39bca66a1674cfcac1219205ea20acc9685522c77fff2c5649f0d","source_spec_sha256":"de95eee21d1bc3fcbe662d063b99908ec94aeec785068c9c36f698f25d5abe93","method_plan_sha256":"cf5800f39b55524ccded154d72ab94421323b34861b8dea3d03e454c3d07117a","original_protocol_sha256":"1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba","marker_contract_sha256":"01cce067e685b392205e24518d337f90281f3462f37e325f16f6eac4de683ac5","prepare_sources_sha256":"12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516"},"status":"BLOCKED_OR_FAILED","cleanup_verified":true,"cleanup":{"trap":{"emulator":"STOPPED_CONFIRMED","command_groups":"STOPPED_CONFIRMED","acl":"RESTORED_EXACT","error_count":0,"before_sha256":"f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89","after_sha256":"f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89","exact_match":true},"always":{"emulator":"STOPPED_CONFIRMED","command_groups":"STOPPED_CONFIRMED","acl":"RESTORED_EXACT","error_count":0,"before_sha256":"f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89","after_sha256":"f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89","exact_match":true}},"methods":[{"ordinal":1,"identity":"C1","phase":"data-diagnostics","selection":"org.inkweft.data.NoteRepositoryTest#sameCommandReturnsSameCommittedRevision","seed":null,"status":"PASS","junit_status":"PASS","adb_exit":0,"process_exit_outcome":"NATURAL_EXIT","log_sha256":"41b52cc78c5acb93eca0889de28f37017c5cbb03502bd158df1753bb3a5c7d00"},{"ordinal":2,"identity":"C1","phase":"data-diagnostics","selection":"org.inkweft.data.NoteRepositoryTest#staleEditorCannotOverwriteNewHead","seed":null,"status":"PASS","junit_status":"PASS","adb_exit":0,"process_exit_outcome":"NATURAL_EXIT","log_sha256":"e60399bdb6c8ec2e7c0d9892152819b65532c43729dff873b4e1a9f7cebe3c40"},{"ordinal":3,"identity":"C1","phase":"data-diagnostics","selection":"org.inkweft.data.NoteRepositoryTest#blankTextAndHistorySurviveReopen","seed":null,"status":"PASS","junit_status":"PASS","adb_exit":0,"process_exit_outcome":"NATURAL_EXIT","log_sha256":"47b108cc74af8d473751a5e3fc4745b11b0de66444f40619ddc1486730098935"},{"ordinal":4,"identity":"C1","phase":"data-diagnostics","selection":"org.inkweft.data.NoteRepositoryTest#oldReceiptIsNotReplacedWithCurrentHead","seed":null,"status":"PASS","junit_status":"PASS","adb_exit":0,"process_exit_outcome":"NATURAL_EXIT","log_sha256":"ab9f877bfeea254f4528b82364a3e47c3b92dfcc8f7bb5ebdd271336a05ea88e"},{"ordinal":5,"identity":"C1","phase":"data-diagnostics","selection":"org.inkweft.data.LibraryTextIndexPreparationTest#cancelledFtsWriteRollsBackBeforeClearingPending","seed":null,"status":"PASS","junit_status":"PASS","adb_exit":0,"process_exit_outcome":"NATURAL_EXIT","log_sha256":"7143b3b5f603091f17126121a0e5c18671a3a148fd4c7824c394b7e049e5fe15"},{"ordinal":6,"identity":"C1","phase":"data-diagnostics","selection":"org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState","seed":null,"status":"PASS","junit_status":"PASS","adb_exit":0,"process_exit_outcome":"NATURAL_EXIT","log_sha256":"27ed7944784d1e6008a3456f2634bab0c9c362315c3f09f517df8dff165cdfd8"},{"ordinal":7,"identity":"C1","phase":"data-diagnostics","selection":"org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews","seed":null,"status":"PASS","junit_status":"PASS","adb_exit":0,"process_exit_outcome":"NATURAL_EXIT","log_sha256":"d17710b7a37ae050e1d0022632fcb41bc2314b0f4e13daa26b10831a7431996b"},{"ordinal":8,"identity":"C1","phase":"data-diagnostics","selection":"org.inkweft.data.LibrarySaveBoundaryDiagnosticsTest#boundariesPreserveCommitRollbackReplayAndRecovery","seed":null,"status":"FAIL","junit_status":"FAIL","adb_exit":0,"process_exit_outcome":"NATURAL_EXIT","log_sha256":"4503b93ddf7a1c337987a80156a52b7336ddbbcceb68f4ba47013fd1e7d938da"},{"ordinal":9,"identity":"C1","phase":"data-diagnostics","selection":"org.inkweft.data.LibrarySaveBoundaryDiagnosticsTest#observerFailureOverflowAndDelegateFailureDoNotChangeSaveOutcome","seed":null,"status":"NOT_RUN","junit_status":null,"adb_exit":null,"process_exit_outcome":null,"log_sha256":null},{"ordinal":10,"identity":"C1","phase":"data-diagnostics","selection":"org.inkweft.data.LibrarySaveBoundaryDiagnosticsTest#singleSeedIdleDirectAndObserveBoundaries","seed":4101,"status":"NOT_RUN","junit_status":null,"adb_exit":null,"process_exit_outcome":null,"log_sha256":null}],"install_groups":{"C1-data-diagnostics":{"identity":"C1","status":"INCOMPLETE"}},"device_before_sha256":"bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba","device_after_sha256":null,"missing_files":["device-after.json","install-C1-data-diagnostics-environment-after.json","install-C1-data-diagnostics-host-after.json","method-08-C1-log-forwarding.json","method-09-C1-instrumentation.log","method-09-C1-junit.xml","method-09-C1-records.json","method-09-C1-log-forwarding.json","method-10-C1-instrumentation.log","method-10-C1-junit.xml","method-10-C1-records.json","method-10-C1-log-forwarding.json"],"packaging_complete":false,"manifest_sha256":"a0941f5cde12f2d1bef060228d08452dfd7fae551169619a158e759f07aa9add","summary_sha256":"59e94320950ffd8b3a8a859fa7efac6b7375f92adf66fef2cee40ef60a0b47b8"}
+2026-10-14T09:16:04.9045656Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-14T09:16:04.9045860Z with:
+2026-10-14T09:16:04.9045981Z   name: pr20-save-boundary-38540498244
+2026-10-14T09:16:04.9046120Z   retention-days: 3
+2026-10-14T09:16:04.9046234Z   if-no-files-found: error
+2026-10-14T09:16:04.9046392Z   path: /home/runner/work/_temp/pr20-save-boundary/upload/*
+2026-10-14T09:16:04.9046563Z   compression-level: 6
+2026-10-14T09:16:04.9046677Z   overwrite: false
+2026-10-14T09:16:04.9046792Z   include-hidden-files: false
+2026-10-14T09:16:04.9046916Z env:
+2026-10-14T09:16:04.9047040Z   KVM_ONCE: /home/runner/work/_temp/pr20-save-boundary
+2026-10-14T09:16:04.9047449Z   ANDROID_AVD_HOME: /home/runner/work/_temp/pr20-save-boundary/avd
+2026-10-14T09:16:04.9047683Z   ANDROID_USER_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:16:04.9047947Z   ANDROID_EMULATOR_HOME: /home/runner/work/_temp/pr20-save-boundary/android-user
+2026-10-14T09:16:04.9048166Z   KVM_BUDGET_ANCHOR: 1791969078
+2026-10-14T09:16:04.9048296Z   KVM_SETUP_CUTOFF: 1791970878
+2026-10-14T09:16:04.9048420Z   KVM_DATA_CUTOFF: 1791971778
+2026-10-14T09:16:04.9048543Z   KVM_WORK_DEADLINE: 1791972378
+2026-10-14T09:16:04.9048717Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-14T09:16:04.9048960Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+2026-10-14T09:16:04.9049149Z ##[endgroup]
+2026-10-14T09:16:05.0047597Z (node:3189) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-14T09:16:05.0048387Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-14T09:16:05.0208769Z With the provided path, there will be 73 files uploaded
+2026-10-14T09:16:05.0209705Z Artifact name is valid!
+2026-10-14T09:16:05.0210232Z Root directory input is valid!
+2026-10-14T09:16:05.3503321Z Beginning upload of artifact content to blob storage
+2026-10-14T09:16:05.4168031Z (node:3189) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-14T09:16:05.6679069Z Uploaded bytes 170396
+2026-10-14T09:16:05.7131585Z Finished uploading artifact content to blob storage!
+2026-10-14T09:16:05.7132141Z SHA256 digest of uploaded artifact zip is 5dca6fe4d7dfe8504986f489c49a4991463f151326eef332da934eeb45fcc33a
+2026-10-14T09:16:05.7132786Z Finalizing artifact upload
+2026-10-14T09:16:05.9809574Z Artifact pr20-save-boundary-38540498244.zip successfully finalized. Artifact ID 11881908285
+2026-10-14T09:16:05.9810300Z Artifact pr20-save-boundary-38540498244 has been successfully uploaded! Final size is 170396 bytes. Artifact ID is 11881908285
+2026-10-14T09:16:05.9814741Z Artifact download URL: https://github.com/InkWeftDevs/InkWeft/actions/runs/38540498244/artifacts/11881908285
+2026-10-14T09:16:06.1030805Z Post job cleanup.
+2026-10-14T09:16:06.1866674Z (node:3202) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-14T09:16:06.1867443Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-14T09:16:06.2232544Z Post job cleanup.
+2026-10-14T09:16:06.2890919Z [command]/usr/bin/git version
+2026-10-14T09:16:06.2965918Z git version 2.55.0
+2026-10-14T09:16:06.2977483Z Temporarily overriding HOME='/home/runner/work/_temp/e6deb1ea-7ecd-4375-8309-a45fbb3dd395' before making global git config changes
+2026-10-14T09:16:06.2984150Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-14T09:16:06.2984976Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/InkWeft/InkWeft/control
+2026-10-14T09:16:06.3428022Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-14T09:16:06.3461899Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-14T09:16:06.3635990Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-14T09:16:06.3661939Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-14T09:16:06.3833489Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-14T09:16:06.3858476Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-14T09:16:06.4629547Z Cleaning up orphan processes
+2026-10-14T09:16:06.4839651Z Terminate orphan process: pid (2842) (adb)
+2026-10-14T09:16:06.4849198Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

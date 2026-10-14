@@ -1,0 +1,31 @@
+{
+  "scope": "DIAGNOSTIC_ONLY",
+  "run_id": "38540498244",
+  "job_id": "115773755321",
+  "source_commit": "4f41a501127dbed6dbef3519f93233a105b5d618",
+  "readiness_git": "4278f310d6f8a742072725f77fda3fdb92c22431",
+  "prep_sha": "da2497844493b82ba2eae22b3dfa291572397649",
+  "workflow_sha": "81fe788cb26413279d4867b92ad3517a60b69c36",
+  "run_attempt": "1",
+  "run_status": "PENDING_OFFICIAL_TERMINAL_METADATA",
+  "run_conclusion": "PENDING_OFFICIAL_TERMINAL_METADATA",
+  "job_status": "PENDING_OFFICIAL_TERMINAL_METADATA",
+  "job_conclusion": "PENDING_OFFICIAL_TERMINAL_METADATA",
+  "input_hashes": {
+    "approved_plan_sha256": "91cce81651d39bca66a1674cfcac1219205ea20acc9685522c77fff2c5649f0d",
+    "source_spec_sha256": "de95eee21d1bc3fcbe662d063b99908ec94aeec785068c9c36f698f25d5abe93",
+    "method_plan_sha256": "cf5800f39b55524ccded154d72ab94421323b34861b8dea3d03e454c3d07117a",
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "marker_contract_sha256": "01cce067e685b392205e24518d337f90281f3462f37e325f16f6eac4de683ac5",
+    "prepare_sources_sha256": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516"
+  },
+  "control_hashes": {
+    "ci/pr20-save-boundary/run.py": "f6309c34d9e8ab34bacc343008aff84c6a2cc508ccb7cfb46e3615943a805aa3",
+    "ci/pr20-save-boundary/markers.py": "d27e19a7ae5b090436b8e70d5a2d914119e343eeb40e01352359d27f30215857",
+    "ci/pr20-save-boundary/package.py": "ed57ea7dc9bed44a150d84721fc6b20b000a21f2373f89eb951917722e986d82",
+    "ci/pr20-save-boundary/cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "ci/pr20-save-boundary/authorization.json": "382237a0bcd4689348ce3284bc1032d65c521f0e5a5cc4542c9390d0ca32b082",
+    "ci/pr20-save-boundary/workflow.proposed.yml": "58eb6f0058f84959a5563238361ed8498c5e426601b1c28ffad2f717b02e8f6a",
+    ".github/workflows/pr20-save-boundary.yml": "58eb6f0058f84959a5563238361ed8498c5e426601b1c28ffad2f717b02e8f6a"
+  }
+}

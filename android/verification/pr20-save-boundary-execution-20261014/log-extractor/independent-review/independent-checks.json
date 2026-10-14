@@ -1,0 +1,121 @@
+{
+  "status": "PASS",
+  "scope": "LOCAL_SYNTHETIC_CHECKS_PLUS_EXISTING_OFFICIAL_FAILURE_REPARSE_NO_NEW_NATIVE",
+  "synthetic_case_count": 13,
+  "synthetic_cases": [
+    {
+      "name": "Full synthetic 10-method closure",
+      "expected": "COMPLETE_SCOPED_SAVE_BOUNDARY_LOG_EVIDENCE",
+      "actual": "COMPLETE_SCOPED_SAVE_BOUNDARY_LOG_EVIDENCE",
+      "issues": []
+    },
+    {
+      "name": "Remove CLOCK receipt",
+      "expected": "INCOMPLETE",
+      "actual": "INCOMPLETE",
+      "issues": [
+        "ValueError: Missing CLOCK"
+      ]
+    },
+    {
+      "name": "Remove CONTEXT receipt",
+      "expected": "INCOMPLETE",
+      "actual": "INCOMPLETE",
+      "issues": [
+        "ValueError: Record outside open block"
+      ]
+    },
+    {
+      "name": "Remove RECORD receipt",
+      "expected": "INCOMPLETE",
+      "actual": "INCOMPLETE",
+      "issues": [
+        "ValueError: Record order/identity differs"
+      ]
+    },
+    {
+      "name": "Remove END receipt",
+      "expected": "INCOMPLETE",
+      "actual": "INCOMPLETE",
+      "issues": [
+        "ValueError: Missing complete method block"
+      ]
+    },
+    {
+      "name": "Remove METHOD receipt",
+      "expected": "INCOMPLETE",
+      "actual": "INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL before all 10 closures"
+      ]
+    },
+    {
+      "name": "Remove FINAL receipt",
+      "expected": "INCOMPLETE",
+      "actual": "INCOMPLETE",
+      "issues": [
+        "ValueError: Missing/unfinished receipt set"
+      ]
+    },
+    {
+      "name": "Duplicate FINAL",
+      "expected": "INCOMPLETE",
+      "actual": "INCOMPLETE",
+      "issues": [
+        "ValueError: Receipt after FINAL"
+      ]
+    },
+    {
+      "name": "FINAL status cannot establish complete",
+      "expected": "INCOMPLETE",
+      "actual": "INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL incomplete execution/evidence/cleanup"
+      ]
+    },
+    {
+      "name": "FINAL packaging_complete cannot establish complete",
+      "expected": "INCOMPLETE",
+      "actual": "INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL incomplete execution/evidence/cleanup"
+      ]
+    },
+    {
+      "name": "FINAL missing_files cannot establish complete",
+      "expected": "INCOMPLETE",
+      "actual": "INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL incomplete execution/evidence/cleanup"
+      ]
+    },
+    {
+      "name": "FINAL cleanup_verified cannot establish complete",
+      "expected": "INCOMPLETE",
+      "actual": "INCOMPLETE",
+      "issues": [
+        "ValueError: FINAL incomplete execution/evidence/cleanup"
+      ]
+    },
+    {
+      "name": "Complete synthetic receipts cannot override official failure",
+      "expected": "INCOMPLETE",
+      "actual": "INCOMPLETE",
+      "issues": [
+        "Official run/job not successful; preserve partial records only"
+      ]
+    }
+  ],
+  "original_marker_export_byte_exact": true,
+  "existing_official_input": {
+    "run": 38540498244,
+    "job": 115773755321,
+    "extractor_exit_code": 1,
+    "status": "INCOMPLETE",
+    "closed_guard_methods": 7,
+    "observed_failed_method": 8,
+    "diagnostic_samples_available": 0
+  },
+  "analyzer_sha256": "68a43811251215250f6125e31b249f85ec96b3bdace17c8d6de5f5536b577a7d",
+  "review_checker_sha256": "09f08e06514c3b946fada6f98e0c83129e4f49bf722264f59303d5723aecb7d8"
+}

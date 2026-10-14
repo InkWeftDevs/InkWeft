@@ -1,0 +1,21 @@
+# Independent frozen log-extractor review
+
+**PASS: no remaining static or reproduced completeness blocker for this frozen extractor.** Main SHA-256 is `68a43811251215250f6125e31b249f85ec96b3bdace17c8d6de5f5536b577a7d`; manifest SHA-256 is `61d18ebcab3e383c9e4d1043965075f924a98cb969046d74924634a34f491deb`. All eight manifest entries still match. This review does not modify or replace the frozen controller, source, readiness or prior failed run.
+
+## Completeness and identity
+
+`analyze_logs.py:35–98` binds the fixed source/readiness/prep/active chain, actual Git parent links, eight committed readiness blobs, six source hashes, and runtime control/workflow bytes. The schema/marker validator is the already-reviewed exact `d27e19a7…` copy. Local Git calls are read-only. Supplied official run/job identity, branch/workflow/attempt, terminal values and hard job span are checked at lines 100–111; external metadata authenticity is explicitly outside this offline tool.
+
+Lines 113–217 enforce original ordered CLOCK/CONTEXT/RECORD/END/METHOD/FINAL closures, strict duplicate-key/nonfinite rejection, payload byte counts/hashes, exact controller schemas and all diagnostic boundary checks. All ten ordered METHOD PASS receipts, one consistent data APK/install group, phase/clock bounds, exact cleanup claims, no missing files and complete FINAL are required. END alone cannot establish completion. The parser also compares context/test/source/arguments/installed and selected APK identities and record digests. Raw instrumentation/APK/native/ACL binaries are not independently available from compact receipts, and the tool does not claim otherwise.
+
+Lines 219–230 keep official failure `INCOMPLETE` even when all synthetic log closures are complete. A failing METHOD is recorded and stops parsing immediately; later FINAL remains available in the untouched raw log and is not promoted into complete evidence. Lines 233–244 retain parsed records, exact original JSON strings and marker text separately, with per-block closure, method PASS and whole-run completeness flags. Partial outputs are never labelled whole-run complete. Source/metadata read errors after parsing downgrade status before output.
+
+## Independent checks and actual failed input
+
+The owner-supplied 83-case test result was read and hash-verified; it was not rerun by this reviewer. This reviewer independently ran 13 synthetic checks: full closure; removal of each of the six receipt kinds; duplicate FINAL; failed status, incomplete packaging, missing evidence and cleanup failure; and official failure despite otherwise complete synthetic receipts. All behaved as required. Exact original marker export was independently byte-compared to input payloads. Passing that synthetic marker text through the independent analyzer yielded 90 synthetic saves and 12 wall segments per arm, with `COMPLETE_DIAGNOSTIC_TRACE_ONLY`. These values are not native observations.
+
+Separately, this reviewer ran the unchanged CLI against root's existing official decoded log and terminal metadata for run `38540498244`, job `115773755321`. The CLI exited **1 / INCOMPLETE**. Seven guard blocks are closed/PASS; the eighth observed METHOD is FAIL; there is no method-9 or method-10 extraction and **zero available diagnostic saves**. All seven extracted ledgers have `whole_run_complete=false`. The parser stops at official log line 327; it does not consume the later FINAL as complete evidence. A separate read of unchanged raw FINAL at line 374 confirms methods 9 and 10 `NOT_RUN`, status `BLOCKED_OR_FAILED`, and `packaging_complete=false`.
+
+Official raw log SHA-256 is `b15e22948657efe1b8193a0b428f2634edde646c3f4c039e92fa3f73e455cdfb`. Its original failed JUnit stack was not forwarded; this review does not recover that stack or infer it from the separate UUID fixture correction. No diagnostic performance analysis of this failed run is possible because method 10 did not run.
+
+Detailed hashes, independent check outputs and actual partial extraction are retained beside this report. Only local reads, pure synthetic parsing, the frozen local CLI and the independent local analyzer were used. No network, artifact route, build, source mutation, workflow trigger or new native execution occurred. No performance gate is closed.

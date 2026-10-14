@@ -1,0 +1,22 @@
+{
+  "approved": true,
+  "scope": "DIAGNOSTIC_ONLY",
+  "plan_git": "4278f310d6f8a742072725f77fda3fdb92c22431",
+  "approved_plan_sha256": "91cce81651d39bca66a1674cfcac1219205ea20acc9685522c77fff2c5649f0d",
+  "source_spec_sha256": "de95eee21d1bc3fcbe662d063b99908ec94aeec785068c9c36f698f25d5abe93",
+  "method_plan_sha256": "cf5800f39b55524ccded154d72ab94421323b34861b8dea3d03e454c3d07117a",
+  "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+  "marker_contract_sha256": "01cce067e685b392205e24518d337f90281f3462f37e325f16f6eac4de683ac5",
+  "prepare_sources_sha256": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516",
+  "phase_cutoff_minutes": {
+    "setup": 30,
+    "data": 45,
+    "work": 55
+  },
+  "job_timeout_minutes": 60,
+  "task_build_cache": false,
+  "new_permissions": false,
+  "automatic_retry": false,
+  "authorization_scope": "Root-authorized bounded one-source save-boundary diagnostic; not formal acceptance. Inactive template; root must bind source/readiness/authorization and one prep-parent attempt1 activation.",
+  "status": "FROZEN"
+}

@@ -1,0 +1,74 @@
+{
+  "status": "PASS_BOUND_NOT_ACTIVATED",
+  "scope": "LOCAL_READ_ONLY_IDENTITY_AND_DELTA_REVIEW_NO_NATIVE",
+  "source_git": "4f41a501127dbed6dbef3519f93233a105b5d618",
+  "readiness_git": "4278f310d6f8a742072725f77fda3fdb92c22431",
+  "template_manifest_sha256": "ee2a145cf9f744e6ad18b6bcfcd1e899a580b946f9c164cacca9463f1dbc1a3d",
+  "source_spec_sha256": "de95eee21d1bc3fcbe662d063b99908ec94aeec785068c9c36f698f25d5abe93",
+  "canonical_source_manifest_sha256": "76bb502e5520b17df393044f58715986feb6a074538ebf2349a9bc38d83ce881",
+  "source_files_checked": 1009,
+  "readiness_sha256": {
+    "C1-source-manifest.json": "e7f223dd6afb3fadd928076c1b14591fa60523864d7fc86ca3a2e680f8d61265",
+    "PLAN.md": "91cce81651d39bca66a1674cfcac1219205ea20acc9685522c77fff2c5649f0d",
+    "SHA256SUMS": "4de5514b6cc53af44649b9848323758dc928d0fc7c0fa1f3a70cfc6707e9a126",
+    "marker-contract.json": "01cce067e685b392205e24518d337f90281f3462f37e325f16f6eac4de683ac5",
+    "method-plan.json": "cf5800f39b55524ccded154d72ab94421323b34861b8dea3d03e454c3d07117a",
+    "original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "prepare_sources.py": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516",
+    "source-spec.json": "de95eee21d1bc3fcbe662d063b99908ec94aeec785068c9c36f698f25d5abe93"
+  },
+  "bound_control_sha256": {
+    "authorization.json": "382237a0bcd4689348ce3284bc1032d65c521f0e5a5cc4542c9390d0ca32b082",
+    "cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "markers.py": "d27e19a7ae5b090436b8e70d5a2d914119e343eeb40e01352359d27f30215857",
+    "package.py": "ed57ea7dc9bed44a150d84721fc6b20b000a21f2373f89eb951917722e986d82",
+    "run.py": "f6309c34d9e8ab34bacc343008aff84c6a2cc508ccb7cfb46e3615943a805aa3",
+    "workflow.proposed.yml": "785c1b6adac26b99c87a38d547e34b619afe23e543da221e7112143d19e33bfe"
+  },
+  "allowed_control_deltas": {
+    "run.py": "Only FROZEN_SOURCE_SPEC_SHA256 string literal",
+    "package.py": "Only FROZEN_SOURCE_SPEC_SHA256 string literal",
+    "authorization.json": {
+      "approved": true,
+      "status": "FROZEN",
+      "plan_git": "4278f310d6f8a742072725f77fda3fdb92c22431",
+      "six_readiness_digest_bindings": {
+        "approved_plan_sha256": "PLAN.md",
+        "source_spec_sha256": "source-spec.json",
+        "method_plan_sha256": "method-plan.json",
+        "original_protocol_sha256": "original-protocol.json",
+        "marker_contract_sha256": "marker-contract.json",
+        "prepare_sources_sha256": "prepare_sources.py"
+      }
+    },
+    "byte_identical": [
+      "cleanup.py",
+      "markers.py",
+      "workflow.proposed.yml"
+    ]
+  },
+  "workflow_prep_parent_guard": "0000000000000000000000000000000000000000",
+  "offline_bound_preflight": {
+    "path": "/workspace/scratch/pr20-save-boundary-ci-20261014/offline-check-bound/preflight.json",
+    "sha256": "6808392bce824bc7942b627d0dae580d2bf55af82de12f8640100af30d988576",
+    "status": "PASS",
+    "groups": 13,
+    "scope": "OFFLINE_ONLY_NO_NEW_NATIVE_NO_NETWORK_NO_BUILD"
+  },
+  "review_script_sha256": "31f06436107f41c364edc4e3f97f5dd84be3569ad0175a878da461e025b681f6",
+  "remaining_findings": [],
+  "not_performed": [
+    "source/control/repository edits",
+    "binder execution",
+    "push",
+    "network",
+    "build",
+    "native execution",
+    "workflow activation"
+  ],
+  "limits": [
+    "This binds the current inactive six-file output only; later prep/active changes require their own exact review.",
+    "No synthetic or static result is native evidence or performance acceptance.",
+    "Log extractor is outside this review and will have separate evidence."
+  ]
+}

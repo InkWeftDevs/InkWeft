@@ -1,0 +1,269 @@
+{
+  "status": "FAILED_CORRECTNESS_GUARD_NO_PERFORMANCE_SAMPLES",
+  "scope": "LOCAL_READ_OF_OFFICIAL_TERMINAL_AND_BOUND_CONTROLLER_CLAIMS",
+  "run_id": 38540498244,
+  "job_id": 115773755321,
+  "source_commit": "4f41a501127dbed6dbef3519f93233a105b5d618",
+  "active": "81fe788cb26413279d4867b92ad3517a60b69c36",
+  "attempt": 1,
+  "started_at": "2026-10-14T09:11:16Z",
+  "completed_at": "2026-10-14T09:16:09Z",
+  "job_elapsed_seconds": 293.0,
+  "methods": [
+    {
+      "ordinal": 1,
+      "identity": "C1",
+      "phase": "data-diagnostics",
+      "selection": "org.inkweft.data.NoteRepositoryTest#sameCommandReturnsSameCommittedRevision",
+      "seed": null,
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "log_sha256": "41b52cc78c5acb93eca0889de28f37017c5cbb03502bd158df1753bb3a5c7d00"
+    },
+    {
+      "ordinal": 2,
+      "identity": "C1",
+      "phase": "data-diagnostics",
+      "selection": "org.inkweft.data.NoteRepositoryTest#staleEditorCannotOverwriteNewHead",
+      "seed": null,
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "log_sha256": "e60399bdb6c8ec2e7c0d9892152819b65532c43729dff873b4e1a9f7cebe3c40"
+    },
+    {
+      "ordinal": 3,
+      "identity": "C1",
+      "phase": "data-diagnostics",
+      "selection": "org.inkweft.data.NoteRepositoryTest#blankTextAndHistorySurviveReopen",
+      "seed": null,
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "log_sha256": "47b108cc74af8d473751a5e3fc4745b11b0de66444f40619ddc1486730098935"
+    },
+    {
+      "ordinal": 4,
+      "identity": "C1",
+      "phase": "data-diagnostics",
+      "selection": "org.inkweft.data.NoteRepositoryTest#oldReceiptIsNotReplacedWithCurrentHead",
+      "seed": null,
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "log_sha256": "ab9f877bfeea254f4528b82364a3e47c3b92dfcc8f7bb5ebdd271336a05ea88e"
+    },
+    {
+      "ordinal": 5,
+      "identity": "C1",
+      "phase": "data-diagnostics",
+      "selection": "org.inkweft.data.LibraryTextIndexPreparationTest#cancelledFtsWriteRollsBackBeforeClearingPending",
+      "seed": null,
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "log_sha256": "7143b3b5f603091f17126121a0e5c18671a3a148fd4c7824c394b7e049e5fe15"
+    },
+    {
+      "ordinal": 6,
+      "identity": "C1",
+      "phase": "data-diagnostics",
+      "selection": "org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState",
+      "seed": null,
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "log_sha256": "27ed7944784d1e6008a3456f2634bab0c9c362315c3f09f517df8dff165cdfd8"
+    },
+    {
+      "ordinal": 7,
+      "identity": "C1",
+      "phase": "data-diagnostics",
+      "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+      "seed": null,
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "log_sha256": "d17710b7a37ae050e1d0022632fcb41bc2314b0f4e13daa26b10831a7431996b"
+    },
+    {
+      "ordinal": 8,
+      "identity": "C1",
+      "phase": "data-diagnostics",
+      "selection": "org.inkweft.data.LibrarySaveBoundaryDiagnosticsTest#boundariesPreserveCommitRollbackReplayAndRecovery",
+      "seed": null,
+      "status": "FAIL",
+      "junit_status": "FAIL",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "log_sha256": "4503b93ddf7a1c337987a80156a52b7336ddbbcceb68f4ba47013fd1e7d938da"
+    },
+    {
+      "ordinal": 9,
+      "identity": "C1",
+      "phase": "data-diagnostics",
+      "selection": "org.inkweft.data.LibrarySaveBoundaryDiagnosticsTest#observerFailureOverflowAndDelegateFailureDoNotChangeSaveOutcome",
+      "seed": null,
+      "status": "NOT_RUN",
+      "junit_status": null,
+      "adb_exit": null,
+      "process_exit_outcome": null,
+      "log_sha256": null
+    },
+    {
+      "ordinal": 10,
+      "identity": "C1",
+      "phase": "data-diagnostics",
+      "selection": "org.inkweft.data.LibrarySaveBoundaryDiagnosticsTest#singleSeedIdleDirectAndObserveBoundaries",
+      "seed": 4101,
+      "status": "NOT_RUN",
+      "junit_status": null,
+      "adb_exit": null,
+      "process_exit_outcome": null,
+      "log_sha256": null
+    }
+  ],
+  "cleanup": {
+    "trap": {
+      "emulator": "STOPPED_CONFIRMED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "RESTORED_EXACT",
+      "error_count": 0,
+      "before_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "after_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "exact_match": true
+    },
+    "always": {
+      "emulator": "STOPPED_CONFIRMED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "RESTORED_EXACT",
+      "error_count": 0,
+      "before_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "after_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "exact_match": true
+    }
+  },
+  "missing_files": [
+    "device-after.json",
+    "install-C1-data-diagnostics-environment-after.json",
+    "install-C1-data-diagnostics-host-after.json",
+    "method-08-C1-log-forwarding.json",
+    "method-09-C1-instrumentation.log",
+    "method-09-C1-junit.xml",
+    "method-09-C1-records.json",
+    "method-09-C1-log-forwarding.json",
+    "method-10-C1-instrumentation.log",
+    "method-10-C1-junit.xml",
+    "method-10-C1-records.json",
+    "method-10-C1-log-forwarding.json"
+  ],
+  "packaging_complete": false,
+  "failed_guard_raw_sha256": "4503b93ddf7a1c337987a80156a52b7336ddbbcceb68f4ba47013fd1e7d938da",
+  "failed_guard_raw_instrumentation_retrieved": false,
+  "performance_sample_count": 0,
+  "official_steps": [
+    {
+      "number": 1,
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 2,
+      "name": "Fix one local first-step screening clock; no network clock API",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 3,
+      "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 4,
+      "name": "Run actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 5,
+      "name": "Freeze/reconstruct one source and install fixed SDK",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 6,
+      "name": "Build only C1 data test APK; verify signature, manifest and SQLite native identities",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 7,
+      "name": "\u6700\u5c0f\u4e34\u65f6ACL\u4e0e\u540c\u4e00KVM\u6a21\u62df\u5668",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 8,
+      "name": "Seven existing guards, two opt-in boundary guards, one three-arm diagnostic; failure stops the run",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "number": 9,
+      "name": "\u6210\u529f\u8def\u5f84\u505c\u6b62\u62e5\u6709\u8fdb\u7a0b\u5e76\u7cbe\u786e\u6062\u590dACL",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "number": 10,
+      "name": "always\u518d\u6b21\u6838\u9a8c\u8fdb\u7a0b\u4e0eACL\u6062\u590d",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 11,
+      "name": "\u53ea\u6253\u5305\u767d\u540d\u5355\u539f\u59cb\u6587\u672c\uff0c\u6700\u592720MiB",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 12,
+      "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 23,
+      "name": "Post Run actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 24,
+      "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 25,
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "official_input_sha256": {
+    "official-job.log": "b15e22948657efe1b8193a0b428f2634edde646c3f4c039e92fa3f73e455cdfb",
+    "official-terminal-run.json": "86175fbdd26b5fbac5714631264a77252e8f4186c536059e45d4bdfcd36136f5",
+    "official-terminal-jobs.json": "4b1af2bd9d4d6cecb38cf8653dea0169997f7458c1cdf8cfb43681afeb3aa957"
+  }
+}

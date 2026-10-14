@@ -1,0 +1,20 @@
+{
+  "scope": "LOCAL_READ_ONLY_NOT_NATIVE",
+  "git_binding": {
+    "source_commit": "4f41a501127dbed6dbef3519f93233a105b5d618",
+    "readiness_git": "4278f310d6f8a742072725f77fda3fdb92c22431",
+    "prep_sha": "da2497844493b82ba2eae22b3dfa291572397649",
+    "workflow_sha": "81fe788cb26413279d4867b92ad3517a60b69c36"
+  },
+  "verification": {
+    "active": "81fe788cb26413279d4867b92ad3517a60b69c36",
+    "prep": "da2497844493b82ba2eae22b3dfa291572397649",
+    "readiness": "4278f310d6f8a742072725f77fda3fdb92c22431",
+    "source": "4f41a501127dbed6dbef3519f93233a105b5d618",
+    "readiness_files_verified": 8,
+    "reviewed_source_files_verified": 6,
+    "control_files_verified": 7,
+    "network": false,
+    "git_operations": "read-only"
+  }
+}
