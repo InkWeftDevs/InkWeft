@@ -352,7 +352,12 @@ class InkRepository(private val db:NoteDatabase,private val fault:(InkFaultPoint
                 catch(e:InkReadBudgetExceeded){if(batch.size<=1)throw e;batch=batch.take((batch.size+1)/2)}
             }
             check(snapshot.revision==revision&&snapshot.strokes.map{it.id}==batch.filter{it.id !in reused}.map{it.id}){"INK_WINDOW_REVISION_CHANGED"}
-            if(cache==null)visit(snapshot.strokes)else{
+            if(cache==null)visit(snapshot.strokes)else if(reused.isEmpty()){
+                // The ordered-ID check above already pairs every decoded stroke with its
+                // spatial identity. A cold batch needs no hash map or reordered copy.
+                snapshot.strokes.forEachIndexed{index,stroke->cache.put(stroke,batch[index].spatialKey)}
+                visit(snapshot.strokes)
+            }else{
                 val decoded=snapshot.strokes.associateBy{it.id}
                 cache.recordHits(reused.size)
                 visit(batch.map{row->reused[row.id]?:decoded.getValue(row.id).also{cache.put(it,row.spatialKey)}})

@@ -41,6 +41,24 @@ class RasterReadCacheTest {
         assertTrue(cache.retainedBytes in 1..InkRasterCache.MAX_BYTES)
         assertTrue(runCatching{InkRepository(db).visitVisible(page,1,union,cache=cache){}}.exceptionOrNull() is IllegalArgumentException)
     }
+    @Test fun coldBatchesPreservePaintOrderAndPopulateEveryCachedIdentity()=fixture {db,page,repo->
+        seed(db,page,List(300){stroke(it+1,100f+it%3)}.reversed())
+        val bounds=CanvasBounds(0.0,0.0,500.0,500.0);val cache=repo.rasterCache()
+        suspend fun read(cache:InkRasterCache?):List<List<InkStroke>>{
+            val batches=mutableListOf<List<InkStroke>>()
+            repo.visitVisible(page,1,bounds,cache=cache){batches+=it}
+            return batches
+        }
+        val reference=read(null).flatten()
+        assertEquals(List(300){id(it+1)},reference.map{it.id})
+        var decoded=0;repo.readObserver={decoded+=it.entries}
+        val cold=read(cache)
+        assertEquals(listOf(256,44),cold.map{it.size});assertEquals(reference,cold.flatten())
+        assertEquals(300,decoded);assertEquals(0,cache.hits)
+        decoded=0;val warm=read(cache).flatten()
+        assertEquals(0,decoded);assertEquals(300,cache.hits)
+        cold.flatten().forEachIndexed{index,stroke->assertSame(stroke,warm[index])}
+    }
     @Test fun payloadMaskAndRevisionChangesCannotReuseStaleDecodedGeometry()=fixture {db,page,repo->
         val initial=stroke(1,100f);seed(db,page,listOf(initial))
         val bounds=CanvasBounds(0.0,0.0,500.0,500.0);val cache=repo.rasterCache()

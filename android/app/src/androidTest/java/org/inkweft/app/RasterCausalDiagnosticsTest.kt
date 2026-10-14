@@ -21,7 +21,7 @@ import java.util.UUID
  * No values from this opt-in run are substituted into the common performance screen. */
 class RasterCausalDiagnosticsTest {
 
-    private val pairSeed by lazy{checkNotNull(InstrumentationRegistry.getArguments().getString("pairSeed")).toLong().also{check(it==4101L)}}
+    private val pairSeed by lazy{checkNotNull(InstrumentationRegistry.getArguments().getString("pairSeed")).toLong().also{check(it==4101L||it==4102L)}}
     private val pairRandom by lazy{java.util.Random(pairSeed)}
     private fun id()=UUID(pairRandom.nextLong(),pairRandom.nextLong()).toString()
     private fun emit(marker:String,value:JSONObject){
