@@ -1,0 +1,1337 @@
+{
+  "status": "INDEPENDENT_TERMINAL_METADATA_AND_COMPACT_LOG_REVIEW_PASS_FULL_ARTIFACT_AUDIT_PENDING",
+  "scope": "Read-only offline review of root-supplied official terminal metadata and decoded job log; no network, artifact access, tests, build, job launch or source modifications.",
+  "identity": {
+    "run_id": 38498392929,
+    "job_id": 115639302352,
+    "attempt": 1,
+    "branch": "codex/kvm-pr20-candidate3-20261014",
+    "active_git": "d20b37a00d084ddea8a59698b926d94ce2f1a633",
+    "preparation_git": "b3bcbcc9ca4e4134f0d2e4806bcd7bcf55ab0897",
+    "readiness_git": "445654c90a4c78893f158fdc4eca4313f3320a7f",
+    "event": "push",
+    "workflow_path": ".github/workflows/pr20-kvm-triple.yml",
+    "source_identities": {
+      "B": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+      "C0": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+      "C1": "d66b60d6cf9587f646acb76dd8a00910b73a6d70"
+    },
+    "source_identity_scope": "Frozen source plan binding; actual APK/source reconstruction receipts are not included in this compact log review.",
+    "public_run_url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/38498392929"
+  },
+  "terminal_metadata": {
+    "run_status": "completed",
+    "run_conclusion": "success",
+    "job_status": "completed",
+    "job_conclusion": "success",
+    "job_started_at": "2026-10-14T01:56:28Z",
+    "job_completed_at": "2026-10-14T02:35:30Z",
+    "job_seconds": 2342.0,
+    "job_within60minutes": true,
+    "anchor_epoch": 1791942801,
+    "anchor_utc": "2026-10-14T01:53:21Z",
+    "anchor_precedes_job_seconds": 187.0,
+    "anchor_to_job_completion_seconds": 2529.0,
+    "runner_labels": [
+      "ubuntu-24.04"
+    ]
+  },
+  "frozen_scope": {
+    "source_spec_sha256": "d8ba1042334d8a6386ed6d1d54fbaad4a00fc6d76acc7fbb39005e6bcf897ba3",
+    "counts": {
+      "correctness": 31,
+      "common-comparison": 24,
+      "candidate-diagnostics": 3
+    },
+    "public_ordinals": [
+      32,
+      55
+    ],
+    "GC_ordinals": [
+      56,
+      57
+    ],
+    "stage_ordinal": 58,
+    "helper_only_ordinal": 17,
+    "method_plan_sha256": "e1d02f73ed8b417949282a729de8133f16deb2fda47a6ae5ec9f2f3671da9346",
+    "plan_document_sha256": "16eeca6375758fe70e3ae5b5787ed87e4103ef7baed9e64e86d37ee61781e1ff"
+  },
+  "compact_method_evidence": {
+    "count": 58,
+    "host_pass": 58,
+    "controller_reported_junit_pass": 58,
+    "adb_exit0": 58,
+    "error_null": 58,
+    "natural_exit": 57,
+    "helper_exit": 1,
+    "exact_frozen_ordinal_identity_phase_selection_match": true,
+    "raw_instrumentation_independently_checked": false,
+    "records": [
+      {
+        "timestamp": "2026-10-14T02:23:19.2999402Z",
+        "line": 392,
+        "value": {
+          "ordinal": 1,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:20.4682475Z",
+        "line": 393,
+        "value": {
+          "ordinal": 2,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.LibraryPagingTest#snapshotRetainsOldClassificationAndSourceWhileWriterCommits",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:21.1233579Z",
+        "line": 394,
+        "value": {
+          "ordinal": 3,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.LibraryPagingTest#refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:21.9305454Z",
+        "line": 395,
+        "value": {
+          "ordinal": 4,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:22.7419483Z",
+        "line": 396,
+        "value": {
+          "ordinal": 5,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:23.3978331Z",
+        "line": 397,
+        "value": {
+          "ordinal": 6,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:24.0062002Z",
+        "line": 398,
+        "value": {
+          "ordinal": 7,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:25.0143115Z",
+        "line": 399,
+        "value": {
+          "ordinal": 8,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.HistoryCollectionTest#oneScanSurvivesRoomObserverRefreshAcrossSevenBatches",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:25.9717141Z",
+        "line": 400,
+        "value": {
+          "ordinal": 9,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:26.9301726Z",
+        "line": 401,
+        "value": {
+          "ordinal": 10,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:27.9435769Z",
+        "line": 402,
+        "value": {
+          "ordinal": 11,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:28.9556120Z",
+        "line": 403,
+        "value": {
+          "ordinal": 12,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:29.8638898Z",
+        "line": 404,
+        "value": {
+          "ordinal": 13,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.HistoryCollectionTest#overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:30.7724080Z",
+        "line": 405,
+        "value": {
+          "ordinal": 14,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.HistoryCollectionTest#malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:31.7302071Z",
+        "line": 406,
+        "value": {
+          "ordinal": 15,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:32.6391997Z",
+        "line": 407,
+        "value": {
+          "ordinal": 16,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.HistoryCollectionTest#missingRoomGuardLogAbortsWithoutDeletingCandidates",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:43.4383994Z",
+        "line": 408,
+        "value": {
+          "ordinal": 17,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.app.NotebookShelfUiTest#pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "AUXILIARY_AM_KILL_CONFIRMED",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:44.0492642Z",
+        "line": 409,
+        "value": {
+          "ordinal": 18,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.LibraryPagingTest#cancelledSourceReadSkipsDirectoryAssemblyAndNextReadKeepsClassification",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:45.2599593Z",
+        "line": 410,
+        "value": {
+          "ordinal": 19,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.RasterReadCacheTest#separatedRegionsSkipEmptyMetadataBatchesAndDecodeCrossingStrokeOnce",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:45.9207241Z",
+        "line": 411,
+        "value": {
+          "ordinal": 20,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.RasterReadCacheTest#payloadMaskAndRevisionChangesCannotReuseStaleDecodedGeometry",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:46.5800364Z",
+        "line": 412,
+        "value": {
+          "ordinal": 21,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.RasterReadCacheTest#explicitAppendReuseSkipsOldPayloadsAcrossRevisionJumpsAndDefaultsToInvalidation",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:47.2888270Z",
+        "line": 413,
+        "value": {
+          "ordinal": 22,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.RasterReadCacheTest#appendPermissionStillRefreshesChangedPayloadVisibilityUndoAndMasks",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:48.2997706Z",
+        "line": 414,
+        "value": {
+          "ordinal": 23,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.RasterReadCacheTest#appendReuseRejectsHeadOrMaskChangesDuringCachedBatches",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:49.5112580Z",
+        "line": 415,
+        "value": {
+          "ordinal": 24,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.RasterReadCacheTest#decodedCacheRemainsBoundedForManyStrokesAndDenseMasks",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:50.5234312Z",
+        "line": 416,
+        "value": {
+          "ordinal": 25,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.RasterReadCacheTest#sameRevisionMaskChangeDuringCachedVisitRejectsTheWholeRead",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:52.0382507Z",
+        "line": 417,
+        "value": {
+          "ordinal": 26,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.app.TileLocalRedrawTest#appendRetainsGeometryAcrossIdleLayerRevisionsAndDestructiveChangesMatchColdFrames",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:53.6498484Z",
+        "line": 418,
+        "value": {
+          "ordinal": 27,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.app.TileLocalRedrawTest#integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:54.6123615Z",
+        "line": 419,
+        "value": {
+          "ordinal": 28,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:55.6256332Z",
+        "line": 420,
+        "value": {
+          "ordinal": 29,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.app.StreamedInkRasterTest#clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:57.1889294Z",
+        "line": 421,
+        "value": {
+          "ordinal": 30,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:23:57.9000761Z",
+        "line": 422,
+        "value": {
+          "ordinal": 31,
+          "phase": "correctness",
+          "identity": "C1",
+          "selection": "org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:24:05.1725550Z",
+        "line": 453,
+        "value": {
+          "ordinal": 32,
+          "phase": "common-comparison",
+          "identity": "B",
+          "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:24:51.8759194Z",
+        "line": 454,
+        "value": {
+          "ordinal": 33,
+          "phase": "common-comparison",
+          "identity": "B",
+          "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:24:58.7864990Z",
+        "line": 455,
+        "value": {
+          "ordinal": 34,
+          "phase": "common-comparison",
+          "identity": "C0",
+          "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:25:41.8292608Z",
+        "line": 456,
+        "value": {
+          "ordinal": 35,
+          "phase": "common-comparison",
+          "identity": "C0",
+          "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:25:48.6924638Z",
+        "line": 457,
+        "value": {
+          "ordinal": 36,
+          "phase": "common-comparison",
+          "identity": "C1",
+          "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:26:31.7856095Z",
+        "line": 458,
+        "value": {
+          "ordinal": 37,
+          "phase": "common-comparison",
+          "identity": "C1",
+          "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:26:38.6082098Z",
+        "line": 459,
+        "value": {
+          "ordinal": 38,
+          "phase": "common-comparison",
+          "identity": "C1",
+          "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:27:21.3568812Z",
+        "line": 460,
+        "value": {
+          "ordinal": 39,
+          "phase": "common-comparison",
+          "identity": "C1",
+          "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:27:28.3627555Z",
+        "line": 461,
+        "value": {
+          "ordinal": 40,
+          "phase": "common-comparison",
+          "identity": "B",
+          "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:28:15.0719304Z",
+        "line": 462,
+        "value": {
+          "ordinal": 41,
+          "phase": "common-comparison",
+          "identity": "B",
+          "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:28:21.8772995Z",
+        "line": 463,
+        "value": {
+          "ordinal": 42,
+          "phase": "common-comparison",
+          "identity": "C0",
+          "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:29:05.0748065Z",
+        "line": 464,
+        "value": {
+          "ordinal": 43,
+          "phase": "common-comparison",
+          "identity": "C0",
+          "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:29:11.9310887Z",
+        "line": 465,
+        "value": {
+          "ordinal": 44,
+          "phase": "common-comparison",
+          "identity": "C0",
+          "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:29:55.0796807Z",
+        "line": 466,
+        "value": {
+          "ordinal": 45,
+          "phase": "common-comparison",
+          "identity": "C0",
+          "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:30:01.9539266Z",
+        "line": 467,
+        "value": {
+          "ordinal": 46,
+          "phase": "common-comparison",
+          "identity": "C1",
+          "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:30:44.8515305Z",
+        "line": 468,
+        "value": {
+          "ordinal": 47,
+          "phase": "common-comparison",
+          "identity": "C1",
+          "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:30:51.8624809Z",
+        "line": 469,
+        "value": {
+          "ordinal": 48,
+          "phase": "common-comparison",
+          "identity": "B",
+          "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:31:38.3724629Z",
+        "line": 470,
+        "value": {
+          "ordinal": 49,
+          "phase": "common-comparison",
+          "identity": "B",
+          "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:31:45.3599338Z",
+        "line": 471,
+        "value": {
+          "ordinal": 50,
+          "phase": "common-comparison",
+          "identity": "B",
+          "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:32:31.8202390Z",
+        "line": 472,
+        "value": {
+          "ordinal": 51,
+          "phase": "common-comparison",
+          "identity": "B",
+          "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:32:38.7405980Z",
+        "line": 473,
+        "value": {
+          "ordinal": 52,
+          "phase": "common-comparison",
+          "identity": "C1",
+          "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:33:21.8933932Z",
+        "line": 474,
+        "value": {
+          "ordinal": 53,
+          "phase": "common-comparison",
+          "identity": "C1",
+          "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:33:28.7422158Z",
+        "line": 475,
+        "value": {
+          "ordinal": 54,
+          "phase": "common-comparison",
+          "identity": "C0",
+          "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:34:11.7413844Z",
+        "line": 476,
+        "value": {
+          "ordinal": 55,
+          "phase": "common-comparison",
+          "identity": "C0",
+          "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:34:20.4386900Z",
+        "line": 507,
+        "value": {
+          "ordinal": 56,
+          "phase": "candidate-diagnostics",
+          "identity": "C1",
+          "selection": "org.inkweft.data.HistoryDeletionExposureTest#sameRoomWriterNaturalDeletionExposure",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:34:26.9215904Z",
+        "line": 508,
+        "value": {
+          "ordinal": 57,
+          "phase": "candidate-diagnostics",
+          "identity": "C1",
+          "selection": "org.inkweft.data.HistoryDeletionExposureTest#separateRoomWriterNaturalDeletionExposure",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:35:07.8189317Z",
+        "line": 509,
+        "value": {
+          "ordinal": 58,
+          "phase": "candidate-diagnostics",
+          "identity": "C1",
+          "selection": "org.inkweft.data.LibraryReadPerformanceTest#coldSearchConcurrentSavesAndShelfReadScale",
+          "status": "PASS",
+          "junit_status": "PASS",
+          "adb_exit": 0,
+          "process_exit_outcome": "NATURAL_EXIT",
+          "error": null
+        }
+      }
+    ]
+  },
+  "stale_step_label": {
+    "number": 10,
+    "label": "C1的30项正确性：失败停止性能部分",
+    "actual_compact_correctness_count": 31,
+    "assessment": "Display-label mismatch only in available evidence; use exact planned selections and58 logged receipts, not the old30 label."
+  },
+  "helper17": {
+    "compact_record": {
+      "timestamp": "2026-10-14T02:23:43.4383994Z",
+      "line": 408,
+      "value": {
+        "ordinal": 17,
+        "phase": "correctness",
+        "identity": "C1",
+        "selection": "org.inkweft.app.NotebookShelfUiTest#pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges",
+        "status": "PASS",
+        "junit_status": "PASS",
+        "adb_exit": 0,
+        "process_exit_outcome": "AUXILIARY_AM_KILL_CONFIRMED",
+        "error": null
+      }
+    },
+    "verified_from_log": "One allowed method17 compact outcome AUXILIARY_AM_KILL_CONFIRMED; the other57 report NATURAL_EXIT.",
+    "not_verified": "No auxiliary_cleanup receipt, exact am-kill command/result, PIDs, pre-helper app/data absence, or3s/2s observation sequence is printed. Existing helper contract remains pending raw artifact review."
+  },
+  "steps": [
+    {
+      "number": 1,
+      "name": "Set up job",
+      "started_at": "2026-10-14T01:56:28Z",
+      "completed_at": "2026-10-14T01:56:29Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 1.0
+    },
+    {
+      "number": 2,
+      "name": "从冻结PR服务器时间保守固定38/41/53/55分钟截止",
+      "started_at": "2026-10-14T01:56:29Z",
+      "completed_at": "2026-10-14T01:56:29Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 0.0
+    },
+    {
+      "number": 3,
+      "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+      "started_at": "2026-10-14T01:56:29Z",
+      "completed_at": "2026-10-14T01:56:33Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 4.0
+    },
+    {
+      "number": 4,
+      "name": "Run actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3",
+      "started_at": "2026-10-14T01:56:33Z",
+      "completed_at": "2026-10-14T01:56:33Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 0.0
+    },
+    {
+      "number": 5,
+      "name": "冻结并重建B/C0/C1源码与SDK",
+      "started_at": "2026-10-14T01:56:33Z",
+      "completed_at": "2026-10-14T01:56:56Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 23.0
+    },
+    {
+      "number": 6,
+      "name": "构建B的三个真实debug APK",
+      "started_at": "2026-10-14T01:56:56Z",
+      "completed_at": "2026-10-14T02:06:41Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 585.0
+    },
+    {
+      "number": 7,
+      "name": "构建C0的三个真实debug APK",
+      "started_at": "2026-10-14T02:06:41Z",
+      "completed_at": "2026-10-14T02:15:05Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 504.0
+    },
+    {
+      "number": 8,
+      "name": "构建C1的三个真实debug APK",
+      "started_at": "2026-10-14T02:15:05Z",
+      "completed_at": "2026-10-14T02:22:42Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 457.0
+    },
+    {
+      "number": 9,
+      "name": "最小临时ACL与同一KVM模拟器",
+      "started_at": "2026-10-14T02:22:42Z",
+      "completed_at": "2026-10-14T02:23:14Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 32.0
+    },
+    {
+      "number": 10,
+      "name": "C1的30项正确性：失败停止性能部分",
+      "started_at": "2026-10-14T02:23:14Z",
+      "completed_at": "2026-10-14T02:23:58Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 44.0
+    },
+    {
+      "number": 11,
+      "name": "四组三端固定顺序的24项公共比较",
+      "started_at": "2026-10-14T02:23:58Z",
+      "completed_at": "2026-10-14T02:34:11Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 613.0
+    },
+    {
+      "number": 12,
+      "name": "C1自然GC两种连接及独立阶段诊断",
+      "started_at": "2026-10-14T02:34:11Z",
+      "completed_at": "2026-10-14T02:35:07Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 56.0
+    },
+    {
+      "number": 13,
+      "name": "成功路径停止拥有进程并精确恢复ACL",
+      "started_at": "2026-10-14T02:35:07Z",
+      "completed_at": "2026-10-14T02:35:17Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 10.0
+    },
+    {
+      "number": 14,
+      "name": "always再次核验进程与ACL恢复",
+      "started_at": "2026-10-14T02:35:17Z",
+      "completed_at": "2026-10-14T02:35:25Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 8.0
+    },
+    {
+      "number": 15,
+      "name": "只打包白名单原始文本，最大20MiB",
+      "started_at": "2026-10-14T02:35:25Z",
+      "completed_at": "2026-10-14T02:35:26Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 1.0
+    },
+    {
+      "number": 16,
+      "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+      "started_at": "2026-10-14T02:35:26Z",
+      "completed_at": "2026-10-14T02:35:27Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 1.0
+    },
+    {
+      "number": 31,
+      "name": "Post Run actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3",
+      "started_at": "2026-10-14T02:35:27Z",
+      "completed_at": "2026-10-14T02:35:27Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 0.0
+    },
+    {
+      "number": 32,
+      "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+      "started_at": "2026-10-14T02:35:27Z",
+      "completed_at": "2026-10-14T02:35:27Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 0.0
+    },
+    {
+      "number": 33,
+      "name": "Complete job",
+      "started_at": "2026-10-14T02:35:27Z",
+      "completed_at": "2026-10-14T02:35:27Z",
+      "status": "completed",
+      "conclusion": "success",
+      "seconds": 0.0
+    }
+  ],
+  "phase_deadlines": [
+    {
+      "phase": "setup",
+      "api_end": "2026-10-14T02:23:14Z",
+      "elapsed_from_anchor_seconds": 1793.0,
+      "cutoff_from_anchor_seconds": 2280,
+      "margin_from_api_second_seconds": 487.0,
+      "last_compact_method_at": null,
+      "last_compact_to_cutoff_seconds": null
+    },
+    {
+      "phase": "correctness",
+      "api_end": "2026-10-14T02:23:58Z",
+      "elapsed_from_anchor_seconds": 1837.0,
+      "cutoff_from_anchor_seconds": 2460,
+      "margin_from_api_second_seconds": 623.0,
+      "last_compact_method_at": "2026-10-14T02:23:57.9000761Z",
+      "last_compact_to_cutoff_seconds": 623.099924
+    },
+    {
+      "phase": "common-comparison",
+      "api_end": "2026-10-14T02:34:11Z",
+      "elapsed_from_anchor_seconds": 2450.0,
+      "cutoff_from_anchor_seconds": 3180,
+      "margin_from_api_second_seconds": 730.0,
+      "last_compact_method_at": "2026-10-14T02:34:11.7413844Z",
+      "last_compact_to_cutoff_seconds": 729.258616
+    },
+    {
+      "phase": "candidate-diagnostics",
+      "api_end": "2026-10-14T02:35:07Z",
+      "elapsed_from_anchor_seconds": 2506.0,
+      "cutoff_from_anchor_seconds": 3300,
+      "margin_from_api_second_seconds": 794.0,
+      "last_compact_method_at": "2026-10-14T02:35:07.8189317Z",
+      "last_compact_to_cutoff_seconds": 793.181069
+    }
+  ],
+  "timing_limits": [
+    "API step timestamps have whole-second precision; job-log event timestamps retain fractional precision. Subsecond compact/cleanup lines can follow the API completed_at second without proving lateness.",
+    "Step wall times include wrapper/setup/install/check work and are not per-method native benchmark durations, SQL writer blocking, Gradle-only time or throughput.",
+    "Adjacent compact log timestamps do not define individual method execution windows."
+  ],
+  "cleanup": {
+    "records": [
+      {
+        "timestamp": "2026-10-14T02:35:17.6929093Z",
+        "line": 526,
+        "value": {
+          "emulator": "STOPPED_CONFIRMED",
+          "command_groups": "STOPPED_CONFIRMED",
+          "acl": "RESTORED_EXACT",
+          "errors": []
+        }
+      },
+      {
+        "timestamp": "2026-10-14T02:35:25.8737809Z",
+        "line": 548,
+        "value": {
+          "emulator": "STOPPED_CONFIRMED",
+          "command_groups": "STOPPED_CONFIRMED",
+          "acl": "RESTORED_EXACT",
+          "errors": []
+        }
+      }
+    ],
+    "step13_seconds": 10.0,
+    "step14_seconds": 8.0,
+    "log_claims_match_double_successful_cleanup": true,
+    "original_cleanup_json_or_ACL_bytes_compared": false
+  },
+  "packaging": {
+    "record": {
+      "timestamp": "2026-10-14T02:35:26.0028064Z",
+      "line": 571,
+      "value": {
+        "files": 292,
+        "bytes": 3579522,
+        "omitted": 0,
+        "truncated": 0
+      }
+    },
+    "reported_payload_files": 292,
+    "reported_payload_bytes_before_manifest": 3579522,
+    "reported_upload_files": 294,
+    "difference_explanation": "Consistent with source package.py appending manifest.json and packaging.json; inferred from frozen controller, not a ZIP directory inspection.",
+    "omitted": 0,
+    "truncated": 0,
+    "step_seconds": 1.0,
+    "upload_step_seconds": 1.0,
+    "upload_lines": [
+      {
+        "line": 596,
+        "text": "2026-10-14T02:35:26.3948830Z With the provided path, there will be 294 files uploaded"
+      },
+      {
+        "line": 601,
+        "text": "2026-10-14T02:35:26.9478951Z Uploaded bytes 772054"
+      },
+      {
+        "line": 603,
+        "text": "2026-10-14T02:35:26.9644910Z SHA256 digest of uploaded artifact zip is 79c53a73e262a22205519f5a994e10e6f2c75ca396a39bbd251d5bbd6b17993c"
+      },
+      {
+        "line": 605,
+        "text": "2026-10-14T02:35:27.1714334Z Artifact pr20-kvm-triple-38498392929.zip successfully finalized. Artifact ID 11866466104"
+      },
+      {
+        "line": 606,
+        "text": "2026-10-14T02:35:27.1715782Z Artifact pr20-kvm-triple-38498392929 has been successfully uploaded! Final size is 772054 bytes. Artifact ID is 11866466104"
+      }
+    ]
+  },
+  "artifact": {
+    "id": 11866466104,
+    "name": "pr20-kvm-triple-38498392929",
+    "size_in_bytes": 772054,
+    "official_digest": "sha256:79c53a73e262a22205519f5a994e10e6f2c75ca396a39bbd251d5bbd6b17993c",
+    "expires_at": "2026-10-17T02:35:26Z",
+    "expired_at_metadata_capture": false,
+    "local_ZIP_present_or_verified": false,
+    "digest_crosscheck": "Upload log and artifact metadata agree; no local archive bytes hashed."
+  },
+  "absence_checks": {
+    "INSTRUMENTATION_STATUS:": 0,
+    "KVM_PAIR_FIXTURE": 0,
+    "LIBRARY_READ_EVIDENCE": 0,
+    "HISTORY_DELETION_EXPOSURE_TRIAL": 0,
+    "auxiliary_cleanup": 0,
+    "process_exit_observations": 0
+  },
+  "input_files": {
+    "jobs-terminal.json": {
+      "bytes": 4525,
+      "sha256": "0a88db905476d2715ab23579a4981e64d312f1b6848bfab6f047036d23e1d4a5"
+    },
+    "run-terminal.json": {
+      "bytes": 12729,
+      "sha256": "546e7a607a470fb3eb049454ddafdb88b4e08f8a1feb5c85cfd4904ac40298cb"
+    },
+    "artifacts.json": {
+      "bytes": 755,
+      "sha256": "ec14b145c429a1c7779526c3baffe54c0959d583cd54468f161153d2652a0a9d"
+    },
+    "job-decoded.log": {
+      "bytes": 63779,
+      "sha256": "c7e11b4de5f371c7512e7aa973eb0a7983e1a3d2fa9e355b34b4d6a2bf2f3fd8"
+    }
+  },
+  "raw_log_utf8_BOM_preserved": true,
+  "crosscheck_of_existing_summary": {
+    "status": "MATCH",
+    "paths": [
+      "terminal-log-summary/job-log-verification.json",
+      "terminal-log-summary/method-status-from-joblog.json"
+    ],
+    "independent_method_and_cleanup_packaging_parser_used": true,
+    "summarizer_not_executed": true
+  },
+  "limits": [
+    "58 compact PASS receipts plus job success establish reported completion, not independent inspection of original instrumentation logs/JSON/XML.",
+    "No30-save arrays, p50/p95/max, index progression, data-reading scale, raster pixel/decode/rebuild/nativeStrokeBuilds counters or GC exposure/scans/deletions are present; no performance reconstruction or new acceptance conclusion.",
+    "GC methods56/57 PASS does not establish >=20 exposed saves, a specific exposure count, or improvement from prior insufficient exposure.",
+    "Successful B/C0/C1 build steps are not inspection of9 APK/source/native/dependency/install/environment receipts. Even the permitted text artifact would not contain APK binaries for independent re-signature verification.",
+    "Two RESTORED_EXACT log claims do not compare original/granted/restored ACL bytes; cleanup JSON and original observations remain unavailable.",
+    "Metadata and upload digest agreement do not verify ZIP contents, manifest completeness, source binding of individual payload files or unmodified original samples.",
+    "Earlier regression/inconclusive/insufficient-exposure findings remain open; no cross-run sample pooling or old ZIP substitution."
+  ],
+  "publication_proposal": {
+    "status": "PROPOSAL_ONLY_NO_REPOSITORY_FILES_CREATED_OR_PUBLISHED",
+    "suggested_directory": "android/verification/pr20-candidate3-terminal-20261014/",
+    "files": [
+      {
+        "name": "README.md",
+        "content": "Bound identity,39m02s,31/24/3 compact PASS, current ZIP/performance limits, public run link; no new speedup or acceptance claim."
+      },
+      {
+        "name": "terminal-review.json",
+        "content": "This review: minimal run/job/artifact fields, full58 compact records with original line numbers, step timings, cleanup/upload claims, source/input hashes, explicit evidence limits."
+      },
+      {
+        "name": "terminal-log-excerpts.txt",
+        "content": "Only original compact method lines, the2 cleanup lines, packaging line, upload size/digest/finalization lines, and exact checkout SHA line. Mark omitted context; preserve original line numbers and whole raw-log SHA. Do not label as full raw log."
+      },
+      {
+        "name": "SHA256SUMS",
+        "content": "Digests of published derived files; raw input digests retained separately inside reviewJSON. A digest is not a substitute for absent ZIP bytes."
+      }
+    ],
+    "excluded": "Full run metadata containing irrelevant account/profile/email fields; full job log environment and checkout setup; API wrapper/envelope files; synthetic ZIP fixtures; historical native samples; all APK/AAR/DB/keys.",
+    "local_originals": "Keep four original terminal inputs and frozen source/clock locally, unchanged. Use original artifact digest/name/id only as remote metadata until actual ZIP is supplied.",
+    "estimated_compact_excerpt_lines": 67
+  },
+  "remaining_blockers": [
+    "Original ZIP for run38498392929 is not locally available or verified; forbidden download channels are not accessed or proposed as a workaround.",
+    "A future supplied original must match artifact11866466104 /772054bytes /official digest, then pass the already-bound auditor and unchanged candidate3 analyzer. No repeat request or re-audit of the already-verified old57 ZIP is needed."
+  ]
+}
