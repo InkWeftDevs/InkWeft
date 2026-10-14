@@ -1,0 +1,25 @@
+{
+  "total_count": 1,
+  "artifacts": [
+    {
+      "id": 11869267275,
+      "node_id": "MDg6QXJ0aWZhY3QxMTg2OTI2NzI3NQ==",
+      "name": "pr20-search-screen-38508580078",
+      "size_in_bytes": 406469,
+      "url": "https://api.github.com/repos/InkWeftDevs/InkWeft/actions/artifacts/11869267275",
+      "archive_download_url": "https://api.github.com/repos/InkWeftDevs/InkWeft/actions/artifacts/11869267275/zip",
+      "expired": false,
+      "digest": "sha256:fcfb81862a8d2d3c45912ba6b8cde42abc281995c2e3a853890fe4049398be91",
+      "created_at": "2026-10-14T04:04:24Z",
+      "updated_at": "2026-10-14T04:04:24Z",
+      "expires_at": "2026-10-17T04:04:23Z",
+      "workflow_run": {
+        "id": 38508580078,
+        "repository_id": 1383361500,
+        "head_repository_id": 1383361500,
+        "head_branch": "codex/kvm-pr20-search-screen-20261014",
+        "head_sha": "02aaa0e3df3d77c6a726931cee060e2daff4bbf2"
+      }
+    }
+  ]
+}

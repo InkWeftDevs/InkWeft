@@ -1,0 +1,118 @@
+{
+  "status": "PASS",
+  "scope": "OFFLINE_PURE_PARSER_ONLY_NOT_NEW_NATIVE_PERFORMANCE",
+  "runner_sha256": "3b88cda9aabda1eb261a4d1c860cde11ce73fd4d3b22223bac34676aa21febec",
+  "contract_sha256": "3f3bc2a6bc5b0a663a4e03a54be65c2193a8ed868ba31014e344a95595d6aa4d",
+  "fixture": {
+    "path": "/workspace/scratch/pr20-candidate3-results-20261014/raw/method-35-C0-instrumentation.log",
+    "sha256": "4912f375f0ad98729757a375fc848ad19ce7bb3dfa5b7fa90cb93a79731f5aaa",
+    "usage": "Parser schema fixture only; no old samples pooled or performance conclusions."
+  },
+  "cases": [
+    {
+      "case": "valid_prior_raw_marker_fixture_only",
+      "result": "ACCEPTED",
+      "count": 12,
+      "same_original_payload_substrings": true
+    },
+    {
+      "case": "extra_array",
+      "result": "REJECTED",
+      "exception": "AssertionError"
+    },
+    {
+      "case": "extra_truncated",
+      "result": "REJECTED",
+      "exception": "JSONDecodeError"
+    },
+    {
+      "case": "extra_empty",
+      "result": "REJECTED",
+      "exception": "JSONDecodeError"
+    },
+    {
+      "case": "no_separator",
+      "result": "REJECTED",
+      "exception": "AssertionError"
+    },
+    {
+      "case": "unknown_array",
+      "result": "REJECTED",
+      "exception": "AssertionError"
+    },
+    {
+      "case": "extra_valid_fixture",
+      "result": "REJECTED",
+      "exception": "AssertionError"
+    },
+    {
+      "case": "duplicate_key",
+      "result": "REJECTED",
+      "exception": "AssertionError"
+    },
+    {
+      "case": "NaN",
+      "result": "REJECTED",
+      "exception": "AssertionError"
+    },
+    {
+      "case": "Infinity",
+      "result": "REJECTED",
+      "exception": "AssertionError"
+    },
+    {
+      "case": "bool_as_number",
+      "result": "REJECTED",
+      "exception": "AssertionError"
+    },
+    {
+      "case": "wrong_enum",
+      "result": "REJECTED",
+      "exception": "AssertionError"
+    },
+    {
+      "case": "unknown_key",
+      "result": "REJECTED",
+      "exception": "AssertionError"
+    },
+    {
+      "case": "wrong_seed",
+      "result": "REJECTED",
+      "exception": "AssertionError"
+    },
+    {
+      "case": "oversize",
+      "result": "REJECTED",
+      "exception": "AssertionError"
+    },
+    {
+      "case": "trailing_garbage",
+      "result": "REJECTED",
+      "exception": "JSONDecodeError"
+    },
+    {
+      "case": "missing_fixture",
+      "result": "REJECTED",
+      "exception": "AssertionError"
+    },
+    {
+      "case": "aggregate_payload_oversize",
+      "result": "REJECTED",
+      "exception": "AssertionError"
+    }
+  ],
+  "raw_junit_cases": [
+    {
+      "case": "valid",
+      "junit_status": "PASS"
+    },
+    {
+      "case": "status_suffix",
+      "junit_status": "FAIL"
+    },
+    {
+      "case": "terminal_suffix",
+      "junit_status": "FAIL"
+    }
+  ]
+}

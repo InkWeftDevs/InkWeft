@@ -1,0 +1,231 @@
+{
+  "schema": 1,
+  "status": "NO_OPEN_CODE_BLOCKER_IN_REVIEWED_SCOPE_ACTIVATION_BINDING_PENDING",
+  "scope": "INDEPENDENT_READ_ONLY_CONTROLLER_REVIEW_AND_PURE_PARSER_SYNTHETIC_CHECKS_NOT_NATIVE_EXECUTION",
+  "final_controller": "bound-control-final",
+  "final_preflight": "offline-check-final/preflight.json",
+  "source_identities": {
+    "C0": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+    "C1": "a9ccf2cc727a7957e8fb00115f0060d80b287de1",
+    "readiness": "03a335f3d92e3682080f3ce7e4c661434956c075"
+  },
+  "findings": [
+    {
+      "id": "H1",
+      "severity": "blocking_before_fix",
+      "status": "RESOLVED_IN_FINAL_BYTES",
+      "problem": "Previous marker regex silently skipped an additional truncated, empty, or array marker while accepting the complete12-record block.",
+      "resolution": "Detect every KVM/LIBRARY/INDEX prefix, parse full original tail and enforce closed schema/cardinality before forwarding. EvidenceIncomplete retains raw JUnit PASS while host is INCOMPLETE.",
+      "validation": "Independent final parser valid block plus17 negatives; existing final checker mocked method classification PASS."
+    },
+    {
+      "id": "H2",
+      "severity": "blocking_before_fix",
+      "status": "RESOLVED_IN_FINAL_BYTES",
+      "problem": "Previous packager skipped missing fixed evidence files and could report complete=true with no original method logs.",
+      "resolution": "Required-file list includes18 sets of raw/records/XML and forwarding only for8 common calls; missing_files is emitted in summary/packaging/FINAL. Declared complete execution becomes EVIDENCE_INCOMPLETE; original method/JUnit results are retained.",
+      "validation": "Read final actual synthetic packager receipt all18_missing_raw: method-01-C1-instrumentation.log missing, EVIDENCE_INCOMPLETE, packaging_complete false, original18 JUnit PASS preserved."
+    },
+    {
+      "id": "H3",
+      "severity": "minor_integrity_hardening",
+      "status": "RESOLVED_IN_FINAL_BYTES",
+      "problem": "Raw instrumentation status code regex previously accepted numeric prefix with trailing junk.",
+      "resolution": "Full-line status-code matching and total prefix count equality; exactly one valid terminal line.",
+      "validation": "Independent pure raw_result rejects appended status/terminal suffix junk."
+    }
+  ],
+  "open_code_blockers": [],
+  "marker_review": {
+    "allowed_marker_kinds": 7,
+    "records_per_common_method": 12,
+    "max_payload_bytes": 65536,
+    "max_total_payload_bytes_per_method": 262144,
+    "closed_object_keys": true,
+    "fixed_array_lengths": true,
+    "reject_duplicate_keys_and_nonfinite": true,
+    "restricted_strings_only": true,
+    "payload_original_substrings_preserved": true,
+    "all_payloads_validated_before_forwarding": true,
+    "identity_context": [
+      "run_id",
+      "run_attempt",
+      "workflow_sha",
+      "source_commit",
+      "source_spec_sha256",
+      "method_plan_sha256",
+      "probe_sha256",
+      "source_manifest_sha256",
+      "apk_sha256",
+      "installed_apk_sha256",
+      "signer_sha256",
+      "apk_receipt_sha256",
+      "install_log_sha256",
+      "environment_sha256",
+      "raw_log_sha256",
+      "records_sha256"
+    ],
+    "ordered_footer": "sequence0..11, marker names, original JSON payload byte counts+SHA256 and ordered list SHA256"
+  },
+  "packaging_review": {
+    "explicit_text_allowlist": true,
+    "utf8_decode_and_no_symlink": true,
+    "secret_patterns_refuse_file": true,
+    "total_cap_including_manifest_and_packaging_bytes": 20971520,
+    "no_truncation": true,
+    "retention_days": 3,
+    "APK_AAR_database_private_key_environment_dump_full_logcat_not_allowed": true,
+    "presence_is_not_semantic_validation": "Packager verifies existence/byte hashes, not validity of every JUnit/log/JSON body. Synthetic complete fixtures do not prove native success."
+  },
+  "budget_cleanup_guard_review": {
+    "anchor": "First runner step local clock, explicitly not actual job start",
+    "cumulative_minutes": {
+      "setup": 30,
+      "correctness": 35,
+      "common": 50,
+      "work": 55,
+      "job_hard_timeout": 60
+    },
+    "clock_reset_refused": true,
+    "phase_commands_bounded": true,
+    "cleanup_package_upload_caps_seconds": [
+      47,
+      47,
+      47,
+      120
+    ],
+    "total_tail_cap_seconds": 261,
+    "margin_to_five_minutes_seconds": 39,
+    "single_prep_before_guard_pending": true,
+    "attempt_guard": 1,
+    "automatic_retries": false,
+    "all_prior_actions_and_methods_must_pass": true,
+    "process_isolation": "Data package natural absence observed within original3s; no helper/force-stop fallback",
+    "cleanup": "Owned UID/PID/start-time/group checks, KVM node identity and exact ACL restoration, both trap+always required",
+    "minimal_kvm_grant": "only caller UID rw with --no-mask when necessary"
+  },
+  "independent_evidence": {
+    "final_handoff_files_rehashed": 19,
+    "preflight_input_hashes_all_match": true,
+    "authorization_hashes_and_source_manifest_canonical_hashes_recomputed": true,
+    "bound_matches_template_after_only_source_hash_substitution": true,
+    "final_preflight_groups": 10,
+    "final_preflight_all_pass": true,
+    "final_packager_synthetic_cases": 13,
+    "independent_parser_cases": 18,
+    "independent_raw_junit_cases": 3
+  },
+  "remaining_activation_gates": [
+    "Root binds a real unique prep-parent SHA in the branch-specific workflow guard; the reviewed proposal intentionally still contains the zero guard.",
+    "Root supplies and verifies EXECUTION_SHA256SUMS and the exact active workflow/source/control commit before its single attempt1 activation. No active/run/job identity is fabricated here."
+  ],
+  "limits": [
+    "No network, CI, Gradle, new APK build, ADB, emulator, privilege mutation, production edit, probe edit or workflow activation was performed by this review.",
+    "Pure-parser checks use an old valid raw library log solely as a schema fixture; no old/new performance sample pooling.",
+    "Forwarding footer completion is per-method only. Consumers must also require every required method and install group, final status, cleanup, missing_files empty, packaging complete and matching source/plan hashes.",
+    "Log-derived screening does not establish original ZIP/APK bytes. The real run still needs original artifact verification and native result analysis.",
+    "The hard60-minute job timeout can interrupt tail steps; a missing cleanup/artifact receipt remains unconfirmed, never assumed success.",
+    "Screening18 methods does not close unrelated full20k rapid-input gate or formal acceptance."
+  ],
+  "final_inputs": [
+    {
+      "path": "bound-control-final/authorization.json",
+      "bytes": 1083,
+      "sha256": "acdcce3b571a891ddbee3189d2ae241f6769bb2691403c201c7c1243b8cc2b3a"
+    },
+    {
+      "path": "bound-control-final/cleanup.py",
+      "bytes": 4068,
+      "sha256": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576"
+    },
+    {
+      "path": "bound-control-final/package.py",
+      "bytes": 8440,
+      "sha256": "6662193ae687c097df6d4e748c348d7a83a3e702b8c44ca1ce79b86ee27d449a"
+    },
+    {
+      "path": "bound-control-final/run.py",
+      "bytes": 42236,
+      "sha256": "3b88cda9aabda1eb261a4d1c860cde11ce73fd4d3b22223bac34676aa21febec"
+    },
+    {
+      "path": "bound-control-final/workflow.proposed.yml",
+      "bytes": 8041,
+      "sha256": "26fa7448371fdb56b6874091f95a78f9e196f8d726382fd9ef104f8a3bd5dd91"
+    },
+    {
+      "path": "frozen-readiness/C0-source-manifest.json",
+      "bytes": 174026,
+      "sha256": "e0874e09a471c8157d9d3e0c72f05c9cf42dbd5ca3721679f63be94e5c5fba5b"
+    },
+    {
+      "path": "frozen-readiness/C1-source-manifest.json",
+      "bytes": 174622,
+      "sha256": "befb5ccec0a8863af5a1709c523470d6d5c7e9e827f2b5e804b0468f98232533"
+    },
+    {
+      "path": "frozen-readiness/PLAN.md",
+      "bytes": 3803,
+      "sha256": "64921517343ba2dfddf3cba3f319b15b61757501744c87f43d4217bd37d4a08a"
+    },
+    {
+      "path": "frozen-readiness/candidate-source-delta.json",
+      "bytes": 1973,
+      "sha256": "ae950bc8967a26dac56a0253604e1b0705d3f2fecbfdc0e84fd7a48d0c572c55"
+    },
+    {
+      "path": "frozen-readiness/marker-contract.json",
+      "bytes": 21274,
+      "sha256": "3f3bc2a6bc5b0a663a4e03a54be65c2193a8ed868ba31014e344a95595d6aa4d"
+    },
+    {
+      "path": "frozen-readiness/method-plan.json",
+      "bytes": 13636,
+      "sha256": "7dd485f678aa16d89fc0a1ef3e69421a376b4054cc31918f2b393c8212033284"
+    },
+    {
+      "path": "frozen-readiness/original-protocol.json",
+      "bytes": 1942,
+      "sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+    },
+    {
+      "path": "frozen-readiness/prepare_sources.py",
+      "bytes": 2965,
+      "sha256": "7e42199cd01da917a0a141982a963fd6db51f6411c7516c85ea27406a0744ce5"
+    },
+    {
+      "path": "frozen-readiness/source-spec.json",
+      "bytes": 1348,
+      "sha256": "e57296ec73cea28ba22c5ee5871d77a0e5b22f0d0503c2bd453b987653ed6499"
+    },
+    {
+      "path": "check_screen.py",
+      "bytes": 21400,
+      "sha256": "a2a3812f5923a2d9932b01edf9e11a164856e20974517790061d8c3e101240b5"
+    },
+    {
+      "path": "offline-check-final/preflight.json",
+      "bytes": 8326,
+      "sha256": "b035265e03fd4c4c8339b949179eb5b61b2f297018728a5b980bdade5e9c041a"
+    },
+    {
+      "path": "source-freeze-receipt.json",
+      "bytes": 1292,
+      "sha256": "9947a0c2140fb5a5189912c5877dae047b1dca8da5a273e840f861117f2794fc"
+    },
+    {
+      "path": "source-reconstruction.log",
+      "bytes": 286,
+      "sha256": "a585852b5e280424c0cd390dfa57c3c293d86240c6a2019d726f24071c75ce70"
+    },
+    {
+      "path": "local-manifest-validation.json",
+      "bytes": 574,
+      "sha256": "bef626ca81bd4761db50699d8f8194c9ccee542535b831b8fd93b63e94175bee"
+    }
+  ],
+  "supporting_files": [
+    "independent-parser-check.json",
+    "final-input-verification.json"
+  ]
+}
