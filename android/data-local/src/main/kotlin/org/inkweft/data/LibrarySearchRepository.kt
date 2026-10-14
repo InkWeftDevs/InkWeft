@@ -59,6 +59,7 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
         require(request.offset>=0&&request.pageSize in 1..500)
         trace?.event("read-start")
         val reportUdf=udfObserver;val udf=reportUdf?.let{LibrarySearchUdfRead()}
+        val foldedAsciiStart=foldedAsciiSearchStart(request.query)
         var primaryFailure:Throwable?=null
         // Requery's deferred transaction pins one WAL read snapshot without joining Room's
         // author-write queue. Keep all native calls on this thread until endTransaction.
@@ -73,22 +74,22 @@ class LibrarySearchRepository(private val db:NoteDatabase) {
                 var scanned=0
                 if(udf==null){
                     reader.addFunction("library_contains",1,{args,result->
-                        active.ensureActive();result.set(if(args.getString(0).orEmpty().contains(request.query,true))1 else 0)
+                        active.ensureActive();result.set(if(containsLibraryText(args.getString(0).orEmpty(),request.query,foldedAsciiStart))1 else 0)
                     })
                     reader.addFunction("library_source_contains",1,{args,result->
                         active.ensureActive();scanObserver?.invoke(request.query,++scanned)
-                        result.set(if(args.getString(0).orEmpty().contains(request.query,true))1 else 0)
+                        result.set(if(containsLibraryText(args.getString(0).orEmpty(),request.query,foldedAsciiStart))1 else 0)
                     })
                 }else{
                     // Same arity, flags, Boolean operation and cancellation checks. Separate
                     // names identify fields without an extra SQL argument or text logging.
                     for((field,totals) in listOf("title" to udf.title,"body" to udf.body,"tags" to udf.tags))
                         reader.addFunction("library_contains_$field",1,{args,result->
-                            active.ensureActive();result.set(totals.contains(args,request.query))
+                            active.ensureActive();result.set(totals.contains(args,request.query,foldedAsciiStart))
                         })
                     reader.addFunction("library_source_contains",1,{args,result->
                         active.ensureActive();scanObserver?.invoke(request.query,++scanned)
-                        result.set(udf.source.contains(args,request.query))
+                        result.set(udf.source.contains(args,request.query,foldedAsciiStart))
                     })
                 }
                 // SQLite NOCASE/lower() are ASCII-only. A big-endian UTF-16 blob compares
@@ -281,7 +282,7 @@ internal class LibrarySearchUdfTotals {
     var conversionWallNs=0L;var conversionCpuNs=0L
     var containsWallNs=0L;var containsCpuNs=0L
     var timingValid=true
-    fun contains(args:SQLiteDatabase.Function.Args,query:String):Int {
+    fun contains(args:SQLiteDatabase.Function.Args,query:String,foldedAsciiStart:Int):Int {
         calls++
         // Each interval is synchronous on this native callback's thread. Clock calls
         // themselves add overhead; these totals are causal diagnostics, not benchmarks.
@@ -293,7 +294,7 @@ internal class LibrarySearchUdfTotals {
         }else timingValid=false
         utf16Chars+=text.length
         val containsWall=System.nanoTime();val containsCpu=android.os.Debug.threadCpuTimeNanos()
-        val found=text.contains(query,true)
+        val found=containsLibraryText(text,query,foldedAsciiStart)
         val containsCpuEnd=android.os.Debug.threadCpuTimeNanos();val containsWallEnd=System.nanoTime()
         if(containsCpu>=0&&containsCpuEnd>=containsCpu&&containsWallEnd>=containsWall){
             containsCpuNs+=containsCpuEnd-containsCpu;containsWallNs+=containsWallEnd-containsWall

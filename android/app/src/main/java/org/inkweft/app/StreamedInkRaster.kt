@@ -149,7 +149,7 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
                         if(!world&&!embedded)clipRect(0f,0f,1000f,1414f)
                     }}
                     val renderer=InkBrushes.renderer()
-                    val pencil=PencilTileRenderer(min(.5f,(1/(factor*scale)).toFloat()),false){context.ensureActive()}
+                    var pencil:PencilTileRenderer?=null
                     var decoded=0;var nativeStrokeBuilds=0
                     try{
                         if(dirty.isNotEmpty()){
@@ -166,14 +166,17 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
                                     for(i in dirty){if(!inkBounds.intersects(regions[i]))continue
                                         val painter=painters.getValue(i);val saved=painter.save()
                                         try{stroke.cuts.forEach{painter.clipOutPath(VisibleInkGeometry.cutPath(it))}
-                                            if(stroke.pen==InkPen.PENCIL)pencil.draw(painter,stroke)else{
+                                            if(stroke.pen==InkPen.PENCIL){
+                                                val graphite=pencil?:PencilTileRenderer(min(.5f,(1/(factor*scale)).toFloat()),false){context.ensureActive()}.also{pencil=it}
+                                                graphite.draw(painter,stroke)
+                                            }else{
                                                 val ink=nativeStroke?:(diagnostic?.measureNative{InkBrushes.stroke(stroke)}?:InkBrushes.stroke(stroke)).also{nativeStroke=it;nativeStrokeBuilds++}
                                                 renderer.draw(painter,ink,matrix)
                                             }
                                         }finally{painter.restoreToCount(saved)}
                                     }
                                 }
-                                pencil.clear()
+                                pencil?.clear()
                             }
                         }
                         source.repository.validateRenderRevision(source.page,source.revision,source.authoringRevision)
@@ -193,7 +196,7 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
                             diagnostic?.stamp(RasterFrameDiagnostics.Stage.PUBLISHED)
                             published=true;notifyChanged(diagnostic)
                         }}
-                    }finally{pencil.clear()}
+                    }finally{pencil?.clear()}
                 }}catch(_:CancellationException){diagnostic?.stamp(RasterFrameDiagnostics.Stage.CANCELLED);RenderResources.cancelledJobs.incrementAndGet()}
                 catch(_:RenderBudgetBusy){diagnostic?.stamp(RasterFrameDiagnostics.Stage.BUDGET_BUSY);if(generation==token){frame?.let(::release);frame=null;delay(500);notifyChanged(diagnostic)}}
                 catch(_:Exception){diagnostic?.stamp(RasterFrameDiagnostics.Stage.FAILED);if(generation==token){rejected=key;failed()}}
