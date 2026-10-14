@@ -1,0 +1,226 @@
+{
+  "status": "PASS_SYNTHETIC_REVIEW",
+  "scope": "independent synthetic malformed-input and arithmetic checks only",
+  "source_sha256": {
+    "analyze.py": "b57adcc7017526bdf9d10dd31631cc08de3c0b9747f0fd86e84aaf2a0e04535e",
+    "boundary_segments.py": "fd1c22004bb91e7e6673a6ac59eb0f2c2413c9f8ef454a00b2950c0581bbd1b7",
+    "test_analyze.py": "70151510f8032a87ad6af4ceac6817c2e3c5150fe3749a8a111cc4cdcd1f6fb4"
+  },
+  "arithmetic": {
+    "quantiles_30_reverse": {
+      "p50": 15,
+      "p95": 29,
+      "max": 30,
+      "method": "nearest-rank n=30; indices 14,28,29"
+    },
+    "known_same_thread": {
+      "name": "known",
+      "begin": {
+        "wallNs": 1000000,
+        "threadCpuNs": 2000000,
+        "threadId": 3
+      },
+      "end": {
+        "wallNs": 8500000,
+        "threadCpuNs": 2250000,
+        "threadId": 3
+      },
+      "wallMs": 7.5,
+      "threadCpuMs": 0.25,
+      "cpuMeaning": "same-thread counter, includes intervening work"
+    },
+    "known_cross_thread": {
+      "name": "known",
+      "begin": {
+        "wallNs": 1000000,
+        "threadCpuNs": 2000000,
+        "threadId": 3
+      },
+      "end": {
+        "wallNs": 8500000,
+        "threadCpuNs": 2250000,
+        "threadId": 4
+      },
+      "wallMs": 7.5,
+      "threadCpuMs": null,
+      "cpuMeaning": "unavailable: endpoint threads differ"
+    },
+    "twelve_segment_ns": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      5,
+      5,
+      1,
+      1,
+      2
+    ],
+    "segment_sum_ns": 21,
+    "whole_call_ns": 23,
+    "varying_whole_call_ns": [
+      37,
+      51,
+      52
+    ]
+  },
+  "faults": [
+    {
+      "case": "start_revision_boolean",
+      "accepted": false,
+      "error": "revision integer types"
+    },
+    {
+      "case": "final_revision_float",
+      "accepted": false,
+      "error": "revision integer types"
+    },
+    {
+      "case": "committed_count_float",
+      "accepted": false,
+      "error": "count integer types"
+    },
+    {
+      "case": "drop_count_boolean",
+      "accepted": false,
+      "error": "count integer types"
+    },
+    {
+      "case": "sqlite_setting_boolean",
+      "accepted": false,
+      "error": "fixture integer types"
+    },
+    {
+      "case": "fixture_count_float",
+      "accepted": false,
+      "error": "fixture integer types"
+    },
+    {
+      "case": "active_missing_connection_lifecycle",
+      "accepted": false,
+      "error": "ACTIVE complete lifecycle"
+    },
+    {
+      "case": "active_snapshot_closed_other_thread",
+      "accepted": false,
+      "error": "ACTIVE native connection changed threads"
+    },
+    {
+      "case": "active_extra_manual_hold",
+      "accepted": false,
+      "error": "ACTIVE complete lifecycle"
+    },
+    {
+      "case": "unsubmitted_writer_exit",
+      "accepted": false,
+      "error": "writer ledger"
+    },
+    {
+      "case": "idle_control_read_identity",
+      "accepted": false,
+      "error": "read identity by owner"
+    },
+    {
+      "case": "held_control_read_identity",
+      "accepted": false,
+      "error": "read identity by owner"
+    },
+    {
+      "case": "active_control_read_identity",
+      "accepted": false,
+      "error": "read identity by owner"
+    },
+    {
+      "case": "reader_revision_boolean",
+      "accepted": false,
+      "error": "revision integer types"
+    },
+    {
+      "case": "cleanup_count_boolean",
+      "accepted": false,
+      "error": "test resource cleanup"
+    },
+    {
+      "case": "read_drop_count_boolean",
+      "accepted": false,
+      "error": "count integer types"
+    },
+    {
+      "case": "read_counter_float",
+      "accepted": false,
+      "error": "integer array bounds/types"
+    },
+    {
+      "case": "active_wrong_query_owner",
+      "accepted": false,
+      "error": "read identity by owner"
+    },
+    {
+      "case": "active_wrong_query_read_identity",
+      "accepted": false,
+      "error": "read identity by owner"
+    },
+    {
+      "case": "active_native_thread_switch",
+      "accepted": false,
+      "error": "ACTIVE native connection changed threads"
+    },
+    {
+      "case": "active_insufficient_query_coverage",
+      "accepted": false,
+      "error": "ACTIVE page query failed complete coverage"
+    },
+    {
+      "case": "held_changed_snapshot_revision",
+      "accepted": false,
+      "error": "held revision not pinned"
+    },
+    {
+      "case": "held_cpu_counter_reversed",
+      "accepted": false,
+      "error": "HELD_SNAPSHOT reads: same-thread wall/CPU decreased"
+    },
+    {
+      "case": "save_end_precedes_return",
+      "accepted": false,
+      "error": "IDLE/0: caller end precedes return"
+    },
+    {
+      "case": "author_boundary_task_mismatch",
+      "accepted": false,
+      "error": "IDLE/0: writer task token mismatch"
+    },
+    {
+      "case": "author_premature_success",
+      "accepted": false,
+      "error": "IDLE/0: premature success marker"
+    },
+    {
+      "case": "author_boundary_clock_reversed",
+      "accepted": false,
+      "error": "IDLE boundaries: same-thread wall/CPU decreased"
+    },
+    {
+      "case": "writer_cleanup_incomplete",
+      "accepted": false,
+      "error": "test resource cleanup"
+    },
+    {
+      "case": "held_owner_changed",
+      "accepted": false,
+      "error": "read identity by owner"
+    },
+    {
+      "case": "idled_snapshot_not_pinned",
+      "accepted": false,
+      "error": "IDLE pin lifecycle"
+    }
+  ],
+  "valid_equal_stamp_read_end_thread_change": {
+    "accepted": true
+  },
+  "native_execution": false
+}

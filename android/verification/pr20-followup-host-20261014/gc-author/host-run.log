@@ -1,0 +1,1 @@
+{"status":"PASS_COMPILED_RECORDER_HOST_CHECK_ONLY","scenarios":5,"background_tasks_unlogged_but_awaited":true,"capacity":512,"overflow_rejected_after_real_drain":true,"tuple_values_and_types_exact":true,"android_json_runtime_tested":false,"android_native_execution":false}

@@ -1,0 +1,48 @@
+{
+  "scope": "UNCOMMITTED_REVIEW_CANDIDATE",
+  "base_head": "28104e1334c79e68b4f9713cbb2aa2e3a0fa9993",
+  "files": {
+    "candidate-production": {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt",
+      "base_sha256": "e7241f4329ece5148f8d1e6f740e102f8326bd4ef0db7f0a6f0a2871e12c9950",
+      "candidate_sha256": "115cb7ea6f3d429d1637ca1be05bbe09ab3a68d2fac5ce617c4cf3519362b52f",
+      "patch_file": "candidate-production.patch",
+      "patch_sha256": "85147715c42b1f006fbf980413fb25926e6896e7b93c3d54d0beb94d71457086"
+    },
+    "semantic-check": {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/RasterReadCacheTest.kt",
+      "base_sha256": "8a4d1bef8092ba418563695dd5709602be00033a37a7658f50602d6186661894",
+      "candidate_sha256": "2467d9dffb61e6d987654ad37d83d4dfc74d3ee0c3d3cad92d8feacdae7ea1dd",
+      "patch_file": "semantic-check.patch",
+      "patch_sha256": "1f4b42c208a5765134b8a281f7348dd597be9fe46b467d003338b72acaf15715"
+    },
+    "common-diagnostic": {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RasterCausalDiagnosticsTest.kt",
+      "base_sha256": "f7a1424cfec939344584c86a1c11005d9f5d70447d31651bc9764907938cccc1",
+      "candidate_sha256": "9625877ead48ded748ab600587f92738f8711ff1fefdcd825e0bbb6b35ece561",
+      "patch_file": "common-diagnostic.patch",
+      "patch_sha256": "2bc0208a7499110949500be680ddc44998669cbd9e9ff41a95b992a34ec1ee4e"
+    }
+  },
+  "compiled": true,
+  "native_executed": false,
+  "common_app_tests": {
+    "android/app/src/androidTest/java/org/inkweft/app/OwnedRasterJobs.kt": "00c38f1f951ad4572e23fb3e7d9a412bd723275d52c68298d4723134e5d51d18",
+    "android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt": "ea3f320d3189e053a1e316dc399eece4afb4792ace36cf0b16087330027beb98",
+    "android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt": "38fd3638d88ed3b21b23442a3759c61a0a3733af7c1619dbbf0bafaac419aa5f",
+    "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt": "6b61b7bbe518729ffc65195f72bfb4a4fe7e84139fbf896e5b687fbe29f756e5",
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt": "385e5618cdb95d91084054da9724f012b57f63e4e77a33d97bf1588681ba792a",
+    "android/app/src/androidTest/java/org/inkweft/app/RasterCausalDiagnosticsTest.kt": "9625877ead48ded748ab600587f92738f8711ff1fefdcd825e0bbb6b35ece561"
+  },
+  "control_definition": "Same final production tree as candidate, excluding only candidate-production.patch. Same common test sources/seed allowlist, resources, dependencies and build configuration. Final source commits/manifests still pending owner freeze.",
+  "candidate_semantics": "Ordered snapshot-ID/revision check still precedes all-miss branch; every put retains original batch spatialKey and order; no epoch, layer, filtering, budget retry, cursor, or partial-hit change.",
+  "host_compile_evidence": "/workspace/scratch/pr20-save-snapshot-control-20261014/host",
+  "host_compile_reported_by_owner": {
+    "status": "PASS",
+    "seconds": 374.626,
+    "exit_code": 0,
+    "source_build_inputs": 761,
+    "all_start_end_hashes_equal": true,
+    "native_executed": false
+  }
+}

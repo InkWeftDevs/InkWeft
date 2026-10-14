@@ -1,0 +1,57 @@
+{
+  "scope": "reviewable source and host validation only; native not executed",
+  "source": "/workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySnapshotHoldDiagnosticsTest.kt",
+  "source_sha256": "7a62c5263d94730884b038bc150d9e6f495a08b5500caadaa846954ec927e9df",
+  "files": {
+    "README.md": {
+      "bytes": 4066,
+      "sha256": "a76ac760b8fcb39e4341658c44a40b54c0fe631f24bedca59535352bd5aefb27"
+    },
+    "plan.md": {
+      "bytes": 6010,
+      "sha256": "efd77ba3586dc4b6b32d9d4507c1f660079c1776dc1074416932f7c3041832d3"
+    },
+    "contract.json": {
+      "bytes": 6123,
+      "sha256": "a76cec96bbf0add437971938e06e4f54e9e811d43b2f30386d53b0986ba423f7"
+    },
+    "success-schema.json": {
+      "bytes": 33697,
+      "sha256": "64e59d822d583b7eddcbc2b25609054e06cee14d5c1b84d79dcb5b33c50b6d32"
+    },
+    "schema-check.txt": {
+      "bytes": 51,
+      "sha256": "66a2dd046afb0eaacd3e1cb972782270d45cd5ce6c2a9ba336b6309b3bbb6833"
+    },
+    "schema-check.json": {
+      "bytes": 257,
+      "sha256": "cfc7ccb41d10c22109d3d9ca436abe7e14fa56c6c6ad4b07ae2dc0fbed5db9c3"
+    },
+    "ValidateSnapshotCommands.java": {
+      "bytes": 1469,
+      "sha256": "f295ebe5ba6d4c307f7e7a1196aa38cb899a263ca8597012ce033938a4b875a5"
+    },
+    "constructor-proof.json": {
+      "bytes": 780,
+      "sha256": "22adffe3431d8b210a86baa5398d1cdb4d3beeb40fbd5d2eeb3b787d549e9d7a"
+    },
+    "host/compile.py": {
+      "bytes": 2119,
+      "sha256": "77af10227a2b534032f82c4a0c0a416d0228f6d65d6923eeca62ff01d1aae430"
+    },
+    "host/compile1-start.json": {
+      "bytes": 109910,
+      "sha256": "3ba84dcf357f5b3758fb1d3c19060c09954db72a91f68c654af96ce8652f3070"
+    },
+    "host/compile1-result.json": {
+      "bytes": 109768,
+      "sha256": "811ab3d73ff0ce692383a8c12fabf8ad126c9a26f13a10558c4a7f66c659f52c"
+    },
+    "host/compile1.log": {
+      "bytes": 32156,
+      "sha256": "7014bac6f1d46bbddff884584d8fac3e5479e5a0104165830b545805a36120da"
+    }
+  },
+  "historical_frozen_analyzer_sha256": "fd1c22004bb91e7e6673a6ac59eb0f2c2413c9f8ef454a00b2950c0581bbd1b7",
+  "historical_90_test_sha256": "cd1b0ba9e112a19e16fdea36b1b867183c890a4addb8c6ebfdfe7986f4a73038"
+}

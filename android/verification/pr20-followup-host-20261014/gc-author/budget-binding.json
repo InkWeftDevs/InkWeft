@@ -1,0 +1,11 @@
+{
+  "budget_path": "/workspace/scratch/pr20-gc-author-only-budget-20261014/budget.json",
+  "budget_sha256": "ca1a347f93b31a908c2f64027d3c215b7ab5058e83a7081c0a3b336e25b1ce52",
+  "source_sha256": "597bed443289598870d063af99731a60db48ca0e38d8e3576b24fcd995cf4055",
+  "event_schema": "author-boundary-v1",
+  "accounted_upper_bytes": 19506916,
+  "limit_bytes": 20971520,
+  "remaining_bytes": 1464604,
+  "status": "DRAFT_STATIC_GC_BUDGET_ONLY_NOT_MERGED_SCOPE_OR_NATIVE",
+  "merged_scope_verified": false
+}

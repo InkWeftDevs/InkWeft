@@ -1,0 +1,19 @@
+# Independent synthetic review
+
+Final re-review: repaired wrapper SHA `b57adcc7017526bdf9d10dd31631cc08de3c0b9747f0fd86e84aaf2a0e04535e` rejects all 30 independent fault cases. It accepts the valid equal-timestamp read-end thread change. No unresolved blocking issue was found in this review. The frozen `fd1c220…` module remains unchanged. See current `results.json`; the original fault evidence below remains preserved separately.
+
+Reviewed wrapper SHA `8a20f3bcdb4889579e90eef8eedd80254beab50d487467b81e0e399831fd5982`. The original four unittest cases (including their 13 fault subcases) passed. `boundary_segments.py` is byte-identical to the frozen analyzer: SHA `fd1c22004bb91e7e6673a6ac59eb0f2c2413c9f8ef454a00b2950c0581bbd1b7`. Nothing in that frozen implementation was modified.
+
+`review_checks.py` independently recomputes known arithmetic and probes ten invalid inputs. Original observations are frozen in `results-original.json`; `analyze-reviewed-original.py` preserves the reviewed wrapper. All input data are synthetic; no Android build, instrumentation, network or CI action was run.
+
+The arithmetic passes: reverse-ordered integers 30 through 1 produce nearest-rank p50/p95/max 15/29/30. A known endpoint pair produces 7.5 ms wall and 0.25 ms same-thread CPU; changing only the endpoint thread makes CPU null. The synthetic author's twelve disjoint segments are `[1,1,1,1,1,1,1,5,5,1,1,2]` ns, totaling 21 ns, with 1 ns before the request and 1 ns after the return making the complete call 23 ns. No component quantiles were added or subtracted.
+
+The reviewed wrapper incorrectly accepted all ten faults as `COMPLETE_CONTROLLED_TRACE_ONLY_PENDING_TERMINAL_AUDIT`:
+
+1. ACTIVE read lifecycle omitted read-requested, read-start, connection-open and connection-closed. It also accepted a different thread for snapshot-closed, and a fabricated manual hold-enter control event. Require the complete applicable search-stage sequence and exact owners/read identity, monotonic lifecycle, and one native thread from connection-open through connection-closed. The calling read-requested and post-coroutine read-end endpoints need not share that native thread.
+2. A writer-run-exit with sample -1 and no submission was accepted because the ledger checks that each submission has an exit, but permits extra exits. Require matching submitted/terminal task sets and unique terminals, retaining permitted real background transaction events.
+3. Python's numeric equality accepted booleans/floats in six declared integer locations: startRevision, finalRevision, committedSaves, droppedEvents, fixture row counts and SQLite auto_vacuum. Use explicit integer-type validation before equality. Also cover reader revision witnesses and the other corresponding scalar fields.
+
+These are wrapper validation gaps, not numerical errors in the frozen twelve-segment implementation. Controller JSON schema success must not substitute for the numerical analyzer's own validation. A repaired wrapper still requires actual complete native traces and separate JUnit/process/cleanup audit before any native-result claim; the three controlled arms are not a public acceptance or B/C causal comparison.
+
+The final repair also validates control read ID 0 versus search read ID 1. Native-thread membership uses the complete stage sequence's connection-open through connection-closed indices, not an inclusive timestamp filter; this allows a later read-end on another thread when timestamps happen to be equal. Extended faults cover owner/read identity, reader revision types, cleanup counters, CPU reversal, insufficient ACTIVE coverage, incorrect held revision, incomplete writer cleanup, author task mismatch and premature transaction success. A second arithmetic vector varies complete save durations from 23 through 52 ns while leaving the disjoint author segments fixed: wrapper p50/p95/max are exactly 37/51/52 ns, and outlier order is sample 29 through 0.

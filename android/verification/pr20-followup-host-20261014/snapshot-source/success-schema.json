@@ -1,0 +1,1337 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Successful marker payload schemas only. Whole-method marker order/count, author/task/transaction/time/thread chains, read same-thread lifecycle/coverage and no failed stages require semantic validation; this schema alone does not establish complete evidence.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/RESULT"
+    },
+    {
+      "$ref": "#/$defs/EVENTS"
+    },
+    {
+      "$ref": "#/$defs/READS"
+    },
+    {
+      "$ref": "#/$defs/END"
+    }
+  ],
+  "$defs": {
+    "RESULT": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": 1
+        },
+        "mode": {
+          "enum": [
+            "IDLE",
+            "HELD_SNAPSHOT",
+            "ACTIVE_SEARCH"
+          ]
+        },
+        "diagnosticOnly": {
+          "const": true
+        },
+        "seed": {
+          "const": 4101
+        },
+        "readiness": {
+          "enum": [
+            "reader-closed",
+            "main-snapshot-pinned",
+            "first-source-check"
+          ]
+        },
+        "fixture": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "rowCounts": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "notes": {
+                  "const": 501
+                },
+                "note_revisions": {
+                  "const": 501
+                },
+                "notebook_workspace": {
+                  "const": 501
+                },
+                "notebook_pages": {
+                  "const": 20001
+                },
+                "page_search_text": {
+                  "const": 20000
+                },
+                "library_search_pending": {
+                  "const": 20000
+                }
+              },
+              "required": [
+                "notes",
+                "note_revisions",
+                "notebook_workspace",
+                "notebook_pages",
+                "page_search_text",
+                "library_search_pending"
+              ]
+            },
+            "logicalSha256": {
+              "const": "1c69bba77781ba0c0b642309b8e869ff21c9a440fd7714894e67c572b95c9dcf"
+            },
+            "writerSqlite": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "page_size": {
+                  "const": 1024
+                },
+                "auto_vacuum": {
+                  "const": 1
+                },
+                "journal_mode": {
+                  "const": "wal"
+                },
+                "synchronous": {
+                  "const": 2
+                }
+              },
+              "required": [
+                "page_size",
+                "auto_vacuum",
+                "journal_mode",
+                "synchronous"
+              ]
+            }
+          },
+          "required": [
+            "rowCounts",
+            "logicalSha256",
+            "writerSqlite"
+          ]
+        },
+        "startRevision": {
+          "const": 1
+        },
+        "finalRevision": {
+          "const": 31
+        },
+        "readerBeforeRevision": {
+          "enum": [
+            -1,
+            1
+          ]
+        },
+        "readerAfterRevision": {
+          "enum": [
+            -1,
+            1
+          ]
+        },
+        "saves": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 0
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 2
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 1
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 3
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 2
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 4
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 3
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 5
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 4
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 6
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 5
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 7
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 6
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 8
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 7
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 9
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 8
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 10
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 9
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 11
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 10
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 12
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 11
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 13
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 12
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 14
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 13
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 15
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 14
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 16
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 15
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 17
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 16
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 18
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 17
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 19
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 18
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 20
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 19
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 21
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 20
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 22
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 21
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 23
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 22
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 24
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 23
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 25
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 24
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 26
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 25
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 27
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 26
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 28
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 27
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 29
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 28
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 30
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "const": 29
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 600000000000
+                },
+                {
+                  "const": 31
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 5,
+              "maxItems": 5
+            }
+          ],
+          "items": false,
+          "minItems": 30,
+          "maxItems": 30
+        }
+      },
+      "required": [
+        "schema",
+        "mode",
+        "diagnosticOnly",
+        "seed",
+        "readiness",
+        "fixture",
+        "startRevision",
+        "finalRevision",
+        "readerBeforeRevision",
+        "readerAfterRevision",
+        "saves"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "IDLE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "readiness": {
+                "const": "reader-closed"
+              },
+              "readerBeforeRevision": {
+                "const": 1
+              },
+              "readerAfterRevision": {
+                "const": -1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "HELD_SNAPSHOT"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "readiness": {
+                "const": "main-snapshot-pinned"
+              },
+              "readerBeforeRevision": {
+                "const": 1
+              },
+              "readerAfterRevision": {
+                "const": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "ACTIVE_SEARCH"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "readiness": {
+                "const": "first-source-check"
+              },
+              "readerBeforeRevision": {
+                "const": -1
+              },
+              "readerAfterRevision": {
+                "const": -1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "EVENTS": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": 1
+        },
+        "mode": {
+          "enum": [
+            "IDLE",
+            "HELD_SNAPSHOT",
+            "ACTIVE_SEARCH"
+          ]
+        },
+        "part": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 15
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 23
+              },
+              {
+                "type": "integer",
+                "minimum": -1,
+                "maximum": 29
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 999999
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 999999
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 8
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 600000000000
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 600000000000
+              },
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              }
+            ],
+            "items": false,
+            "minItems": 10,
+            "maxItems": 10
+          },
+          "minItems": 1,
+          "maxItems": 96
+        }
+      },
+      "required": [
+        "schema",
+        "mode",
+        "part",
+        "events"
+      ]
+    },
+    "READS": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": 1
+        },
+        "mode": {
+          "enum": [
+            "IDLE",
+            "HELD_SNAPSHOT",
+            "ACTIVE_SEARCH"
+          ]
+        },
+        "part": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 28
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1
+              },
+              {
+                "type": "integer",
+                "minimum": -1,
+                "maximum": 20001
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 600000000000
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 600000000000
+              },
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              }
+            ],
+            "items": false,
+            "minItems": 7,
+            "maxItems": 7
+          },
+          "minItems": 1,
+          "maxItems": 96
+        }
+      },
+      "required": [
+        "schema",
+        "mode",
+        "part",
+        "events"
+      ]
+    },
+    "END": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": 1
+        },
+        "mode": {
+          "enum": [
+            "IDLE",
+            "HELD_SNAPSHOT",
+            "ACTIVE_SEARCH"
+          ]
+        },
+        "completed": {
+          "const": true
+        },
+        "coverageValid": {
+          "const": true
+        },
+        "committedSaves": {
+          "const": 30
+        },
+        "recordedEvents": {
+          "type": "integer",
+          "minimum": 660,
+          "maximum": 1536
+        },
+        "recordedReadEvents": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 128
+        },
+        "droppedEvents": {
+          "const": 0
+        },
+        "droppedReadEvents": {
+          "const": 0
+        },
+        "invalid": {
+          "const": false
+        },
+        "readerExited": {
+          "const": true
+        },
+        "writersExited": {
+          "const": true
+        },
+        "databaseClosed": {
+          "const": true
+        },
+        "databaseDeleted": {
+          "const": true
+        },
+        "cleanupErrors": {
+          "const": 0
+        }
+      },
+      "required": [
+        "schema",
+        "mode",
+        "completed",
+        "coverageValid",
+        "committedSaves",
+        "recordedEvents",
+        "recordedReadEvents",
+        "droppedEvents",
+        "droppedReadEvents",
+        "invalid",
+        "readerExited",
+        "writersExited",
+        "databaseClosed",
+        "databaseDeleted",
+        "cleanupErrors"
+      ]
+    }
+  }
+}

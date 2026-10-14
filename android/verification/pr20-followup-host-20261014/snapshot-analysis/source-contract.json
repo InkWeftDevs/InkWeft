@@ -1,0 +1,316 @@
+{
+  "status": "source contract prepared; not native evidence or CI activation",
+  "source": "/workspace/InkWeft/android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySnapshotHoldDiagnosticsTest.kt",
+  "sourceSha256": "7a62c5263d94730884b038bc150d9e6f495a08b5500caadaa846954ec927e9df",
+  "method": "org.inkweft.data.LibrarySnapshotHoldDiagnosticsTest#idleHeldSnapshotAndActiveSearchSaveBoundaries",
+  "argument": {
+    "librarySnapshotHoldDiagnostics": "true"
+  },
+  "prefix": "LIBRARY_SNAPSHOT_CONTROL_",
+  "schema": 1,
+  "order": [
+    "IDLE",
+    "HELD_SNAPSHOT",
+    "ACTIVE_SEARCH"
+  ],
+  "saveCountPerArm": 30,
+  "markerOrder": [
+    "RESULT",
+    "EVENTS parts 0..ceil(n/96)-1",
+    "READS parts 0..ceil(n/96)-1",
+    "END"
+  ],
+  "fields": {
+    "RESULT": [
+      "schema",
+      "diagnosticOnly",
+      "seed",
+      "mode",
+      "readiness",
+      "fixture",
+      "startRevision",
+      "finalRevision",
+      "readerBeforeRevision",
+      "readerAfterRevision",
+      "saves"
+    ],
+    "EVENTS": [
+      "schema",
+      "mode",
+      "part",
+      "events"
+    ],
+    "READS": [
+      "schema",
+      "mode",
+      "part",
+      "events"
+    ],
+    "END": [
+      "schema",
+      "mode",
+      "completed",
+      "coverageValid",
+      "committedSaves",
+      "recordedEvents",
+      "recordedReadEvents",
+      "droppedEvents",
+      "droppedReadEvents",
+      "invalid",
+      "readerExited",
+      "writersExited",
+      "databaseClosed",
+      "databaseDeleted",
+      "cleanupErrors"
+    ]
+  },
+  "boundaryColumns": [
+    "stageCode",
+    "sample",
+    "task",
+    "transaction",
+    "depth",
+    "successRequested",
+    "outcomeCode",
+    "wallNs",
+    "threadCpuNs",
+    "threadId"
+  ],
+  "readColumns": [
+    "ownerCode",
+    "stageCode",
+    "read",
+    "count",
+    "wallNs",
+    "threadCpuNs",
+    "threadId"
+  ],
+  "saveColumns": [
+    "sample",
+    "startNs",
+    "endNs",
+    "revision",
+    "committed"
+  ],
+  "boundaryStages": [
+    "save-request",
+    "save-writer-acquired",
+    "save-head-read",
+    "save-head-written",
+    "save-revision-written",
+    "save-receipt-written",
+    "save-returned",
+    "save-failed",
+    "writer-submit",
+    "writer-run-enter",
+    "writer-run-exit",
+    "writer-submit-failed",
+    "room-begin-enter",
+    "room-begin-exit",
+    "room-success-enter",
+    "room-success-exit",
+    "room-end-enter",
+    "room-end-exit",
+    "sqlite-begin-enter",
+    "sqlite-begin-exit",
+    "sqlite-success-enter",
+    "sqlite-success-exit",
+    "sqlite-end-enter",
+    "sqlite-end-exit"
+  ],
+  "readStages": [
+    "read-requested",
+    "read-start",
+    "connection-open",
+    "snapshot-open",
+    "drafts-ready",
+    "scope-start",
+    "scope-end",
+    "hits-ready",
+    "page-hits-start",
+    "page-hits-end",
+    "card-hits-start",
+    "card-hits-end",
+    "page-start",
+    "page-end",
+    "metadata-start",
+    "metadata-end",
+    "pending-start",
+    "pending-end",
+    "snapshot-closed",
+    "connection-closed",
+    "read-end",
+    "read-cancel",
+    "read-error",
+    "pin-read",
+    "hold-enter",
+    "hold-exit",
+    "pin-recheck",
+    "idle-ready",
+    "active-ready"
+  ],
+  "outcomes": [
+    "entered",
+    "returned",
+    "threw"
+  ],
+  "owners": [
+    "control",
+    "search"
+  ],
+  "caps": {
+    "boundaryPerArm": 1536,
+    "readPerArm": 128,
+    "chunkRows": 96,
+    "savePerArm": 30
+  },
+  "ranges": {
+    "boundary": [
+      [
+        0,
+        23
+      ],
+      [
+        -1,
+        29
+      ],
+      [
+        0,
+        999999
+      ],
+      [
+        0,
+        999999
+      ],
+      [
+        0,
+        8
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        600000000000
+      ],
+      [
+        0,
+        600000000000
+      ],
+      [
+        1,
+        2147483647
+      ]
+    ],
+    "read": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        28
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        -1,
+        20001
+      ],
+      [
+        0,
+        600000000000
+      ],
+      [
+        0,
+        600000000000
+      ],
+      [
+        1,
+        2147483647
+      ]
+    ],
+    "save": [
+      [
+        0,
+        29
+      ],
+      [
+        0,
+        600000000000
+      ],
+      [
+        0,
+        600000000000
+      ],
+      [
+        2,
+        31
+      ],
+      [
+        1,
+        1
+      ]
+    ]
+  },
+  "expected": {
+    "seed": 4101,
+    "initialRevision": 1,
+    "finalRevision": 31,
+    "fixtureSha256": "1c69bba77781ba0c0b642309b8e869ff21c9a440fd7714894e67c572b95c9dcf",
+    "readerBeforeRevision": [
+      1,
+      1,
+      -1
+    ],
+    "readerAfterRevision": [
+      -1,
+      1,
+      -1
+    ],
+    "readiness": [
+      "reader-closed",
+      "main-snapshot-pinned",
+      "first-source-check"
+    ],
+    "rowCounts": {
+      "notes": 501,
+      "note_revisions": 501,
+      "notebook_workspace": 501,
+      "notebook_pages": 20001,
+      "page_search_text": 20000,
+      "library_search_pending": 20000
+    },
+    "writerSqlite": {
+      "page_size": 1024,
+      "auto_vacuum": 1,
+      "journal_mode": "wal",
+      "synchronous": 2
+    },
+    "cleanup": {
+      "readerExited": true,
+      "writersExited": true,
+      "databaseClosed": true,
+      "databaseDeleted": true,
+      "cleanupErrors": 0
+    }
+  },
+  "coverage": {
+    "IDLE": "all manual events one thread; pin-read=1, snapshot-closed/connection-closed/idle-ready before first save",
+    "HELD_SNAPSHOT": "all manual events one thread; pin-read=1; hold-enter<=first save; last save<=hold-exit; pin-recheck=1; then snapshot-closed/connection-closed",
+    "ACTIVE_SEARCH": "one original read; snapshot-open<=page-hits-start<=active-ready<=first save; last save<=page-hits-end<=snapshot-closed<=read-end; stronger than whole-read lifetime, early query completion is invalid and never retried"
+  },
+  "wholeMethod": "all three arm blocks in order, each complete=true/coverageValid=true/30 committed, zero dropped and invalid=false; otherwise invalid diagnostic, no retry/loop",
+  "numericRowUpperBytes": {
+    "boundary": 64,
+    "read": 51,
+    "save": 35
+  }
+}

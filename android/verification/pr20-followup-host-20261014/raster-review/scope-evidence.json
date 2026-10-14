@@ -1,0 +1,348 @@
+{
+  "scope": "READ_ONLY_PROPOSAL_NOT_NATIVE_EXECUTION",
+  "read_head": "28104e1334c79e68b4f9713cbb2aa2e3a0fa9993",
+  "e310_commit": "e31063c4cd5ddf70b456e83697e539482849361a",
+  "owned_job_methods": [
+    {
+      "selection": "org.inkweft.app.NativeStrokeTileReuseTest#oneNativeShapePerStrokeMatchesPerTileConstructionThroughTransformsAndClips",
+      "identity": "C1",
+      "kind": "native",
+      "marker_policy": "required",
+      "markers": {
+        "NATIVE_STROKE_TILE_EVIDENCE": {
+          "min_count": 4,
+          "max_count": 4,
+          "payload_max_bytes": 4096
+        }
+      },
+      "method_payload_max_bytes": 16384,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt",
+      "test_source_sha256": "ea3f320d3189e053a1e316dc399eece4afb4792ace36cf0b16087330027beb98",
+      "source_manifest_pending": true,
+      "historical_ordinal": 60,
+      "runs": 1,
+      "seed": null,
+      "expected_junit_methods": 1,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.app.NativeStrokeTileReuseTest#oneNativeShapePerStrokeMatchesPerTileConstructionThroughTransformsAndClips",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "prior_adjacent_completion_interval_seconds": 1.591051
+    },
+    {
+      "selection": "org.inkweft.app.RasterPerformanceProbe#continuousTransformsAndSeparatedDirtyTiles",
+      "identity": "C1",
+      "kind": "frame",
+      "marker_policy": "required",
+      "markers": {
+        "RASTER_PAIRED_EVIDENCE": {
+          "min_count": 14,
+          "max_count": 14,
+          "payload_max_bytes": 8192
+        },
+        "RASTER_SQLITE_EVIDENCE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 65536,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt",
+      "test_source_sha256": "38fd3638d88ed3b21b23442a3759c61a0a3733af7c1619dbbf0bafaac419aa5f",
+      "source_manifest_pending": true,
+      "historical_ordinal": 61,
+      "runs": 1,
+      "seed": null,
+      "expected_junit_methods": 1,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.app.RasterPerformanceProbe#continuousTransformsAndSeparatedDirtyTiles",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "prior_adjacent_completion_interval_seconds": 6.456047
+    },
+    {
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "identity": "C1",
+      "kind": "dense",
+      "marker_policy": "required",
+      "markers": {
+        "STREAMED_FRAME_STAGE": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt",
+      "test_source_sha256": "6b61b7bbe518729ffc65195f72bfb4a4fe7e84139fbf896e5b687fbe29f756e5",
+      "source_manifest_pending": true,
+      "historical_ordinal": 62,
+      "runs": 1,
+      "seed": null,
+      "expected_junit_methods": 1,
+      "case": "original-dense",
+      "fixtureStrokes": 1201,
+      "fixturePoints": 76802,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "prior_adjacent_completion_interval_seconds": 3.994411
+    },
+    {
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameCrossesBothTheEditorPointWindowAndDatabaseBatchBoundary",
+      "identity": "C1",
+      "kind": "dense",
+      "marker_policy": "required",
+      "markers": {
+        "STREAMED_FRAME_STAGE": {
+          "min_count": 6,
+          "max_count": 6,
+          "payload_max_bytes": 65536
+        }
+      },
+      "method_payload_max_bytes": 131072,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt",
+      "test_source_sha256": "6b61b7bbe518729ffc65195f72bfb4a4fe7e84139fbf896e5b687fbe29f756e5",
+      "source_manifest_pending": true,
+      "historical_ordinal": null,
+      "runs": 1,
+      "seed": null,
+      "expected_junit_methods": 1,
+      "case": "bounded-two-batch",
+      "fixtureStrokes": 258,
+      "fixturePoints": 8226,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.app.StreamedInkRasterTest#completeFrameCrossesBothTheEditorPointWindowAndDatabaseBatchBoundary",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "prior_adjacent_completion_interval_seconds": null
+    },
+    {
+      "selection": "org.inkweft.app.TileLocalRedrawTest#appendRetainsGeometryAcrossIdleLayerRevisionsAndDestructiveChangesMatchColdFrames",
+      "identity": "C1",
+      "kind": "none",
+      "marker_policy": "none",
+      "markers": {},
+      "method_payload_max_bytes": 0,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+      "test_source_sha256": "385e5618cdb95d91084054da9724f012b57f63e4e77a33d97bf1588681ba792a",
+      "source_manifest_pending": true,
+      "historical_ordinal": 26,
+      "runs": 1,
+      "seed": null,
+      "expected_junit_methods": 1,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.app.TileLocalRedrawTest#appendRetainsGeometryAcrossIdleLayerRevisionsAndDestructiveChangesMatchColdFrames",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "prior_adjacent_completion_interval_seconds": 2.00693
+    },
+    {
+      "selection": "org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources",
+      "identity": "C1",
+      "kind": "guard",
+      "marker_policy": "required",
+      "markers": {
+        "TILE_PAN_STAGE": {
+          "min_count": 1,
+          "max_count": 1,
+          "payload_max_bytes": 8192
+        }
+      },
+      "method_payload_max_bytes": 8192,
+      "test_source_path": "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt",
+      "test_source_sha256": "385e5618cdb95d91084054da9724f012b57f63e4e77a33d97bf1588681ba792a",
+      "source_manifest_pending": true,
+      "historical_ordinal": 28,
+      "runs": 1,
+      "seed": null,
+      "expected_junit_methods": 1,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "prior_adjacent_completion_interval_seconds": 1.232313
+    }
+  ],
+  "method_count": 6,
+  "successful_record_count": 32,
+  "successful_original_json_max_bytes": 352256,
+  "old_marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+  "schema_source": "android/verification/pr20-match-candidate-20261014/marker-contract.json",
+  "schema_note": "Bounded-two-batch requires a distinct STREAMED_FRAME_STAGE schema/case/fixture constants; original-dense schema is not silently widened.",
+  "historical_timing_note": "Adjacent METHOD completion receipt difference includes method and small controller overhead; not exact instrumentation duration or native execution of e310.",
+  "mupdf": [
+    {
+      "path": "com.artifex.mupdf/fitz/1.28.5/3483fd70a4dbe8b13b374354dfa237b85ea8d494/fitz-1.28.5.aar",
+      "bytes": 21636412,
+      "sha256": "e6887a242882cdd2dce062430bb46b6727513e3eb94e222255cc1a37db7a7d8e",
+      "local_path": "/workspace/.setup/gradle/caches/modules-2/files-2.1/com.artifex.mupdf/fitz/1.28.5/3483fd70a4dbe8b13b374354dfa237b85ea8d494/fitz-1.28.5.aar",
+      "matches_archived_dependency": true,
+      "native": [
+        {
+          "path": "lib/arm64-v8a/libmupdf_java.so",
+          "bytes": 10840392,
+          "sha256": "5c7872c5e12ae3c00f68e14e371d3467cbfb2fd3dfefc7bb2a03d2cd491f6a4f",
+          "aar_path": "jni/arm64-v8a/libmupdf_java.so",
+          "matches_archived_apk": true
+        },
+        {
+          "path": "lib/armeabi-v7a/libmupdf_java.so",
+          "bytes": 7582088,
+          "sha256": "2b24af301ba54d70c4cac09a1ae22af2c20f62b5f1046a2e8b352ca702e2ffd6",
+          "aar_path": "jni/armeabi-v7a/libmupdf_java.so",
+          "matches_archived_apk": true
+        },
+        {
+          "path": "lib/x86/libmupdf_java.so",
+          "bytes": 11187796,
+          "sha256": "46f512805c693c07f6e7fac50cdf3d2e028c5078f92e7d230f4c1e6e1b165ed9",
+          "aar_path": "jni/x86/libmupdf_java.so",
+          "matches_archived_apk": true
+        },
+        {
+          "path": "lib/x86_64/libmupdf_java.so",
+          "bytes": 11264136,
+          "sha256": "e9907d1e11f886662915376a1f059608e539c75cb1bc5ef57ccdf887a0367349",
+          "aar_path": "jni/x86_64/libmupdf_java.so",
+          "matches_archived_apk": true
+        }
+      ]
+    },
+    {
+      "path": "com.artifex.mupdf/fitz/1.28.5/e0e1b006967205df5d778037aa1ded7ad3beceec/fitz-1.28.5.pom",
+      "bytes": 662,
+      "sha256": "d66b443446cb2bb992c0de60115ae4988584bd44d16c877d0ba5e2d400b416ff",
+      "local_path": "/workspace/.setup/gradle/caches/modules-2/files-2.1/com.artifex.mupdf/fitz/1.28.5/e0e1b006967205df5d778037aa1ded7ad3beceec/fitz-1.28.5.pom",
+      "matches_archived_dependency": true
+    }
+  ],
+  "official_coordinate": "com.artifex.mupdf:fitz:1.28.5",
+  "declared_repository": "https://maven.ghostscript.com",
+  "rule_review": {
+    "pairs": [
+      {
+        "seed": 4101,
+        "B": 358.822529,
+        "C1": 337.493995,
+        "delta_ms": -21.32853399999999,
+        "relative_change": -0.05944034244293505,
+        "positive": false,
+        "individual_over_band": false
+      },
+      {
+        "seed": 4102,
+        "B": 318.882758,
+        "C1": 380.560993,
+        "delta_ms": 61.67823499999997,
+        "relative_change": 0.1934197865912837,
+        "positive": true,
+        "individual_over_band": true
+      },
+      {
+        "seed": 4103,
+        "B": 321.718498,
+        "C1": 338.116419,
+        "delta_ms": 16.397920999999997,
+        "relative_change": 0.05096977979798972,
+        "positive": true,
+        "individual_over_band": false
+      },
+      {
+        "seed": 4104,
+        "B": 308.987158,
+        "C1": 374.559969,
+        "delta_ms": 65.572811,
+        "relative_change": 0.21221856411262244,
+        "positive": true,
+        "individual_over_band": true
+      }
+    ],
+    "positive_pairs": 3,
+    "individual_over_band_pairs": 2,
+    "paired_median_delta_ms": 39.038077999999985,
+    "paired_median_relative": 0.12219478319463671,
+    "frozen_status": "REGRESSION_SIGNAL",
+    "aggregate_original_counts": "45/5/4",
+    "original_envelope_payloads_verified": 72,
+    "original_plan_matches_pre_run_git": true
+  },
+  "input_hashes": {
+    "android/verification/pr20-match-execution-20261014/extracted/method-32-B-records.json": "1eaf54e3fd885949e7db2b8fc8b9dab52464f6bb7f4e3ac1cdd727d614b20caa",
+    "android/verification/pr20-match-execution-20261014/extracted/method-36-C1-records.json": "a6839ec47877bbdcccdbc72f4b40094fb248068282d8b5ce60bfea01bd649eec",
+    "android/verification/pr20-match-execution-20261014/extracted/method-40-B-records.json": "55a00741efb1e177607ddf83b7503689696143a1c8b83ca504522d4d108e09dd",
+    "android/verification/pr20-match-execution-20261014/extracted/method-38-C1-records.json": "2478df2d17d8cb5b6a980463e73247064dad4228abaa6a5b811191f74cbb9fd8",
+    "android/verification/pr20-match-execution-20261014/extracted/method-48-B-records.json": "2ad0c847f6dbf42917a36aec0ab1b91ac1b0b5de0503ba854da55261c1eeaf62",
+    "android/verification/pr20-match-execution-20261014/extracted/method-46-C1-records.json": "10de8abc94b02aaed3e01e283a22b0e18b6dc21eb30f81b8aabc9ee2ff69c841",
+    "android/verification/pr20-match-execution-20261014/extracted/method-50-B-records.json": "a4f25232cb2a1dd4173d3eff72a0cf56c10b02d6958256321caf6a42f07e9f72",
+    "android/verification/pr20-match-execution-20261014/extracted/method-52-C1-records.json": "61a6f15a95643861e15005b0239705a37507656b682a660690892caf2f8a46df",
+    "android/verification/pr20-kvm-paired-20261013/evidence/frozen-PLAN.md": "028e1b7051626235636c08d7f6627a0d1f9298d3ce9009d0cae3803caad38ee4",
+    "android/verification/pr20-match-execution-20261014/reviews/rule-audit/pre-run-original/analyze.py": "d3bb05d493691be7924ecef0569d747645628c7abf0005287a8b045a69e36adf",
+    "android/verification/pr20-match-candidate-20261014/analyze.py": "fdbf7b76ebbf587bccaede00910209ba2586c0982bbd0da80cb26cb94ce07740"
+  },
+  "official_log_sha256": "d1634bbeb118100737e2c9d6d6111fca972f2fb05999b5604ff34f0d0e7c9f62",
+  "network_used": false,
+  "production_changed": false,
+  "ci_started": false
+}

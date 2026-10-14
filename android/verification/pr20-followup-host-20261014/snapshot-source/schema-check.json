@@ -1,0 +1,6 @@
+{
+  "status": "PASS",
+  "cases": 16,
+  "scope": "synthetic payload shape/ceiling tests only; no raw native marker stream or timing result generated",
+  "semantic_contract_validation": "separate controller required for ordering/causality/thread relations"
+}

@@ -1,0 +1,15 @@
+{
+  "status": "PASS_HOST_CONSTRUCTOR_AND_STATIC_RECIPE_ONLY",
+  "source_sha256": "7a62c5263d94730884b038bc150d9e6f495a08b5500caadaa846954ec927e9df",
+  "validator_sha256": "f295ebe5ba6d4c307f7e7a1196aa38cb899a263ca8597012ce033938a4b875a5",
+  "constructed": 90,
+  "arms": 3,
+  "identical_seeded_commands_per_arm": 30,
+  "actual_stdout": [
+    "PASS: 90 actual core SaveNote constructions; identical seeded author/30 commands per arm, valid UUIDs and revisions.",
+    "Host constructor/recipe check only; no SQLite/Room/Android or measured fixture digest produced."
+  ],
+  "core_source_sha256": "39a5df195ecb0e49b0a99fd0f9eb09def3c573f5d75b7d489345ff348af7c7e9",
+  "core_class_sha256": "554693c11e54871a8bba91bfd6f3444b32164c1b7b7b977e8fa23249d5f7e869",
+  "native_executed": false
+}

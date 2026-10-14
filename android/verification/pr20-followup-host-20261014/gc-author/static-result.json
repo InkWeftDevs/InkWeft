@@ -1,0 +1,28 @@
+{
+  "status": "PASS_STATIC_SCOPE_AND_SCHEMA_CHECK",
+  "source_sha256": "597bed443289598870d063af99731a60db48ca0e38d8e3576b24fcd995cf4055",
+  "before_sha256": "98b69ea1d09e0bce21646d79f50f9b7dd9396c9e73bb1a9baea647de7cdf6b72",
+  "event_schema": "author-boundary-v1",
+  "columns": [
+    "stage",
+    "ownerToken",
+    "task",
+    "transaction",
+    "depth",
+    "successRequested",
+    "outcome",
+    "atNs",
+    "cpuNs",
+    "thread"
+  ],
+  "checks": {
+    "gc_batch_fields_and_entire_probe_summary_byte_identical": true,
+    "fixture_arrival_rename_gc_cleanup_raw_results_byte_identical": true,
+    "author_segment_validation_byte_identical": true,
+    "old_json_keys_match_declared_columns": true,
+    "old_json_values_match_fixed_array_order": true,
+    "pending_add_outside_owner_filter": true,
+    "pending_terminal_still_present": true
+  },
+  "native_execution": false
+}

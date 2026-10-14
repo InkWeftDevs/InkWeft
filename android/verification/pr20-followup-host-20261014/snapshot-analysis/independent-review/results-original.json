@@ -1,0 +1,117 @@
+{
+  "scope": "independent synthetic malformed-input and arithmetic checks only",
+  "source_sha256": {
+    "analyze.py": "8a20f3bcdb4889579e90eef8eedd80254beab50d487467b81e0e399831fd5982",
+    "boundary_segments.py": "fd1c22004bb91e7e6673a6ac59eb0f2c2413c9f8ef454a00b2950c0581bbd1b7",
+    "test_analyze.py": "2e19886bf6473dea269132f019609ee203b79931ce18d71ca15390c2e28955a4"
+  },
+  "arithmetic": {
+    "quantiles_30_reverse": {
+      "p50": 15,
+      "p95": 29,
+      "max": 30,
+      "method": "nearest-rank n=30; indices 14,28,29"
+    },
+    "known_same_thread": {
+      "name": "known",
+      "begin": {
+        "wallNs": 1000000,
+        "threadCpuNs": 2000000,
+        "threadId": 3
+      },
+      "end": {
+        "wallNs": 8500000,
+        "threadCpuNs": 2250000,
+        "threadId": 3
+      },
+      "wallMs": 7.5,
+      "threadCpuMs": 0.25,
+      "cpuMeaning": "same-thread counter, includes intervening work"
+    },
+    "known_cross_thread": {
+      "name": "known",
+      "begin": {
+        "wallNs": 1000000,
+        "threadCpuNs": 2000000,
+        "threadId": 3
+      },
+      "end": {
+        "wallNs": 8500000,
+        "threadCpuNs": 2250000,
+        "threadId": 4
+      },
+      "wallMs": 7.5,
+      "threadCpuMs": null,
+      "cpuMeaning": "unavailable: endpoint threads differ"
+    },
+    "twelve_segment_ns": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      5,
+      5,
+      1,
+      1,
+      2
+    ],
+    "segment_sum_ns": 21,
+    "whole_call_ns": 23
+  },
+  "faults": [
+    {
+      "case": "start_revision_boolean",
+      "accepted": true,
+      "status": "COMPLETE_CONTROLLED_TRACE_ONLY_PENDING_TERMINAL_AUDIT"
+    },
+    {
+      "case": "final_revision_float",
+      "accepted": true,
+      "status": "COMPLETE_CONTROLLED_TRACE_ONLY_PENDING_TERMINAL_AUDIT"
+    },
+    {
+      "case": "committed_count_float",
+      "accepted": true,
+      "status": "COMPLETE_CONTROLLED_TRACE_ONLY_PENDING_TERMINAL_AUDIT"
+    },
+    {
+      "case": "drop_count_boolean",
+      "accepted": true,
+      "status": "COMPLETE_CONTROLLED_TRACE_ONLY_PENDING_TERMINAL_AUDIT"
+    },
+    {
+      "case": "sqlite_setting_boolean",
+      "accepted": true,
+      "status": "COMPLETE_CONTROLLED_TRACE_ONLY_PENDING_TERMINAL_AUDIT"
+    },
+    {
+      "case": "fixture_count_float",
+      "accepted": true,
+      "status": "COMPLETE_CONTROLLED_TRACE_ONLY_PENDING_TERMINAL_AUDIT"
+    },
+    {
+      "case": "active_missing_connection_lifecycle",
+      "accepted": true,
+      "status": "COMPLETE_CONTROLLED_TRACE_ONLY_PENDING_TERMINAL_AUDIT"
+    },
+    {
+      "case": "active_snapshot_closed_other_thread",
+      "accepted": true,
+      "status": "COMPLETE_CONTROLLED_TRACE_ONLY_PENDING_TERMINAL_AUDIT"
+    },
+    {
+      "case": "active_extra_manual_hold",
+      "accepted": true,
+      "status": "COMPLETE_CONTROLLED_TRACE_ONLY_PENDING_TERMINAL_AUDIT"
+    },
+    {
+      "case": "unsubmitted_writer_exit",
+      "accepted": true,
+      "status": "COMPLETE_CONTROLLED_TRACE_ONLY_PENDING_TERMINAL_AUDIT"
+    }
+  ],
+  "native_execution": false
+}

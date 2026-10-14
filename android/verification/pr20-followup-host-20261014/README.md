@@ -1,0 +1,13 @@
+# Follow-up source and host evidence, 2026-10-14
+
+Candidate source is `fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353`; the preceding diagnostic commit is `b16401c81bc07d7277a0ac866eb9a7d9ef1f74c3`. Separate local raster control `207bc654e0c922bb58b599d0ca619aff85eeebeb` differs from the candidate only in InkRepository.kt, restoring the pre-candidate implementation while preserving identical tests. These source commits were not pushed when this archive was prepared.
+
+- `source-state/` binds the earlier 607→281 review, not the later follow-up commits. It confirms the effective cb7 matcher/lazy-pencil changes remain and the original 45/5/4 screen, including the eight-layer full regression signal, is unchanged.
+- `gc-author/` narrows only diagnostic transaction recording to the author and preserves full task draining, deletion intervals, scans, original30+30 arrivals, capacities and failures. Its old GC-only budget is conditional arithmetic, not the final combined execution budget.
+- `snapshot-source/` adds a separate fixed-order IDLE/HELD_SNAPSHOT/ACTIVE_SEARCH experiment,30 committed saves each, with a real pinned main snapshot and full active source-query coverage. Incomplete coverage fails without retry. Reader/writer completion is required before closing/deleting the synthetic DB.
+- `snapshot-analysis/` is a source-bound parser plus the unchanged frozen prior12-segment function module. Four synthetic unit methods and30 independent malformed cases passed; no generated numbers are Android measurements.
+- `raster-review/` preserves the proposal followed by the exact reviewed candidate. The production change skips a redundant map/list rebuild only for all-miss cached batches, retaining ordered-ID/revision/epoch/layer/filter/budget/cursor checks. The new300-stroke test checks cold paint order and cached object identity. Its performance effect remains unverified.
+
+One offline data/app AndroidTest Kotlin compilation passed in374.626seconds; all761 source/build input hashes matched before/after. The earlier GC-only compile and compiled-class host checks are separately bound. Neither compilation nor host stubs are native performance validation. No APK/AAR/database/class files are included here.
+
+The remaining native work is split because the combined worst-case raw records would exceed the unchanged20MiB limit: first GC7+snapshot1 with one data APK; then the isolated raster candidate/control experiment and strict owned-Job guards. Their exact controllers, readiness and results will have separate bindings. This archive does not authorize activation or close any acceptance gate. Search concurrent-save latency, eight-layer full, GC natural exposure and the new strict cleanup still require their stated native evidence.

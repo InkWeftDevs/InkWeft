@@ -1,0 +1,17 @@
+{
+  "status": "FROZEN_SYNTHETIC_CHECKED_ANALYZER_NOT_NATIVE_RESULT",
+  "candidate_source_commit": "fcc8dd39f029f4bf04f4c3f1bccc1e3ed4bfc353",
+  "test_source_sha256": "7a62c5263d94730884b038bc150d9e6f495a08b5500caadaa846954ec927e9df",
+  "analyzer_sha256": "b57adcc7017526bdf9d10dd31631cc08de3c0b9747f0fd86e84aaf2a0e04535e",
+  "frozen_prior_boundary_functions_sha256": "fd1c22004bb91e7e6673a6ac59eb0f2c2413c9f8ef454a00b2950c0581bbd1b7",
+  "source_contract_sha256": "a76cec96bbf0add437971938e06e4f54e9e811d43b2f30386d53b0986ba423f7",
+  "unit_test_methods": 4,
+  "independent_invalid_cases_rejected": 30,
+  "native_executed": false,
+  "limits": [
+    "The prior module is unchanged; only its verified 12-segment and nearest-rank functions are reused.",
+    "New array/lifecycle/fixture/cleanup validation is source-bound to this three-arm experiment.",
+    "Fixed-order instrumented mechanism screening cannot close public B/C gates.",
+    "Requires separate original JUnit/process/runner cleanup/source identity audit."
+  ]
+}

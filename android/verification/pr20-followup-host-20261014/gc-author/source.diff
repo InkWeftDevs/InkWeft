@@ -1,0 +1,57 @@
+diff --git a/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest.kt b/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest.kt
+index b08111a..55ef5f4 100644
+--- a/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest.kt
++++ b/android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest.kt
+@@ -26,13 +26,14 @@ class HistoryDeletionBoundaryDiagnosticsTest {
+     @Test fun separateRoomNaturalArrivalBoundaries()=runProbe(true)
+ 
+     private data class Phase(val name:String,val atNs:Long)
++    private val boundaryColumns=listOf("stage","ownerToken","task","transaction","depth",
++        "successRequested","outcome","atNs","cpuNs","thread")
+     private data class Boundary(val stage:String,val owner:Int,val task:Long,val transaction:Long,
+         val depth:Int,val success:Boolean,val outcome:String,val atNs:Long,val cpuNs:Long,val thread:Long) {
+-        fun json()=JSONObject().put("stage",stage).put("ownerToken",owner).put("task",task)
+-            .put("transaction",transaction).put("depth",depth).put("successRequested",success)
+-            .put("outcome",outcome).put("atNs",atNs).put("cpuNs",cpuNs).put("thread",thread)
++        // Fixed columns preserve every value; only repeated JSON field names are removed.
++        fun json()=JSONArray(listOf(stage,owner,task,transaction,depth,success,outcome,atNs,cpuNs,thread))
+     }
+-    private class Recorder(val database:String) {
++    private class Recorder(val database:String,private val recordedOwner:Int) {
+         @Volatile var enabled=false
+         private val slots=AtomicReferenceArray<Boundary>(512)
+         private val count=AtomicInteger()
+@@ -41,7 +42,8 @@ class HistoryDeletionBoundaryDiagnosticsTest {
+         val diagnostics=SaveBoundaryDiagnostics { stage,owner,task,transaction,depth,success,outcome ->
+             // Track setup tasks too: a trailing worker exit must not enter a later window.
+             if(stage=="writer-submit")pending.add(task)
+-            if(enabled) {
++            // Author events alone explain its wait; all tasks still enter/leave pending.
++            if(enabled&&owner==recordedOwner) {
+                 val event=Boundary(stage,owner,task,transaction,depth,success,outcome,
+                     System.nanoTime(),Debug.threadCpuTimeNanos(),Thread.currentThread().id)
+                 val index=count.getAndIncrement()
+@@ -133,11 +135,12 @@ class HistoryDeletionBoundaryDiagnosticsTest {
+             .put("saveOutcome","NOT_STARTED").put("saveWatchdogMs",5000)
+             .put("batchLimit",256).put("authorBoundaries",JSONObject.NULL)
+             .put("boundaryCapacityPerDatabase",512).put("batchCapacity",64).put("phaseCapacity",32)
++            .put("boundaryScope","AUTHOR_ONLY")
+             .put("pureSqliteLockWaitMs",JSONObject.NULL)
+-        val collectorRecorder=Recorder("collector")
+-        val authorRecorder=if(separate)Recorder("author")else collectorRecorder
+-        val recorders=listOf(collectorRecorder,authorRecorder).distinct()
+         val gcToken=sample*3;val authorToken=gcToken+1;val finishToken=gcToken+2
++        val collectorRecorder=Recorder("collector",authorToken)
++        val authorRecorder=if(separate)Recorder("author",authorToken)else collectorRecorder
++        val recorders=listOf(collectorRecorder,authorRecorder).distinct()
+         record.put("gcOwnerToken",gcToken).put("authorOwnerToken",authorToken).put("finishOwnerToken",finishToken)
+         val batches=arrayOfNulls<Batch>(64);var batchCount=0;var batchDropped=0
+         val phaseSlots=arrayOfNulls<Phase>(32);var phaseCount=0;var phaseDropped=0
+@@ -318,6 +321,7 @@ class HistoryDeletionBoundaryDiagnosticsTest {
+                 chunks.forEachIndexed{part,events->emit("HISTORY_GC_BOUNDARY_EVENTS",JSONObject()
+                     .put("sample",sample).put("connection",if(separate)"separate-room"else"same-room")
+                     .put("database",recorder.database).put("part",part).put("parts",chunks.size)
++                    .put("eventSchema","author-boundary-v1").put("eventColumns",JSONArray(boundaryColumns))
+                     .put("events",JSONArray(events.map{it.json()})))}
+             }
+             emit("HISTORY_GC_BOUNDARY_TRIAL",record)

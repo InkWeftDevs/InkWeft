@@ -1,0 +1,859 @@
+{
+  "status": "VERIFIED_PINNED_COMMIT_SCOPE",
+  "pr_head": "607c891efe6afd70b4c3fd7db0e95d0e2ccabd8c",
+  "head": "28104e1334c79e68b4f9713cbb2aa2e3a0fa9993",
+  "native_source": "94379190b9ad0e1034f136ea9887fb0ac12e7ea7",
+  "cb7": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+  "scope": "Pinned Git objects, not any subsequent uncommitted worktree edit",
+  "worktree_status_observed": [
+    " M android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest.kt"
+  ],
+  "remote_scope": {
+    "cached_origin_integration": "607c891efe6afd70b4c3fd7db0e95d0e2ccabd8c",
+    "cached_remote_branches_containing_head": [],
+    "no_network": true,
+    "note": "Unpushed range relative to parent-supplied PR head and local cached refs, not a fresh GitHub check"
+  },
+  "commits": [
+    "28104e1334c79e68b4f9713cbb2aa2e3a0fa9993 docs: archive native save boundary diagnosis and remaining gates",
+    "a69c173c16bd8a434cc1eab9ef8ff2ad56070c19 Freeze corrected save guards and bounded failure-log evidence",
+    "cee44b8997872d8f8cc1e03a13cb7b8171f56ef3 Preserve failed save-boundary native run and partial evidence",
+    "4c4a2d67a27b56f351b3433d4f99deb7ce3e2591 Observe natural GC deletion and author transaction boundaries",
+    "94379190b9ad0e1034f136ea9887fb0ac12e7ea7 Use valid UUID fixtures in save-boundary guards",
+    "e31063c4cd5ddf70b456e83697e539482849361a Join owned raster jobs before releasing native test resources",
+    "4278f310d6f8a742072725f77fda3fdb92c22431 Freeze single-source save-boundary diagnostic and offline audit",
+    "efe8617424f65134379bfefadfbf9d303d9f5ab7 Record save-boundary compilation and independent review",
+    "4f41a501127dbed6dbef3519f93233a105b5d618 Add opt-in transaction boundaries for save latency diagnosis",
+    "d4ca52ec9cc7d0f9680873b2ab3483ce9cd6ac9d Archive native matcher comparison and preserve frozen regression rules",
+    "f7a9ec6756b1cf4b33eee24aa1dc5dd8b8321058 Archive independent native log extractor review",
+    "d70fcb23afecb6f80e8fc716a5145ecf851dd68e Freeze 62-method native comparison and strict log extraction",
+    "8a569e4fb0c348313019d1566e2b536c8eca82d9 Record native causal findings and scoped candidate host checks",
+    "cb7e14218ac83aa8cf6b9d7906051a10da1a6547 Avoid redundant search matching and unused pencil initialization",
+    "b2e1d9f9de66a26f5a4b122ea6754d77198005f8 Freeze single-source causal diagnostic inputs and host evidence",
+    "78a5babeaeb92292026423222d5e08635989198b Add opt-in causal diagnostics for remaining performance costs"
+  ],
+  "file_counts": {
+    "android_test": 10,
+    "production_source": 10,
+    "jvm_test": 2,
+    "evidence_and_frozen_plans": 655,
+    "controller_and_tools": 58
+  },
+  "changed_total": 735,
+  "sources": [
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt",
+      "category": "android_test",
+      "versions": {
+        "pr_head": {
+          "sha256": "33a12420e1a8230cb272f65ada9501ac8ceb12b4be068598c1f1e161e26c44e7",
+          "bytes": 7558,
+          "git_blob": "6592737bf921d0d0af7ff83c30e08830864fd367"
+        },
+        "cb7": {
+          "sha256": "33a12420e1a8230cb272f65ada9501ac8ceb12b4be068598c1f1e161e26c44e7",
+          "bytes": 7558,
+          "git_blob": "6592737bf921d0d0af7ff83c30e08830864fd367"
+        },
+        "native_source": {
+          "sha256": "ea3f320d3189e053a1e316dc399eece4afb4792ace36cf0b16087330027beb98",
+          "bytes": 7779,
+          "git_blob": "2fec5d08372587a6d19e624a31a37ccb89a3c9ec"
+        },
+        "head": {
+          "sha256": "ea3f320d3189e053a1e316dc399eece4afb4792ace36cf0b16087330027beb98",
+          "bytes": 7779,
+          "git_blob": "2fec5d08372587a6d19e624a31a37ccb89a3c9ec"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": false
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/OwnedRasterJobs.kt",
+      "category": "android_test",
+      "versions": {
+        "pr_head": null,
+        "cb7": null,
+        "native_source": {
+          "sha256": "00c38f1f951ad4572e23fb3e7d9a412bd723275d52c68298d4723134e5d51d18",
+          "bytes": 1561,
+          "git_blob": "6548944bd16a72eba643de94dc68cf45d4a89b75"
+        },
+        "head": {
+          "sha256": "00c38f1f951ad4572e23fb3e7d9a412bd723275d52c68298d4723134e5d51d18",
+          "bytes": 1561,
+          "git_blob": "6548944bd16a72eba643de94dc68cf45d4a89b75"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": false
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RasterCausalDiagnosticsTest.kt",
+      "category": "android_test",
+      "versions": {
+        "pr_head": null,
+        "cb7": {
+          "sha256": "f7a1424cfec939344584c86a1c11005d9f5d70447d31651bc9764907938cccc1",
+          "bytes": 19218,
+          "git_blob": "ebccfa2cfe358f29610b38e84c67fc401cb5f1ac"
+        },
+        "native_source": {
+          "sha256": "f7a1424cfec939344584c86a1c11005d9f5d70447d31651bc9764907938cccc1",
+          "bytes": 19218,
+          "git_blob": "ebccfa2cfe358f29610b38e84c67fc401cb5f1ac"
+        },
+        "head": {
+          "sha256": "f7a1424cfec939344584c86a1c11005d9f5d70447d31651bc9764907938cccc1",
+          "bytes": 19218,
+          "git_blob": "ebccfa2cfe358f29610b38e84c67fc401cb5f1ac"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": true
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt",
+      "category": "android_test",
+      "versions": {
+        "pr_head": {
+          "sha256": "91ceacc2db7557509f923a2046ba0f8d8ccf9691265dbee12e10e674a9ba33c9",
+          "bytes": 7201,
+          "git_blob": "8de3a42aec1252bb0c5a855a9b1fd63938878d5d"
+        },
+        "cb7": {
+          "sha256": "91ceacc2db7557509f923a2046ba0f8d8ccf9691265dbee12e10e674a9ba33c9",
+          "bytes": 7201,
+          "git_blob": "8de3a42aec1252bb0c5a855a9b1fd63938878d5d"
+        },
+        "native_source": {
+          "sha256": "38fd3638d88ed3b21b23442a3759c61a0a3733af7c1619dbbf0bafaac419aa5f",
+          "bytes": 7419,
+          "git_blob": "f75036eb39fa01f1a7f5b497e15b60cd5090d545"
+        },
+        "head": {
+          "sha256": "38fd3638d88ed3b21b23442a3759c61a0a3733af7c1619dbbf0bafaac419aa5f",
+          "bytes": 7419,
+          "git_blob": "f75036eb39fa01f1a7f5b497e15b60cd5090d545"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": false
+    },
+    {
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt",
+      "category": "android_test",
+      "versions": {
+        "pr_head": {
+          "sha256": "c5700b11df7e4535aaf248ba074f9952f356a571fe238770887c813fe84dcca2",
+          "bytes": 12700,
+          "git_blob": "974ca3fe51785ac055faeec2599223fa4f147277"
+        },
+        "cb7": {
+          "sha256": "c5700b11df7e4535aaf248ba074f9952f356a571fe238770887c813fe84dcca2",
+          "bytes": 12700,
+          "git_blob": "974ca3fe51785ac055faeec2599223fa4f147277"
+        },
+        "native_source": {
+          "sha256": "6b61b7bbe518729ffc65195f72bfb4a4fe7e84139fbf896e5b687fbe29f756e5",
+          "bytes": 12896,
+          "git_blob": "bfd84b76e371060d83fa962f833fb9569e39fcdf"
+        },
+        "head": {
+          "sha256": "6b61b7bbe518729ffc65195f72bfb4a4fe7e84139fbf896e5b687fbe29f756e5",
+          "bytes": 12896,
+          "git_blob": "bfd84b76e371060d83fa962f833fb9569e39fcdf"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": false
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/RasterFrameDiagnostics.kt",
+      "category": "production_source",
+      "versions": {
+        "pr_head": null,
+        "cb7": {
+          "sha256": "24f139a486d6603ea5bc62616f05f0d55d2a4fd90a3e5dd67b87b883c6689232",
+          "bytes": 3801,
+          "git_blob": "bd88048911e74a236ca1198fba20e41ea26ad462"
+        },
+        "native_source": {
+          "sha256": "24f139a486d6603ea5bc62616f05f0d55d2a4fd90a3e5dd67b87b883c6689232",
+          "bytes": 3801,
+          "git_blob": "bd88048911e74a236ca1198fba20e41ea26ad462"
+        },
+        "head": {
+          "sha256": "24f139a486d6603ea5bc62616f05f0d55d2a4fd90a3e5dd67b87b883c6689232",
+          "bytes": 3801,
+          "git_blob": "bd88048911e74a236ca1198fba20e41ea26ad462"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": true
+    },
+    {
+      "path": "android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt",
+      "category": "production_source",
+      "versions": {
+        "pr_head": {
+          "sha256": "0001f4fbb5dd4bd297fc60558d0998b718a6fed318fcd51e281bbefb8905a221",
+          "bytes": 17176,
+          "git_blob": "a4a4924b4da106bc6b08c86c16ba56da2e5de0fb"
+        },
+        "cb7": {
+          "sha256": "c27b9f9d3326a625a9063b8fa8a446cc68296406b527a8254d8993dd41f44731",
+          "bytes": 19617,
+          "git_blob": "b5ea28ac5c946f96c6fd3ca835e9980b1a9d8dbe"
+        },
+        "native_source": {
+          "sha256": "c27b9f9d3326a625a9063b8fa8a446cc68296406b527a8254d8993dd41f44731",
+          "bytes": 19617,
+          "git_blob": "b5ea28ac5c946f96c6fd3ca835e9980b1a9d8dbe"
+        },
+        "head": {
+          "sha256": "c27b9f9d3326a625a9063b8fa8a446cc68296406b527a8254d8993dd41f44731",
+          "bytes": 19617,
+          "git_blob": "b5ea28ac5c946f96c6fd3ca835e9980b1a9d8dbe"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": true
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest.kt",
+      "category": "android_test",
+      "versions": {
+        "pr_head": null,
+        "cb7": null,
+        "native_source": null,
+        "head": {
+          "sha256": "98b69ea1d09e0bce21646d79f50f9b7dd9396c9e73bb1a9baea647de7cdf6b72",
+          "bytes": 27786,
+          "git_blob": "b08111a36e62b9b0381e8d375d57ed7d3bdc26fe"
+        }
+      },
+      "head_equals_native": false,
+      "head_equals_cb7": false
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionCausalTest.kt",
+      "category": "android_test",
+      "versions": {
+        "pr_head": null,
+        "cb7": {
+          "sha256": "4f80b8ce32e1aa2bae1d919b96c06b1897e7a8500c748822efd05119ba87ec4a",
+          "bytes": 18607,
+          "git_blob": "4135f077fa2bb5a620470902bd4376d9bd3da6b6"
+        },
+        "native_source": {
+          "sha256": "4f80b8ce32e1aa2bae1d919b96c06b1897e7a8500c748822efd05119ba87ec4a",
+          "bytes": 18607,
+          "git_blob": "4135f077fa2bb5a620470902bd4376d9bd3da6b6"
+        },
+        "head": {
+          "sha256": "4f80b8ce32e1aa2bae1d919b96c06b1897e7a8500c748822efd05119ba87ec4a",
+          "bytes": 18607,
+          "git_blob": "4135f077fa2bb5a620470902bd4376d9bd3da6b6"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": true
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveBoundaryDiagnosticsTest.kt",
+      "category": "android_test",
+      "versions": {
+        "pr_head": null,
+        "cb7": null,
+        "native_source": {
+          "sha256": "cd1b0ba9e112a19e16fdea36b1b867183c890a4addb8c6ebfdfe7986f4a73038",
+          "bytes": 27605,
+          "git_blob": "47c4708c26fbe15df049b5659d32d025c06b05ea"
+        },
+        "head": {
+          "sha256": "cd1b0ba9e112a19e16fdea36b1b867183c890a4addb8c6ebfdfe7986f4a73038",
+          "bytes": 27605,
+          "git_blob": "47c4708c26fbe15df049b5659d32d025c06b05ea"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": false
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveCausalTest.kt",
+      "category": "android_test",
+      "versions": {
+        "pr_head": null,
+        "cb7": {
+          "sha256": "f2faf22c8eff0c5f37c981c389917e17214d86edc38535e68dd9b0ab69a1eb8e",
+          "bytes": 13190,
+          "git_blob": "7ee68d5a715c2ec3dc269df51963ffb111a54b63"
+        },
+        "native_source": {
+          "sha256": "f2faf22c8eff0c5f37c981c389917e17214d86edc38535e68dd9b0ab69a1eb8e",
+          "bytes": 13190,
+          "git_blob": "7ee68d5a715c2ec3dc269df51963ffb111a54b63"
+        },
+        "head": {
+          "sha256": "f2faf22c8eff0c5f37c981c389917e17214d86edc38535e68dd9b0ab69a1eb8e",
+          "bytes": 13190,
+          "git_blob": "7ee68d5a715c2ec3dc269df51963ffb111a54b63"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": true
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySearchCausalTest.kt",
+      "category": "android_test",
+      "versions": {
+        "pr_head": null,
+        "cb7": {
+          "sha256": "8bbf97dc7d31ed93dedbd66a1758973c53df34a2226984f9fa59562bf0b89ebe",
+          "bytes": 13752,
+          "git_blob": "ad4bca6c44ff5403ec30ccff220d00be9d5ab4e9"
+        },
+        "native_source": {
+          "sha256": "8bbf97dc7d31ed93dedbd66a1758973c53df34a2226984f9fa59562bf0b89ebe",
+          "bytes": 13752,
+          "git_blob": "ad4bca6c44ff5403ec30ccff220d00be9d5ab4e9"
+        },
+        "head": {
+          "sha256": "8bbf97dc7d31ed93dedbd66a1758973c53df34a2226984f9fa59562bf0b89ebe",
+          "bytes": 13752,
+          "git_blob": "ad4bca6c44ff5403ec30ccff220d00be9d5ab4e9"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": true
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/HistoryStorage.kt",
+      "category": "production_source",
+      "versions": {
+        "pr_head": {
+          "sha256": "07046d5d7653723153744cff81ca63430a778112b49c31d16bd6e7535f856677",
+          "bytes": 13268,
+          "git_blob": "04af9cd7db12209b0d418b0878caacaadeccf257"
+        },
+        "cb7": {
+          "sha256": "b96890478129bbb7b0bbb538c3cf8d5f2e97f2b8b5e2e34d8057c855c9ec6ca9",
+          "bytes": 14910,
+          "git_blob": "fcec98ee677c2ef60d3987da769b292ee3370660"
+        },
+        "native_source": {
+          "sha256": "b96890478129bbb7b0bbb538c3cf8d5f2e97f2b8b5e2e34d8057c855c9ec6ca9",
+          "bytes": 14910,
+          "git_blob": "fcec98ee677c2ef60d3987da769b292ee3370660"
+        },
+        "head": {
+          "sha256": "b96890478129bbb7b0bbb538c3cf8d5f2e97f2b8b5e2e34d8057c855c9ec6ca9",
+          "bytes": 14910,
+          "git_blob": "fcec98ee677c2ef60d3987da769b292ee3370660"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": true
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchMatcher.kt",
+      "category": "production_source",
+      "versions": {
+        "pr_head": null,
+        "cb7": {
+          "sha256": "dca79a9188799f608bec31c1d0c799d82490237347142b7f88c7490275793b3b",
+          "bytes": 1002,
+          "git_blob": "bf0fb58ecf1362c302d8e50488b591eb6748b9ef"
+        },
+        "native_source": {
+          "sha256": "dca79a9188799f608bec31c1d0c799d82490237347142b7f88c7490275793b3b",
+          "bytes": 1002,
+          "git_blob": "bf0fb58ecf1362c302d8e50488b591eb6748b9ef"
+        },
+        "head": {
+          "sha256": "dca79a9188799f608bec31c1d0c799d82490237347142b7f88c7490275793b3b",
+          "bytes": 1002,
+          "git_blob": "bf0fb58ecf1362c302d8e50488b591eb6748b9ef"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": true
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt",
+      "category": "production_source",
+      "versions": {
+        "pr_head": {
+          "sha256": "99cdd6b82f48f3553577ae9fad7473019a77293f618df8f3c1dcb29650ad4571",
+          "bytes": 17308,
+          "git_blob": "a7419338b5983d166f692e2110ae08f0e2655834"
+        },
+        "cb7": {
+          "sha256": "50089cb11edae66be4339a7258b96c7ac6b866b440255d48220aea7bf2fdb963",
+          "bytes": 21415,
+          "git_blob": "96f3ac1cb881f5cae9cfe05f212a209999703661"
+        },
+        "native_source": {
+          "sha256": "50089cb11edae66be4339a7258b96c7ac6b866b440255d48220aea7bf2fdb963",
+          "bytes": 21415,
+          "git_blob": "96f3ac1cb881f5cae9cfe05f212a209999703661"
+        },
+        "head": {
+          "sha256": "50089cb11edae66be4339a7258b96c7ac6b866b440255d48220aea7bf2fdb963",
+          "bytes": 21415,
+          "git_blob": "96f3ac1cb881f5cae9cfe05f212a209999703661"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": true
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/LibraryTextIndex.kt",
+      "category": "production_source",
+      "versions": {
+        "pr_head": {
+          "sha256": "9861462b2eb3328020dcdc0396b1ed380d4b56fa4dd0646b030fb7a1a4f77fdf",
+          "bytes": 7607,
+          "git_blob": "870e88dd74d5aa816d00e9d3dfd0ea1c0a25350c"
+        },
+        "cb7": {
+          "sha256": "34fac20efe18b5c8c88039b9303114569ca17e1b0f2c88be2b45fd201494b50b",
+          "bytes": 7806,
+          "git_blob": "7d6d53f80b7075b6befb4a3bd9030956697b7fc7"
+        },
+        "native_source": {
+          "sha256": "34fac20efe18b5c8c88039b9303114569ca17e1b0f2c88be2b45fd201494b50b",
+          "bytes": 7806,
+          "git_blob": "7d6d53f80b7075b6befb4a3bd9030956697b7fc7"
+        },
+        "head": {
+          "sha256": "34fac20efe18b5c8c88039b9303114569ca17e1b0f2c88be2b45fd201494b50b",
+          "bytes": 7806,
+          "git_blob": "7d6d53f80b7075b6befb4a3bd9030956697b7fc7"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": true
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt",
+      "category": "production_source",
+      "versions": {
+        "pr_head": {
+          "sha256": "bbead6435e0858be6d1480b6e61d764b6a4177bdb9db564dffb76d3ea588781a",
+          "bytes": 22384,
+          "git_blob": "5274a429ed9fd3584ea9e3753f7e379179e527fe"
+        },
+        "cb7": {
+          "sha256": "bbead6435e0858be6d1480b6e61d764b6a4177bdb9db564dffb76d3ea588781a",
+          "bytes": 22384,
+          "git_blob": "5274a429ed9fd3584ea9e3753f7e379179e527fe"
+        },
+        "native_source": {
+          "sha256": "c904a8ebc9b2aed64266a82d24b8f1395621314a9087fd6f0de6298b8865fb47",
+          "bytes": 23735,
+          "git_blob": "a727b71c3dce4c12bd0ccfdc21458e915c2f0ff8"
+        },
+        "head": {
+          "sha256": "c904a8ebc9b2aed64266a82d24b8f1395621314a9087fd6f0de6298b8865fb47",
+          "bytes": 23735,
+          "git_blob": "a727b71c3dce4c12bd0ccfdc21458e915c2f0ff8"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": false
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt",
+      "category": "production_source",
+      "versions": {
+        "pr_head": {
+          "sha256": "b789cfe0b328bef5b9bfe6ffe72999916bfff61cf585e6ce8671dafcb2782af5",
+          "bytes": 3625,
+          "git_blob": "f1a015d5ccb42e6354242f6863d1e758f994edb8"
+        },
+        "cb7": {
+          "sha256": "e1570c26f61ba352f7a636d934e7acbff6f0b3250985f1e9caf0a55046432c9a",
+          "bytes": 4426,
+          "git_blob": "e792384492c07c9d8454008ef6671d52b192ad7b"
+        },
+        "native_source": {
+          "sha256": "a9351355ca45af5f6f5db34109fa68d6bf10505d3117ed60a7c68cc000b05e89",
+          "bytes": 4833,
+          "git_blob": "c0e59d442cea2f01f25666d365254d056764ba04"
+        },
+        "head": {
+          "sha256": "a9351355ca45af5f6f5db34109fa68d6bf10505d3117ed60a7c68cc000b05e89",
+          "bytes": 4833,
+          "git_blob": "c0e59d442cea2f01f25666d365254d056764ba04"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": false
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+      "category": "production_source",
+      "versions": {
+        "pr_head": {
+          "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+          "bytes": 4426,
+          "git_blob": "57f8c4f67e59f6e76cfeed899ca25feb8dbd72ee"
+        },
+        "cb7": {
+          "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+          "bytes": 4426,
+          "git_blob": "57f8c4f67e59f6e76cfeed899ca25feb8dbd72ee"
+        },
+        "native_source": {
+          "sha256": "052467625c685a79f72337379b2d4e70718440c6717e91c6d18677c9c1982581",
+          "bytes": 5207,
+          "git_blob": "2940ee242bd6dd88c56727437681ef2a4cc1c82c"
+        },
+        "head": {
+          "sha256": "052467625c685a79f72337379b2d4e70718440c6717e91c6d18677c9c1982581",
+          "bytes": 5207,
+          "git_blob": "2940ee242bd6dd88c56727437681ef2a4cc1c82c"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": false
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/SaveBoundaryDiagnostics.kt",
+      "category": "production_source",
+      "versions": {
+        "pr_head": null,
+        "cb7": null,
+        "native_source": {
+          "sha256": "392bf0e25e6f62d77f915eec628eac16f3f374e0de5287fb02435d29c0cecab9",
+          "bytes": 6771,
+          "git_blob": "04d4505ba6f3397767b646c044e9f6014e7a39e1"
+        },
+        "head": {
+          "sha256": "392bf0e25e6f62d77f915eec628eac16f3f374e0de5287fb02435d29c0cecab9",
+          "bytes": 6771,
+          "git_blob": "04d4505ba6f3397767b646c044e9f6014e7a39e1"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": false
+    },
+    {
+      "path": "android/data-local/src/test/kotlin/org/inkweft/data/LibrarySearchMatcherTest.kt",
+      "category": "jvm_test",
+      "versions": {
+        "pr_head": null,
+        "cb7": {
+          "sha256": "0c97fa38e8b52810fbf0c3d61ca937791baf9191108eaf244fff775592931d8a",
+          "bytes": 3344,
+          "git_blob": "74077641648e8717b25f4252fe279cfd3340d233"
+        },
+        "native_source": {
+          "sha256": "0c97fa38e8b52810fbf0c3d61ca937791baf9191108eaf244fff775592931d8a",
+          "bytes": 3344,
+          "git_blob": "74077641648e8717b25f4252fe279cfd3340d233"
+        },
+        "head": {
+          "sha256": "0c97fa38e8b52810fbf0c3d61ca937791baf9191108eaf244fff775592931d8a",
+          "bytes": 3344,
+          "git_blob": "74077641648e8717b25f4252fe279cfd3340d233"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": true
+    },
+    {
+      "path": "android/data-local/src/test/kotlin/org/inkweft/data/SaveBoundaryDiagnosticsTest.kt",
+      "category": "jvm_test",
+      "versions": {
+        "pr_head": null,
+        "cb7": null,
+        "native_source": {
+          "sha256": "d1bd148f6f787bf636d005d5f0932b4e4e02c65c0953ece313eb0e7bbd789dc6",
+          "bytes": 4166,
+          "git_blob": "47bfcb56a51aedb3ce7561fd63dcd903292751d0"
+        },
+        "head": {
+          "sha256": "d1bd148f6f787bf636d005d5f0932b4e4e02c65c0953ece313eb0e7bbd789dc6",
+          "bytes": 4166,
+          "git_blob": "47bfcb56a51aedb3ce7561fd63dcd903292751d0"
+        }
+      },
+      "head_equals_native": true,
+      "head_equals_cb7": false
+    }
+  ],
+  "native_source_comparison": {
+    "all_android_src_differences": [
+      "android/data-local/src/androidTest/kotlin/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest.kt"
+    ],
+    "all_android_main_files_identical": true,
+    "main_file_count": 397,
+    "not_blanket_test_coverage": true
+  },
+  "cb7_four_source_files_still_exact": [
+    "android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt",
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchMatcher.kt",
+    "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt",
+    "android/data-local/src/test/kotlin/org/inkweft/data/LibrarySearchMatcherTest.kt"
+  ],
+  "real_default_behavior_changes": [
+    "78a5bab: remove empty-draft CTE and restore unconditional TEMP draft overlay. Actual default SQL path change; simplification after mixed screen, not a claimed speedup.",
+    "cb7: precompute ASCII first query character and reject provably different starts; retain original ignoreCase verification/non-ASCII fallback; both ordinary and profiled UDFs use helper.",
+    "cb7: instantiate PencilTileRenderer on first actual PENCIL drawing and retain batch/finally cleanup."
+  ],
+  "default_off_diagnostics": [
+    "UDF/SQL and all-index-batch callbacks",
+    "Save stages/executor/Room/SQLite boundaries",
+    "GC guard/delete batch callbacks from existing reads",
+    "Raster/native-build/publication/notification boundaries"
+  ],
+  "default_off_limit": "Null skips diagnostic clocks, ThreadLocal and event allocations; branches remain. No measured zero total overhead claim.",
+  "coverage": [
+    {
+      "source_scope": "cb7 host",
+      "evidence": "android/verification/pr20-match-host-20261014/README.md",
+      "result_and_limit": "17 actual JVM tests: matcher5/observation11/terms1; app/data AndroidTest compile; host only"
+    },
+    {
+      "source_scope": "cb7 run38520196523",
+      "evidence": "android/verification/pr20-match-execution-20261014/README.md",
+      "result_and_limit": "62 native calls, four seeds,24 public calls/720 saves plus Unicode/oracle/continuous/dense;45/5/4 gates remain open"
+    },
+    {
+      "source_scope": "78a5bab run38514139119",
+      "evidence": "android/verification/pr20-causal-results-20261014/README.md",
+      "result_and_limit": "13 actual native diagnostic calls, before matcher/lazy pencil; not evidence of their gains"
+    },
+    {
+      "source_scope": "4f41a50 host",
+      "evidence": "android/verification/pr20-save-boundary-host-20261014/README.md",
+      "result_and_limit": "4 wrapper JVM tests executed and compile; not Room/SQLite/native execution"
+    },
+    {
+      "source_scope": "e31063c raster cleanup",
+      "evidence": "android/verification/pr20-raster-followup-20261014/README.md",
+      "result_and_limit": "322.761s app AndroidTest compile; no new native/JVM/APK build; new exact harness not natively executed"
+    },
+    {
+      "source_scope": "9437919 run38543698114",
+      "evidence": "android/verification/pr20-save-boundary-uuid-execution-20261014/README.md",
+      "result_and_limit": "10 data-only native calls:7 existing guards/2 corrected guards/90 instrumented saves; no app or GC boundary test"
+    },
+    {
+      "source_scope": "4c4a2d6 GC test",
+      "evidence": "android/verification/pr20-gc-boundary-host-20261014/README.md",
+      "result_and_limit": "107.791s final data AndroidTest compile bound9 inputs; no native execution; old0/30,1/30 natural exposure insufficient"
+    }
+  ],
+  "no_active_workflow_or_backup_server_delta": true,
+  "classification": {
+    "current_counts": {
+      "WITHIN_PROPOSED_BAND": 45,
+      "INCONCLUSIVE": 5,
+      "REGRESSION_SIGNAL": 4
+    },
+    "current_rule": ">=3 positive deltas AND median relative > band AND median absolute > band",
+    "B_to_C1_eight_full": "REGRESSION_SIGNAL",
+    "C0_to_C1_eight_full": "INCONCLUSIVE",
+    "parent_withdrew_three_individual_over_band_interpretation": true,
+    "historical_sensitivity_only": {
+      "WITHIN_PROPOSED_BAND": 45,
+      "INCONCLUSIVE": 6,
+      "REGRESSION_SIGNAL": 3
+    },
+    "original_sources": [
+      {
+        "git": "c37ba03232b1a0985e85cbaec4d349dbab945919",
+        "path": "ci/pr20-kvm-paired/PLAN.md",
+        "bytes": 19344,
+        "sha256": "028e1b7051626235636c08d7f6627a0d1f9298d3ce9009d0cae3803caad38ee4"
+      },
+      {
+        "git": "c37ba03232b1a0985e85cbaec4d349dbab945919",
+        "path": "ci/pr20-kvm-paired/protocol.json",
+        "bytes": 1942,
+        "sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+      },
+      {
+        "git": "c37ba03232b1a0985e85cbaec4d349dbab945919",
+        "path": "ci/pr20-kvm-paired/analyze.py",
+        "bytes": 6181,
+        "sha256": "d3bb05d493691be7924ecef0569d747645628c7abf0005287a8b045a69e36adf"
+      }
+    ],
+    "execution_analyzer": {
+      "path": "android/verification/pr20-match-candidate-20261014/analyze.py",
+      "lines": [
+        43,
+        46
+      ],
+      "sha256": "fdbf7b76ebbf587bccaede00910209ba2586c0982bbd0da80cb26cb94ce07740",
+      "bytes": 23606,
+      "git_blob": "12463aae7cb5e2721472527c013baa19a6ffb216"
+    },
+    "original_audit": {
+      "path": "/workspace/scratch/pr20-match-execution-20261014/rule-audit/review.json",
+      "sha256": "690beb40639920d3d3dc7d3ad4c2f06b70823811adcd948586c69fc29d3f5e7d"
+    },
+    "eight_full_pairs_reused": [
+      {
+        "comparison": "B->C0",
+        "metric": "raster.8.forcedFullCompleteMs",
+        "band": {
+          "relative": 0.1,
+          "absolute_ms": 5
+        },
+        "pairs": [
+          {
+            "seed": 4101,
+            "left_ms": 358.822529,
+            "right_ms": 313.601683,
+            "delta_ms": -45.220845999999995,
+            "relative_change": -0.12602565988826187,
+            "over_band": false
+          },
+          {
+            "seed": 4102,
+            "left_ms": 318.882758,
+            "right_ms": 345.232249,
+            "delta_ms": 26.349491,
+            "relative_change": 0.0826306544927713,
+            "over_band": false
+          },
+          {
+            "seed": 4103,
+            "left_ms": 321.718498,
+            "right_ms": 325.220203,
+            "delta_ms": 3.5017050000000154,
+            "relative_change": 0.010884375694182324,
+            "over_band": false
+          },
+          {
+            "seed": 4104,
+            "left_ms": 308.987158,
+            "right_ms": 331.41159,
+            "delta_ms": 22.424431999999968,
+            "relative_change": 0.07257399351205396,
+            "over_band": false
+          }
+        ],
+        "positive_pairs": 3,
+        "over_band_pairs": 0,
+        "median_delta_ms": 12.963068499999991,
+        "median_relative_change": 0.04172918460311814,
+        "original_frozen_status": "WITHIN_PROPOSED_BAND",
+        "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+        "original_output_exact_match": true
+      },
+      {
+        "comparison": "B->C1",
+        "metric": "raster.8.forcedFullCompleteMs",
+        "band": {
+          "relative": 0.1,
+          "absolute_ms": 5
+        },
+        "pairs": [
+          {
+            "seed": 4101,
+            "left_ms": 358.822529,
+            "right_ms": 337.493995,
+            "delta_ms": -21.32853399999999,
+            "relative_change": -0.05944034244293506,
+            "over_band": false
+          },
+          {
+            "seed": 4102,
+            "left_ms": 318.882758,
+            "right_ms": 380.560993,
+            "delta_ms": 61.67823499999997,
+            "relative_change": 0.19341978659128367,
+            "over_band": true
+          },
+          {
+            "seed": 4103,
+            "left_ms": 321.718498,
+            "right_ms": 338.116419,
+            "delta_ms": 16.397920999999997,
+            "relative_change": 0.05096977979798978,
+            "over_band": false
+          },
+          {
+            "seed": 4104,
+            "left_ms": 308.987158,
+            "right_ms": 374.559969,
+            "delta_ms": 65.572811,
+            "relative_change": 0.2122185641126224,
+            "over_band": true
+          }
+        ],
+        "positive_pairs": 3,
+        "over_band_pairs": 2,
+        "median_delta_ms": 39.038077999999985,
+        "median_relative_change": 0.12219478319463672,
+        "original_frozen_status": "REGRESSION_SIGNAL",
+        "alternative_three_over_band_status": "INCONCLUSIVE",
+        "original_output_exact_match": true
+      },
+      {
+        "comparison": "C0->C1",
+        "metric": "raster.8.forcedFullCompleteMs",
+        "band": {
+          "relative": 0.1,
+          "absolute_ms": 5
+        },
+        "pairs": [
+          {
+            "seed": 4101,
+            "left_ms": 313.601683,
+            "right_ms": 337.493995,
+            "delta_ms": 23.892312000000004,
+            "relative_change": 0.07618681051529941,
+            "over_band": false
+          },
+          {
+            "seed": 4102,
+            "left_ms": 345.232249,
+            "right_ms": 380.560993,
+            "delta_ms": 35.32874399999997,
+            "relative_change": 0.10233326724931757,
+            "over_band": true
+          },
+          {
+            "seed": 4103,
+            "left_ms": 325.220203,
+            "right_ms": 338.116419,
+            "delta_ms": 12.896215999999981,
+            "relative_change": 0.0396537972765485,
+            "over_band": false
+          },
+          {
+            "seed": 4104,
+            "left_ms": 331.41159,
+            "right_ms": 374.559969,
+            "delta_ms": 43.148379000000034,
+            "relative_change": 0.13019574541735257,
+            "over_band": true
+          }
+        ],
+        "positive_pairs": 4,
+        "over_band_pairs": 2,
+        "median_delta_ms": 29.610527999999988,
+        "median_relative_change": 0.08926003888230849,
+        "original_frozen_status": "INCONCLUSIVE",
+        "alternative_three_over_band_status": "INCONCLUSIVE",
+        "original_output_exact_match": true
+      }
+    ]
+  },
+  "remaining_limits": [
+    "Observe p50/direct p95 and eight-layer full signals remain open",
+    "GC natural competition quantiles and new boundary test native run unverified",
+    "Changed strict raster cleanup has compile only",
+    "Single-seed enabled-hook timings cannot close public four-pair gates"
+  ],
+  "actions": "No source edit, test, native, CI, build, network or push; only scratch output and read-only local evidence reuse"
+}

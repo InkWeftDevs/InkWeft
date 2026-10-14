@@ -1,0 +1,9 @@
+test_complete_synthetic (test_analyze.AnalysisTests.test_complete_synthetic) ... ok
+test_faults_rejected (test_analyze.AnalysisTests.test_faults_rejected) ... ok
+test_source_contract_mapping (test_analyze.AnalysisTests.test_source_contract_mapping) ... ok
+test_text_roundtrip_and_duplicate_keys (test_analyze.AnalysisTests.test_text_roundtrip_and_duplicate_keys) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.211s
+
+OK

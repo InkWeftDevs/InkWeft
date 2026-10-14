@@ -1,0 +1,43 @@
+{
+  "started_utc": "2026-10-14T10:19:28.880908+00:00",
+  "source_sha256_before": "597bed443289598870d063af99731a60db48ca0e38d8e3576b24fcd995cf4055",
+  "compiled_class_sha256": {
+    "android/data-local/build/intermediates/built_in_kotlinc/debugAndroidTest/compileDebugAndroidTestKotlin/classes/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest$Recorder$awaitWorkers$2.class": "8250f4e40e420b6f7d093e7117686a17c18f5c44dc0ebbb1d261d6ba84fd1456",
+    "android/data-local/build/intermediates/built_in_kotlinc/debugAndroidTest/compileDebugAndroidTestKotlin/classes/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest$Recorder.class": "2a563fc86d5893e65963c77ad493737b97d7c972ab83d0cd5db11db0a6e6b4f3",
+    "android/data-local/build/intermediates/built_in_kotlinc/debugAndroidTest/compileDebugAndroidTestKotlin/classes/org/inkweft/data/HistoryDeletionBoundaryDiagnosticsTest$Boundary.class": "221b51891fcb3d1cc9ff5de2f7123a48394649bd7c08628d82ba800fad20d43c",
+    "android/data-local/build/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes/org/inkweft/data/SaveBoundaryDiagnostics$Frame.class": "96f29864b9fb317a2e6dc12b441ec5278a3bff39b9a5e94f235ed26745a74250",
+    "android/data-local/build/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes/org/inkweft/data/SaveBoundaryDiagnostics.class": "1332e462711061dc9bfba757e50660a5d9ae61d5f837097752eb0aedfa554839",
+    "android/data-local/build/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes/org/inkweft/data/SaveBoundaryDiagnostics$database$1.class": "4908bb966307dbd98c59063f3c7b20cedaf36b0f7ceaa6c4ca3734df423e2f3d"
+  },
+  "host_source_sha256": {
+    "host-src/GcRecorderHostCheck.java": "4a8e7e0d2f5431a0f76e2c9debf7e70c758f2504415d13c1790571f836ea5c82",
+    "host-src/android/os/Debug.java": "b2ea68eb0f7c8c2db8d00f6584d639d1c04bfd4decf26bf08b0cb6f3d7d73e6b",
+    "host-src/org/json/JSONArray.java": "868fb8df981a0aaa822ce4fdf3005181ab7fb3ce72c78105afa9efa630fd07c1"
+  },
+  "dependency_sha256": {
+    "/workspace/.setup/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.10/8b80e2f80a3b7daa99c16017f91d4c72cd8b31a6/kotlin-stdlib-2.3.10.jar": "f61662c6d3a2f8ef5bd34362a02d877772c39f393cd394feb259dfaf7f4d8437",
+    "/workspace/.setup/gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.10.2/4a9f78ef49483748e2c129f3d124b8fa249dafbf/kotlinx-coroutines-core-jvm-1.10.2.jar": "5ca175b38df331fd64155b35cd8cae1251fa9ee369709b36d42e0a288ccce3fd",
+    "/workspace/.setup/gradle/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3",
+    "/workspace/.setup/gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9",
+    "/workspace/.setup/gradle/caches/9.4.1/transforms/410a77131322234df44ecb9b10d91f65/transformed/sqlite-runtime.jar": "389746af87b5868bc9ca75ab10880471353f53bf1be305a0eb4fd036349a1f5d",
+    "/workspace/.setup/tools/android-sdk/platforms/android-36/android.jar": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a"
+  },
+  "native_execution": false,
+  "android_json_runtime_tested": false,
+  "scope": "Actual compiled Recorder and Boundary; host Debug and JSONArray argument capture stand-ins; no DB",
+  "javac_exit_code": 0,
+  "host_exit_code": 0,
+  "checks": {
+    "status": "PASS_COMPILED_RECORDER_HOST_CHECK_ONLY",
+    "scenarios": 5,
+    "background_tasks_unlogged_but_awaited": true,
+    "capacity": 512,
+    "overflow_rejected_after_real_drain": true,
+    "tuple_values_and_types_exact": true,
+    "android_json_runtime_tested": false,
+    "android_native_execution": false
+  },
+  "elapsed_seconds": 2.986793766998744,
+  "source_sha256_after": "597bed443289598870d063af99731a60db48ca0e38d8e3576b24fcd995cf4055",
+  "source_unchanged": true
+}
