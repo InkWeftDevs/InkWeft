@@ -1,0 +1,41 @@
+{
+  "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+  "run_id": "38520196523",
+  "job_id": "115707901766",
+  "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+  "source_commit": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+  "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+  "run_attempt": "1",
+  "prep_sha": "b35d448862fe5963cdb57e0bc67042e87d22b1f6",
+  "run_status": "__PENDING_OFFICIAL_TERMINAL__",
+  "run_conclusion": "__PENDING_OFFICIAL_TERMINAL__",
+  "job_status": "__PENDING_OFFICIAL_TERMINAL__",
+  "job_conclusion": "__PENDING_OFFICIAL_TERMINAL__",
+  "input_hashes": {
+    "approved_plan_sha256": "fddc7225de7db0c14048a0d8f364dc749c2779ed9c959527d0ebadd78888f087",
+    "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+    "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+    "clock_contract_sha256": "b64b0ac49ae3f5de3784cf1fa4ab3151312d5faf59cc3f770d2514a705888314",
+    "server_receipt_sha256": "44a85fb00efc441eba34d4849590b5f91b08eec8ab563cf3db319b9ebf13dcf4"
+  },
+  "control_hashes": {
+    "ci/pr20-kvm-triple/binding-selftest.json": "bae817ca2220c5e473e6206b105d9c184b5c73b86b2dd1f2a978f4ef3bb03050",
+    "ci/pr20-kvm-triple/workflow.proposed.yml": "807b8520913966fda9a204947d792025407a7e7abf7c6b3ead6363aa71a05891",
+    "ci/pr20-kvm-triple/preflight.json": "a199bd8ce6905af02b31708e4538ef771e261f0feb964381fa8ef5daa6ad1076",
+    "ci/pr20-kvm-triple/budget-revision.json": "be2006587f7e7feb9397310345ef3f8e73a5d35282d536916b5ac4c08db6d144",
+    "ci/pr20-kvm-triple/run.py": "4a3fc95304dfe0dfeeeecfda85a67f9f7ffc288fb904b9608262be5b04d97466",
+    "ci/pr20-kvm-triple/clock-server-receipt.json": "44a85fb00efc441eba34d4849590b5f91b08eec8ab563cf3db319b9ebf13dcf4",
+    "ci/pr20-kvm-triple/package.py": "e9b0fcfa55549dfc71e1737f07b7eaf7a598e09f961145be509d0c0945b6e24a",
+    "ci/pr20-kvm-triple/authorization.json": "be5884313087a81f8f3c067f32605c6688c6cff01daa09cf8547aaa242d88739",
+    "ci/pr20-kvm-triple/markers.py": "7dfb88112bdf17b9cc8ff96b9cdf068a79394505cbb0103be4d93819533a2a80",
+    "ci/pr20-kvm-triple/EXECUTION_SHA256SUMS": "7e9ddfba86a64d858eae6f475f9a96a2870f016f627190034362a3b0982dbcbd",
+    "ci/pr20-kvm-triple/check_final_binding.py": "255974562c85466be0849e4305759dba348e54139566cfe4b83ae5f485c86a17",
+    "ci/pr20-kvm-triple/cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "ci/pr20-kvm-triple/clock-contract.json": "b64b0ac49ae3f5de3784cf1fa4ab3151312d5faf59cc3f770d2514a705888314",
+    ".github/workflows/pr20-kvm-triple.yml": "807b8520913966fda9a204947d792025407a7e7abf7c6b3ead6363aa71a05891"
+  },
+  "statistics_sha256": "fdbf7b76ebbf587bccaede00910209ba2586c0982bbd0da80cb26cb94ce07740",
+  "prepare_sources_sha256": "2b544afa479b81294efc6bad2bf8af910bf39039af4664ab70035fce3e6e0dfb"
+}

@@ -1,0 +1,259 @@
+{
+  "status": "READ_ONLY_INSTRUMENTATION_DESIGN_NOT_IMPLEMENTED",
+  "source": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+  "sources": [
+    {
+      "path": "android/gradle/libs.versions.toml",
+      "current_sha256": "2bedab1699d8c47afa899674207927a10fce8c8abb93b049a3b659af89483403",
+      "cb7_sha256": "2bedab1699d8c47afa899674207927a10fce8c8abb93b049a3b659af89483403",
+      "matches_cb7": true
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt",
+      "current_sha256": "e1570c26f61ba352f7a636d934e7acbff6f0b3250985f1e9caf0a55046432c9a",
+      "cb7_sha256": "e1570c26f61ba352f7a636d934e7acbff6f0b3250985f1e9caf0a55046432c9a",
+      "matches_cb7": true
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt",
+      "current_sha256": "bbead6435e0858be6d1480b6e61d764b6a4177bdb9db564dffb76d3ea588781a",
+      "cb7_sha256": "bbead6435e0858be6d1480b6e61d764b6a4177bdb9db564dffb76d3ea588781a",
+      "matches_cb7": true
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+      "current_sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+      "cb7_sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d",
+      "matches_cb7": true
+    },
+    {
+      "path": "android/data-local/src/main/kotlin/org/inkweft/data/LibrarySearchRepository.kt",
+      "current_sha256": "50089cb11edae66be4339a7258b96c7ac6b866b440255d48220aea7bf2fdb963",
+      "cb7_sha256": "50089cb11edae66be4339a7258b96c7ac6b866b440255d48220aea7bf2fdb963",
+      "matches_cb7": true
+    },
+    {
+      "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveCausalTest.kt",
+      "current_sha256": "f2faf22c8eff0c5f37c981c389917e17214d86edc38535e68dd9b0ab69a1eb8e",
+      "cb7_sha256": "f2faf22c8eff0c5f37c981c389917e17214d86edc38535e68dd9b0ab69a1eb8e",
+      "matches_cb7": true
+    }
+  ],
+  "dependencies": {
+    "room": "2.8.5",
+    "requery": "3.49.0",
+    "coroutines": "1.10.2",
+    "mode": "OpenHelper compatibility",
+    "journal": "WAL",
+    "synchronous": "FULL"
+  },
+  "latest_public_comparisons": [
+    {
+      "metric": "library.direct.p95",
+      "left_seed_median_ms": 3.7381135,
+      "right_seed_median_ms": 10.474968,
+      "median_paired_delta_ms": 6.7368545,
+      "status": "REGRESSION_SIGNAL",
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 3.977992,
+          "right_ms": 8.129486,
+          "delta_ms": 4.151494,
+          "relative_change": 1.043615472328753,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 3.563505,
+          "right_ms": 11.474386,
+          "delta_ms": 7.910881000000001,
+          "relative_change": 2.2199719096788137,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 3.887389,
+          "right_ms": 10.577346,
+          "delta_ms": 6.689957,
+          "relative_change": 1.7209383984983235,
+          "over_band": true
+        },
+        {
+          "seed": 4104,
+          "left_ms": 3.588838,
+          "right_ms": 10.37259,
+          "delta_ms": 6.783752000000001,
+          "relative_change": 1.8902363383356957,
+          "over_band": true
+        }
+      ]
+    },
+    {
+      "metric": "library.observe.p50",
+      "left_seed_median_ms": 3.3232720000000002,
+      "right_seed_median_ms": 7.858404999999999,
+      "median_paired_delta_ms": 4.4063,
+      "status": "REGRESSION_SIGNAL",
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 3.19772,
+          "right_ms": 7.879988,
+          "delta_ms": 4.6822680000000005,
+          "relative_change": 1.4642520295710693,
+          "over_band": true
+        },
+        {
+          "seed": 4102,
+          "left_ms": 3.79792,
+          "right_ms": 8.066663,
+          "delta_ms": 4.268743000000001,
+          "relative_change": 1.1239686459957028,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 3.292965,
+          "right_ms": 7.836822,
+          "delta_ms": 4.543856999999999,
+          "relative_change": 1.3798679913087444,
+          "over_band": true
+        },
+        {
+          "seed": 4104,
+          "left_ms": 3.353579,
+          "right_ms": 7.34989,
+          "delta_ms": 3.9963110000000004,
+          "relative_change": 1.1916555417361572,
+          "over_band": true
+        }
+      ]
+    }
+  ],
+  "directly_feasible_boundaries": [
+    "Room transaction executor submission and Runnable entry",
+    "Room begin/success/end around original super calls",
+    "Outermost delegated SupportSQLite begin/end",
+    "Existing caller return hook"
+  ],
+  "bounded_not_exact": [
+    "Room post-SQLite-end includes refresh request/coalescing/launch",
+    "SQLite END includes commit or rollback plus release",
+    "Room-end return to caller includes continuation plumbing and scheduling"
+  ],
+  "not_exposed_without_intrusion": [
+    "Private refresh CAS callbacks",
+    "Exact private continuation.resumeWith",
+    "Native fsync-only and release-only durations"
+  ],
+  "optional_followup": [
+    "Same-default-pool query executor submission wrapper",
+    "Diagnostic-only delegated caller IO dispatcher; not public performance data"
+  ],
+  "no_changes": [
+    "No source/test/controller edits",
+    "No library fork/reflection",
+    "No Gradle/native/network/CI",
+    "No acceptance threshold or sample changes"
+  ],
+  "support_files": [
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/save-return-review.md",
+      "sha256": "c31d07e4844ffd8963c4cb32e25ce2eb60a5f26d7d9b61bfab07d4ef22aacd96",
+      "bytes": 10584
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/save-return-binding.json",
+      "sha256": "6f6d4dab1c7205a2c716f56453762b63e87f8178772db4968fc13f6ac6b85290",
+      "bytes": 15143
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/save-return-raw-review.json",
+      "sha256": "da85c18ed0587a5e3fb27f6b6bf343b99768b36bd73543e377bd611b356b0e24",
+      "bytes": 277640
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/room-runtime-2.8.5-classes.jar",
+      "sha256": "17ac25750e9b7e3f4ef13e69db6493539aa962f541a4ce1570924a68b6c218d7",
+      "bytes": 610605
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/requery-3.49.0-classes.jar",
+      "sha256": "b9f6a7901d3cdc90649542ee116460067e75fe62709a84288e58f53346355580",
+      "bytes": 113189
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/sqlite-2.6.2-classes.jar",
+      "sha256": "09c3b94cb3046b4a252ee9c42c0f83afaeff057c3b61181b6f9de6f268c1c625",
+      "bytes": 36633
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/androidx.room.RoomDatabase.javap.txt",
+      "sha256": "cdb901bca2c7c6bfc0846b417e34363a762cce35aa1efe207f2c9890e005a2f8",
+      "bytes": 76931
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/androidx.room.RoomDatabaseKt__RoomDatabase_androidKt.javap.txt",
+      "sha256": "6c29a24ed9862d91f6508181e66c296f4aa1fc1896a0b63445a98189a4f25a53",
+      "bytes": 13518
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/androidx.room.RoomDatabaseKt__RoomDatabase_androidKt$startTransactionCoroutine$2$1.javap.txt",
+      "sha256": "1618f4c47d1236d172d8d2ec8d7791f4b983a8ba4a99fb2888e4e67d3b4dc9b1",
+      "bytes": 3713
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/androidx.room.RoomDatabaseKt__RoomDatabase_androidKt$startTransactionCoroutine$2$1$1.javap.txt",
+      "sha256": "7478f00c67b363e00dac1763d19e6bcf298d9595f2d45af6395a2d4e6843db19",
+      "bytes": 8401
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/androidx.room.RoomDatabaseKt__RoomDatabase_androidKt$withTransaction$2.javap.txt",
+      "sha256": "893231f680664c23ae97f8ff2a339d4d60fe0e22f9666aa9d9e51a6601df3d89",
+      "bytes": 5742
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/androidx.room.InvalidationTracker.javap.txt",
+      "sha256": "c0d814284046967dbe90aae556d3f53ce95093ee1b11cc8564c69de02d2200ab",
+      "bytes": 53042
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/androidx.room.TriggerBasedInvalidationTracker.javap.txt",
+      "sha256": "5c8e96dde6d82e54ff4946b60a9c19afe889bf8fac327e11e07b5e19a561bb9f",
+      "bytes": 81870
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/io.requery.android.database.sqlite.SQLiteDatabase.javap.txt",
+      "sha256": "3b43b691914d7fa5e8ca384258a749525d75a5196fbace405243cba1a4a1e8bb",
+      "bytes": 149802
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/io.requery.android.database.sqlite.SQLiteSession.javap.txt",
+      "sha256": "f29df9105207308bec61dec7fb3d69761540caee9e5312902d4caad017826270",
+      "bytes": 45170
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-execution-20261014/extracted/statistics/analysis.json",
+      "sha256": "9c735a2031ba94f04ea7c185ba3c7fc820d69bd27bbffb63f080bf19d930e7bc",
+      "bytes": 1950174
+    },
+    {
+      "path": "/workspace/scratch/pr20-causal-execution-20261014/extracted/method-10-C1-records.json",
+      "sha256": "1bb57986e65d56c4e27ccd65466b0793f7a364e638c93b17b1b00b40bb0e8bd6",
+      "bytes": 506212
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/save-boundary-readonly-evidence/room-builder-api.javap.txt",
+      "sha256": "9a2eaaab469a55171a5440131ab7cac55507797a13873ce1ca36fd3f9a358107",
+      "bytes": 5380
+    },
+    {
+      "path": "/workspace/scratch/pr20-match-candidate-20261014/save-boundary-readonly-evidence/room-builder-default-executors.javap.txt",
+      "sha256": "d576e38a8e54408826b4bf1883fa4e895d54409203a90fc7e59d58747e8a8288",
+      "bytes": 3948
+    }
+  ],
+  "plan_path": "/workspace/scratch/pr20-match-candidate-20261014/save-boundary-instrumentation-plan.md",
+  "plan_sha256": "c19ef0eb80b97db70932e7444e810fba931b9abc397f2545b5babcbd8e1d12df"
+}

@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "scope": "LOCAL_FINAL_BINDING_ONLY_NOT_JOB_OR_NATIVE_EVIDENCE",
+  "repo": "/workspace/InkWeft-native-match",
+  "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+  "prep_sha": "0000000000000000000000000000000000000000",
+  "expected_pr_head": "607c891efe6afd70b4c3fd7db0e95d0e2ccabd8c",
+  "source_git": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+  "committed_readiness_files_checked": 38,
+  "input_hashes": {
+    "approved_plan_sha256": "fddc7225de7db0c14048a0d8f364dc749c2779ed9c959527d0ebadd78888f087",
+    "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+    "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+    "clock_contract_sha256": "b64b0ac49ae3f5de3784cf1fa4ab3151312d5faf59cc3f770d2514a705888314",
+    "server_receipt_sha256": "44a85fb00efc441eba34d4849590b5f91b08eec8ab563cf3db319b9ebf13dcf4"
+  },
+  "control_hashes": {
+    "workflow.proposed.yml": "add3e107c74ae3c28907847d8296d2420281e3d19d7e04fd408424c7c511345d",
+    "budget-revision.json": "be2006587f7e7feb9397310345ef3f8e73a5d35282d536916b5ac4c08db6d144",
+    "run.py": "4a3fc95304dfe0dfeeeecfda85a67f9f7ffc288fb904b9608262be5b04d97466",
+    "clock-server-receipt.json": "44a85fb00efc441eba34d4849590b5f91b08eec8ab563cf3db319b9ebf13dcf4",
+    "package.py": "e9b0fcfa55549dfc71e1737f07b7eaf7a598e09f961145be509d0c0945b6e24a",
+    "authorization.json": "be5884313087a81f8f3c067f32605c6688c6cff01daa09cf8547aaa242d88739",
+    "markers.py": "7dfb88112bdf17b9cc8ff96b9cdf068a79394505cbb0103be4d93819533a2a80",
+    "cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "clock-contract.json": "b64b0ac49ae3f5de3784cf1fa4ab3151312d5faf59cc3f770d2514a705888314"
+  },
+  "clock": {
+    "anchor_epoch": 1791957846,
+    "anchor_utc": "2026-10-14T06:04:06Z",
+    "locally_checked_epoch": 1791957875.1645665,
+    "actual_job_started_epoch": null,
+    "cutoffs": {
+      "setup": 1791960126,
+      "correctness": 1791960306,
+      "common": 1791961026,
+      "diagnostics": 1791961146
+    }
+  },
+  "approved": true,
+  "active_workflow_present": false,
+  "actual_runner_invocations": 0,
+  "network_calls": 0,
+  "launch_authorization_created": false,
+  "pending_external_checks": [
+    "No active overlapping run",
+    "Prep head had zero workflow runs before activation",
+    "Actual job start is at or after immutable anchor",
+    "Only one authorized activation/attempt"
+  ],
+  "checker_sha256": "255974562c85466be0849e4305759dba348e54139566cfe4b83ae5f485c86a17"
+}

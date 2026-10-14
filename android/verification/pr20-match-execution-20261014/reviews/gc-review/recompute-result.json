@@ -1,0 +1,131 @@
+{
+  "status": "RECORDS_CONSISTENT_INSUFFICIENT_EXPOSURE_NOT_ACCEPTANCE",
+  "groups": [
+    {
+      "ordinal": 56,
+      "connection": "same-room",
+      "exposure": {
+        "precommit_point_trials": 0,
+        "actual_delete_exact_intervals_measured": false,
+        "source_order_proven_delete_during_pending_call_trials": 0,
+        "source_order_proven_complete_delete_loops_during_call": 0,
+        "threshold": 20,
+        "status": "INSUFFICIENT_EXPOSURE",
+        "samples_original_order": [],
+        "indices": [],
+        "p50_ms": null,
+        "p95_ms": null,
+        "max_ms": null
+      },
+      "first": {
+        "root_scans": 30,
+        "deleted": 0,
+        "committed_batches": 0,
+        "deferred_count": 30,
+        "elapsed_total_ms": 576.216202
+      },
+      "finish": {
+        "root_scans": 30,
+        "deleted": 38400,
+        "elapsed_total_ms": 2007.209923
+      },
+      "total": {
+        "root_scans": 60,
+        "deleted": 38400,
+        "elapsed_total_ms": 2583.426125
+      },
+      "deletion_details": []
+    },
+    {
+      "ordinal": 57,
+      "connection": "separate-room",
+      "exposure": {
+        "precommit_point_trials": 1,
+        "actual_delete_exact_intervals_measured": false,
+        "source_order_proven_delete_during_pending_call_trials": 1,
+        "source_order_proven_complete_delete_loops_during_call": 4,
+        "threshold": 20,
+        "status": "INSUFFICIENT_EXPOSURE",
+        "samples_original_order": [
+          84.060999
+        ],
+        "indices": [
+          9
+        ],
+        "p50_ms": null,
+        "p95_ms": null,
+        "max_ms": 84.060999
+      },
+      "first": {
+        "root_scans": 30,
+        "deleted": 1280,
+        "committed_batches": 5,
+        "deferred_count": 29,
+        "elapsed_total_ms": 627.612375
+      },
+      "finish": {
+        "root_scans": 30,
+        "deleted": 37120,
+        "elapsed_total_ms": 1994.869167
+      },
+      "total": {
+        "root_scans": 60,
+        "deleted": 38400,
+        "elapsed_total_ms": 2622.481542
+      },
+      "deletion_details": [
+        {
+          "sample": 9,
+          "save_ms": 84.060999,
+          "save_start_ns": 834682118714,
+          "save_end_ns": 834766179713,
+          "precommit_points_during_call": [
+            834690066037,
+            834706368549,
+            834717193843,
+            834726952560,
+            834736407686
+          ],
+          "first_deleted": 1280,
+          "first_deferred": false,
+          "committed_batches": 5,
+          "bracketed_full_delete_loops_during_call": [
+            {
+              "batch": 2,
+              "lower_ns": 834697798498,
+              "upper_ns": 834706368549,
+              "contains_full_delete_loop_by_source_order": true
+            },
+            {
+              "batch": 3,
+              "lower_ns": 834709305194,
+              "upper_ns": 834717193843,
+              "contains_full_delete_loop_by_source_order": true
+            },
+            {
+              "batch": 4,
+              "lower_ns": 834719570720,
+              "upper_ns": 834726952560,
+              "contains_full_delete_loop_by_source_order": true
+            },
+            {
+              "batch": 5,
+              "lower_ns": 834729361772,
+              "upper_ns": 834736407686,
+              "contains_full_delete_loop_by_source_order": true
+            }
+          ],
+          "exact_delete_interval_observed": false,
+          "relative_to_save_start_ms": {
+            "first_before_commit": 7.947323,
+            "last_before_commit": 54.288972,
+            "last_after_batch": 56.277436,
+            "collector_end": 59.222817,
+            "before_rename_receipt": 82.531005,
+            "save_end": 84.060999
+          }
+        }
+      ]
+    }
+  ]
+}

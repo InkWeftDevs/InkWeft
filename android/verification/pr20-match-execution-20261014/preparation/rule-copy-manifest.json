@@ -1,0 +1,44 @@
+[
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/rule-audit/comparisons.csv",
+    "path": "reviews/rule-audit/comparisons.csv",
+    "bytes": 6283,
+    "sha256": "2e5459c1286cf9acc43a1cd17ea9297805c623ba4d5ecc00fe2d85dba8e8e88c"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/rule-audit/pre-run-original/PLAN.md",
+    "path": "reviews/rule-audit/pre-run-original/PLAN.md",
+    "bytes": 19344,
+    "sha256": "028e1b7051626235636c08d7f6627a0d1f9298d3ce9009d0cae3803caad38ee4"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/rule-audit/pre-run-original/analyze.py",
+    "path": "reviews/rule-audit/pre-run-original/analyze.py",
+    "bytes": 6181,
+    "sha256": "d3bb05d493691be7924ecef0569d747645628c7abf0005287a8b045a69e36adf"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/rule-audit/pre-run-original/protocol.json",
+    "path": "reviews/rule-audit/pre-run-original/protocol.json",
+    "bytes": 1942,
+    "sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/rule-audit/recompute.py",
+    "path": "reviews/rule-audit/recompute.py",
+    "bytes": 9163,
+    "sha256": "394c4ab9c0ba435d488dd65d96bb7113260b6fe268b2b61a90183d7c9593cac8"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/rule-audit/review.json",
+    "path": "reviews/rule-audit/review.json",
+    "bytes": 80175,
+    "sha256": "690beb40639920d3d3dc7d3ad4c2f06b70823811adcd948586c69fc29d3f5e7d"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/rule-audit/review.md",
+    "path": "reviews/rule-audit/review.md",
+    "bytes": 6113,
+    "sha256": "cd44e11d3b4ca8efb8edf906e5590f873826ab5ca4948efd60adeece310838b5"
+  }
+]

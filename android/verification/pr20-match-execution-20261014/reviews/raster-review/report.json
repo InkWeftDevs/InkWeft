@@ -1,0 +1,5750 @@
+{
+  "schema": 1,
+  "status": "COMPLETE_INDEPENDENT_RASTER_RECOMPUTATION_NOT_FINAL_ACCEPTANCE",
+  "expected": {
+    "run_id": "38520196523",
+    "job_id": "115707901766",
+    "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+    "source_commit": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+    "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e"
+  },
+  "inputs": {
+    "extracted/analysis.json": "6c0f87b29a7a4611c20b413b16a5e7b3246e00c06ccd9f7af65aab6029abcbd5",
+    "extracted/statistics/analysis.json": "9c735a2031ba94f04ea7c185ba3c7fc820d69bd27bbffb63f080bf19d930e7bc",
+    "job-decoded.log": "d1634bbeb118100737e2c9d6d6111fca972f2fb05999b5604ff34f0d0e7c9f62"
+  },
+  "scope": "fixed run only; raw compact log evidence independently recomputed, no builds/network/tests",
+  "source_spec": {
+    "schema": 1,
+    "status": "FROZEN_SOURCE_NOT_BUILT_NOT_RUN",
+    "materialized_scope": [
+      "android",
+      "ci"
+    ],
+    "excluded_from_build_inputs": [
+      "android/verification"
+    ],
+    "identities": {
+      "B": {
+        "git": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+        "tree": "2eefbf879679d29f5ae4b1d6b9715a4cef14d5d9",
+        "production_overrides": [
+          {
+            "from_git": "7949011ca2b84492f6438d275a09d28faef3b472",
+            "from_path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+            "path": "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt",
+            "bytes": 4426,
+            "sha256": "a049af775caa688cd0dfd938acdf1539d34ee13de272ed35c930de9ef4e3d15d"
+          }
+        ],
+        "canonical_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+        "file_count": 947
+      },
+      "C0": {
+        "git": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+        "tree": "e773d660abbc15fd727000eb60631d3b72a19a92",
+        "production_overrides": [],
+        "canonical_manifest_sha256": "06e7cea253c061891e10f658400143a7da34ba23f6ec95224bee31f5c0d13eb6",
+        "file_count": 964
+      },
+      "C1": {
+        "git": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+        "tree": "5e5b9651197f024832ff7763ff0d87f2011a606d",
+        "production_overrides": [],
+        "canonical_manifest_sha256": "6f9c33d89bab33c032af958727ac1ee9b8b6011b2af2af5d06984556cc839d3e",
+        "file_count": 999
+      }
+    },
+    "common_probes": [
+      {
+        "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+        "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLibraryPairProbe.kt",
+        "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/KvmLibraryPairProbe.kt",
+        "bytes": 18281,
+        "sha256": "90525d56efe48b32441be890e29c021d0f699fe7d82389d1e049283cfb10f98c"
+      },
+      {
+        "from_git": "e1a813aa24be20df0901f6aff9554632e1f531b7",
+        "from_path": "android/verification/pr20-kvm-paired-20261013/evidence/probe-KvmLocalAppendPairProbe.kt",
+        "path": "android/app/src/androidTest/java/org/inkweft/app/KvmLocalAppendPairProbe.kt",
+        "bytes": 12932,
+        "sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338"
+      }
+    ],
+    "native_execution": "NOT_RUN",
+    "notes": [
+      "B and common probes remain byte-identical to the prior full58 source manifest.",
+      "C0 equals prior full58 C1=d66, not the old45b slot.",
+      "C1 contains the entire committed delta from d66, including prior default-off diagnostic hooks; do not claim one-helper-only causal isolation.",
+      "62 methods preserve all old1..58 fields and add Unicode/NativeReuse/Frame/originaldense only.",
+      "No build/native/network operation is performed by freezing."
+    ],
+    "version_aliases": {
+      "B": "controlled_baseline",
+      "C0": "previous_complete_candidate_d66b60d",
+      "C1": "matching_and_frame_pencil_candidate"
+    }
+  },
+  "bindings": [
+    {
+      "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+      "run_id": "38520196523",
+      "run_attempt": "1",
+      "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+      "source_commit": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+      "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+      "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+      "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+      "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+      "source_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ],
+      "apk_receipt_sha256": "134457d87ad2521dd97962a350fbc3357d59b08c4877429c69fbad81c5dff88d",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d",
+          "source_apk_sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1",
+          "source_apk_sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0",
+          "source_apk_sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0"
+        }
+      ],
+      "install_log_sha256": "1446dd3e7102f8fab2f2dfa5e3e0dc92e2a77cd02e4fce60180672ddfc195f33",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "ordinal": 32,
+      "identity": "B",
+      "seed": 4101,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "install_group": "visit-01-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "raw_log_sha256": "e28688efd3dceb84c19378185c988319106bbec3f1a7ff6ee300b97fb9103628",
+      "records_sha256": "1eaf54e3fd885949e7db2b8fc8b9dab52464f6bb7f4e3ac1cdd727d614b20caa",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 4.2699998630268965e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_seconds": 0.06145139399995969,
+      "auxiliary_cleanup": null
+    },
+    {
+      "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+      "run_id": "38520196523",
+      "run_attempt": "1",
+      "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+      "source_commit": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+      "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+      "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+      "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+      "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+      "source_manifest_sha256": "06e7cea253c061891e10f658400143a7da34ba23f6ec95224bee31f5c0d13eb6",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ],
+      "apk_receipt_sha256": "60bd415869885912e0d93b3d29d4ac9c13796c6418e3cc8a7731d3d8431f7389",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890",
+          "source_apk_sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a",
+          "source_apk_sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5",
+          "source_apk_sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5"
+        }
+      ],
+      "install_log_sha256": "b4b131f6477b2a8f22d4acea8bf7c801054d696219bd0169d62809b0672032a4",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "ordinal": 34,
+      "identity": "C0",
+      "seed": 4101,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "install_group": "visit-02-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "raw_log_sha256": "eb571ead52cb2d2486c973389d48e787c108588c40a2d36d877719fbe1b89585",
+      "records_sha256": "e75113bedf4b9d9e44e2b7dbe0ef800a9ef6d8fc8e1440d584a17e98564f6750",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.843999936885666e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_seconds": 0.05676759200014203,
+      "auxiliary_cleanup": null
+    },
+    {
+      "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+      "run_id": "38520196523",
+      "run_attempt": "1",
+      "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+      "source_commit": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+      "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+      "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+      "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+      "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+      "source_manifest_sha256": "6f9c33d89bab33c032af958727ac1ee9b8b6011b2af2af5d06984556cc839d3e",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ],
+      "apk_receipt_sha256": "b2efd3ee5fa197c51cb3a57c94b21757167e1c39ed5021c271c5a472275a6e8b",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "source_apk_sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "source_apk_sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "source_apk_sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c"
+        }
+      ],
+      "install_log_sha256": "30a25599aaa5bf69f7426a179bd8e77bc236fa7fe8e0ba3b50458a4bb6332462",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "ordinal": 36,
+      "identity": "C1",
+      "seed": 4101,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "install_group": "visit-03-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "raw_log_sha256": "065d01329a161a7e04282cb80fb36386d6653f3f1e471281e328f5cf407ca2d7",
+      "records_sha256": "a6839ec47877bbdcccdbc72f4b40094fb248068282d8b5ce60bfea01bd649eec",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.5129997993644793e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_seconds": 0.05762948499977938,
+      "auxiliary_cleanup": null
+    },
+    {
+      "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+      "run_id": "38520196523",
+      "run_attempt": "1",
+      "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+      "source_commit": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+      "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+      "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+      "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+      "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+      "source_manifest_sha256": "6f9c33d89bab33c032af958727ac1ee9b8b6011b2af2af5d06984556cc839d3e",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ],
+      "apk_receipt_sha256": "b2efd3ee5fa197c51cb3a57c94b21757167e1c39ed5021c271c5a472275a6e8b",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "source_apk_sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "source_apk_sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "source_apk_sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c"
+        }
+      ],
+      "install_log_sha256": "17de10572c0311662aef3f1ff06dbd929e4cb268fe8a3b9d89385fa9dac3453d",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "ordinal": 38,
+      "identity": "C1",
+      "seed": 4102,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "install_group": "visit-04-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "raw_log_sha256": "8fb397532745095733efc79fedc2e46c2a4970a663ee64a4cd3b46b240ea9baa",
+      "records_sha256": "2478df2d17d8cb5b6a980463e73247064dad4228abaa6a5b811191f74cbb9fd8",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.551999841671204e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_seconds": 0.055413013999896066,
+      "auxiliary_cleanup": null
+    },
+    {
+      "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+      "run_id": "38520196523",
+      "run_attempt": "1",
+      "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+      "source_commit": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+      "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+      "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+      "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+      "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+      "source_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ],
+      "apk_receipt_sha256": "134457d87ad2521dd97962a350fbc3357d59b08c4877429c69fbad81c5dff88d",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d",
+          "source_apk_sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1",
+          "source_apk_sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0",
+          "source_apk_sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0"
+        }
+      ],
+      "install_log_sha256": "f12b8eb2641d0e46d3b71b6711746289ac424fe7231718df1b63e0ad3ceb7d14",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "ordinal": 40,
+      "identity": "B",
+      "seed": 4102,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "install_group": "visit-05-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "raw_log_sha256": "a52a244cbeab9e56259d25baa304be75130d0c6efbb4ea2d35f97758137cd2b0",
+      "records_sha256": "55a00741efb1e177607ddf83b7503689696143a1c8b83ca504522d4d108e09dd",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 4.0499999158782884e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_seconds": 0.059404078999705234,
+      "auxiliary_cleanup": null
+    },
+    {
+      "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+      "run_id": "38520196523",
+      "run_attempt": "1",
+      "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+      "source_commit": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+      "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+      "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+      "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+      "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+      "source_manifest_sha256": "06e7cea253c061891e10f658400143a7da34ba23f6ec95224bee31f5c0d13eb6",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ],
+      "apk_receipt_sha256": "60bd415869885912e0d93b3d29d4ac9c13796c6418e3cc8a7731d3d8431f7389",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890",
+          "source_apk_sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a",
+          "source_apk_sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5",
+          "source_apk_sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5"
+        }
+      ],
+      "install_log_sha256": "bbeaa0b44ccd621419546879c49b850fa6199c070bf1fd2d1318bc4198dbb112",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "ordinal": 42,
+      "identity": "C0",
+      "seed": 4102,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "install_group": "visit-06-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "raw_log_sha256": "b1b91827e726eee5a238d3d92cd29d6c3498ced63b879ed331cdc6f45a56a289",
+      "records_sha256": "6e90d10e4afcff29b4c71839be6ec79af1b7704cd46668a6c1212438a906802f",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.471000243531307e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_seconds": 0.056531749999976455,
+      "auxiliary_cleanup": null
+    },
+    {
+      "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+      "run_id": "38520196523",
+      "run_attempt": "1",
+      "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+      "source_commit": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+      "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+      "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+      "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+      "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+      "source_manifest_sha256": "06e7cea253c061891e10f658400143a7da34ba23f6ec95224bee31f5c0d13eb6",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ],
+      "apk_receipt_sha256": "60bd415869885912e0d93b3d29d4ac9c13796c6418e3cc8a7731d3d8431f7389",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890",
+          "source_apk_sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a",
+          "source_apk_sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5",
+          "source_apk_sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5"
+        }
+      ],
+      "install_log_sha256": "dd51db0e3322982c25d22e137d45c6aa6966b09a8ccfea7bc075bab67fe3a96b",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "ordinal": 44,
+      "identity": "C0",
+      "seed": 4103,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4103",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "install_group": "visit-07-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "raw_log_sha256": "b1bc72580d2690ba8f80567cfe2101106a74465416e0b901300bb4976254461c",
+      "records_sha256": "9eb544ae19dc0d3cbe1cdb123772f19a638d7f32073128aa19ba8099d78b1ba6",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.6609999369829893e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_seconds": 0.05830816599973332,
+      "auxiliary_cleanup": null
+    },
+    {
+      "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+      "run_id": "38520196523",
+      "run_attempt": "1",
+      "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+      "source_commit": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+      "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+      "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+      "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+      "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+      "source_manifest_sha256": "6f9c33d89bab33c032af958727ac1ee9b8b6011b2af2af5d06984556cc839d3e",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ],
+      "apk_receipt_sha256": "b2efd3ee5fa197c51cb3a57c94b21757167e1c39ed5021c271c5a472275a6e8b",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "source_apk_sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "source_apk_sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "source_apk_sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c"
+        }
+      ],
+      "install_log_sha256": "453d0c396a49bc601a23e2e1b59f9728359f5016e6af59409000c36b9b359c9b",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "ordinal": 46,
+      "identity": "C1",
+      "seed": 4103,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4103",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "install_group": "visit-08-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "raw_log_sha256": "080e53816fe4124a2cea312ed93c803e6cebc998d0b2b20a53440b02c0fbe474",
+      "records_sha256": "10de8abc94b02aaed3e01e283a22b0e18b6dc21eb30f81b8aabc9ee2ff69c841",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.5765000373212388e-05,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_seconds": 0.05737303200021415,
+      "auxiliary_cleanup": null
+    },
+    {
+      "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+      "run_id": "38520196523",
+      "run_attempt": "1",
+      "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+      "source_commit": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+      "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+      "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+      "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+      "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+      "source_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ],
+      "apk_receipt_sha256": "134457d87ad2521dd97962a350fbc3357d59b08c4877429c69fbad81c5dff88d",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d",
+          "source_apk_sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1",
+          "source_apk_sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0",
+          "source_apk_sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0"
+        }
+      ],
+      "install_log_sha256": "6434fc463b268e7cb25bd6743ef358cc494481f695e7585b6184f4377f021792",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "ordinal": 48,
+      "identity": "B",
+      "seed": 4103,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4103",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "install_group": "visit-09-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "raw_log_sha256": "bedef1fc8708824f720941ffcf7f83a495fb1343fde41a8b4f605035d93b4d0d",
+      "records_sha256": "2ad0c847f6dbf42917a36aec0ab1b91ac1b0b5de0503ba854da55261c1eeaf62",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.1229997148329858e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_seconds": 0.059551531999659346,
+      "auxiliary_cleanup": null
+    },
+    {
+      "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+      "run_id": "38520196523",
+      "run_attempt": "1",
+      "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+      "source_commit": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+      "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+      "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+      "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+      "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+      "source_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ],
+      "apk_receipt_sha256": "134457d87ad2521dd97962a350fbc3357d59b08c4877429c69fbad81c5dff88d",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d",
+          "source_apk_sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1",
+          "source_apk_sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0",
+          "source_apk_sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0"
+        }
+      ],
+      "install_log_sha256": "ceebbea21692299964bfa8f00d06028b9fde6f299a831c3c46a320e71e1f1de7",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "ordinal": 50,
+      "identity": "B",
+      "seed": 4104,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4104",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "install_group": "visit-10-B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "raw_log_sha256": "d094fbeee9a06013de44d07b02447a2817952fd9ddef73543cd0b52cfa5f74e4",
+      "records_sha256": "a4f25232cb2a1dd4173d3eff72a0cf56c10b02d6958256321caf6a42f07e9f72",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.6620000426191837e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_seconds": 0.05892437600004996,
+      "auxiliary_cleanup": null
+    },
+    {
+      "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+      "run_id": "38520196523",
+      "run_attempt": "1",
+      "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+      "source_commit": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+      "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+      "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+      "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+      "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+      "source_manifest_sha256": "6f9c33d89bab33c032af958727ac1ee9b8b6011b2af2af5d06984556cc839d3e",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ],
+      "apk_receipt_sha256": "b2efd3ee5fa197c51cb3a57c94b21757167e1c39ed5021c271c5a472275a6e8b",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "source_apk_sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "source_apk_sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "source_apk_sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c"
+        }
+      ],
+      "install_log_sha256": "330d8bcefe24d5370fff6c2af69b028a8c43416258c7755a2224b9586c803a4d",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "ordinal": 52,
+      "identity": "C1",
+      "seed": 4104,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4104",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "install_group": "visit-11-C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "raw_log_sha256": "a3905bdce9a995d5f109ff4c33cdb89de61f568e7f3d84094713703614fe1d6f",
+      "records_sha256": "61a6f15a95643861e15005b0239705a37507656b682a660690892caf2f8a46df",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.790000053209951e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_seconds": 0.0645827990001635,
+      "auxiliary_cleanup": null
+    },
+    {
+      "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+      "run_id": "38520196523",
+      "run_attempt": "1",
+      "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+      "source_commit": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+      "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+      "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+      "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+      "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+      "test_source_sha256": "a916d2470d54f069d1d6071d0b56a15ac6b07d05ab0b033d0aa7d4420fa74338",
+      "source_manifest_sha256": "06e7cea253c061891e10f658400143a7da34ba23f6ec95224bee31f5c0d13eb6",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ],
+      "apk_receipt_sha256": "60bd415869885912e0d93b3d29d4ac9c13796c6418e3cc8a7731d3d8431f7389",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890",
+          "source_apk_sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a",
+          "source_apk_sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5",
+          "source_apk_sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5"
+        }
+      ],
+      "install_log_sha256": "149817ee5132cd70ff80cd7ec4b05a623d4474ce9de2a7cc81aec650ae0ce755",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "ordinal": 54,
+      "identity": "C0",
+      "seed": 4104,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "pairSeed",
+        "4104",
+        "-e",
+        "class",
+        "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "install_group": "visit-12-C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "raw_log_sha256": "658899343ed856b24a903aceaac27416dc09f5b5c9eb5a62e060991fc8f0121d",
+      "records_sha256": "a239e922753277aa958fb31dfdcfcc966a8a38bc2f663d7b75e2cd62e573019b",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 4.034000085084699e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_seconds": 0.05483599900026093,
+      "auxiliary_cleanup": null
+    },
+    {
+      "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+      "run_id": "38520196523",
+      "run_attempt": "1",
+      "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+      "source_commit": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+      "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+      "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+      "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+      "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+      "test_source_sha256": "33a12420e1a8230cb272f65ada9501ac8ceb12b4be068598c1f1e161e26c44e7",
+      "source_manifest_sha256": "6f9c33d89bab33c032af958727ac1ee9b8b6011b2af2af5d06984556cc839d3e",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ],
+      "apk_receipt_sha256": "b2efd3ee5fa197c51cb3a57c94b21757167e1c39ed5021c271c5a472275a6e8b",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "source_apk_sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "source_apk_sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "source_apk_sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c"
+        }
+      ],
+      "install_log_sha256": "cb68a645f835baf2326e4f947b7fce88acb6c765725250f79736c57fd5261da2",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "ordinal": 60,
+      "identity": "C1",
+      "seed": null,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.app.NativeStrokeTileReuseTest#oneNativeShapePerStrokeMatchesPerTileConstructionThroughTransformsAndClips",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "install_group": "C1-diagnostics",
+      "selection": "org.inkweft.app.NativeStrokeTileReuseTest#oneNativeShapePerStrokeMatchesPerTileConstructionThroughTransformsAndClips",
+      "raw_log_sha256": "b6f4d171425c376ccb2c7421342600ff3a7db4e14b7cde6d565545a827dfef75",
+      "records_sha256": "cbbeee5d3543e9b3f66d707edc01daebcfab666408c6ac495318bfd18ba41212",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.7039995984523557e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_seconds": 0.05719742899964331,
+      "auxiliary_cleanup": null
+    },
+    {
+      "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+      "run_id": "38520196523",
+      "run_attempt": "1",
+      "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+      "source_commit": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+      "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+      "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+      "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+      "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+      "test_source_sha256": "91ceacc2db7557509f923a2046ba0f8d8ccf9691265dbee12e10e674a9ba33c9",
+      "source_manifest_sha256": "6f9c33d89bab33c032af958727ac1ee9b8b6011b2af2af5d06984556cc839d3e",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ],
+      "apk_receipt_sha256": "b2efd3ee5fa197c51cb3a57c94b21757167e1c39ed5021c271c5a472275a6e8b",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "source_apk_sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "source_apk_sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "source_apk_sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c"
+        }
+      ],
+      "install_log_sha256": "cb68a645f835baf2326e4f947b7fce88acb6c765725250f79736c57fd5261da2",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "ordinal": 61,
+      "identity": "C1",
+      "seed": null,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.app.RasterPerformanceProbe#continuousTransformsAndSeparatedDirtyTiles",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "install_group": "C1-diagnostics",
+      "selection": "org.inkweft.app.RasterPerformanceProbe#continuousTransformsAndSeparatedDirtyTiles",
+      "raw_log_sha256": "2c82e8f61b41b3cc482be809acf0a375ab3ba10fcf22dad80c5f0eac8bbe71f9",
+      "records_sha256": "f394110ea94c9979623bd1d8e048075b936b959cf338125d45e210d8523a88aa",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 2.775000211840961e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_seconds": 0.05736686099999133,
+      "auxiliary_cleanup": null
+    },
+    {
+      "scope": "FORMAL_THREE_SOURCE_COMPARISON",
+      "run_id": "38520196523",
+      "run_attempt": "1",
+      "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+      "source_commit": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+      "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+      "marker_contract_sha256": "e87fd6d98d7c716b21878ecfb99bcc90edd9b5f5cc5ba135e10fadad071aebc0",
+      "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+      "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+      "test_source_sha256": "c5700b11df7e4535aaf248ba074f9952f356a571fe238770887c813fe84dcca2",
+      "source_manifest_sha256": "6f9c33d89bab33c032af958727ac1ee9b8b6011b2af2af5d06984556cc839d3e",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ],
+      "apk_receipt_sha256": "b2efd3ee5fa197c51cb3a57c94b21757167e1c39ed5021c271c5a472275a6e8b",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "source_apk_sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "source_apk_sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "source_apk_sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c"
+        }
+      ],
+      "install_log_sha256": "cb68a645f835baf2326e4f947b7fce88acb6c765725250f79736c57fd5261da2",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+      "ordinal": 62,
+      "identity": "C1",
+      "seed": null,
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "install_group": "C1-diagnostics",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "raw_log_sha256": "5f65972ec2d30123236bc3c3f751efe631bf8296bd774cb727fac8b1e765dccd",
+      "records_sha256": "6caecd0103a3cfe5e43af41bdc53c88882d24d8ccff7754154f3599e491973af",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 3.5950001802120823e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_seconds": 0.055305512999893836,
+      "auxiliary_cleanup": null
+    }
+  ],
+  "payload_validation": [
+    {
+      "ordinal": 32,
+      "path": "method-32-B-records.json",
+      "sha256": "1eaf54e3fd885949e7db2b8fc8b9dab52464f6bb7f4e3ac1cdd727d614b20caa",
+      "records_sha256": "1eaf54e3fd885949e7db2b8fc8b9dab52464f6bb7f4e3ac1cdd727d614b20caa",
+      "original_payload_hashes_verified": true
+    },
+    {
+      "ordinal": 34,
+      "path": "method-34-C0-records.json",
+      "sha256": "e75113bedf4b9d9e44e2b7dbe0ef800a9ef6d8fc8e1440d584a17e98564f6750",
+      "records_sha256": "e75113bedf4b9d9e44e2b7dbe0ef800a9ef6d8fc8e1440d584a17e98564f6750",
+      "original_payload_hashes_verified": true
+    },
+    {
+      "ordinal": 36,
+      "path": "method-36-C1-records.json",
+      "sha256": "a6839ec47877bbdcccdbc72f4b40094fb248068282d8b5ce60bfea01bd649eec",
+      "records_sha256": "a6839ec47877bbdcccdbc72f4b40094fb248068282d8b5ce60bfea01bd649eec",
+      "original_payload_hashes_verified": true
+    },
+    {
+      "ordinal": 38,
+      "path": "method-38-C1-records.json",
+      "sha256": "2478df2d17d8cb5b6a980463e73247064dad4228abaa6a5b811191f74cbb9fd8",
+      "records_sha256": "2478df2d17d8cb5b6a980463e73247064dad4228abaa6a5b811191f74cbb9fd8",
+      "original_payload_hashes_verified": true
+    },
+    {
+      "ordinal": 40,
+      "path": "method-40-B-records.json",
+      "sha256": "55a00741efb1e177607ddf83b7503689696143a1c8b83ca504522d4d108e09dd",
+      "records_sha256": "55a00741efb1e177607ddf83b7503689696143a1c8b83ca504522d4d108e09dd",
+      "original_payload_hashes_verified": true
+    },
+    {
+      "ordinal": 42,
+      "path": "method-42-C0-records.json",
+      "sha256": "6e90d10e4afcff29b4c71839be6ec79af1b7704cd46668a6c1212438a906802f",
+      "records_sha256": "6e90d10e4afcff29b4c71839be6ec79af1b7704cd46668a6c1212438a906802f",
+      "original_payload_hashes_verified": true
+    },
+    {
+      "ordinal": 44,
+      "path": "method-44-C0-records.json",
+      "sha256": "9eb544ae19dc0d3cbe1cdb123772f19a638d7f32073128aa19ba8099d78b1ba6",
+      "records_sha256": "9eb544ae19dc0d3cbe1cdb123772f19a638d7f32073128aa19ba8099d78b1ba6",
+      "original_payload_hashes_verified": true
+    },
+    {
+      "ordinal": 46,
+      "path": "method-46-C1-records.json",
+      "sha256": "10de8abc94b02aaed3e01e283a22b0e18b6dc21eb30f81b8aabc9ee2ff69c841",
+      "records_sha256": "10de8abc94b02aaed3e01e283a22b0e18b6dc21eb30f81b8aabc9ee2ff69c841",
+      "original_payload_hashes_verified": true
+    },
+    {
+      "ordinal": 48,
+      "path": "method-48-B-records.json",
+      "sha256": "2ad0c847f6dbf42917a36aec0ab1b91ac1b0b5de0503ba854da55261c1eeaf62",
+      "records_sha256": "2ad0c847f6dbf42917a36aec0ab1b91ac1b0b5de0503ba854da55261c1eeaf62",
+      "original_payload_hashes_verified": true
+    },
+    {
+      "ordinal": 50,
+      "path": "method-50-B-records.json",
+      "sha256": "a4f25232cb2a1dd4173d3eff72a0cf56c10b02d6958256321caf6a42f07e9f72",
+      "records_sha256": "a4f25232cb2a1dd4173d3eff72a0cf56c10b02d6958256321caf6a42f07e9f72",
+      "original_payload_hashes_verified": true
+    },
+    {
+      "ordinal": 52,
+      "path": "method-52-C1-records.json",
+      "sha256": "61a6f15a95643861e15005b0239705a37507656b682a660690892caf2f8a46df",
+      "records_sha256": "61a6f15a95643861e15005b0239705a37507656b682a660690892caf2f8a46df",
+      "original_payload_hashes_verified": true
+    },
+    {
+      "ordinal": 54,
+      "path": "method-54-C0-records.json",
+      "sha256": "a239e922753277aa958fb31dfdcfcc966a8a38bc2f663d7b75e2cd62e573019b",
+      "records_sha256": "a239e922753277aa958fb31dfdcfcc966a8a38bc2f663d7b75e2cd62e573019b",
+      "original_payload_hashes_verified": true
+    },
+    {
+      "ordinal": 60,
+      "path": "method-60-C1-records.json",
+      "sha256": "cbbeee5d3543e9b3f66d707edc01daebcfab666408c6ac495318bfd18ba41212",
+      "records_sha256": "cbbeee5d3543e9b3f66d707edc01daebcfab666408c6ac495318bfd18ba41212",
+      "original_payload_hashes_verified": true
+    },
+    {
+      "ordinal": 61,
+      "path": "method-61-C1-records.json",
+      "sha256": "f394110ea94c9979623bd1d8e048075b936b959cf338125d45e210d8523a88aa",
+      "records_sha256": "f394110ea94c9979623bd1d8e048075b936b959cf338125d45e210d8523a88aa",
+      "original_payload_hashes_verified": true
+    },
+    {
+      "ordinal": 62,
+      "path": "method-62-C1-records.json",
+      "sha256": "6caecd0103a3cfe5e43af41bdc53c88882d24d8ccff7754154f3599e491973af",
+      "records_sha256": "6caecd0103a3cfe5e43af41bdc53c88882d24d8ccff7754154f3599e491973af",
+      "original_payload_hashes_verified": true
+    }
+  ],
+  "source_checks": [
+    {
+      "ordinal": 60,
+      "path": "android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt",
+      "sha256": "33a12420e1a8230cb272f65ada9501ac8ceb12b4be068598c1f1e161e26c44e7",
+      "matches_context": true
+    },
+    {
+      "ordinal": 61,
+      "path": "android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt",
+      "sha256": "91ceacc2db7557509f923a2046ba0f8d8ccf9691265dbee12e10e674a9ba33c9",
+      "matches_context": true
+    },
+    {
+      "ordinal": 62,
+      "path": "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt",
+      "sha256": "c5700b11df7e4535aaf248ba074f9952f356a571fe238770887c813fe84dcca2",
+      "matches_context": true
+    }
+  ],
+  "counts": {
+    "common_calls": 12,
+    "common_layer_records": 36,
+    "common_pixel_checks": 36,
+    "strict_common_cleanup_records": 36,
+    "comparisons": 27,
+    "paired_values": 108
+  },
+  "classification_counts": {
+    "B->C0": {
+      "WITHIN_PROPOSED_BAND": 9
+    },
+    "B->C1": {
+      "WITHIN_PROPOSED_BAND": 8,
+      "REGRESSION_SIGNAL": 1
+    },
+    "C0->C1": {
+      "WITHIN_PROPOSED_BAND": 7,
+      "INCONCLUSIVE": 2
+    }
+  },
+  "comparisons": [
+    {
+      "comparison": "B->C0",
+      "metric": "raster.1.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 329.936532,
+          "right_ms": 345.286958,
+          "delta_ms": 15.350426000000027,
+          "relative_change": 0.04652539052571489,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 325.959405,
+          "right_ms": 333.811333,
+          "delta_ms": 7.851927999999987,
+          "relative_change": 0.024088668341997944,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 335.457325,
+          "right_ms": 337.358415,
+          "delta_ms": 1.9010899999999538,
+          "relative_change": 0.005667159004502148,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 330.840927,
+          "right_ms": 337.109287,
+          "delta_ms": 6.268359999999973,
+          "relative_change": 0.01894674899154775,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": 7.06014399999998,
+      "median_relative_change": 0.02151770866677285,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.1.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 63.872273,
+          "right_ms": 64.223127,
+          "delta_ms": 0.35085400000000533,
+          "relative_change": 0.005493056431544331,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 64.508983,
+          "right_ms": 65.273552,
+          "delta_ms": 0.7645689999999945,
+          "relative_change": 0.011852132283654115,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 67.0164,
+          "right_ms": 47.647305,
+          "delta_ms": -19.369095,
+          "relative_change": -0.2890202249001737,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 63.991049,
+          "right_ms": 63.205411,
+          "delta_ms": -0.7856379999999987,
+          "relative_change": -0.012277310847021727,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -0.2173919999999967,
+      "median_relative_change": -0.0033921272077386978,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.1.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 253.21594,
+          "right_ms": 253.19505,
+          "delta_ms": -0.02088999999998009,
+          "relative_change": -8.249875580494693e-05,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 253.548367,
+          "right_ms": 253.895628,
+          "delta_ms": 0.34726099999997473,
+          "relative_change": 0.0013696045614838242,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 252.503429,
+          "right_ms": 253.692341,
+          "delta_ms": 1.1889119999999878,
+          "relative_change": 0.004708498433896467,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 252.915965,
+          "right_ms": 253.424985,
+          "delta_ms": 0.5090199999999925,
+          "relative_change": 0.0020126052540811036,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": 0.4281404999999836,
+      "median_relative_change": 0.001691104907782464,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.4.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 255.715001,
+          "right_ms": 268.864017,
+          "delta_ms": 13.149015999999989,
+          "relative_change": 0.051420589126877185,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 274.913205,
+          "right_ms": 244.418946,
+          "delta_ms": -30.494259,
+          "relative_change": -0.11092322393171328,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 238.406311,
+          "right_ms": 240.688093,
+          "delta_ms": 2.281782000000021,
+          "relative_change": 0.00957097985547883,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 267.052681,
+          "right_ms": 252.217179,
+          "delta_ms": -14.83550200000002,
+          "relative_change": -0.05555271695624737,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -6.276859999999999,
+      "median_relative_change": -0.02299086855038427,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.4.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 132.297164,
+          "right_ms": 127.02975,
+          "delta_ms": -5.267414000000002,
+          "relative_change": -0.03981501825692954,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 135.358719,
+          "right_ms": 136.905322,
+          "delta_ms": 1.5466030000000046,
+          "relative_change": 0.011425957717581566,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 136.585196,
+          "right_ms": 130.320244,
+          "delta_ms": -6.264951999999994,
+          "relative_change": -0.0458684556121294,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 142.381186,
+          "right_ms": 134.405821,
+          "delta_ms": -7.975365000000011,
+          "relative_change": -0.05601417732255728,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -5.766182999999998,
+      "median_relative_change": -0.04284173693452947,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.4.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 258.770404,
+          "right_ms": 247.103123,
+          "delta_ms": -11.667280999999974,
+          "relative_change": -0.0450873856501765,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 252.122224,
+          "right_ms": 242.607845,
+          "delta_ms": -9.514378999999991,
+          "relative_change": -0.03773716909620784,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 254.773049,
+          "right_ms": 226.086602,
+          "delta_ms": -28.686446999999987,
+          "relative_change": -0.11259608154236121,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 252.267107,
+          "right_ms": 241.263714,
+          "delta_ms": -11.003393000000017,
+          "relative_change": -0.04361802508005935,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -11.335336999999996,
+      "median_relative_change": -0.04435270536511793,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.8.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 347.003134,
+          "right_ms": 334.002418,
+          "delta_ms": -13.000716000000011,
+          "relative_change": -0.037465701966830106,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 383.304194,
+          "right_ms": 354.099337,
+          "delta_ms": -29.204857000000004,
+          "relative_change": -0.07619237529135933,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 342.625784,
+          "right_ms": 306.142759,
+          "delta_ms": -36.483025,
+          "relative_change": -0.10648067572170808,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 336.049277,
+          "right_ms": 341.687835,
+          "delta_ms": 5.638557999999989,
+          "relative_change": 0.016778961854454426,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -21.102786500000008,
+      "median_relative_change": -0.05682903862909472,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.8.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 169.160309,
+          "right_ms": 167.28318,
+          "delta_ms": -1.877129000000025,
+          "relative_change": -0.011096746104903514,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 245.564296,
+          "right_ms": 172.849642,
+          "delta_ms": -72.71465400000002,
+          "relative_change": -0.296112485342739,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 171.696924,
+          "right_ms": 166.411739,
+          "delta_ms": -5.285184999999984,
+          "relative_change": -0.030782059904579214,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 243.85681,
+          "right_ms": 170.811143,
+          "delta_ms": -73.04566700000001,
+          "relative_change": -0.2995432729559614,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -38.999919500000004,
+      "median_relative_change": -0.1634472726236591,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 358.822529,
+          "right_ms": 313.601683,
+          "delta_ms": -45.220845999999995,
+          "relative_change": -0.12602565988826192,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 318.882758,
+          "right_ms": 345.232249,
+          "delta_ms": 26.349491,
+          "relative_change": 0.08263065449277128,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 321.718498,
+          "right_ms": 325.220203,
+          "delta_ms": 3.5017050000000154,
+          "relative_change": 0.010884375694182232,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 308.987158,
+          "right_ms": 331.41159,
+          "delta_ms": 22.424431999999968,
+          "relative_change": 0.07257399351205387,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": 12.963068499999991,
+      "median_relative_change": 0.04172918460311805,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.1.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 329.936532,
+          "right_ms": 339.192326,
+          "delta_ms": 9.25579399999998,
+          "relative_change": 0.02805325601228051,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 325.959405,
+          "right_ms": 328.533075,
+          "delta_ms": 2.573669999999993,
+          "relative_change": 0.00789567645701155,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 335.457325,
+          "right_ms": 331.38458,
+          "delta_ms": -4.072744999999998,
+          "relative_change": -0.012140873656582092,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 330.840927,
+          "right_ms": 327.749963,
+          "delta_ms": -3.0909640000000422,
+          "relative_change": -0.00934274978621385,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -0.2586470000000247,
+      "median_relative_change": -0.0007235366646011505,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.1.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 63.872273,
+          "right_ms": 48.102288,
+          "delta_ms": -15.769984999999998,
+          "relative_change": -0.2468987599674118,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 64.508983,
+          "right_ms": 47.193895,
+          "delta_ms": -17.315088000000003,
+          "relative_change": -0.2684135944291666,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 67.0164,
+          "right_ms": 48.265926,
+          "delta_ms": -18.750474000000004,
+          "relative_change": -0.2797893351478146,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 63.991049,
+          "right_ms": 64.410344,
+          "delta_ms": 0.4192949999999982,
+          "relative_change": 0.006552400789679167,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -16.5425365,
+      "median_relative_change": -0.2576561771982892,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.1.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 253.21594,
+          "right_ms": 236.151907,
+          "delta_ms": -17.064032999999995,
+          "relative_change": -0.06738925282507885,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 253.548367,
+          "right_ms": 236.290029,
+          "delta_ms": -17.25833800000001,
+          "relative_change": -0.06806724178192008,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 252.503429,
+          "right_ms": 236.854224,
+          "delta_ms": -15.649205000000023,
+          "relative_change": -0.061976207855775386,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 252.915965,
+          "right_ms": 253.33107,
+          "delta_ms": 0.41510500000001116,
+          "relative_change": 0.0016412763820584089,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -16.35661900000001,
+      "median_relative_change": -0.06468273034042712,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.4.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 255.715001,
+          "right_ms": 251.89588,
+          "delta_ms": -3.8191209999999955,
+          "relative_change": -0.01493506827939279,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 274.913205,
+          "right_ms": 247.285673,
+          "delta_ms": -27.627532000000002,
+          "relative_change": -0.10049547092508707,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 238.406311,
+          "right_ms": 241.64603,
+          "delta_ms": 3.239719000000008,
+          "relative_change": 0.013589065601539416,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 267.052681,
+          "right_ms": 267.806206,
+          "delta_ms": 0.7535249999999678,
+          "relative_change": 0.0028216342827128097,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -1.5327980000000139,
+      "median_relative_change": -0.00605671699833999,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.4.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 132.297164,
+          "right_ms": 122.984125,
+          "delta_ms": -9.313039000000003,
+          "relative_change": -0.07039484988506634,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 135.358719,
+          "right_ms": 136.570807,
+          "delta_ms": 1.2120879999999943,
+          "relative_change": 0.008954635570982274,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 136.585196,
+          "right_ms": 128.387344,
+          "delta_ms": -8.197851999999983,
+          "relative_change": -0.0600200624963776,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 142.381186,
+          "right_ms": 134.638545,
+          "delta_ms": -7.74264100000002,
+          "relative_change": -0.05437966361651194,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -7.970246500000002,
+      "median_relative_change": -0.05719986305644477,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.4.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 258.770404,
+          "right_ms": 217.608782,
+          "delta_ms": -41.161621999999994,
+          "relative_change": -0.1590661890375995,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 252.122224,
+          "right_ms": 235.980497,
+          "delta_ms": -16.141726999999975,
+          "relative_change": -0.0640234198473514,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 254.773049,
+          "right_ms": 245.405645,
+          "delta_ms": -9.367403999999993,
+          "relative_change": -0.036767640991728266,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 252.267107,
+          "right_ms": 230.71487,
+          "delta_ms": -21.55223700000002,
+          "relative_change": -0.08543419416150841,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -18.846981999999997,
+      "median_relative_change": -0.07472880700442991,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 347.003134,
+          "right_ms": 343.9881,
+          "delta_ms": -3.015034000000014,
+          "relative_change": -0.008688780315165725,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 383.304194,
+          "right_ms": 336.109389,
+          "delta_ms": -47.194804999999974,
+          "relative_change": -0.12312624213029084,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 342.625784,
+          "right_ms": 363.544573,
+          "delta_ms": 20.918789000000004,
+          "relative_change": 0.06105433384429703,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 336.049277,
+          "right_ms": 311.897331,
+          "delta_ms": -24.15194600000001,
+          "relative_change": -0.0718702513381691,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -13.583490000000012,
+      "median_relative_change": -0.04027951582666741,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 169.160309,
+          "right_ms": 169.450269,
+          "delta_ms": 0.28995999999997935,
+          "relative_change": 0.0017141136813599656,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 245.564296,
+          "right_ms": 171.445097,
+          "delta_ms": -74.11919900000001,
+          "relative_change": -0.30183214826963284,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 171.696924,
+          "right_ms": 164.471563,
+          "delta_ms": -7.225360999999992,
+          "relative_change": -0.042082064323994486,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 243.85681,
+          "right_ms": 173.186976,
+          "delta_ms": -70.66983400000001,
+          "relative_change": -0.28980053499428626,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -38.9475975,
+      "median_relative_change": -0.16594129965914037,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 358.822529,
+          "right_ms": 337.493995,
+          "delta_ms": -21.32853399999999,
+          "relative_change": -0.05944034244293505,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 318.882758,
+          "right_ms": 380.560993,
+          "delta_ms": 61.67823499999997,
+          "relative_change": 0.1934197865912837,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 321.718498,
+          "right_ms": 338.116419,
+          "delta_ms": 16.397920999999997,
+          "relative_change": 0.05096977979798972,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 308.987158,
+          "right_ms": 374.559969,
+          "delta_ms": 65.572811,
+          "relative_change": 0.21221856411262244,
+          "over_band": true
+        }
+      ],
+      "median_delta_ms": 39.038077999999985,
+      "median_relative_change": 0.12219478319463671,
+      "screening_status": "REGRESSION_SIGNAL"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.1.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 345.286958,
+          "right_ms": 339.192326,
+          "delta_ms": -6.094632000000047,
+          "relative_change": -0.017650918630989956,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 333.811333,
+          "right_ms": 328.533075,
+          "delta_ms": -5.278257999999994,
+          "relative_change": -0.015812099465179016,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 337.358415,
+          "right_ms": 331.38458,
+          "delta_ms": -5.973834999999951,
+          "relative_change": -0.01770768042054013,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 337.109287,
+          "right_ms": 327.749963,
+          "delta_ms": -9.359324000000015,
+          "relative_change": -0.027763471256726353,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -6.034233499999999,
+      "median_relative_change": -0.017679299525765045,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.1.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 64.223127,
+          "right_ms": 48.102288,
+          "delta_ms": -16.120839000000004,
+          "relative_change": -0.251012987891418,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 65.273552,
+          "right_ms": 47.193895,
+          "delta_ms": -18.079656999999997,
+          "relative_change": -0.27698288887358236,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 47.647305,
+          "right_ms": 48.265926,
+          "delta_ms": 0.6186209999999974,
+          "relative_change": 0.012983336623131095,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 63.205411,
+          "right_ms": 64.410344,
+          "delta_ms": 1.204932999999997,
+          "relative_change": 0.01906376338570122,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -7.751109000000003,
+      "median_relative_change": -0.11901482563414346,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.1.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 253.19505,
+          "right_ms": 236.151907,
+          "delta_ms": -17.043143000000015,
+          "relative_change": -0.06731230725087246,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 253.895628,
+          "right_ms": 236.290029,
+          "delta_ms": -17.605598999999984,
+          "relative_change": -0.06934187539456167,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 253.692341,
+          "right_ms": 236.854224,
+          "delta_ms": -16.83811700000001,
+          "relative_change": -0.06637219292323851,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 253.424985,
+          "right_ms": 253.33107,
+          "delta_ms": -0.09391499999998132,
+          "relative_change": -0.0003705830346600645,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -16.940630000000013,
+      "median_relative_change": -0.0668422500870555,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.4.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 268.864017,
+          "right_ms": 251.89588,
+          "delta_ms": -16.968136999999984,
+          "relative_change": -0.06311047937664334,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 244.418946,
+          "right_ms": 247.285673,
+          "delta_ms": 2.8667269999999974,
+          "relative_change": 0.011728742991961014,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 240.688093,
+          "right_ms": 241.64603,
+          "delta_ms": 0.9579369999999869,
+          "relative_change": 0.003979993310263117,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 252.217179,
+          "right_ms": 267.806206,
+          "delta_ms": 15.589026999999987,
+          "relative_change": 0.06180795083748038,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": 1.9123319999999921,
+      "median_relative_change": 0.007854368151112064,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.4.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 127.02975,
+          "right_ms": 122.984125,
+          "delta_ms": -4.045625000000001,
+          "relative_change": -0.03184785453801177,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 136.905322,
+          "right_ms": 136.570807,
+          "delta_ms": -0.33451500000001033,
+          "relative_change": -0.002443403916759425,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 130.320244,
+          "right_ms": 128.387344,
+          "delta_ms": -1.9328999999999894,
+          "relative_change": -0.014831924347839536,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 134.405821,
+          "right_ms": 134.638545,
+          "delta_ms": 0.23272399999999038,
+          "relative_change": 0.0017315023878317769,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -1.1337074999999999,
+      "median_relative_change": -0.00863766413229948,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.4.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 247.103123,
+          "right_ms": 217.608782,
+          "delta_ms": -29.49434100000002,
+          "relative_change": -0.11936045421813636,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 242.607845,
+          "right_ms": 235.980497,
+          "delta_ms": -6.627347999999984,
+          "relative_change": -0.027317121587721056,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 226.086602,
+          "right_ms": 245.405645,
+          "delta_ms": 19.319042999999994,
+          "relative_change": 0.0854497472610075,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 241.263714,
+          "right_ms": 230.71487,
+          "delta_ms": -10.548844000000003,
+          "relative_change": -0.043723292761712204,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -8.588095999999993,
+      "median_relative_change": -0.03552020717471663,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 334.002418,
+          "right_ms": 343.9881,
+          "delta_ms": 9.985681999999997,
+          "relative_change": 0.029897035056794103,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 354.099337,
+          "right_ms": 336.109389,
+          "delta_ms": -17.98994799999997,
+          "relative_change": -0.05080480565824943,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 306.142759,
+          "right_ms": 363.544573,
+          "delta_ms": 57.401814,
+          "relative_change": 0.18750015250238206,
+          "over_band": true
+        },
+        {
+          "seed": 4104,
+          "left_ms": 341.687835,
+          "right_ms": 311.897331,
+          "delta_ms": -29.790504,
+          "relative_change": -0.08718631730040959,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": -4.002132999999986,
+      "median_relative_change": -0.010453885300727663,
+      "screening_status": "INCONCLUSIVE"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 167.28318,
+          "right_ms": 169.450269,
+          "delta_ms": 2.1670890000000043,
+          "relative_change": 0.012954613847010826,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 172.849642,
+          "right_ms": 171.445097,
+          "delta_ms": -1.4045449999999846,
+          "relative_change": -0.008125819548992672,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 166.411739,
+          "right_ms": 164.471563,
+          "delta_ms": -1.9401760000000081,
+          "relative_change": -0.011658889040273823,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 170.811143,
+          "right_ms": 173.186976,
+          "delta_ms": 2.375833,
+          "relative_change": 0.013909121842244217,
+          "over_band": false
+        }
+      ],
+      "median_delta_ms": 0.3812720000000098,
+      "median_relative_change": 0.002414397149009077,
+      "screening_status": "WITHIN_PROPOSED_BAND"
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 313.601683,
+          "right_ms": 337.493995,
+          "delta_ms": 23.892312000000004,
+          "relative_change": 0.07618681051529945,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 345.232249,
+          "right_ms": 380.560993,
+          "delta_ms": 35.32874399999997,
+          "relative_change": 0.10233326724931763,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 325.220203,
+          "right_ms": 338.116419,
+          "delta_ms": 12.896215999999981,
+          "relative_change": 0.039653797276548594,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 331.41159,
+          "right_ms": 374.559969,
+          "delta_ms": 43.148379000000034,
+          "relative_change": 0.1301957454173526,
+          "over_band": true
+        }
+      ],
+      "median_delta_ms": 29.610527999999988,
+      "median_relative_change": 0.08926003888230855,
+      "screening_status": "INCONCLUSIVE"
+    }
+  ],
+  "common_raw": [
+    {
+      "ordinal": 32,
+      "identity": "B",
+      "seed": 4101,
+      "layers": 1,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 329.936532,
+      "appendCompleteMs": 63.872273,
+      "forcedFullCompleteMs": 253.21594,
+      "localDecoded": 13,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 27.747103,
+      "rasterMs": 20.565931,
+      "publicationMs": 0.5705,
+      "pixelsEqual": true,
+      "bitmapBytes": 14371200,
+      "nativeStrokeBuilds": null,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4101,
+        "logicalSha256": "e42134ad686969604696eca0c8b1e509642eb8cb0f394806f4463a7a0c51b4f5",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 32,
+      "identity": "B",
+      "seed": 4101,
+      "layers": 4,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 255.715001,
+      "appendCompleteMs": 132.297164,
+      "forcedFullCompleteMs": 258.770404,
+      "localDecoded": 21,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 52.689008,
+      "rasterMs": 94.435258,
+      "publicationMs": 85.433144,
+      "pixelsEqual": true,
+      "bitmapBytes": 12147408,
+      "nativeStrokeBuilds": null,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4101,
+        "logicalSha256": "ce90b22b09e96ba9c39c605ab6789cf87d488152388a36d473416cdbd9b4c241",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 32,
+      "identity": "B",
+      "seed": 4101,
+      "layers": 8,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 347.003134,
+      "appendCompleteMs": 169.160309,
+      "forcedFullCompleteMs": 358.822529,
+      "localDecoded": 11,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 48,
+      "metadataMs": 77.82484600000001,
+      "rasterMs": 84.079301,
+      "publicationMs": 227.261034,
+      "pixelsEqual": true,
+      "bitmapBytes": 24294816,
+      "nativeStrokeBuilds": null,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4101,
+        "logicalSha256": "0df59d18c4c4dea150455471d713e6110524e93bbb78b82d0389c1ea29e36990",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 48589632,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 34,
+      "identity": "C0",
+      "seed": 4101,
+      "layers": 1,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 345.286958,
+      "appendCompleteMs": 64.223127,
+      "forcedFullCompleteMs": 253.19505,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 22.022957,
+      "rasterMs": 17.784468,
+      "publicationMs": 0.668506,
+      "pixelsEqual": true,
+      "bitmapBytes": 14371200,
+      "nativeStrokeBuilds": 13,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4101,
+        "logicalSha256": "e42134ad686969604696eca0c8b1e509642eb8cb0f394806f4463a7a0c51b4f5",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 34,
+      "identity": "C0",
+      "seed": 4101,
+      "layers": 4,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 268.864017,
+      "appendCompleteMs": 127.02975,
+      "forcedFullCompleteMs": 247.103123,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 42.86448,
+      "rasterMs": 72.96399699999999,
+      "publicationMs": 102.264678,
+      "pixelsEqual": true,
+      "bitmapBytes": 12147408,
+      "nativeStrokeBuilds": 21,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4101,
+        "logicalSha256": "ce90b22b09e96ba9c39c605ab6789cf87d488152388a36d473416cdbd9b4c241",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 34,
+      "identity": "C0",
+      "seed": 4101,
+      "layers": 8,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 334.002418,
+      "appendCompleteMs": 167.28318,
+      "forcedFullCompleteMs": 313.601683,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 48,
+      "metadataMs": 52.624795999999996,
+      "rasterMs": 46.79326399999999,
+      "publicationMs": 280.523759,
+      "pixelsEqual": true,
+      "bitmapBytes": 24294816,
+      "nativeStrokeBuilds": 11,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4101,
+        "logicalSha256": "0df59d18c4c4dea150455471d713e6110524e93bbb78b82d0389c1ea29e36990",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 36,
+      "identity": "C1",
+      "seed": 4101,
+      "layers": 1,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 339.192326,
+      "appendCompleteMs": 48.102288,
+      "forcedFullCompleteMs": 236.151907,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 18.457774,
+      "rasterMs": 16.6643,
+      "publicationMs": 0.58881,
+      "pixelsEqual": true,
+      "bitmapBytes": 14371200,
+      "nativeStrokeBuilds": 13,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4101,
+        "logicalSha256": "e42134ad686969604696eca0c8b1e509642eb8cb0f394806f4463a7a0c51b4f5",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 36,
+      "identity": "C1",
+      "seed": 4101,
+      "layers": 4,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 251.89588,
+      "appendCompleteMs": 122.984125,
+      "forcedFullCompleteMs": 217.608782,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 45.034836,
+      "rasterMs": 65.58592999999999,
+      "publicationMs": 100.37570500000001,
+      "pixelsEqual": true,
+      "bitmapBytes": 12147408,
+      "nativeStrokeBuilds": 21,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4101,
+        "logicalSha256": "ce90b22b09e96ba9c39c605ab6789cf87d488152388a36d473416cdbd9b4c241",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 36,
+      "identity": "C1",
+      "seed": 4101,
+      "layers": 8,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 343.9881,
+      "appendCompleteMs": 169.450269,
+      "forcedFullCompleteMs": 337.493995,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 48,
+      "metadataMs": 57.933026999999996,
+      "rasterMs": 61.163025000000005,
+      "publicationMs": 265.255514,
+      "pixelsEqual": true,
+      "bitmapBytes": 24294816,
+      "nativeStrokeBuilds": 11,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4101,
+        "logicalSha256": "0df59d18c4c4dea150455471d713e6110524e93bbb78b82d0389c1ea29e36990",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 38,
+      "identity": "C1",
+      "seed": 4102,
+      "layers": 1,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 328.533075,
+      "appendCompleteMs": 47.193895,
+      "forcedFullCompleteMs": 236.290029,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 17.855143,
+      "rasterMs": 17.949146,
+      "publicationMs": 0.761097,
+      "pixelsEqual": true,
+      "bitmapBytes": 14371200,
+      "nativeStrokeBuilds": 13,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4102,
+        "logicalSha256": "a041ece6c5b1a6fd1cbec080ffc738c6ad63b374516cb722d4266ca0023909df",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 38,
+      "identity": "C1",
+      "seed": 4102,
+      "layers": 4,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 247.285673,
+      "appendCompleteMs": 136.570807,
+      "forcedFullCompleteMs": 235.980497,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 50.010511,
+      "rasterMs": 77.42828300000001,
+      "publicationMs": 132.058795,
+      "pixelsEqual": true,
+      "bitmapBytes": 12147408,
+      "nativeStrokeBuilds": 21,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4102,
+        "logicalSha256": "21519a3876f8f6c9ac6434a0111d1da10fec364ce0ea31ddefe6a0a2d2967386",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 38,
+      "identity": "C1",
+      "seed": 4102,
+      "layers": 8,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 336.109389,
+      "appendCompleteMs": 171.445097,
+      "forcedFullCompleteMs": 380.560993,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 48,
+      "metadataMs": 48.42649,
+      "rasterMs": 55.909669,
+      "publicationMs": 272.096902,
+      "pixelsEqual": true,
+      "bitmapBytes": 24294816,
+      "nativeStrokeBuilds": 11,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4102,
+        "logicalSha256": "fd5134454ed2f4518823fb0265a0fe40c9089ce0c645bb5a39dde3af070cfc16",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 40,
+      "identity": "B",
+      "seed": 4102,
+      "layers": 1,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 325.959405,
+      "appendCompleteMs": 64.508983,
+      "forcedFullCompleteMs": 253.548367,
+      "localDecoded": 13,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 28.277329,
+      "rasterMs": 19.988768,
+      "publicationMs": 0.646592,
+      "pixelsEqual": true,
+      "bitmapBytes": 14371200,
+      "nativeStrokeBuilds": null,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4102,
+        "logicalSha256": "a041ece6c5b1a6fd1cbec080ffc738c6ad63b374516cb722d4266ca0023909df",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 40,
+      "identity": "B",
+      "seed": 4102,
+      "layers": 4,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 274.913205,
+      "appendCompleteMs": 135.358719,
+      "forcedFullCompleteMs": 252.122224,
+      "localDecoded": 21,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 58.52296,
+      "rasterMs": 99.64263600000001,
+      "publicationMs": 93.597019,
+      "pixelsEqual": true,
+      "bitmapBytes": 12147408,
+      "nativeStrokeBuilds": null,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4102,
+        "logicalSha256": "21519a3876f8f6c9ac6434a0111d1da10fec364ce0ea31ddefe6a0a2d2967386",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 40,
+      "identity": "B",
+      "seed": 4102,
+      "layers": 8,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 383.304194,
+      "appendCompleteMs": 245.564296,
+      "forcedFullCompleteMs": 318.882758,
+      "localDecoded": 11,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 48,
+      "metadataMs": 112.61538399999999,
+      "rasterMs": 116.733539,
+      "publicationMs": 310.466097,
+      "pixelsEqual": true,
+      "bitmapBytes": 24294816,
+      "nativeStrokeBuilds": null,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4102,
+        "logicalSha256": "fd5134454ed2f4518823fb0265a0fe40c9089ce0c645bb5a39dde3af070cfc16",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 48589632,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 42,
+      "identity": "C0",
+      "seed": 4102,
+      "layers": 1,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 333.811333,
+      "appendCompleteMs": 65.273552,
+      "forcedFullCompleteMs": 253.895628,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 17.978102,
+      "rasterMs": 20.635417,
+      "publicationMs": 0.69883,
+      "pixelsEqual": true,
+      "bitmapBytes": 14371200,
+      "nativeStrokeBuilds": 13,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4102,
+        "logicalSha256": "a041ece6c5b1a6fd1cbec080ffc738c6ad63b374516cb722d4266ca0023909df",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 42,
+      "identity": "C0",
+      "seed": 4102,
+      "layers": 4,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 244.418946,
+      "appendCompleteMs": 136.905322,
+      "forcedFullCompleteMs": 242.607845,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 45.276837,
+      "rasterMs": 73.770145,
+      "publicationMs": 117.980378,
+      "pixelsEqual": true,
+      "bitmapBytes": 12147408,
+      "nativeStrokeBuilds": 21,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4102,
+        "logicalSha256": "21519a3876f8f6c9ac6434a0111d1da10fec364ce0ea31ddefe6a0a2d2967386",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 42,
+      "identity": "C0",
+      "seed": 4102,
+      "layers": 8,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 354.099337,
+      "appendCompleteMs": 172.849642,
+      "forcedFullCompleteMs": 345.232249,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 48,
+      "metadataMs": 67.449647,
+      "rasterMs": 59.538090000000004,
+      "publicationMs": 292.06307200000003,
+      "pixelsEqual": true,
+      "bitmapBytes": 24294816,
+      "nativeStrokeBuilds": 11,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4102,
+        "logicalSha256": "fd5134454ed2f4518823fb0265a0fe40c9089ce0c645bb5a39dde3af070cfc16",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 44,
+      "identity": "C0",
+      "seed": 4103,
+      "layers": 1,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 337.358415,
+      "appendCompleteMs": 47.647305,
+      "forcedFullCompleteMs": 253.692341,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 17.811156,
+      "rasterMs": 18.163476,
+      "publicationMs": 0.569791,
+      "pixelsEqual": true,
+      "bitmapBytes": 14371200,
+      "nativeStrokeBuilds": 13,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4103,
+        "logicalSha256": "dab1c2e0041b38f5d3ffd8c89e17ee9fff375a4f41bec6ac426e34b8c69386c9",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 44,
+      "identity": "C0",
+      "seed": 4103,
+      "layers": 4,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 240.688093,
+      "appendCompleteMs": 130.320244,
+      "forcedFullCompleteMs": 226.086602,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 44.749797,
+      "rasterMs": 72.27145,
+      "publicationMs": 111.325715,
+      "pixelsEqual": true,
+      "bitmapBytes": 12147408,
+      "nativeStrokeBuilds": 21,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4103,
+        "logicalSha256": "5ad5ed9192a0eeb43b6978c2ae8d5a410fef1ab67099888cdd62f643511d50e8",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 44,
+      "identity": "C0",
+      "seed": 4103,
+      "layers": 8,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 306.142759,
+      "appendCompleteMs": 166.411739,
+      "forcedFullCompleteMs": 325.220203,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 48,
+      "metadataMs": 62.004568,
+      "rasterMs": 73.30459400000001,
+      "publicationMs": 233.642181,
+      "pixelsEqual": true,
+      "bitmapBytes": 24294816,
+      "nativeStrokeBuilds": 11,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4103,
+        "logicalSha256": "f1107ae9b0de2b2bd16830b423bc32aa9b8f890d6c91bb54bd1b00f4ec4f900d",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 46,
+      "identity": "C1",
+      "seed": 4103,
+      "layers": 1,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 331.38458,
+      "appendCompleteMs": 48.265926,
+      "forcedFullCompleteMs": 236.854224,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 18.039309,
+      "rasterMs": 17.429315,
+      "publicationMs": 0.675074,
+      "pixelsEqual": true,
+      "bitmapBytes": 14371200,
+      "nativeStrokeBuilds": 13,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4103,
+        "logicalSha256": "dab1c2e0041b38f5d3ffd8c89e17ee9fff375a4f41bec6ac426e34b8c69386c9",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 46,
+      "identity": "C1",
+      "seed": 4103,
+      "layers": 4,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 241.64603,
+      "appendCompleteMs": 128.387344,
+      "forcedFullCompleteMs": 245.405645,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 48.326192000000006,
+      "rasterMs": 67.535269,
+      "publicationMs": 105.104637,
+      "pixelsEqual": true,
+      "bitmapBytes": 12147408,
+      "nativeStrokeBuilds": 21,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4103,
+        "logicalSha256": "5ad5ed9192a0eeb43b6978c2ae8d5a410fef1ab67099888cdd62f643511d50e8",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 46,
+      "identity": "C1",
+      "seed": 4103,
+      "layers": 8,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 363.544573,
+      "appendCompleteMs": 164.471563,
+      "forcedFullCompleteMs": 338.116419,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 48,
+      "metadataMs": 55.632516,
+      "rasterMs": 61.671355,
+      "publicationMs": 249.709602,
+      "pixelsEqual": true,
+      "bitmapBytes": 24294816,
+      "nativeStrokeBuilds": 11,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4103,
+        "logicalSha256": "f1107ae9b0de2b2bd16830b423bc32aa9b8f890d6c91bb54bd1b00f4ec4f900d",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 48,
+      "identity": "B",
+      "seed": 4103,
+      "layers": 1,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 335.457325,
+      "appendCompleteMs": 67.0164,
+      "forcedFullCompleteMs": 252.503429,
+      "localDecoded": 13,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 27.577752,
+      "rasterMs": 19.96086,
+      "publicationMs": 0.600826,
+      "pixelsEqual": true,
+      "bitmapBytes": 14371200,
+      "nativeStrokeBuilds": null,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4103,
+        "logicalSha256": "dab1c2e0041b38f5d3ffd8c89e17ee9fff375a4f41bec6ac426e34b8c69386c9",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 48,
+      "identity": "B",
+      "seed": 4103,
+      "layers": 4,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 238.406311,
+      "appendCompleteMs": 136.585196,
+      "forcedFullCompleteMs": 254.773049,
+      "localDecoded": 21,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 57.162411999999996,
+      "rasterMs": 96.78304999999999,
+      "publicationMs": 109.325249,
+      "pixelsEqual": true,
+      "bitmapBytes": 12147408,
+      "nativeStrokeBuilds": null,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4103,
+        "logicalSha256": "5ad5ed9192a0eeb43b6978c2ae8d5a410fef1ab67099888cdd62f643511d50e8",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 48,
+      "identity": "B",
+      "seed": 4103,
+      "layers": 8,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 342.625784,
+      "appendCompleteMs": 171.696924,
+      "forcedFullCompleteMs": 321.718498,
+      "localDecoded": 11,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 48,
+      "metadataMs": 82.159513,
+      "rasterMs": 97.18585999999998,
+      "publicationMs": 225.244316,
+      "pixelsEqual": true,
+      "bitmapBytes": 24294816,
+      "nativeStrokeBuilds": null,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4103,
+        "logicalSha256": "f1107ae9b0de2b2bd16830b423bc32aa9b8f890d6c91bb54bd1b00f4ec4f900d",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 48589632,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 50,
+      "identity": "B",
+      "seed": 4104,
+      "layers": 1,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 330.840927,
+      "appendCompleteMs": 63.991049,
+      "forcedFullCompleteMs": 252.915965,
+      "localDecoded": 13,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 28.663918,
+      "rasterMs": 21.382964,
+      "publicationMs": 0.741063,
+      "pixelsEqual": true,
+      "bitmapBytes": 14371200,
+      "nativeStrokeBuilds": null,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4104,
+        "logicalSha256": "3b22700197bc4a81a3676386a52337b08263d01f28ea83f33f3303ecea9ceea4",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 50,
+      "identity": "B",
+      "seed": 4104,
+      "layers": 4,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 267.052681,
+      "appendCompleteMs": 142.381186,
+      "forcedFullCompleteMs": 252.267107,
+      "localDecoded": 21,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 53.119651000000005,
+      "rasterMs": 94.141887,
+      "publicationMs": 120.932193,
+      "pixelsEqual": true,
+      "bitmapBytes": 12147408,
+      "nativeStrokeBuilds": null,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4104,
+        "logicalSha256": "0f853304b0164070ce18cd74c855e4a926c3481b1eab24f3830ea85dc9c57fe8",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 28742400,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 50,
+      "identity": "B",
+      "seed": 4104,
+      "layers": 8,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 336.049277,
+      "appendCompleteMs": 243.85681,
+      "forcedFullCompleteMs": 308.987158,
+      "localDecoded": 11,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 48,
+      "metadataMs": 92.90430699999999,
+      "rasterMs": 117.67003400000002,
+      "publicationMs": 319.34492,
+      "pixelsEqual": true,
+      "bitmapBytes": 24294816,
+      "nativeStrokeBuilds": null,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4104,
+        "logicalSha256": "8f3d7c1e08bee55f9efa2504f70b3b7fe346e15a76b8b16a15043bca5e21dbf2",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 48589632,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 52,
+      "identity": "C1",
+      "seed": 4104,
+      "layers": 1,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 327.749963,
+      "appendCompleteMs": 64.410344,
+      "forcedFullCompleteMs": 253.33107,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 18.222677,
+      "rasterMs": 18.097872,
+      "publicationMs": 0.619951,
+      "pixelsEqual": true,
+      "bitmapBytes": 14371200,
+      "nativeStrokeBuilds": 13,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4104,
+        "logicalSha256": "3b22700197bc4a81a3676386a52337b08263d01f28ea83f33f3303ecea9ceea4",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 52,
+      "identity": "C1",
+      "seed": 4104,
+      "layers": 4,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 267.806206,
+      "appendCompleteMs": 134.638545,
+      "forcedFullCompleteMs": 230.71487,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 50.623922,
+      "rasterMs": 82.414266,
+      "publicationMs": 103.76821000000001,
+      "pixelsEqual": true,
+      "bitmapBytes": 12147408,
+      "nativeStrokeBuilds": 21,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4104,
+        "logicalSha256": "0f853304b0164070ce18cd74c855e4a926c3481b1eab24f3830ea85dc9c57fe8",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 52,
+      "identity": "C1",
+      "seed": 4104,
+      "layers": 8,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 311.897331,
+      "appendCompleteMs": 173.186976,
+      "forcedFullCompleteMs": 374.559969,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 48,
+      "metadataMs": 57.801851,
+      "rasterMs": 67.749481,
+      "publicationMs": 261.515134,
+      "pixelsEqual": true,
+      "bitmapBytes": 24294816,
+      "nativeStrokeBuilds": 11,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4104,
+        "logicalSha256": "8f3d7c1e08bee55f9efa2504f70b3b7fe346e15a76b8b16a15043bca5e21dbf2",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 54,
+      "identity": "C0",
+      "seed": 4104,
+      "layers": 1,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 337.109287,
+      "appendCompleteMs": 63.205411,
+      "forcedFullCompleteMs": 253.424985,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 21.032847,
+      "rasterMs": 18.945475,
+      "publicationMs": 0.701059,
+      "pixelsEqual": true,
+      "bitmapBytes": 14371200,
+      "nativeStrokeBuilds": 13,
+      "fixture": {
+        "label": "raster-1-before",
+        "seed": 4104,
+        "logicalSha256": "3b22700197bc4a81a3676386a52337b08263d01f28ea83f33f3303ecea9ceea4",
+        "rowCounts": {
+          "notes": 1,
+          "note_revisions": 1,
+          "notebook_workspace": 1,
+          "notebook_pages": 1,
+          "ink_pages": 1,
+          "ink_strokes": 320,
+          "canvas_authoring": 1,
+          "page_layer_memberships": 320
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 1,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 30839552,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 54,
+      "identity": "C0",
+      "seed": 4104,
+      "layers": 4,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 252.217179,
+      "appendCompleteMs": 134.405821,
+      "forcedFullCompleteMs": 241.263714,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 24,
+      "metadataMs": 49.109657,
+      "rasterMs": 73.04075399999999,
+      "publicationMs": 113.42731900000001,
+      "pixelsEqual": true,
+      "bitmapBytes": 12147408,
+      "nativeStrokeBuilds": 21,
+      "fixture": {
+        "label": "raster-4-before",
+        "seed": 4104,
+        "logicalSha256": "0f853304b0164070ce18cd74c855e4a926c3481b1eab24f3830ea85dc9c57fe8",
+        "rowCounts": {
+          "notes": 2,
+          "note_revisions": 2,
+          "notebook_workspace": 2,
+          "notebook_pages": 2,
+          "ink_pages": 2,
+          "ink_strokes": 641,
+          "canvas_authoring": 2,
+          "page_layer_memberships": 641
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 4,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 32683424,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    },
+    {
+      "ordinal": 54,
+      "identity": "C0",
+      "seed": 4104,
+      "layers": 8,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 341.687835,
+      "appendCompleteMs": 170.811143,
+      "forcedFullCompleteMs": 331.41159,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 48,
+      "metadataMs": 58.658392000000006,
+      "rasterMs": 58.252206,
+      "publicationMs": 271.638086,
+      "pixelsEqual": true,
+      "bitmapBytes": 24294816,
+      "nativeStrokeBuilds": 11,
+      "fixture": {
+        "label": "raster-8-before",
+        "seed": 4104,
+        "logicalSha256": "8f3d7c1e08bee55f9efa2504f70b3b7fe346e15a76b8b16a15043bca5e21dbf2",
+        "rowCounts": {
+          "notes": 3,
+          "note_revisions": 3,
+          "notebook_workspace": 3,
+          "notebook_pages": 3,
+          "ink_pages": 3,
+          "ink_strokes": 962,
+          "canvas_authoring": 3,
+          "page_layer_memberships": 962
+        },
+        "writerSqlite": {
+          "page_size": 1024,
+          "auto_vacuum": 1,
+          "journal_mode": "wal",
+          "synchronous": 2
+        }
+      },
+      "cleanup": {
+        "layers": 8,
+        "joined": true,
+        "resources": {
+          "totalBytes": 0,
+          "budgetBytes": 134217728,
+          "peakTrackedBytes": 65366848,
+          "inFlightJobs": 0,
+          "cancelledJobs": 0,
+          "cacheBytes": 0,
+          "in_flightBytes": 0,
+          "activeBytes": 0,
+          "live_inkBytes": 0
+        }
+      }
+    }
+  ],
+  "added60": {
+    "records": [
+      {
+        "phase": 0,
+        "nativeStrokeBuilds": 2,
+        "perTileReferenceBuilds": 24,
+        "tiles": 16,
+        "rebuilt": 16,
+        "pixelsEqual": true
+      },
+      {
+        "phase": 1,
+        "nativeStrokeBuilds": 2,
+        "perTileReferenceBuilds": 32,
+        "tiles": 16,
+        "rebuilt": 16,
+        "pixelsEqual": true
+      },
+      {
+        "phase": 2,
+        "nativeStrokeBuilds": 1,
+        "perTileReferenceBuilds": 16,
+        "tiles": 16,
+        "rebuilt": 16,
+        "pixelsEqual": true
+      },
+      {
+        "phase": 3,
+        "nativeStrokeBuilds": 0,
+        "perTileReferenceBuilds": 0,
+        "tiles": 16,
+        "rebuilt": 16,
+        "pixelsEqual": true
+      }
+    ],
+    "method": {
+      "ordinal": 60,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "selection": "org.inkweft.app.NativeStrokeTileReuseTest#oneNativeShapePerStrokeMatchesPerTileConstructionThroughTransformsAndClips",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    },
+    "cleanup": "best-effort withTimeoutOrNull(5000) global count; not strict owned Job join"
+  },
+  "added61": {
+    "records": [
+      {
+        "case": "initial",
+        "completeMs": 438.074562,
+        "decoded": 320,
+        "snapshotReadRows": 320,
+        "rebuilt": 20,
+        "tiles": 20,
+        "metadataMs": 21.642453,
+        "rasterMs": 378.025755,
+        "publicationMs": 0.890601,
+        "coldMs": 281.724683,
+        "coldDecoded": 320,
+        "coldSnapshotReadRows": 320,
+        "coldRebuilt": 20,
+        "pixelsEqual": true,
+        "reusedStrokes": 0,
+        "geometryBytes": 204800,
+        "nativeStrokeBuilds": 300
+      },
+      {
+        "case": "transform-0-0",
+        "completeMs": 92.095968,
+        "decoded": 0,
+        "snapshotReadRows": 0,
+        "rebuilt": 8,
+        "tiles": 20,
+        "metadataMs": 15.517561,
+        "rasterMs": 57.76281,
+        "publicationMs": 0.614,
+        "coldMs": 251.900327,
+        "coldDecoded": 320,
+        "coldSnapshotReadRows": 320,
+        "coldRebuilt": 20,
+        "pixelsEqual": true,
+        "reusedStrokes": 96,
+        "geometryBytes": 204800,
+        "nativeStrokeBuilds": 92
+      },
+      {
+        "case": "transform-0-1",
+        "completeMs": 179.724512,
+        "decoded": 0,
+        "snapshotReadRows": 0,
+        "rebuilt": 20,
+        "tiles": 20,
+        "metadataMs": 12.917453,
+        "rasterMs": 144.466872,
+        "publicationMs": 0.765099,
+        "coldMs": 199.549129,
+        "coldDecoded": 320,
+        "coldSnapshotReadRows": 320,
+        "coldRebuilt": 20,
+        "pixelsEqual": true,
+        "reusedStrokes": 320,
+        "geometryBytes": 204800,
+        "nativeStrokeBuilds": 300
+      },
+      {
+        "case": "transform-0-2",
+        "completeMs": 195.617829,
+        "decoded": 0,
+        "snapshotReadRows": 0,
+        "rebuilt": 20,
+        "tiles": 20,
+        "metadataMs": 11.49388,
+        "rasterMs": 166.109062,
+        "publicationMs": 0.706773,
+        "coldMs": 183.023466,
+        "coldDecoded": 304,
+        "coldSnapshotReadRows": 304,
+        "coldRebuilt": 20,
+        "pixelsEqual": true,
+        "reusedStrokes": 304,
+        "geometryBytes": 204800,
+        "nativeStrokeBuilds": 288
+      },
+      {
+        "case": "transform-0-3",
+        "completeMs": 163.224551,
+        "decoded": 0,
+        "snapshotReadRows": 0,
+        "rebuilt": 20,
+        "tiles": 20,
+        "metadataMs": 11.81287,
+        "rasterMs": 129.524061,
+        "publicationMs": 0.652416,
+        "coldMs": 199.559708,
+        "coldDecoded": 320,
+        "coldSnapshotReadRows": 320,
+        "coldRebuilt": 20,
+        "pixelsEqual": true,
+        "reusedStrokes": 320,
+        "geometryBytes": 204800,
+        "nativeStrokeBuilds": 300
+      },
+      {
+        "case": "transform-1-0",
+        "completeMs": 77.046878,
+        "decoded": 0,
+        "snapshotReadRows": 0,
+        "rebuilt": 8,
+        "tiles": 20,
+        "metadataMs": 10.73718,
+        "rasterMs": 39.563573,
+        "publicationMs": 0.656158,
+        "coldMs": 167.811462,
+        "coldDecoded": 320,
+        "coldSnapshotReadRows": 320,
+        "coldRebuilt": 20,
+        "pixelsEqual": true,
+        "reusedStrokes": 96,
+        "geometryBytes": 204800,
+        "nativeStrokeBuilds": 92
+      },
+      {
+        "case": "transform-1-1",
+        "completeMs": 146.796042,
+        "decoded": 0,
+        "snapshotReadRows": 0,
+        "rebuilt": 20,
+        "tiles": 20,
+        "metadataMs": 10.184595,
+        "rasterMs": 120.3971,
+        "publicationMs": 0.686302,
+        "coldMs": 182.999149,
+        "coldDecoded": 320,
+        "coldSnapshotReadRows": 320,
+        "coldRebuilt": 20,
+        "pixelsEqual": true,
+        "reusedStrokes": 320,
+        "geometryBytes": 204800,
+        "nativeStrokeBuilds": 300
+      },
+      {
+        "case": "transform-1-2",
+        "completeMs": 145.029444,
+        "decoded": 0,
+        "snapshotReadRows": 0,
+        "rebuilt": 20,
+        "tiles": 20,
+        "metadataMs": 10.146695,
+        "rasterMs": 119.895535,
+        "publicationMs": 0.814862,
+        "coldMs": 166.98781,
+        "coldDecoded": 304,
+        "coldSnapshotReadRows": 304,
+        "coldRebuilt": 20,
+        "pixelsEqual": true,
+        "reusedStrokes": 304,
+        "geometryBytes": 204800,
+        "nativeStrokeBuilds": 288
+      },
+      {
+        "case": "transform-1-3",
+        "completeMs": 178.880183,
+        "decoded": 0,
+        "snapshotReadRows": 0,
+        "rebuilt": 20,
+        "tiles": 20,
+        "metadataMs": 10.536855,
+        "rasterMs": 148.004092,
+        "publicationMs": 0.722279,
+        "coldMs": 183.167065,
+        "coldDecoded": 320,
+        "coldSnapshotReadRows": 320,
+        "coldRebuilt": 20,
+        "pixelsEqual": true,
+        "reusedStrokes": 320,
+        "geometryBytes": 204800,
+        "nativeStrokeBuilds": 300
+      },
+      {
+        "case": "transform-2-0",
+        "completeMs": 77.229219,
+        "decoded": 0,
+        "snapshotReadRows": 0,
+        "rebuilt": 12,
+        "tiles": 24,
+        "metadataMs": 14.273559,
+        "rasterMs": 39.699668,
+        "publicationMs": 0.760569,
+        "coldMs": 168.817135,
+        "coldDecoded": 304,
+        "coldSnapshotReadRows": 304,
+        "coldRebuilt": 24,
+        "pixelsEqual": true,
+        "reusedStrokes": 80,
+        "geometryBytes": 204800,
+        "nativeStrokeBuilds": 80
+      },
+      {
+        "case": "transform-2-1",
+        "completeMs": 180.348082,
+        "decoded": 0,
+        "snapshotReadRows": 0,
+        "rebuilt": 24,
+        "tiles": 24,
+        "metadataMs": 9.123382,
+        "rasterMs": 140.573209,
+        "publicationMs": 0.700763,
+        "coldMs": 168.060642,
+        "coldDecoded": 304,
+        "coldSnapshotReadRows": 304,
+        "coldRebuilt": 24,
+        "pixelsEqual": true,
+        "reusedStrokes": 304,
+        "geometryBytes": 204800,
+        "nativeStrokeBuilds": 288
+      },
+      {
+        "case": "transform-2-2",
+        "completeMs": 141.906255,
+        "decoded": 0,
+        "snapshotReadRows": 0,
+        "rebuilt": 20,
+        "tiles": 20,
+        "metadataMs": 9.340526,
+        "rasterMs": 114.698888,
+        "publicationMs": 0.473356,
+        "coldMs": 183.580726,
+        "coldDecoded": 304,
+        "coldSnapshotReadRows": 304,
+        "coldRebuilt": 20,
+        "pixelsEqual": true,
+        "reusedStrokes": 304,
+        "geometryBytes": 204800,
+        "nativeStrokeBuilds": 288
+      },
+      {
+        "case": "transform-2-3",
+        "completeMs": 145.170772,
+        "decoded": 0,
+        "snapshotReadRows": 0,
+        "rebuilt": 20,
+        "tiles": 20,
+        "metadataMs": 9.613897,
+        "rasterMs": 114.24455,
+        "publicationMs": 0.38017,
+        "coldMs": 166.318561,
+        "coldDecoded": 320,
+        "coldSnapshotReadRows": 320,
+        "coldRebuilt": 20,
+        "pixelsEqual": true,
+        "reusedStrokes": 320,
+        "geometryBytes": 204800,
+        "nativeStrokeBuilds": 300
+      },
+      {
+        "case": "separated-append",
+        "completeMs": 58.82161,
+        "decoded": 2,
+        "snapshotReadRows": 2,
+        "rebuilt": 2,
+        "tiles": 20,
+        "metadataMs": 11.887598,
+        "rasterMs": 27.245922,
+        "publicationMs": 0.327656,
+        "coldMs": 185.771036,
+        "coldDecoded": 322,
+        "coldSnapshotReadRows": 322,
+        "coldRebuilt": 20,
+        "pixelsEqual": true,
+        "reusedStrokes": 22,
+        "geometryBytes": 206080,
+        "nativeStrokeBuilds": 21
+      }
+    ],
+    "transform_summary": {
+      "count": 12,
+      "sums": {
+        "decoded": 0,
+        "snapshotReadRows": 0,
+        "rebuilt": 212,
+        "coldDecoded": 3760,
+        "coldSnapshotReadRows": 3760,
+        "coldRebuilt": 248,
+        "reusedStrokes": 3088,
+        "nativeStrokeBuilds": 2916
+      },
+      "medianCompleteMs": 145.983407,
+      "medianColdMs": 183.0113075,
+      "slowerThanOwnCold": [
+        "transform-0-2",
+        "transform-2-1"
+      ],
+      "interpretation": "12 different transformations in one sequence, not repeat samples or an APK baseline comparison; no p95 or significance claim"
+    },
+    "sqlite": {
+      "writerSqlite": {
+        "page_size": 1024,
+        "auto_vacuum": 1,
+        "journal_mode": "wal",
+        "synchronous": 2
+      }
+    },
+    "method": {
+      "ordinal": 61,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "selection": "org.inkweft.app.RasterPerformanceProbe#continuousTransformsAndSeparatedDirtyTiles",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    },
+    "cleanup": "best-effort withTimeoutOrNull(5000) global count; not strict owned Job join"
+  },
+  "added62": {
+    "records": [
+      {
+        "case": "original-dense",
+        "stage": "fixture-start",
+        "elapsedMs": 135.964923,
+        "fixtureStrokes": 1201,
+        "fixturePoints": 76802,
+        "frameDeadlineMs": 30000
+      },
+      {
+        "case": "original-dense",
+        "stage": "fixture-complete",
+        "elapsedMs": 808.090336,
+        "fixtureStrokes": 1201,
+        "fixturePoints": 76802,
+        "frameDeadlineMs": 30000
+      },
+      {
+        "windowStrokes": 128,
+        "windowPoints": 8192,
+        "case": "original-dense",
+        "stage": "editor-window-complete",
+        "elapsedMs": 1599.201745,
+        "fixtureStrokes": 1201,
+        "fixturePoints": 76802,
+        "frameDeadlineMs": 30000
+      },
+      {
+        "case": "original-dense",
+        "stage": "frame-start",
+        "elapsedMs": 1601.241066,
+        "fixtureStrokes": 1201,
+        "fixturePoints": 76802,
+        "frameDeadlineMs": 30000
+      },
+      {
+        "frameElapsedMs": 1362.832964,
+        "snapshotReads": [
+          {
+            "frameElapsedMs": 141.189837,
+            "rows": 256,
+            "points": 16384,
+            "freezeMs": 17.214288,
+            "decodeMs": 19.553541
+          },
+          {
+            "frameElapsedMs": 473.670413,
+            "rows": 256,
+            "points": 16384,
+            "freezeMs": 15.180881,
+            "decodeMs": 19.442399
+          },
+          {
+            "frameElapsedMs": 751.359554,
+            "rows": 256,
+            "points": 16384,
+            "freezeMs": 18.375627,
+            "decodeMs": 22.658669
+          },
+          {
+            "frameElapsedMs": 994.229809,
+            "rows": 256,
+            "points": 16384,
+            "freezeMs": 16.481513,
+            "decodeMs": 19.262474
+          },
+          {
+            "frameElapsedMs": 1219.907876,
+            "rows": 177,
+            "points": 11266,
+            "freezeMs": 12.405873,
+            "decodeMs": 13.728323
+          }
+        ],
+        "snapshotRows": 1201,
+        "changeCallbacks": 1,
+        "publishedStats": "BuildStats(tiles=4, rebuilt=4, decoded=1201, bitmapBytes=800000, metadataMs=68.00578, rasterMs=1274.839024, publicationMs=0.980319, reusedStrokes=0, geometryBytes=1046656, nativeStrokeBuilds=1201)",
+        "case": "original-dense",
+        "stage": "frame-complete",
+        "elapsedMs": 2963.421878,
+        "fixtureStrokes": 1201,
+        "fixturePoints": 76802,
+        "frameDeadlineMs": 30000
+      },
+      {
+        "case": "original-dense",
+        "stage": "verified-and-released",
+        "elapsedMs": 2965.015043,
+        "fixtureStrokes": 1201,
+        "fixturePoints": 76802,
+        "frameDeadlineMs": 30000
+      }
+    ],
+    "publishedStats": {
+      "tiles": 4,
+      "rebuilt": 4,
+      "decoded": 1201,
+      "bitmapBytes": 800000,
+      "metadataMs": 68.00578,
+      "rasterMs": 1274.839024,
+      "publicationMs": 0.980319,
+      "reusedStrokes": 0,
+      "geometryBytes": 1046656,
+      "nativeStrokeBuilds": 1201
+    },
+    "freezeTotalMs": 79.658182,
+    "decodeTotalMs": 94.64540600000001,
+    "method": {
+      "ordinal": 62,
+      "phase": "candidate-diagnostics",
+      "identity": "C1",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    },
+    "cleanup": "strict withTimeout(5000) count restoration, pending=false and geometry restoration assertions; not captured Job.join"
+  },
+  "other_raster_correctness": [
+    {
+      "ordinal": 19,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#separatedRegionsSkipEmptyMetadataBatchesAndDecodeCrossingStrokeOnce",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    },
+    {
+      "ordinal": 20,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#payloadMaskAndRevisionChangesCannotReuseStaleDecodedGeometry",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    },
+    {
+      "ordinal": 21,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#explicitAppendReuseSkipsOldPayloadsAcrossRevisionJumpsAndDefaultsToInvalidation",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    },
+    {
+      "ordinal": 22,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#appendPermissionStillRefreshesChangedPayloadVisibilityUndoAndMasks",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    },
+    {
+      "ordinal": 23,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#appendReuseRejectsHeadOrMaskChangesDuringCachedBatches",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    },
+    {
+      "ordinal": 24,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#decodedCacheRemainsBoundedForManyStrokesAndDenseMasks",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    },
+    {
+      "ordinal": 25,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#sameRevisionMaskChangeDuringCachedVisitRejectsTheWholeRead",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    },
+    {
+      "ordinal": 26,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#appendRetainsGeometryAcrossIdleLayerRevisionsAndDestructiveChangesMatchColdFrames",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    },
+    {
+      "ordinal": 27,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    },
+    {
+      "ordinal": 28,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    },
+    {
+      "ordinal": 29,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    },
+    {
+      "ordinal": 30,
+      "phase": "correctness",
+      "identity": "C1",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+      "status": "PASS",
+      "junit_status": "PASS",
+      "adb_exit": 0,
+      "process_exit_outcome": "NATURAL_EXIT",
+      "error": null
+    }
+  ],
+  "limitations": [
+    "Official metadata/log provenance is supplied externally.",
+    "Compact receipts do not independently audit raw JUnit, APK/ELF/dependency files, installed bytes, ACL or artifact manifest.",
+    "Raw log hashes are linked, not independently reconstructed; original forwarded JSON and parsed records hashes are checked.",
+    "Group post-environment equality is a bound-controller claim; before/global hashes are forwarded.",
+    "62-call execution closure and 18-metric screening are distinct; neither is a final product/performance acceptance.",
+    "Original frozen 10% and 5 ms screening bands retained; four seed pairs are not a significance test.",
+    "All pixel equality compares two render paths inside one identity; no cross-APK or physical display capture equivalence claim.",
+    "Common stage values are append-only per-layer accumulated intervals, potentially overlapping; do not sum as wall time or attribute forced-full regression from them.",
+    "B native construction counters are absent, represented as null; retained Kotlin geometry is not a cross-frame native Stroke cache.",
+    "Added60 per-tile oracle is a test reference implementation, not an installed baseline APK.",
+    "Added60/61 use best-effort timeout-or-null global job-count cleanup, not captured-worker strict joins; natural process exit is a separate observation.",
+    "Added62 strict bounded count/pending/geometry assertions passed, but it does not capture and join owned Job objects.",
+    "Historical single-layer append regression and TCG dense deadline failures remain evidence; this KVM run cannot establish their unique causes.",
+    "Current B->C1 8-layer forced-full REGRESSION_SIGNAL and C0->C1 8-layer first/full INCONCLUSIVE remain unresolved; no production fix inferred from counts alone.",
+    "C1 includes the whole committed delta from d66 including default-off diagnostics and search changes; no causal attribution to lazy Pencil renderer alone."
+  ]
+}

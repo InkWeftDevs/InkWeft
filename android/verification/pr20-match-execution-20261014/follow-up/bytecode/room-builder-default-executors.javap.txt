@@ -1,0 +1,70 @@
+  public T build();
+    Code:
+       0: aload_0
+       1: getfield      #254                // Field queryExecutor:Ljava/util/concurrent/Executor;
+       4: ifnonnull     32
+       7: aload_0
+       8: getfield      #261                // Field transactionExecutor:Ljava/util/concurrent/Executor;
+      11: ifnonnull     32
+      14: aload_0
+      15: invokestatic  #427                // Method androidx/arch/core/executor/ArchTaskExecutor.getIOThreadExecutor:()Ljava/util/concurrent/Executor;
+      18: putfield      #261                // Field transactionExecutor:Ljava/util/concurrent/Executor;
+      21: aload_0
+      22: aload_0
+      23: getfield      #261                // Field transactionExecutor:Ljava/util/concurrent/Executor;
+      26: putfield      #254                // Field queryExecutor:Ljava/util/concurrent/Executor;
+      29: goto          72
+      32: aload_0
+      33: getfield      #254                // Field queryExecutor:Ljava/util/concurrent/Executor;
+      36: ifnull        57
+      39: aload_0
+      40: getfield      #261                // Field transactionExecutor:Ljava/util/concurrent/Executor;
+      43: ifnonnull     57
+      46: aload_0
+      47: aload_0
+      48: getfield      #254                // Field queryExecutor:Ljava/util/concurrent/Executor;
+      51: putfield      #261                // Field transactionExecutor:Ljava/util/concurrent/Executor;
+      54: goto          72
+      57: aload_0
+      58: getfield      #254                // Field queryExecutor:Ljava/util/concurrent/Executor;
+      61: ifnonnull     72
+      64: aload_0
+      65: aload_0
+      66: getfield      #261                // Field transactionExecutor:Ljava/util/concurrent/Executor;
+      69: putfield      #254                // Field queryExecutor:Ljava/util/concurrent/Executor;
+      72: aload_0
+      73: getfield      #70                 // Field migrationStartAndEndVersions:Ljava/util/Set;
+      76: aload_0
+      77: getfield      #67                 // Field migrationsNotRequiredFrom:Ljava/util/Set;
+      80: invokestatic  #433                // Method androidx/room/RoomDatabaseKt.validateMigrationsNotRequired:(Ljava/util/Set;Ljava/util/Set;)V
+      83: aload_0
+      84: getfield      #387                // Field driver:Landroidx/sqlite/SQLiteDriver;
+      87: ifnonnull     110
+      90: aload_0
+      91: getfield      #168                // Field supportOpenHelperFactory:Landroidx/sqlite/db/SupportSQLiteOpenHelper$Factory;
+      94: ifnonnull     110
+      97: new           #435                // class androidx/sqlite/db/framework/FrameworkSQLiteOpenHelperFactory
+     100: dup
+     101: invokespecial #436                // Method androidx/sqlite/db/framework/FrameworkSQLiteOpenHelperFactory."<init>":()V
+     104: checkcast     #438                // class androidx/sqlite/db/SupportSQLiteOpenHelper$Factory
+     107: goto          146
+     110: aload_0
+     111: getfield      #387                // Field driver:Landroidx/sqlite/SQLiteDriver;
+     114: ifnonnull     124
+     117: aload_0
+     118: getfield      #168                // Field supportOpenHelperFactory:Landroidx/sqlite/db/SupportSQLiteOpenHelper$Factory;
+     121: goto          146
+     124: aload_0
+     125: getfield      #168                // Field supportOpenHelperFactory:Landroidx/sqlite/db/SupportSQLiteOpenHelper$Factory;
+     128: ifnonnull     135
+     131: aconst_null
+     132: goto          146
+     135: new           #243                // class java/lang/IllegalArgumentException
+     138: dup
+     139: ldc_w         #440                // String A RoomDatabase cannot be configured with both a SQLiteDriver and a SupportOpenHelper.Factory.
+     142: invokespecial #250                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     145: athrow
+     146: astore_1
+     147: aload_0
+     148: getfield      #51                 // Field autoCloseTimeout:J
+     151: lconst_0

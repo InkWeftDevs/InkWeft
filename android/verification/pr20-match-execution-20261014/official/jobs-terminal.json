@@ -1,0 +1,185 @@
+{
+  "total_count": 1,
+  "jobs": [
+    {
+      "id": 115707901766,
+      "run_id": 38520196523,
+      "workflow_name": "PR20 一次性三端集中原生复验",
+      "head_branch": "codex/kvm-pr20-match-candidate-20261014",
+      "run_url": "https://api.github.com/repos/InkWeftDevs/InkWeft/actions/runs/38520196523",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUnRr3M8AAAAa8Lp3Rg",
+      "head_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+      "url": "https://api.github.com/repos/InkWeftDevs/InkWeft/actions/jobs/115707901766",
+      "html_url": "https://github.com/InkWeftDevs/InkWeft/actions/runs/38520196523/job/115707901766",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-14T06:05:33Z",
+      "started_at": "2026-10-14T06:05:35Z",
+      "completed_at": "2026-10-14T06:49:57Z",
+      "name": "PR20 fixed three-source native validation",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-14T06:05:36Z",
+          "completed_at": "2026-10-14T06:05:37Z"
+        },
+        {
+          "name": "从冻结PR服务器时间保守固定38/41/53/55分钟截止",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-14T06:05:37Z",
+          "completed_at": "2026-10-14T06:05:38Z"
+        },
+        {
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-14T06:05:38Z",
+          "completed_at": "2026-10-14T06:05:43Z"
+        },
+        {
+          "name": "Run actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-14T06:05:43Z",
+          "completed_at": "2026-10-14T06:05:43Z"
+        },
+        {
+          "name": "冻结并重建B/C0/C1源码与SDK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-14T06:05:43Z",
+          "completed_at": "2026-10-14T06:06:16Z"
+        },
+        {
+          "name": "构建B的三个真实debug APK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-14T06:06:16Z",
+          "completed_at": "2026-10-14T06:17:05Z"
+        },
+        {
+          "name": "构建C0的三个真实debug APK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-14T06:17:05Z",
+          "completed_at": "2026-10-14T06:26:05Z"
+        },
+        {
+          "name": "构建C1的三个真实debug APK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-14T06:26:05Z",
+          "completed_at": "2026-10-14T06:34:27Z"
+        },
+        {
+          "name": "最小临时ACL与同一KVM模拟器",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-14T06:34:27Z",
+          "completed_at": "2026-10-14T06:35:06Z"
+        },
+        {
+          "name": "C1的31项正确性：失败停止性能部分",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-14T06:35:06Z",
+          "completed_at": "2026-10-14T06:36:00Z"
+        },
+        {
+          "name": "四组三端固定顺序的24项公共比较",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-14T06:36:00Z",
+          "completed_at": "2026-10-14T06:48:08Z"
+        },
+        {
+          "name": "C1原3诊断与4项候选正确性补充",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-14T06:48:08Z",
+          "completed_at": "2026-10-14T06:49:25Z"
+        },
+        {
+          "name": "成功路径停止拥有进程并精确恢复ACL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-14T06:49:25Z",
+          "completed_at": "2026-10-14T06:49:43Z"
+        },
+        {
+          "name": "always再次核验进程与ACL恢复",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-14T06:49:43Z",
+          "completed_at": "2026-10-14T06:49:49Z"
+        },
+        {
+          "name": "只打包白名单原始文本，最大20MiB",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-14T06:49:49Z",
+          "completed_at": "2026-10-14T06:49:50Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-14T06:49:50Z",
+          "completed_at": "2026-10-14T06:49:53Z"
+        },
+        {
+          "name": "Post Run actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 31,
+          "started_at": "2026-10-14T06:49:53Z",
+          "completed_at": "2026-10-14T06:49:53Z"
+        },
+        {
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 32,
+          "started_at": "2026-10-14T06:49:53Z",
+          "completed_at": "2026-10-14T06:49:53Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 33,
+          "started_at": "2026-10-14T06:49:53Z",
+          "completed_at": "2026-10-14T06:49:53Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/InkWeftDevs/InkWeft/check-runs/115707901766",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000000331,
+      "runner_name": "GitHub Actions 1000000331",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

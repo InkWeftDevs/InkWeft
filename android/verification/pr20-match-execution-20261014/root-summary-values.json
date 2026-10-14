@@ -1,0 +1,131 @@
+{
+  "comparison_counts": {
+    "B->C0": {
+      "WITHIN_PROPOSED_BAND": 16,
+      "INCONCLUSIVE": 1,
+      "REGRESSION_SIGNAL": 1
+    },
+    "B->C1": {
+      "WITHIN_PROPOSED_BAND": 14,
+      "REGRESSION_SIGNAL": 3,
+      "INCONCLUSIVE": 1
+    },
+    "C0->C1": {
+      "WITHIN_PROPOSED_BAND": 15,
+      "INCONCLUSIVE": 3
+    }
+  },
+  "library_medians": {
+    "B": {
+      "coldMs": 4773.5249855,
+      "warmMedianMs": 531.3392345,
+      "headerReadMs": 200.60141700000003,
+      "direct": {
+        "p50": 2.6336645,
+        "p95": 3.7381135,
+        "max": 4564.6231865
+      },
+      "observe": {
+        "p50": 3.3232720000000002,
+        "p95": 98.186009,
+        "max": 4538.259436
+      }
+    },
+    "C0": {
+      "coldMs": 2168.9290840000003,
+      "warmMedianMs": 606.972135,
+      "headerReadMs": 24.9231815,
+      "direct": {
+        "p50": 3.1551405,
+        "p95": 8.390471999999999,
+        "max": 9.6648925
+      },
+      "observe": {
+        "p50": 7.8184705,
+        "p95": 22.6073575,
+        "max": 53.7932085
+      }
+    },
+    "C1": {
+      "coldMs": 700.517518,
+      "warmMedianMs": 150.039115,
+      "headerReadMs": 25.15408,
+      "direct": {
+        "p50": 3.302982,
+        "p95": 10.474968,
+        "max": 11.076775000000001
+      },
+      "observe": {
+        "p50": 7.858404999999999,
+        "p95": 19.0415405,
+        "max": 50.929284499999994
+      }
+    }
+  },
+  "job_step_seconds": [],
+  "nonwithin": [
+    {
+      "comparison": "B->C0",
+      "metric": "library.direct.p95",
+      "screening_status": "INCONCLUSIVE",
+      "median_delta_ms": 4.8143005,
+      "median_relative_change": 1.3167633358986197
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.observe.p50",
+      "screening_status": "REGRESSION_SIGNAL",
+      "median_delta_ms": 4.5731280000000005,
+      "median_relative_change": 1.3807667615983263
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "screening_status": "REGRESSION_SIGNAL",
+      "median_delta_ms": 39.038077999999985,
+      "median_relative_change": 0.12219478319463672
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.direct.p50",
+      "screening_status": "INCONCLUSIVE",
+      "median_delta_ms": 0.6881284999999997,
+      "median_relative_change": 0.26329047492032365
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.direct.p95",
+      "screening_status": "REGRESSION_SIGNAL",
+      "median_delta_ms": 6.7368545,
+      "median_relative_change": 1.8055873684170096
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.observe.p50",
+      "screening_status": "REGRESSION_SIGNAL",
+      "median_delta_ms": 4.4063,
+      "median_relative_change": 1.2857617665224508
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.firstCompleteMs",
+      "screening_status": "INCONCLUSIVE",
+      "median_delta_ms": -4.002132999999986,
+      "median_relative_change": -0.010453885300727606
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "screening_status": "INCONCLUSIVE",
+      "median_delta_ms": 29.610527999999988,
+      "median_relative_change": 0.08926003888230849
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.observe.p50",
+      "screening_status": "INCONCLUSIVE",
+      "median_delta_ms": 0.03993449999999932,
+      "median_relative_change": 0.005690205491403089
+    }
+  ]
+}

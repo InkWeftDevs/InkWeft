@@ -1,0 +1,2742 @@
+{
+  "scope": "Independent numeric and original rule audit; not a complete execution/acceptance audit",
+  "run_id": 38520196523,
+  "official_log_sha256": "d1634bbeb118100737e2c9d6d6111fca972f2fb05999b5604ff34f0d0e7c9f62",
+  "payload_hashes_verified": 365,
+  "method_record_hashes_verified": 62,
+  "original_ordered_saves_checked": 720,
+  "metric_count": 18,
+  "comparison_count": 54,
+  "history_sources": [
+    {
+      "git": "c37ba03232b1a0985e85cbaec4d349dbab945919",
+      "path": "ci/pr20-kvm-paired/PLAN.md",
+      "bytes": 19344,
+      "sha256": "028e1b7051626235636c08d7f6627a0d1f9298d3ce9009d0cae3803caad38ee4"
+    },
+    {
+      "git": "c37ba03232b1a0985e85cbaec4d349dbab945919",
+      "path": "ci/pr20-kvm-paired/protocol.json",
+      "bytes": 1942,
+      "sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+    },
+    {
+      "git": "c37ba03232b1a0985e85cbaec4d349dbab945919",
+      "path": "ci/pr20-kvm-paired/analyze.py",
+      "bytes": 6181,
+      "sha256": "d3bb05d493691be7924ecef0569d747645628c7abf0005287a8b045a69e36adf"
+    }
+  ],
+  "original_rule": ">=3 positive deltas AND median relative > band AND median absolute > band",
+  "alternative_rule": ">=3 individually over-band deltas AND median relative > band AND median absolute > band",
+  "alternate_rule_scope": "Sensitivity only: not present in original frozen PLAN/analyzer",
+  "original_counts": {
+    "WITHIN_PROPOSED_BAND": 45,
+    "INCONCLUSIVE": 5,
+    "REGRESSION_SIGNAL": 4
+  },
+  "alternative_counts": {
+    "WITHIN_PROPOSED_BAND": 45,
+    "INCONCLUSIVE": 6,
+    "REGRESSION_SIGNAL": 3
+  },
+  "changed": [
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 358.822529,
+          "right_ms": 337.493995,
+          "delta_ms": -21.32853399999999,
+          "relative_change": -0.05944034244293506,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 318.882758,
+          "right_ms": 380.560993,
+          "delta_ms": 61.67823499999997,
+          "relative_change": 0.19341978659128367,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 321.718498,
+          "right_ms": 338.116419,
+          "delta_ms": 16.397920999999997,
+          "relative_change": 0.05096977979798978,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 308.987158,
+          "right_ms": 374.559969,
+          "delta_ms": 65.572811,
+          "relative_change": 0.2122185641126224,
+          "over_band": true
+        }
+      ],
+      "positive_pairs": 3,
+      "over_band_pairs": 2,
+      "median_delta_ms": 39.038077999999985,
+      "median_relative_change": 0.12219478319463672,
+      "original_frozen_status": "REGRESSION_SIGNAL",
+      "alternative_three_over_band_status": "INCONCLUSIVE",
+      "original_output_exact_match": true
+    }
+  ],
+  "comparisons": [
+    {
+      "comparison": "B->C0",
+      "metric": "library.allIndexRowsCommittedMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 33507.535993,
+          "right_ms": 34174.982456,
+          "delta_ms": 667.4464630000002,
+          "relative_change": 0.019919294069830507,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 35378.68485,
+          "right_ms": 34737.814227,
+          "delta_ms": -640.8706229999952,
+          "relative_change": -0.018114597128671805,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 33681.906777,
+          "right_ms": 33878.961479,
+          "delta_ms": 197.05470200000127,
+          "relative_change": 0.005850461593657874,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 33882.874947,
+          "right_ms": 34080.821359,
+          "delta_ms": 197.94641200000478,
+          "relative_change": 0.005842078404197926,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 3,
+      "over_band_pairs": 0,
+      "median_delta_ms": 197.50055700000303,
+      "median_relative_change": 0.0058462699989279,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.coldMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 6500.287131,
+          "right_ms": 2127.94045,
+          "delta_ms": -4372.346681,
+          "relative_change": -0.672639006998351,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 4705.914978,
+          "right_ms": 2189.464974,
+          "delta_ms": -2516.450004,
+          "relative_change": -0.5347419185778584,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 4707.009303,
+          "right_ms": 2173.954263,
+          "delta_ms": -2533.0550399999997,
+          "relative_change": -0.5381453226331131,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 4840.040668,
+          "right_ms": 2163.903905,
+          "delta_ms": -2676.1367629999995,
+          "relative_change": -0.5529161729349337,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -2604.5959015,
+      "median_relative_change": -0.5455307477840234,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.direct.max",
+      "band": {
+        "relative": 0.25,
+        "absolute_ms": 20
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 6297.390422,
+          "right_ms": 9.342843,
+          "delta_ms": -6288.047579,
+          "relative_change": -0.998516394510437,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 4498.115808,
+          "right_ms": 11.602549,
+          "delta_ms": -4486.513258999999,
+          "relative_change": -0.9974205757487692,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 4501.478098,
+          "right_ms": 9.986942,
+          "delta_ms": -4491.491155999999,
+          "relative_change": -0.9977814082879939,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 4627.768275,
+          "right_ms": 8.766902,
+          "delta_ms": -4619.001373,
+          "relative_change": -0.9981055875145347,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -4555.2462645,
+      "median_relative_change": -0.9979434979012642,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.direct.p50",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 1
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 2.599203,
+          "right_ms": 3.126662,
+          "delta_ms": 0.5274589999999999,
+          "relative_change": 0.20293105232642472,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 2.843834,
+          "right_ms": 2.975076,
+          "delta_ms": 0.13124199999999986,
+          "relative_change": 0.04614966977678714,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 2.636825,
+          "right_ms": 3.183619,
+          "delta_ms": 0.5467940000000002,
+          "relative_change": 0.20736833123168963,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 2.630504,
+          "right_ms": 3.241354,
+          "delta_ms": 0.6108499999999997,
+          "relative_change": 0.23221785634996173,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 4,
+      "over_band_pairs": 0,
+      "median_delta_ms": 0.5371265000000001,
+      "median_relative_change": 0.20514969177905718,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.direct.p95",
+      "band": {
+        "relative": 0.15,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 3.977992,
+          "right_ms": 7.914811,
+          "delta_ms": 3.9368190000000003,
+          "relative_change": 0.9896498032173018,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 3.563505,
+          "right_ms": 8.430458,
+          "delta_ms": 4.866953,
+          "relative_change": 1.3657769527473653,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 3.887389,
+          "right_ms": 8.967168,
+          "delta_ms": 5.0797789999999985,
+          "relative_change": 1.3067328739161423,
+          "over_band": true
+        },
+        {
+          "seed": 4104,
+          "left_ms": 3.588838,
+          "right_ms": 8.350486,
+          "delta_ms": 4.761648,
+          "relative_change": 1.326793797881097,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 4,
+      "over_band_pairs": 1,
+      "median_delta_ms": 4.8143005,
+      "median_relative_change": 1.3167633358986197,
+      "original_frozen_status": "INCONCLUSIVE",
+      "alternative_three_over_band_status": "INCONCLUSIVE",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.observe.max",
+      "band": {
+        "relative": 0.25,
+        "absolute_ms": 20
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 4493.679969,
+          "right_ms": 52.266886,
+          "delta_ms": -4441.4130829999995,
+          "relative_change": -0.9883688009914887,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 4515.040758,
+          "right_ms": 58.387119,
+          "delta_ms": -4456.653639,
+          "relative_change": -0.9870683074351995,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 4561.478114,
+          "right_ms": 55.319531,
+          "delta_ms": -4506.158582999999,
+          "relative_change": -0.9878724550206184,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 4650.297108,
+          "right_ms": 44.860809,
+          "delta_ms": -4605.436299,
+          "relative_change": -0.9903531305724907,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -4481.406111,
+      "median_relative_change": -0.9881206280060535,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.observe.p50",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 1
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 3.19772,
+          "right_ms": 8.01767,
+          "delta_ms": 4.81995,
+          "relative_change": 1.5073083321866831,
+          "over_band": true
+        },
+        {
+          "seed": 4102,
+          "left_ms": 3.79792,
+          "right_ms": 7.056763,
+          "delta_ms": 3.258843,
+          "relative_change": 0.8580599380713654,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 3.292965,
+          "right_ms": 7.619271,
+          "delta_ms": 4.326306000000001,
+          "relative_change": 1.3138026064656017,
+          "over_band": true
+        },
+        {
+          "seed": 4104,
+          "left_ms": 3.353579,
+          "right_ms": 8.208659,
+          "delta_ms": 4.855080000000001,
+          "relative_change": 1.447730916731051,
+          "over_band": true
+        }
+      ],
+      "positive_pairs": 4,
+      "over_band_pairs": 4,
+      "median_delta_ms": 4.5731280000000005,
+      "median_relative_change": 1.3807667615983263,
+      "original_frozen_status": "REGRESSION_SIGNAL",
+      "alternative_three_over_band_status": "REGRESSION_SIGNAL",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.observe.p95",
+      "band": {
+        "relative": 0.15,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 102.196754,
+          "right_ms": 15.498114,
+          "delta_ms": -86.69864,
+          "relative_change": -0.8483502323371249,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 99.344452,
+          "right_ms": 24.085875,
+          "delta_ms": -75.258577,
+          "relative_change": -0.7575518862392033,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 96.410058,
+          "right_ms": 25.271624,
+          "delta_ms": -71.138434,
+          "relative_change": -0.7378735733153485,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 97.027566,
+          "right_ms": 21.12884,
+          "delta_ms": -75.898726,
+          "relative_change": -0.7822387918089174,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -75.5786515,
+      "median_relative_change": -0.7698953390240604,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "library.searchIndexReadyMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 34054.624086,
+          "right_ms": 34784.213431,
+          "delta_ms": 729.589344999993,
+          "relative_change": 0.021424090401277684,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 36532.632202,
+          "right_ms": 35378.125919,
+          "delta_ms": -1154.5062830000024,
+          "relative_change": -0.03160205584465925,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 34218.129218,
+          "right_ms": 34502.998754,
+          "delta_ms": 284.86953599999833,
+          "relative_change": 0.008325105507233532,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 34452.595418,
+          "right_ms": 34693.044338,
+          "delta_ms": 240.44892000000254,
+          "relative_change": 0.0069791235488279035,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 3,
+      "over_band_pairs": 0,
+      "median_delta_ms": 262.65922800000044,
+      "median_relative_change": 0.007652114528030718,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.1.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 63.872273,
+          "right_ms": 64.223127,
+          "delta_ms": 0.35085400000000533,
+          "relative_change": 0.0054930564315442965,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 64.508983,
+          "right_ms": 65.273552,
+          "delta_ms": 0.7645689999999945,
+          "relative_change": 0.011852132283654004,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 67.0164,
+          "right_ms": 47.647305,
+          "delta_ms": -19.369095,
+          "relative_change": -0.28902022490017365,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 63.991049,
+          "right_ms": 63.205411,
+          "delta_ms": -0.7856379999999987,
+          "relative_change": -0.012277310847021772,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 2,
+      "over_band_pairs": 0,
+      "median_delta_ms": -0.2173919999999967,
+      "median_relative_change": -0.0033921272077387377,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.1.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 329.936532,
+          "right_ms": 345.286958,
+          "delta_ms": 15.350426000000027,
+          "relative_change": 0.046525390525714805,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 325.959405,
+          "right_ms": 333.811333,
+          "delta_ms": 7.851927999999987,
+          "relative_change": 0.024088668341997854,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 335.457325,
+          "right_ms": 337.358415,
+          "delta_ms": 1.9010899999999538,
+          "relative_change": 0.005667159004502098,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 330.840927,
+          "right_ms": 337.109287,
+          "delta_ms": 6.268359999999973,
+          "relative_change": 0.0189467489915478,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 4,
+      "over_band_pairs": 0,
+      "median_delta_ms": 7.06014399999998,
+      "median_relative_change": 0.021517708666772828,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.1.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 253.21594,
+          "right_ms": 253.19505,
+          "delta_ms": -0.02088999999998009,
+          "relative_change": -8.249875580490507e-05,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 253.548367,
+          "right_ms": 253.895628,
+          "delta_ms": 0.34726099999997473,
+          "relative_change": 0.0013696045614837171,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 252.503429,
+          "right_ms": 253.692341,
+          "delta_ms": 1.1889119999999878,
+          "relative_change": 0.004708498433896535,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 252.915965,
+          "right_ms": 253.424985,
+          "delta_ms": 0.5090199999999925,
+          "relative_change": 0.002012605254081201,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 3,
+      "over_band_pairs": 0,
+      "median_delta_ms": 0.4281404999999836,
+      "median_relative_change": 0.0016911049077824591,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.4.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 132.297164,
+          "right_ms": 127.02975,
+          "delta_ms": -5.267414000000002,
+          "relative_change": -0.03981501825692957,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 135.358719,
+          "right_ms": 136.905322,
+          "delta_ms": 1.5466030000000046,
+          "relative_change": 0.01142595771758148,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 136.585196,
+          "right_ms": 130.320244,
+          "delta_ms": -6.264951999999994,
+          "relative_change": -0.04586845561212938,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 142.381186,
+          "right_ms": 134.405821,
+          "delta_ms": -7.975365000000011,
+          "relative_change": -0.05601417732255731,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 1,
+      "over_band_pairs": 0,
+      "median_delta_ms": -5.766182999999998,
+      "median_relative_change": -0.04284173693452947,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.4.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 255.715001,
+          "right_ms": 268.864017,
+          "delta_ms": 13.149015999999989,
+          "relative_change": 0.05142058912687708,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 274.913205,
+          "right_ms": 244.418946,
+          "delta_ms": -30.494259,
+          "relative_change": -0.11092322393171328,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 238.406311,
+          "right_ms": 240.688093,
+          "delta_ms": 2.281782000000021,
+          "relative_change": 0.009570979855478834,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 267.052681,
+          "right_ms": 252.217179,
+          "delta_ms": -14.83550200000002,
+          "relative_change": -0.05555271695624742,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 2,
+      "over_band_pairs": 0,
+      "median_delta_ms": -6.276859999999999,
+      "median_relative_change": -0.02299086855038429,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.4.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 258.770404,
+          "right_ms": 247.103123,
+          "delta_ms": -11.667280999999974,
+          "relative_change": -0.04508738565017645,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 252.122224,
+          "right_ms": 242.607845,
+          "delta_ms": -9.514378999999991,
+          "relative_change": -0.037737169096207834,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 254.773049,
+          "right_ms": 226.086602,
+          "delta_ms": -28.686446999999987,
+          "relative_change": -0.11259608154236123,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 252.267107,
+          "right_ms": 241.263714,
+          "delta_ms": -11.003393000000017,
+          "relative_change": -0.04361802508005941,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -11.335336999999996,
+      "median_relative_change": -0.04435270536511793,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.8.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 169.160309,
+          "right_ms": 167.28318,
+          "delta_ms": -1.877129000000025,
+          "relative_change": -0.011096746104903521,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 245.564296,
+          "right_ms": 172.849642,
+          "delta_ms": -72.71465400000002,
+          "relative_change": -0.29611248534273904,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 171.696924,
+          "right_ms": 166.411739,
+          "delta_ms": -5.285184999999984,
+          "relative_change": -0.030782059904579162,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 243.85681,
+          "right_ms": 170.811143,
+          "delta_ms": -73.04566700000001,
+          "relative_change": -0.2995432729559614,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -38.999919500000004,
+      "median_relative_change": -0.1634472726236591,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.8.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 347.003134,
+          "right_ms": 334.002418,
+          "delta_ms": -13.000716000000011,
+          "relative_change": -0.03746570196683008,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 383.304194,
+          "right_ms": 354.099337,
+          "delta_ms": -29.204857000000004,
+          "relative_change": -0.07619237529135936,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 342.625784,
+          "right_ms": 306.142759,
+          "delta_ms": -36.483025,
+          "relative_change": -0.10648067572170805,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 336.049277,
+          "right_ms": 341.687835,
+          "delta_ms": 5.638557999999989,
+          "relative_change": 0.01677896185445449,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 1,
+      "over_band_pairs": 0,
+      "median_delta_ms": -21.102786500000008,
+      "median_relative_change": -0.05682903862909472,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C0",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 358.822529,
+          "right_ms": 313.601683,
+          "delta_ms": -45.220845999999995,
+          "relative_change": -0.12602565988826187,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 318.882758,
+          "right_ms": 345.232249,
+          "delta_ms": 26.349491,
+          "relative_change": 0.0826306544927713,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 321.718498,
+          "right_ms": 325.220203,
+          "delta_ms": 3.5017050000000154,
+          "relative_change": 0.010884375694182324,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 308.987158,
+          "right_ms": 331.41159,
+          "delta_ms": 22.424431999999968,
+          "relative_change": 0.07257399351205396,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 3,
+      "over_band_pairs": 0,
+      "median_delta_ms": 12.963068499999991,
+      "median_relative_change": 0.04172918460311814,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.allIndexRowsCommittedMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 33507.535993,
+          "right_ms": 33747.26896,
+          "delta_ms": 239.73296700000355,
+          "relative_change": 0.007154598507335352,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 35378.68485,
+          "right_ms": 34794.230843,
+          "delta_ms": -584.4540070000003,
+          "relative_change": -0.016519947235969723,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 33681.906777,
+          "right_ms": 33447.638607,
+          "delta_ms": -234.26816999999573,
+          "relative_change": -0.0069553119884521175,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 33882.874947,
+          "right_ms": 33907.335108,
+          "delta_ms": 24.4601610000027,
+          "relative_change": 0.0007219033520107221,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 2,
+      "over_band_pairs": 0,
+      "median_delta_ms": -104.90400449999652,
+      "median_relative_change": -0.0031167043182206977,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.coldMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 6500.287131,
+          "right_ms": 687.271191,
+          "delta_ms": -5813.01594,
+          "relative_change": -0.8942706411040845,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 4705.914978,
+          "right_ms": 713.495369,
+          "delta_ms": -3992.4196089999996,
+          "relative_change": -0.8483832852196507,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 4707.009303,
+          "right_ms": 694.374298,
+          "delta_ms": -4012.635005,
+          "relative_change": -0.8524807891164689,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 4840.040668,
+          "right_ms": 706.660738,
+          "delta_ms": -4133.379929999999,
+          "relative_change": -0.8539969420769338,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -4073.0074674999996,
+      "median_relative_change": -0.8532388655967014,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.direct.max",
+      "band": {
+        "relative": 0.25,
+        "absolute_ms": 20
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 6297.390422,
+          "right_ms": 8.34242,
+          "delta_ms": -6289.048002,
+          "relative_change": -0.9986752576160983,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 4498.115808,
+          "right_ms": 12.487228,
+          "delta_ms": -4485.62858,
+          "relative_change": -0.9972238980646538,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 4501.478098,
+          "right_ms": 11.745744,
+          "delta_ms": -4489.732354,
+          "relative_change": -0.9973906917362947,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 4627.768275,
+          "right_ms": 10.407806,
+          "delta_ms": -4617.360469,
+          "relative_change": -0.9977510096915991,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -4553.5464114999995,
+      "median_relative_change": -0.9975708507139469,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.direct.p50",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 1
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 2.599203,
+          "right_ms": 3.339603,
+          "delta_ms": 0.7403999999999997,
+          "relative_change": 0.2848565502579059,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 2.843834,
+          "right_ms": 3.888681,
+          "delta_ms": 1.0448469999999999,
+          "relative_change": 0.36740787261141117,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 2.636825,
+          "right_ms": 2.972022,
+          "delta_ms": 0.33519699999999997,
+          "relative_change": 0.12712144340257692,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 2.630504,
+          "right_ms": 3.266361,
+          "delta_ms": 0.6358569999999997,
+          "relative_change": 0.2417243995827414,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 4,
+      "over_band_pairs": 1,
+      "median_delta_ms": 0.6881284999999997,
+      "median_relative_change": 0.26329047492032365,
+      "original_frozen_status": "INCONCLUSIVE",
+      "alternative_three_over_band_status": "INCONCLUSIVE",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.direct.p95",
+      "band": {
+        "relative": 0.15,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 3.977992,
+          "right_ms": 8.129486,
+          "delta_ms": 4.151494,
+          "relative_change": 1.043615472328753,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 3.563505,
+          "right_ms": 11.474386,
+          "delta_ms": 7.910881000000001,
+          "relative_change": 2.2199719096788137,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 3.887389,
+          "right_ms": 10.577346,
+          "delta_ms": 6.689957,
+          "relative_change": 1.7209383984983235,
+          "over_band": true
+        },
+        {
+          "seed": 4104,
+          "left_ms": 3.588838,
+          "right_ms": 10.37259,
+          "delta_ms": 6.783752000000001,
+          "relative_change": 1.8902363383356957,
+          "over_band": true
+        }
+      ],
+      "positive_pairs": 4,
+      "over_band_pairs": 3,
+      "median_delta_ms": 6.7368545,
+      "median_relative_change": 1.8055873684170096,
+      "original_frozen_status": "REGRESSION_SIGNAL",
+      "alternative_three_over_band_status": "REGRESSION_SIGNAL",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.observe.max",
+      "band": {
+        "relative": 0.25,
+        "absolute_ms": 20
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 4493.679969,
+          "right_ms": 50.612072,
+          "delta_ms": -4443.067897,
+          "relative_change": -0.9887370546302471,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 4515.040758,
+          "right_ms": 51.246497,
+          "delta_ms": -4463.794261,
+          "relative_change": -0.9886498262702947,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 4561.478114,
+          "right_ms": 43.893828,
+          "delta_ms": -4517.584285999999,
+          "relative_change": -0.9903772797099953,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 4650.297108,
+          "right_ms": 56.028299,
+          "delta_ms": -4594.268809,
+          "relative_change": -0.9879516732589809,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -4490.6892735,
+      "median_relative_change": -0.988693440450271,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.observe.p50",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 1
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 3.19772,
+          "right_ms": 7.879988,
+          "delta_ms": 4.6822680000000005,
+          "relative_change": 1.4642520295710693,
+          "over_band": true
+        },
+        {
+          "seed": 4102,
+          "left_ms": 3.79792,
+          "right_ms": 8.066663,
+          "delta_ms": 4.268743000000001,
+          "relative_change": 1.1239686459957028,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 3.292965,
+          "right_ms": 7.836822,
+          "delta_ms": 4.543856999999999,
+          "relative_change": 1.3798679913087444,
+          "over_band": true
+        },
+        {
+          "seed": 4104,
+          "left_ms": 3.353579,
+          "right_ms": 7.34989,
+          "delta_ms": 3.9963110000000004,
+          "relative_change": 1.1916555417361572,
+          "over_band": true
+        }
+      ],
+      "positive_pairs": 4,
+      "over_band_pairs": 4,
+      "median_delta_ms": 4.4063,
+      "median_relative_change": 1.2857617665224508,
+      "original_frozen_status": "REGRESSION_SIGNAL",
+      "alternative_three_over_band_status": "REGRESSION_SIGNAL",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.observe.p95",
+      "band": {
+        "relative": 0.15,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 102.196754,
+          "right_ms": 15.512158,
+          "delta_ms": -86.684596,
+          "relative_change": -0.8482128111427101,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 99.344452,
+          "right_ms": 18.412767,
+          "delta_ms": -80.931685,
+          "relative_change": -0.8146573197665834,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 96.410058,
+          "right_ms": 19.670314,
+          "delta_ms": -76.739744,
+          "relative_change": -0.7959723870304072,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 97.027566,
+          "right_ms": 22.614901,
+          "delta_ms": -74.41266499999999,
+          "relative_change": -0.7669229278615523,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -78.8357145,
+      "median_relative_change": -0.8053148533984953,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "library.searchIndexReadyMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 34054.624086,
+          "right_ms": 33919.825947,
+          "delta_ms": -134.7981390000059,
+          "relative_change": -0.003958291792021895,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 36532.632202,
+          "right_ms": 34963.79045,
+          "delta_ms": -1568.8417520000003,
+          "relative_change": -0.0429435728399038,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 34218.129218,
+          "right_ms": 33611.112182,
+          "delta_ms": -607.0170360000047,
+          "relative_change": -0.017739632465958777,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 34452.595418,
+          "right_ms": 34069.844991,
+          "delta_ms": -382.75042699999904,
+          "relative_change": -0.011109480210597655,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -494.8837315000019,
+      "median_relative_change": -0.014424556338278216,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.1.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 63.872273,
+          "right_ms": 48.102288,
+          "delta_ms": -15.769984999999998,
+          "relative_change": -0.24689875996741184,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 64.508983,
+          "right_ms": 47.193895,
+          "delta_ms": -17.315088000000003,
+          "relative_change": -0.26841359442916657,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 67.0164,
+          "right_ms": 48.265926,
+          "delta_ms": -18.750474000000004,
+          "relative_change": -0.27978933514781457,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 63.991049,
+          "right_ms": 64.410344,
+          "delta_ms": 0.4192949999999982,
+          "relative_change": 0.006552400789679114,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 1,
+      "over_band_pairs": 0,
+      "median_delta_ms": -16.5425365,
+      "median_relative_change": -0.2576561771982892,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.1.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 329.936532,
+          "right_ms": 339.192326,
+          "delta_ms": 9.25579399999998,
+          "relative_change": 0.028053256012280592,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 325.959405,
+          "right_ms": 328.533075,
+          "delta_ms": 2.573669999999993,
+          "relative_change": 0.007895676457011502,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 335.457325,
+          "right_ms": 331.38458,
+          "delta_ms": -4.072744999999998,
+          "relative_change": -0.012140873656582118,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 330.840927,
+          "right_ms": 327.749963,
+          "delta_ms": -3.0909640000000422,
+          "relative_change": -0.009342749786213855,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 2,
+      "over_band_pairs": 0,
+      "median_delta_ms": -0.2586470000000247,
+      "median_relative_change": -0.0007235366646011765,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.1.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 253.21594,
+          "right_ms": 236.151907,
+          "delta_ms": -17.064032999999995,
+          "relative_change": -0.0673892528250788,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 253.548367,
+          "right_ms": 236.290029,
+          "delta_ms": -17.25833800000001,
+          "relative_change": -0.06806724178192014,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 252.503429,
+          "right_ms": 236.854224,
+          "delta_ms": -15.649205000000023,
+          "relative_change": -0.0619762078557754,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 252.915965,
+          "right_ms": 253.33107,
+          "delta_ms": 0.41510500000001116,
+          "relative_change": 0.0016412763820583542,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 1,
+      "over_band_pairs": 0,
+      "median_delta_ms": -16.35661900000001,
+      "median_relative_change": -0.0646827303404271,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.4.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 132.297164,
+          "right_ms": 122.984125,
+          "delta_ms": -9.313039000000003,
+          "relative_change": -0.07039484988506639,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 135.358719,
+          "right_ms": 136.570807,
+          "delta_ms": 1.2120879999999943,
+          "relative_change": 0.008954635570982195,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 136.585196,
+          "right_ms": 128.387344,
+          "delta_ms": -8.197851999999983,
+          "relative_change": -0.06002006249637759,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 142.381186,
+          "right_ms": 134.638545,
+          "delta_ms": -7.74264100000002,
+          "relative_change": -0.05437966361651192,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 1,
+      "over_band_pairs": 0,
+      "median_delta_ms": -7.970246500000002,
+      "median_relative_change": -0.057199863056444755,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.4.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 255.715001,
+          "right_ms": 251.89588,
+          "delta_ms": -3.8191209999999955,
+          "relative_change": -0.014935068279392838,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 274.913205,
+          "right_ms": 247.285673,
+          "delta_ms": -27.627532000000002,
+          "relative_change": -0.10049547092508704,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 238.406311,
+          "right_ms": 241.64603,
+          "delta_ms": 3.239719000000008,
+          "relative_change": 0.013589065601539385,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 267.052681,
+          "right_ms": 267.806206,
+          "delta_ms": 0.7535249999999678,
+          "relative_change": 0.0028216342827127594,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 2,
+      "over_band_pairs": 0,
+      "median_delta_ms": -1.5327980000000139,
+      "median_relative_change": -0.006056716998340039,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.4.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 258.770404,
+          "right_ms": 217.608782,
+          "delta_ms": -41.161621999999994,
+          "relative_change": -0.1590661890375995,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 252.122224,
+          "right_ms": 235.980497,
+          "delta_ms": -16.141726999999975,
+          "relative_change": -0.06402341984735138,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 254.773049,
+          "right_ms": 245.405645,
+          "delta_ms": -9.367403999999993,
+          "relative_change": -0.036767640991728245,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 252.267107,
+          "right_ms": 230.71487,
+          "delta_ms": -21.55223700000002,
+          "relative_change": -0.08543419416150844,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -18.846981999999997,
+      "median_relative_change": -0.07472880700442991,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 169.160309,
+          "right_ms": 169.450269,
+          "delta_ms": 0.28995999999997935,
+          "relative_change": 0.0017141136813598745,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 245.564296,
+          "right_ms": 171.445097,
+          "delta_ms": -74.11919900000001,
+          "relative_change": -0.3018321482696328,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 171.696924,
+          "right_ms": 164.471563,
+          "delta_ms": -7.225360999999992,
+          "relative_change": -0.04208206432399453,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 243.85681,
+          "right_ms": 173.186976,
+          "delta_ms": -70.66983400000001,
+          "relative_change": -0.28980053499428626,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 1,
+      "over_band_pairs": 0,
+      "median_delta_ms": -38.9475975,
+      "median_relative_change": -0.1659412996591404,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 347.003134,
+          "right_ms": 343.9881,
+          "delta_ms": -3.015034000000014,
+          "relative_change": -0.008688780315165734,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 383.304194,
+          "right_ms": 336.109389,
+          "delta_ms": -47.194804999999974,
+          "relative_change": -0.12312624213029089,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 342.625784,
+          "right_ms": 363.544573,
+          "delta_ms": 20.918789000000004,
+          "relative_change": 0.06105433384429704,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 336.049277,
+          "right_ms": 311.897331,
+          "delta_ms": -24.15194600000001,
+          "relative_change": -0.07187025133816904,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 1,
+      "over_band_pairs": 0,
+      "median_delta_ms": -13.583490000000012,
+      "median_relative_change": -0.04027951582666739,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "B->C1",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 358.822529,
+          "right_ms": 337.493995,
+          "delta_ms": -21.32853399999999,
+          "relative_change": -0.05944034244293506,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 318.882758,
+          "right_ms": 380.560993,
+          "delta_ms": 61.67823499999997,
+          "relative_change": 0.19341978659128367,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 321.718498,
+          "right_ms": 338.116419,
+          "delta_ms": 16.397920999999997,
+          "relative_change": 0.05096977979798978,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 308.987158,
+          "right_ms": 374.559969,
+          "delta_ms": 65.572811,
+          "relative_change": 0.2122185641126224,
+          "over_band": true
+        }
+      ],
+      "positive_pairs": 3,
+      "over_band_pairs": 2,
+      "median_delta_ms": 39.038077999999985,
+      "median_relative_change": 0.12219478319463672,
+      "original_frozen_status": "REGRESSION_SIGNAL",
+      "alternative_three_over_band_status": "INCONCLUSIVE",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.allIndexRowsCommittedMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 34174.982456,
+          "right_ms": 33747.26896,
+          "delta_ms": -427.71349599999667,
+          "relative_change": -0.012515397675790352,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 34737.814227,
+          "right_ms": 34794.230843,
+          "delta_ms": 56.416615999994974,
+          "relative_change": 0.0016240692529279066,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 33878.961479,
+          "right_ms": 33447.638607,
+          "delta_ms": -431.322871999997,
+          "relative_change": -0.012731289660911083,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 34080.821359,
+          "right_ms": 33907.335108,
+          "delta_ms": -173.48625100000208,
+          "relative_change": -0.005090436324070247,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 1,
+      "over_band_pairs": 0,
+      "median_delta_ms": -300.5998734999994,
+      "median_relative_change": -0.0088029169999303,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.coldMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 2127.94045,
+          "right_ms": 687.271191,
+          "delta_ms": -1440.669259,
+          "relative_change": -0.6770251766208966,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 2189.464974,
+          "right_ms": 713.495369,
+          "delta_ms": -1475.969605,
+          "relative_change": -0.674123414864914,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 2173.954263,
+          "right_ms": 694.374298,
+          "delta_ms": -1479.5799650000001,
+          "relative_change": -0.6805938791730689,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 2163.903905,
+          "right_ms": 706.660738,
+          "delta_ms": -1457.243167,
+          "relative_change": -0.6734324771228692,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -1466.606386,
+      "median_relative_change": -0.6755742957429053,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.direct.max",
+      "band": {
+        "relative": 0.25,
+        "absolute_ms": 20
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 9.342843,
+          "right_ms": 8.34242,
+          "delta_ms": -1.0004229999999996,
+          "relative_change": -0.1070790764652686,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 11.602549,
+          "right_ms": 12.487228,
+          "delta_ms": 0.8846790000000002,
+          "relative_change": 0.0762486760452381,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 9.986942,
+          "right_ms": 11.745744,
+          "delta_ms": 1.7588019999999993,
+          "relative_change": 0.1761101646530039,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 8.766902,
+          "right_ms": 10.407806,
+          "delta_ms": 1.6409040000000008,
+          "relative_change": 0.18717033679628226,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 3,
+      "over_band_pairs": 0,
+      "median_delta_ms": 1.2627915000000005,
+      "median_relative_change": 0.126179420349121,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.direct.p50",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 1
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 3.126662,
+          "right_ms": 3.339603,
+          "delta_ms": 0.21294099999999982,
+          "relative_change": 0.06810489909046757,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 2.975076,
+          "right_ms": 3.888681,
+          "delta_ms": 0.913605,
+          "relative_change": 0.30708627275404066,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 3.183619,
+          "right_ms": 2.972022,
+          "delta_ms": -0.21159700000000026,
+          "relative_change": -0.06646429739237025,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 3.241354,
+          "right_ms": 3.266361,
+          "delta_ms": 0.025007,
+          "relative_change": 0.00771498577446339,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 3,
+      "over_band_pairs": 0,
+      "median_delta_ms": 0.11897399999999991,
+      "median_relative_change": 0.03790994243246548,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.direct.p95",
+      "band": {
+        "relative": 0.15,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 7.914811,
+          "right_ms": 8.129486,
+          "delta_ms": 0.21467499999999973,
+          "relative_change": 0.027123199783292362,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 8.430458,
+          "right_ms": 11.474386,
+          "delta_ms": 3.043928000000001,
+          "relative_change": 0.361063183044148,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 8.967168,
+          "right_ms": 10.577346,
+          "delta_ms": 1.6101780000000012,
+          "relative_change": 0.1795637150993492,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 8.350486,
+          "right_ms": 10.37259,
+          "delta_ms": 2.0221040000000006,
+          "relative_change": 0.2421540494768808,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 4,
+      "over_band_pairs": 0,
+      "median_delta_ms": 1.816141000000001,
+      "median_relative_change": 0.210858882288115,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.observe.max",
+      "band": {
+        "relative": 0.25,
+        "absolute_ms": 20
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 52.266886,
+          "right_ms": 50.612072,
+          "delta_ms": -1.6548140000000018,
+          "relative_change": -0.03166084928036461,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 58.387119,
+          "right_ms": 51.246497,
+          "delta_ms": -7.1406220000000005,
+          "relative_change": -0.12229789930207036,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 55.319531,
+          "right_ms": 43.893828,
+          "delta_ms": -11.425702999999999,
+          "relative_change": -0.206540127753433,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 44.860809,
+          "right_ms": 56.028299,
+          "delta_ms": 11.167489999999994,
+          "relative_change": 0.24893643803882348,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 1,
+      "over_band_pairs": 0,
+      "median_delta_ms": -4.397718000000001,
+      "median_relative_change": -0.07697937429121748,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.observe.p50",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 1
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 8.01767,
+          "right_ms": 7.879988,
+          "delta_ms": -0.13768200000000075,
+          "relative_change": -0.017172320636793525,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 7.056763,
+          "right_ms": 8.066663,
+          "delta_ms": 1.0099,
+          "relative_change": 0.14311094194321106,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 7.619271,
+          "right_ms": 7.836822,
+          "delta_ms": 0.21755099999999938,
+          "relative_change": 0.028552731619599703,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 8.208659,
+          "right_ms": 7.34989,
+          "delta_ms": -0.8587690000000006,
+          "relative_change": -0.1046174533501758,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 2,
+      "over_band_pairs": 1,
+      "median_delta_ms": 0.03993449999999932,
+      "median_relative_change": 0.005690205491403089,
+      "original_frozen_status": "INCONCLUSIVE",
+      "alternative_three_over_band_status": "INCONCLUSIVE",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.observe.p95",
+      "band": {
+        "relative": 0.15,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 15.498114,
+          "right_ms": 15.512158,
+          "delta_ms": 0.014044000000000167,
+          "relative_change": 0.0009061747771375028,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 24.085875,
+          "right_ms": 18.412767,
+          "delta_ms": -5.673108000000003,
+          "relative_change": -0.23553672017313065,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 25.271624,
+          "right_ms": 19.670314,
+          "delta_ms": -5.601309999999998,
+          "relative_change": -0.22164424415304684,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 21.12884,
+          "right_ms": 22.614901,
+          "delta_ms": 1.4860609999999994,
+          "relative_change": 0.07033329799458943,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 2,
+      "over_band_pairs": 0,
+      "median_delta_ms": -2.793632999999999,
+      "median_relative_change": -0.11036903468795467,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "library.searchIndexReadyMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 500
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 34784.213431,
+          "right_ms": 33919.825947,
+          "delta_ms": -864.387483999999,
+          "relative_change": -0.024849993682181437,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 35378.125919,
+          "right_ms": 34963.79045,
+          "delta_ms": -414.33546899999783,
+          "relative_change": -0.011711628534214591,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 34502.998754,
+          "right_ms": 33611.112182,
+          "delta_ms": -891.8865720000031,
+          "relative_change": -0.025849537843333215,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 34693.044338,
+          "right_ms": 34069.844991,
+          "delta_ms": -623.1993470000016,
+          "relative_change": -0.017963236115240533,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -743.7934155000003,
+      "median_relative_change": -0.021406614898710985,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.1.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 64.223127,
+          "right_ms": 48.102288,
+          "delta_ms": -16.120839000000004,
+          "relative_change": -0.251012987891418,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 65.273552,
+          "right_ms": 47.193895,
+          "delta_ms": -18.079656999999997,
+          "relative_change": -0.27698288887358236,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 47.647305,
+          "right_ms": 48.265926,
+          "delta_ms": 0.6186209999999974,
+          "relative_change": 0.012983336623131114,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 63.205411,
+          "right_ms": 64.410344,
+          "delta_ms": 1.204932999999997,
+          "relative_change": 0.01906376338570115,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 2,
+      "over_band_pairs": 0,
+      "median_delta_ms": -7.751109000000003,
+      "median_relative_change": -0.11901482563414345,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.1.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 345.286958,
+          "right_ms": 339.192326,
+          "delta_ms": -6.094632000000047,
+          "relative_change": -0.017650918630989998,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 333.811333,
+          "right_ms": 328.533075,
+          "delta_ms": -5.278257999999994,
+          "relative_change": -0.01581209946517903,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 337.358415,
+          "right_ms": 331.38458,
+          "delta_ms": -5.973834999999951,
+          "relative_change": -0.01770768042054016,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 337.109287,
+          "right_ms": 327.749963,
+          "delta_ms": -9.359324000000015,
+          "relative_change": -0.027763471256726402,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -6.034233499999999,
+      "median_relative_change": -0.01767929952576508,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.1.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 253.19505,
+          "right_ms": 236.151907,
+          "delta_ms": -17.043143000000015,
+          "relative_change": -0.06731230725087245,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 253.895628,
+          "right_ms": 236.290029,
+          "delta_ms": -17.605598999999984,
+          "relative_change": -0.06934187539456171,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 253.692341,
+          "right_ms": 236.854224,
+          "delta_ms": -16.83811700000001,
+          "relative_change": -0.06637219292323848,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 253.424985,
+          "right_ms": 253.33107,
+          "delta_ms": -0.09391499999998132,
+          "relative_change": -0.000370583034660088,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 0,
+      "over_band_pairs": 0,
+      "median_delta_ms": -16.940630000000013,
+      "median_relative_change": -0.06684225008705547,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.4.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 127.02975,
+          "right_ms": 122.984125,
+          "delta_ms": -4.045625000000001,
+          "relative_change": -0.031847854538011755,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 136.905322,
+          "right_ms": 136.570807,
+          "delta_ms": -0.33451500000001033,
+          "relative_change": -0.002443403916759457,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 130.320244,
+          "right_ms": 128.387344,
+          "delta_ms": -1.9328999999999894,
+          "relative_change": -0.014831924347839531,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 134.405821,
+          "right_ms": 134.638545,
+          "delta_ms": 0.23272399999999038,
+          "relative_change": 0.001731502387831707,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 1,
+      "over_band_pairs": 0,
+      "median_delta_ms": -1.1337074999999999,
+      "median_relative_change": -0.008637664132299494,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.4.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 268.864017,
+          "right_ms": 251.89588,
+          "delta_ms": -16.968136999999984,
+          "relative_change": -0.06311047937664338,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 244.418946,
+          "right_ms": 247.285673,
+          "delta_ms": 2.8667269999999974,
+          "relative_change": 0.011728742991961028,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 240.688093,
+          "right_ms": 241.64603,
+          "delta_ms": 0.9579369999999869,
+          "relative_change": 0.003979993310263108,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 252.217179,
+          "right_ms": 267.806206,
+          "delta_ms": 15.589026999999987,
+          "relative_change": 0.061807950837480474,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 3,
+      "over_band_pairs": 0,
+      "median_delta_ms": 1.9123319999999921,
+      "median_relative_change": 0.007854368151112068,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.4.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 247.103123,
+          "right_ms": 217.608782,
+          "delta_ms": -29.49434100000002,
+          "relative_change": -0.11936045421813635,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 242.607845,
+          "right_ms": 235.980497,
+          "delta_ms": -6.627347999999984,
+          "relative_change": -0.02731712158772104,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 226.086602,
+          "right_ms": 245.405645,
+          "delta_ms": 19.319042999999994,
+          "relative_change": 0.0854497472610074,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 241.263714,
+          "right_ms": 230.71487,
+          "delta_ms": -10.548844000000003,
+          "relative_change": -0.04372329276171216,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 1,
+      "over_band_pairs": 0,
+      "median_delta_ms": -8.588095999999993,
+      "median_relative_change": -0.0355202071747166,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.appendCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 167.28318,
+          "right_ms": 169.450269,
+          "delta_ms": 2.1670890000000043,
+          "relative_change": 0.01295461384701091,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 172.849642,
+          "right_ms": 171.445097,
+          "delta_ms": -1.4045449999999846,
+          "relative_change": -0.008125819548992719,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 166.411739,
+          "right_ms": 164.471563,
+          "delta_ms": -1.9401760000000081,
+          "relative_change": -0.01165888904027379,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 170.811143,
+          "right_ms": 173.186976,
+          "delta_ms": 2.375833,
+          "relative_change": 0.013909121842244243,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 2,
+      "over_band_pairs": 0,
+      "median_delta_ms": 0.3812720000000098,
+      "median_relative_change": 0.0024143971490090954,
+      "original_frozen_status": "WITHIN_PROPOSED_BAND",
+      "alternative_three_over_band_status": "WITHIN_PROPOSED_BAND",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.firstCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 334.002418,
+          "right_ms": 343.9881,
+          "delta_ms": 9.985681999999997,
+          "relative_change": 0.029897035056794197,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 354.099337,
+          "right_ms": 336.109389,
+          "delta_ms": -17.98994799999997,
+          "relative_change": -0.05080480565824941,
+          "over_band": false
+        },
+        {
+          "seed": 4103,
+          "left_ms": 306.142759,
+          "right_ms": 363.544573,
+          "delta_ms": 57.401814,
+          "relative_change": 0.18750015250238206,
+          "over_band": true
+        },
+        {
+          "seed": 4104,
+          "left_ms": 341.687835,
+          "right_ms": 311.897331,
+          "delta_ms": -29.790504,
+          "relative_change": -0.0871863173004096,
+          "over_band": false
+        }
+      ],
+      "positive_pairs": 2,
+      "over_band_pairs": 1,
+      "median_delta_ms": -4.002132999999986,
+      "median_relative_change": -0.010453885300727606,
+      "original_frozen_status": "INCONCLUSIVE",
+      "alternative_three_over_band_status": "INCONCLUSIVE",
+      "original_output_exact_match": true
+    },
+    {
+      "comparison": "C0->C1",
+      "metric": "raster.8.forcedFullCompleteMs",
+      "band": {
+        "relative": 0.1,
+        "absolute_ms": 5
+      },
+      "pairs": [
+        {
+          "seed": 4101,
+          "left_ms": 313.601683,
+          "right_ms": 337.493995,
+          "delta_ms": 23.892312000000004,
+          "relative_change": 0.07618681051529941,
+          "over_band": false
+        },
+        {
+          "seed": 4102,
+          "left_ms": 345.232249,
+          "right_ms": 380.560993,
+          "delta_ms": 35.32874399999997,
+          "relative_change": 0.10233326724931757,
+          "over_band": true
+        },
+        {
+          "seed": 4103,
+          "left_ms": 325.220203,
+          "right_ms": 338.116419,
+          "delta_ms": 12.896215999999981,
+          "relative_change": 0.0396537972765485,
+          "over_band": false
+        },
+        {
+          "seed": 4104,
+          "left_ms": 331.41159,
+          "right_ms": 374.559969,
+          "delta_ms": 43.148379000000034,
+          "relative_change": 0.13019574541735257,
+          "over_band": true
+        }
+      ],
+      "positive_pairs": 4,
+      "over_band_pairs": 2,
+      "median_delta_ms": 29.610527999999988,
+      "median_relative_change": 0.08926003888230849,
+      "original_frozen_status": "INCONCLUSIVE",
+      "alternative_three_over_band_status": "INCONCLUSIVE",
+      "original_output_exact_match": true
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+[
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/integration-audit/review.json",
+    "path": "reviews/integration-audit/review.json",
+    "bytes": 68521,
+    "sha256": "8c4b82614a0da6dd067e86a54ed7c1ee16ac8b021a12b38c919bfc6afc2884d8"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/integration-audit/review.md",
+    "path": "reviews/integration-audit/review.md",
+    "bytes": 5092,
+    "sha256": "6e80192afc41c30e7d4da1b90a44cee287ba511afa093efece634d87249433bf"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/search-review/analyze_stage58.py",
+    "path": "reviews/search-review/analyze_stage58.py",
+    "bytes": 6244,
+    "sha256": "cdbd815049b58ebd6be8a828dc6a59929d00201d4f770ee1e2a0e5209bc19fd2"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/search-review/causal-plan.md",
+    "path": "reviews/search-review/causal-plan.md",
+    "bytes": 11250,
+    "sha256": "dea83661aa73d00bdade38074ca483a147c66aec87c710affb26755fc2899eb9"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/search-review/recompute.py",
+    "path": "reviews/search-review/recompute.py",
+    "bytes": 10699,
+    "sha256": "cddbf20878f7f5e96862419ffca6624679419a7508987159d3358e8106b5ed86"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/search-review/search-review.json",
+    "path": "reviews/search-review/search-review.json",
+    "bytes": 922946,
+    "sha256": "29cc9e9b2bc12ed87b173fc7a194ed061b954fd2d2023af00e7ce3fcdbc94e72"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/search-review/search-review.md",
+    "path": "reviews/search-review/search-review.md",
+    "bytes": 12906,
+    "sha256": "642d7aeb3ddaaeae6a4228e00f912f20998dabd7b44fa12a65071ae4f08c349d"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/search-review/stage58-analysis.json",
+    "path": "reviews/search-review/stage58-analysis.json",
+    "bytes": 299084,
+    "sha256": "024e71c96ad25a1fdbbb9594433c34d09b36a1c99ce8cde9955d7d7737d29413"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/search-review/write_report.py",
+    "path": "reviews/search-review/write_report.py",
+    "bytes": 12377,
+    "sha256": "d351639c92fbb04cc5ca01ca1f0d4af2f5301368b073230253b6aae0bdf57f47"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/raster-review/recompute.py",
+    "path": "reviews/raster-review/recompute.py",
+    "bytes": 25355,
+    "sha256": "905c82dd3b99a1e18c890c8f63d6a71f24877e4e898c53ffaa14daf059c55933"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/raster-review/report.json",
+    "path": "reviews/raster-review/report.json",
+    "bytes": 185590,
+    "sha256": "ddd554c95c880618a3762eac1c43a811e70c7e59f3c3b00edf866a56e7994fc3"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/raster-review/report.md",
+    "path": "reviews/raster-review/report.md",
+    "bytes": 16576,
+    "sha256": "19884d62322c3ba937c0038ad407115ba868a69f2e81277565ad7c471d73768a"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/gc-review/gc-review.json",
+    "path": "reviews/gc-review/gc-review.json",
+    "bytes": 152823,
+    "sha256": "58d9bd385301253cdd4c1cb212db5b8368c45fd002adde2cde8287c810001406"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/gc-review/gc-review.md",
+    "path": "reviews/gc-review/gc-review.md",
+    "bytes": 9808,
+    "sha256": "178a2e00d6af6c4e1e9c1fc18023158e4e563062ad7c5f480c76a20bdeb58695"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/gc-review/recompute-result.json",
+    "path": "reviews/gc-review/recompute-result.json",
+    "bytes": 3760,
+    "sha256": "cb8042c0a697e89c584318f8e36189c7b14a0c3651aa6f31a57ef4fa9b766957"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-execution-20261014/gc-review/recompute.py",
+    "path": "reviews/gc-review/recompute.py",
+    "bytes": 10495,
+    "sha256": "67230790414f4700e8ea69aabe251a84f830eecd756e1e7ab8fbc681a71dc5db"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-candidate-20261014/save-boundary-instrumentation-plan.md",
+    "path": "follow-up/save-boundary-instrumentation-plan.md",
+    "bytes": 15733,
+    "sha256": "c19ef0eb80b97db70932e7444e810fba931b9abc397f2545b5babcbd8e1d12df"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-candidate-20261014/save-boundary-instrumentation-plan.json",
+    "path": "follow-up/save-boundary-instrumentation-plan.json",
+    "bytes": 10151,
+    "sha256": "1ab51854a28647f8a47ee438a1d7900c546a94caa9c48648577ef427bf9de863"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-candidate-20261014/save-boundary-readonly-evidence/room-builder-api.javap.txt",
+    "path": "follow-up/bytecode/room-builder-api.javap.txt",
+    "bytes": 5380,
+    "sha256": "9a2eaaab469a55171a5440131ab7cac55507797a13873ce1ca36fd3f9a358107"
+  },
+  {
+    "source": "/workspace/scratch/pr20-match-candidate-20261014/save-boundary-readonly-evidence/room-builder-default-executors.javap.txt",
+    "path": "follow-up/bytecode/room-builder-default-executors.javap.txt",
+    "bytes": 3948,
+    "sha256": "d576e38a8e54408826b4bf1883fa4e895d54409203a90fc7e59d58747e8a8288"
+  }
+]

@@ -1,0 +1,218 @@
+{
+  "status": "CONTINUE_APPROVED_BUDGET3_MATCH62_FROZEN_NOT_PERFORMANCE_EVIDENCE",
+  "prior_run": "38419007471",
+  "prior_execution_git": "30acef2e082eb1cd2d70471737824da32fbe9c24",
+  "prior_archive_sha256": "aab2be49c45bb833c9b8304f05698a3c392d561cdd92bb997f0a9b3a69dc8485",
+  "prior_cleanup_verified_locally": true,
+  "historical_budget_revision_sha256": "37802241b962e6c3d347b6359bac361c351ad81e63766b78c782edaa1a601f28",
+  "original_plan_git": "6e6391c7de228b69453499ea106ffed7615afb29",
+  "old_cutoffs_minutes": [
+    38,
+    41,
+    53,
+    55,
+    60
+  ],
+  "new_cutoffs_minutes": [
+    38,
+    41,
+    53,
+    55,
+    60
+  ],
+  "unchanged": {
+    "source_identities": 3,
+    "debug_apks": 9,
+    "common_calls": 24,
+    "diagnostic_calls": 3,
+    "install_groups": 14,
+    "serial_single_worker": true,
+    "task_build_cache": false,
+    "work_deadline_minutes": 55,
+    "job_hard_minutes": 60,
+    "text_artifact_limit_bytes": 20971520,
+    "retention_days": 3,
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+  },
+  "fourth_observed_seconds": {
+    "setup": 1323.998,
+    "correctness_17": 28.079,
+    "common_24": 499.498,
+    "diagnostics_3": 44.921
+  },
+  "cleanup_budget": {
+    "trap_cap_seconds": 45,
+    "kill_after_seconds": 2,
+    "always_cap_seconds": 45,
+    "package_cap_seconds": 45,
+    "upload_step_cap_seconds": 120,
+    "nominal_max_seconds_including_kill_grace": 261,
+    "remaining_seconds_for_step_overhead_before_60m": 39,
+    "caveat": "Time caps are not proof of process/ACL restoration; require both original receipts and exact restoration. Step scheduling overhead remains subject to job hard limit."
+  },
+  "limitations": [
+    "Prior timing and sensitivity are not bounds or native performance evidence for this candidate.",
+    "Any deadline abort retains all evidence and leaves later methods NOT_RUN; no smaller sample, method retries or automatic rerun.",
+    "Only the existing method17 auxiliary-package cleanup exception remains; no added method joins its allowlist.",
+    "No paid runner, permission expansion, baseline optimization overlay, common fixture/threshold change, merge or deployment."
+  ],
+  "clock_amendment": {
+    "prior_run": "38498392929",
+    "reason": "Keep the verified no-network conservative PR-server clock for a distinct source/method candidate; not a rerun of the same candidate.",
+    "anchor_kind": "github_pull_request_updated_at",
+    "budget_anchor_epoch": 1791957846,
+    "clock_contract_sha256": "b64b0ac49ae3f5de3784cf1fa4ab3151312d5faf59cc3f770d2514a705888314",
+    "server_receipt_sha256": "44a85fb00efc441eba34d4849590b5f91b08eec8ab563cf3db319b9ebf13dcf4",
+    "actual_job_started_epoch": null,
+    "effect": "One new immutable earlier PR server timestamp for this separately frozen candidate attempt; offsets38/41/53/55 and actualjob60 remain unchanged. Never rebase any frozen anchor.",
+    "no_rebase": true,
+    "network_clock_requests": 0,
+    "prior_execution_git": "d20b37a00d084ddea8a59698b926d94ce2f1a633"
+  },
+  "historical_sensitivity_only": {
+    "old_C0_build_seconds": 339.202,
+    "previous_C1_build_seconds": 405.452,
+    "predicted_setup_replacing_only_C0_build_seconds": 1390.248,
+    "margin_to_32m_seconds": 529.752,
+    "new_13_correctness_duration": "UNKNOWN",
+    "new_candidate_build_duration": "UNKNOWN"
+  },
+  "previous_budget3_revision_sha256": "0de35f7063e25c9c75daa7f4a1719eb525d40d2bdbc311c380133669dcfd582a",
+  "historical_method_amendments": {
+    "C0": "Previous candidate ebb4848 replaces historical C0=7949011.",
+    "C1": "45b4861ae23ac19eda3246fcd34cf3d2132dc1ee",
+    "methods": {
+      "old": 44,
+      "new": 57,
+      "old_phases": [
+        17,
+        24,
+        3
+      ],
+      "new_phases": [
+        30,
+        24,
+        3
+      ]
+    },
+    "correctness": "Original 1-17 unchanged; 13 inserted at18-30; old18-44 shift+13 only."
+  },
+  "current_source_method_amendment": {
+    "kind": "MATCH_CANDIDATE_PLUS_UNICODE_AND_THREE_RASTER_GUARDS",
+    "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+    "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+    "old_methods_preserved": 58,
+    "appended_ordinals": [
+      59,
+      60,
+      61,
+      62
+    ],
+    "public_methods": 24,
+    "total_methods": 62,
+    "budget_extension": false
+  },
+  "historical_phase_budget_amendment": {
+    "kind": "EXPLICIT_USER_AUTHORIZED_PHASE_BUDGET_OVERRIDE",
+    "supersedes_only": "Cumulative setup/correctness/common deadlines in the historical frozen readiness PLAN; source identities, samples, thresholds, probes, internal test timeouts and diagnostics/work/job caps unchanged.",
+    "historical_plan_git": "6c72fd8b20228cc324fd835efa3f505f1f179997",
+    "historical_plan_sha256": "ff2459abb0b8582d20e570c5afb0c4e9a0df5216bed8bc5191e4d008b5c4dacd",
+    "historical_cutoffs_minutes": [
+      32,
+      38,
+      52,
+      55,
+      60
+    ],
+    "replacement_cutoffs_minutes": [
+      38,
+      41,
+      53,
+      55,
+      60
+    ],
+    "source_spec_sha256": "6e9c422d8be60728967226de674b750cb7b3633485956d537dd0c2dac21a6dfb",
+    "method_plan_sha256": "808dd0cf1fece09185c59ae94ce41f51fdbc26dcde5ed196df7e803860f49765",
+    "prior_run": "38433834125",
+    "prior_execution_git": "9907a8f96fe0d20061f0a7deba6a69d4416ced50",
+    "terminal_report_git": "9c9e490ee4e579946a744cb1d0555643812b91c7",
+    "user_authorization_quote_as_relayed": "请利用官方日志能证明的退出和清理事实继续合理修复预算/构建安排…保持每轮60分钟总上限、原始样本及正确性门禁，可根据已完成第四轮的实测测试阶段时长重新合理分配预算或评估可信构建缓存…不要盲目同配置重跑。",
+    "authorization_source": "Parent relayed explicit user steering in this task; no synthetic approval timestamp supplied.",
+    "task_build_cache": false,
+    "correctness_methods": 30,
+    "common_methods": 24,
+    "diagnostic_methods": 3,
+    "timing_reference_only": {
+      "fourth_run": "38419007471",
+      "fourth_summary_actions_seconds": {
+        "build_B": 503.509612799,
+        "build_old_C0": 339.20193243,
+        "build_ebb_old_C1": 405.451995611,
+        "emulator": 26.181581259,
+        "correctness_17": 28.078970909,
+        "common_24": 499.497565508,
+        "diagnostics_3": 44.920757055
+      },
+      "current_run": "38433834125",
+      "current_api_step_seconds": {
+        "build_B": 733,
+        "build_ebb_C0": 589,
+        "build_45b_C1_censored": 434
+      },
+      "current_anchor_lead_to_actual_job_seconds": 105,
+      "current_anchor_to_C1_start_seconds": 1485,
+      "current_C1_exit": 124,
+      "new_setup_window_from_same_C1_start_seconds": 795,
+      "phase_windows_minutes": [
+        38,
+        3,
+        12,
+        2
+      ],
+      "caveat": "C1 full build and 30-method correctness duration remain unknown; references and sensitivity are not bounds, host-load attribution, native speed calibration or a PASS guarantee. Early phases advance immediately. API step durations and inner Gradle durations are not mixed."
+    },
+    "failed_run_evidence_scope": "Official decoded job log and terminal metadata establish outer timeout and both STOPPED_CONFIRMED/NOT_STARTED/NOT_TOUCHED/errors[] cleanup statements. Original artifact ZIP was not obtained and is not represented as verified.",
+    "no_automatic_retry": true
+  },
+  "phase_budget_amendment": {
+    "kind": "CONTINUE_APPROVED_BUDGET3_WITH_NEW_SOURCE_METHOD_SCOPE",
+    "historical_budget_revision_sha256": "0de35f7063e25c9c75daa7f4a1719eb525d40d2bdbc311c380133669dcfd582a",
+    "historical_cutoffs_minutes": [
+      38,
+      41,
+      53,
+      55,
+      60
+    ],
+    "replacement_cutoffs_minutes": [
+      38,
+      41,
+      53,
+      55,
+      60
+    ],
+    "source_spec_sha256": "87c053799de6b5cdab10f641e136dfb6729e924edc7c70da774ab9170fb2ddf5",
+    "method_plan_sha256": "6660f4f25061440892ad8ff0b7257e09dd311b2df8786e258c873dd21fe15913",
+    "plan_sha256": "fddc7225de7db0c14048a0d8f364dc749c2779ed9c959527d0ebadd78888f087",
+    "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+    "prior_run": "38441089594",
+    "prior_execution_git": "6b180ef65fa0d966f42967fe6a592f7bfe0a8ae5",
+    "terminal_report_git": "8a569e4fb0c348313019d1566e2b536c8eca82d9",
+    "task_build_cache": false,
+    "correctness_methods": 31,
+    "common_methods": 24,
+    "diagnostic_methods": 3,
+    "no_automatic_retry": true,
+    "authorization_source": "Root authorized scratch preparation for the matching and frame-local lazyPencil candidate: preserve original methods1-58 and append59Unicode/60NativeReuse/61Frame/62dense under the unchanged budget. Actual launch remains separately performed only by root after source freeze and independent review."
+  },
+  "latest_observed_seconds": {
+    "setup": 33.666068792,
+    "build-B": 624.286401749,
+    "build-C0": 542.128299952,
+    "build-C1": 473.372719288,
+    "emulator": 32.16467452,
+    "methods-correctness": 42.841116667,
+    "methods-common": 611.95477438,
+    "methods-diagnostics": 54.632564783
+  }
+}

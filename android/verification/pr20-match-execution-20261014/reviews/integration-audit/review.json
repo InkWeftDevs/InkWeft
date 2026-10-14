@@ -1,0 +1,1839 @@
+{
+  "status": "PASS_SCOPED_OFFICIAL_LOG_INTEGRITY",
+  "scope": "INDEPENDENT_LOCAL_RECOMPUTATION_NOT_RAW_ARTIFACT_AUDIT",
+  "issues": [],
+  "run_id": 38520196523,
+  "job_id": 115707901766,
+  "attempt": 1,
+  "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+  "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e",
+  "source_identities": {
+    "B": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+    "C0": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+    "C1": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547"
+  },
+  "log_bytes": 1107962,
+  "log_sha256": "d1634bbeb118100737e2c9d6d6111fca972f2fb05999b5604ff34f0d0e7c9f62",
+  "bom_preserved": true,
+  "job_started_at": "2026-10-14T06:05:35Z",
+  "job_completed_at": "2026-10-14T06:49:57Z",
+  "job_seconds": 2662,
+  "anchor_utc": "2026-10-14T06:04:06Z",
+  "anchor_lead_seconds": 89,
+  "phase_times": [
+    {
+      "name": "冻结并重建B/C0/C1源码与SDK",
+      "phase": "setup",
+      "seconds": 33.0,
+      "started_at": "2026-10-14T06:05:43Z",
+      "completed_at": "2026-10-14T06:06:16Z",
+      "deadline_margin_seconds": 2150.0
+    },
+    {
+      "name": "构建B的三个真实debug APK",
+      "phase": "setup",
+      "seconds": 649.0,
+      "started_at": "2026-10-14T06:06:16Z",
+      "completed_at": "2026-10-14T06:17:05Z",
+      "deadline_margin_seconds": 1501.0
+    },
+    {
+      "name": "构建C0的三个真实debug APK",
+      "phase": "setup",
+      "seconds": 540.0,
+      "started_at": "2026-10-14T06:17:05Z",
+      "completed_at": "2026-10-14T06:26:05Z",
+      "deadline_margin_seconds": 961.0
+    },
+    {
+      "name": "构建C1的三个真实debug APK",
+      "phase": "setup",
+      "seconds": 502.0,
+      "started_at": "2026-10-14T06:26:05Z",
+      "completed_at": "2026-10-14T06:34:27Z",
+      "deadline_margin_seconds": 459.0
+    },
+    {
+      "name": "最小临时ACL与同一KVM模拟器",
+      "phase": "setup",
+      "seconds": 39.0,
+      "started_at": "2026-10-14T06:34:27Z",
+      "completed_at": "2026-10-14T06:35:06Z",
+      "deadline_margin_seconds": 420.0
+    },
+    {
+      "name": "C1的31项正确性：失败停止性能部分",
+      "phase": "correctness",
+      "seconds": 54.0,
+      "started_at": "2026-10-14T06:35:06Z",
+      "completed_at": "2026-10-14T06:36:00Z",
+      "deadline_margin_seconds": 546.0
+    },
+    {
+      "name": "四组三端固定顺序的24项公共比较",
+      "phase": "common-comparison",
+      "seconds": 728.0,
+      "started_at": "2026-10-14T06:36:00Z",
+      "completed_at": "2026-10-14T06:48:08Z",
+      "deadline_margin_seconds": 538.0
+    },
+    {
+      "name": "C1原3诊断与4项候选正确性补充",
+      "phase": "candidate-diagnostics",
+      "seconds": 77.0,
+      "started_at": "2026-10-14T06:48:08Z",
+      "completed_at": "2026-10-14T06:49:25Z",
+      "deadline_margin_seconds": 581.0
+    }
+  ],
+  "receipt_counts": {
+    "CLOCK": 1,
+    "CONTEXT": 62,
+    "END": 62,
+    "METHOD": 62,
+    "RECORD": 365,
+    "FINAL": 1
+  },
+  "payload_utf8_bytes": 588998,
+  "extracted_records_bytes": 605172,
+  "marker_counts": {
+    "HISTORY_DELETE_WRITER_CORRECTNESS": 2,
+    "TILE_PAN_EVIDENCE": 1,
+    "TILE_PAN_STAGE": 1,
+    "KVM_PAIR_FIXTURE": 48,
+    "TILE_LOCAL_EVIDENCE": 36,
+    "KVM_RASTER_CLEANUP": 36,
+    "KVM_DIRECT_INTERVALS": 12,
+    "LIBRARY_DIRECT_SAVE_CHECKPOINT": 13,
+    "INDEX_SAVE_PROGRESS": 78,
+    "LIBRARY_INDEX_SAVE_CHECKPOINT": 13,
+    "KVM_INDEX_INTERVALS": 12,
+    "LIBRARY_READ_EVIDENCE": 13,
+    "HISTORY_DELETION_EXPOSURE_TRIAL": 60,
+    "HISTORY_DELETION_EXPOSURE_SUMMARY": 2,
+    "LIBRARY_STAGE_DIAGNOSTICS": 12,
+    "LIBRARY_CAUSAL_UNICODE": 1,
+    "NATIVE_STROKE_TILE_EVIDENCE": 4,
+    "RASTER_PAIRED_EVIDENCE": 14,
+    "RASTER_SQLITE_EVIDENCE": 1,
+    "STREAMED_FRAME_STAGE": 6
+  },
+  "methods": 62,
+  "method_phases": {
+    "correctness": 31,
+    "common-comparison": 24,
+    "candidate-diagnostics": 7
+  },
+  "public_calls": 24,
+  "public_save_samples": 720,
+  "four_seed_fixture_groups_verified": 8,
+  "installed_groups": {
+    "C1-correctness": {
+      "identity": "C1",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "source_apk_sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "source_apk_sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "source_apk_sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c"
+        }
+      ],
+      "install_log_sha256": "32a4fa4d1967d8d4be37a93e7cd4ffc6a3a75821c9b62ad49c14e1b3836db60b",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "visit-01-B": {
+      "identity": "B",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d",
+          "source_apk_sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1",
+          "source_apk_sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0",
+          "source_apk_sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0"
+        }
+      ],
+      "install_log_sha256": "1446dd3e7102f8fab2f2dfa5e3e0dc92e2a77cd02e4fce60180672ddfc195f33",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "visit-02-C0": {
+      "identity": "C0",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890",
+          "source_apk_sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a",
+          "source_apk_sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5",
+          "source_apk_sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5"
+        }
+      ],
+      "install_log_sha256": "b4b131f6477b2a8f22d4acea8bf7c801054d696219bd0169d62809b0672032a4",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "visit-03-C1": {
+      "identity": "C1",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "source_apk_sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "source_apk_sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "source_apk_sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c"
+        }
+      ],
+      "install_log_sha256": "30a25599aaa5bf69f7426a179bd8e77bc236fa7fe8e0ba3b50458a4bb6332462",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "visit-04-C1": {
+      "identity": "C1",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "source_apk_sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "source_apk_sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "source_apk_sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c"
+        }
+      ],
+      "install_log_sha256": "17de10572c0311662aef3f1ff06dbd929e4cb268fe8a3b9d89385fa9dac3453d",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "visit-05-B": {
+      "identity": "B",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d",
+          "source_apk_sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1",
+          "source_apk_sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0",
+          "source_apk_sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0"
+        }
+      ],
+      "install_log_sha256": "f12b8eb2641d0e46d3b71b6711746289ac424fe7231718df1b63e0ad3ceb7d14",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "visit-06-C0": {
+      "identity": "C0",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890",
+          "source_apk_sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a",
+          "source_apk_sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5",
+          "source_apk_sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5"
+        }
+      ],
+      "install_log_sha256": "bbeaa0b44ccd621419546879c49b850fa6199c070bf1fd2d1318bc4198dbb112",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "visit-07-C0": {
+      "identity": "C0",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890",
+          "source_apk_sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a",
+          "source_apk_sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5",
+          "source_apk_sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5"
+        }
+      ],
+      "install_log_sha256": "dd51db0e3322982c25d22e137d45c6aa6966b09a8ccfea7bc075bab67fe3a96b",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "visit-08-C1": {
+      "identity": "C1",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "source_apk_sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "source_apk_sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "source_apk_sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c"
+        }
+      ],
+      "install_log_sha256": "453d0c396a49bc601a23e2e1b59f9728359f5016e6af59409000c36b9b359c9b",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "visit-09-B": {
+      "identity": "B",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d",
+          "source_apk_sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1",
+          "source_apk_sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0",
+          "source_apk_sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0"
+        }
+      ],
+      "install_log_sha256": "6434fc463b268e7cb25bd6743ef358cc494481f695e7585b6184f4377f021792",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "visit-10-B": {
+      "identity": "B",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d",
+          "source_apk_sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1",
+          "source_apk_sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0",
+          "source_apk_sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0"
+        }
+      ],
+      "install_log_sha256": "ceebbea21692299964bfa8f00d06028b9fde6f299a831c3c46a320e71e1f1de7",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "visit-11-C1": {
+      "identity": "C1",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "source_apk_sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "source_apk_sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "source_apk_sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c"
+        }
+      ],
+      "install_log_sha256": "330d8bcefe24d5370fff6c2af69b028a8c43416258c7755a2224b9586c803a4d",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "visit-12-C0": {
+      "identity": "C0",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890",
+          "source_apk_sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a",
+          "source_apk_sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5",
+          "source_apk_sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5"
+        }
+      ],
+      "install_log_sha256": "149817ee5132cd70ff80cd7ec4b05a623d4474ce9de2a7cc81aec650ae0ce755",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    },
+    "C1-diagnostics": {
+      "identity": "C1",
+      "installed_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "source_apk_sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05"
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "source_apk_sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a"
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "source_apk_sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c"
+        }
+      ],
+      "install_log_sha256": "cb68a645f835baf2326e4f947b7fce88acb6c765725250f79736c57fd5261da2",
+      "environment_sha256": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba"
+    }
+  },
+  "apk_identity_claims": {
+    "C1": {
+      "source_commit": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+      "source_manifest_sha256": "6f9c33d89bab33c032af958727ac1ee9b8b6011b2af2af5d06984556cc839d3e",
+      "apk_receipt_sha256": "b2efd3ee5fa197c51cb3a57c94b21757167e1c39ed5021c271c5a472275a6e8b",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "fbddcea976da33d436880c437ef71927b869f45a8f43ec59313168b5c53d3b05",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "c01ff523587cdd483be858346f418caa30474d50a16525672e70bff10881470a",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "51c8ec3ed721dc69929749edef5be9d2a57932971eaca18750e26d1b7edc841c",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ]
+    },
+    "B": {
+      "source_commit": "a128bb07e34cb82f00eeafc8e62a47bf7b95b128",
+      "source_manifest_sha256": "bcf2b51fb04e85ced2a70bc3fc7a402e1fed551583de43831d8a4ecccce91fd8",
+      "apk_receipt_sha256": "134457d87ad2521dd97962a350fbc3357d59b08c4877429c69fbad81c5dff88d",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "edc51e8fb5cd8fd03e251f14d5a48bb092b503da5189d9942b4c752eded8561d",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "65f97c40f63c9cd434186970faa6715c3764940af7b3ee631ed2bf5279964da1",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "8b0e50d1f46041727125d734787317c2eecdfa2115e1e7f977fefbde4b55c1b0",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ]
+    },
+    "C0": {
+      "source_commit": "d66b60d6cf9587f646acb76dd8a00910b73a6d70",
+      "source_manifest_sha256": "06e7cea253c061891e10f658400143a7da34ba23f6ec95224bee31f5c0d13eb6",
+      "apk_receipt_sha256": "60bd415869885912e0d93b3d29d4ac9c13796c6418e3cc8a7731d3d8431f7389",
+      "selected_apks": [
+        {
+          "package": "org.inkweft.app.a0",
+          "sha256": "ae1dda2c864028fd23d368e7578502e73d77c3d96bc6e6240be0bf6c2d0e0890",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.app.a0.test",
+          "sha256": "103186701b339ce616489321e9dba82e46aa5f8583704283823a11471c4b1a1a",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        },
+        {
+          "package": "org.inkweft.data.test",
+          "sha256": "bf55b3112bf1f6a8777f6144b904e247d6f481b17f15bfcbbe571e2e624fcdd5",
+          "signer_sha256": [
+            "704b3324e80869fa9f00b12300c87f61585b082cc6b3337542457413c284a1c2"
+          ]
+        }
+      ]
+    }
+  },
+  "process_observation_count": 80,
+  "process_outcomes": {
+    "NATURAL_EXIT": 61,
+    "AUXILIARY_AM_KILL_CONFIRMED": 1
+  },
+  "natural_process_seconds_range": [
+    0.05330750500024806,
+    0.08000001599975803
+  ],
+  "method17_process": {
+    "process_exit_seconds": 2.836792684000102,
+    "auxiliary_cleanup": {
+      "command": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "kill",
+        "--user",
+        "0",
+        "org.inkweft.app.a0.test"
+      ],
+      "status": "ABSENCE_CONFIRMED",
+      "started_seconds": 2.7501051730000654,
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "process_exit_observations": [
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 2.8389999897626694e-06,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 0.15761408200023652,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 0.3190844720002133,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 0.4838342040002317,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 0.6397712230000252,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 0.7953863269999601,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 0.951149525999881,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 1.1078400609999335,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 1.2658897870001056,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 1.422681496000223,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 1.5814457149999726,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 1.7402839279998261,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 1.8976808970001002,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 2.054081569000118,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 2.209690351000063,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 2.3688400840001123,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 2.5265308759999243,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "natural-exit",
+        "elapsed_seconds": 2.683068159999948,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 0,
+            "stdout": "2784",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      },
+      {
+        "stage": "after-background-cleanup",
+        "elapsed_seconds": 2.7783518290002576,
+        "packages": {
+          "org.inkweft.app.a0": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.app.a0.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          },
+          "org.inkweft.data.test": {
+            "exit": 1,
+            "stdout": "",
+            "stderr": ""
+          }
+        }
+      }
+    ]
+  },
+  "cleanup_log_receipts": [
+    {
+      "line": 1021,
+      "timestamp": "2026-10-14T06:49:43.3756926Z",
+      "receipt": {
+        "emulator": "STOPPED_CONFIRMED",
+        "command_groups": "STOPPED_CONFIRMED",
+        "acl": "RESTORED_EXACT",
+        "errors": []
+      }
+    },
+    {
+      "line": 1043,
+      "timestamp": "2026-10-14T06:49:49.9333848Z",
+      "receipt": {
+        "emulator": "STOPPED_CONFIRMED",
+        "command_groups": "STOPPED_CONFIRMED",
+        "acl": "RESTORED_EXACT",
+        "errors": []
+      }
+    }
+  ],
+  "cleanup_final_claims": {
+    "trap": {
+      "emulator": "STOPPED_CONFIRMED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "RESTORED_EXACT",
+      "error_count": 0,
+      "before_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "after_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "exact_match": true
+    },
+    "always": {
+      "emulator": "STOPPED_CONFIRMED",
+      "command_groups": "STOPPED_CONFIRMED",
+      "acl": "RESTORED_EXACT",
+      "error_count": 0,
+      "before_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "after_sha256": "f3fffbc1c7ccf8e0e966c07730ac09719c1040b79090df185e9009e75b601f89",
+      "exact_match": true
+    }
+  },
+  "packaging_log_receipt": {
+    "line": 1066,
+    "timestamp": "2026-10-14T06:49:50.1079520Z",
+    "receipt": {
+      "files": 372,
+      "bytes": 3785601,
+      "omitted": 0,
+      "truncated": 0
+    }
+  },
+  "final_log_line": 1067,
+  "final_manifest_sha256_claim": "b1ed284da1ae68a2a20c770b92a52ac02be76c0ceda38e05643acfa5655eea00",
+  "final_summary_sha256_claim": "51697cf5edf6021d95db14e454aff4a72a0d63c09edb22faa358d2d3b3506e5a",
+  "environment_sha256_claim": "bd8a6a68e3862125cb02a5bf4d9e4ca24b46bc961f2fce19815488711cd63cba",
+  "method_record_ledger": [
+    {
+      "ordinal": 1,
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibraryPagingTest#sqlPagingMatchesUnicodePinnedOrderAndLoadsOnlyBoundedPreviews",
+      "context_line": 394,
+      "end_line": 395,
+      "method_line": 396,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "fe65932d940b9c28a34ee4b92ab5bf90ac461dee6dacd32e748ddef8fb2d318f"
+    },
+    {
+      "ordinal": 2,
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibraryPagingTest#snapshotRetainsOldClassificationAndSourceWhileWriterCommits",
+      "context_line": 397,
+      "end_line": 398,
+      "method_line": 399,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "72b771a0df524e79cc00a54d357c9c0934095f4140a248d496f5056d7f41b552"
+    },
+    {
+      "ordinal": 3,
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibraryPagingTest#refreshedNoteBodyAndUnicodeBlankFolderUseAuthorState",
+      "context_line": 400,
+      "end_line": 401,
+      "method_line": 402,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "07980fa721c2dfa96f3ed651f7a8d5faa9d50177558c194c812b38386692fe3f"
+    },
+    {
+      "ordinal": 4,
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#pausedSourceReadCancelsOnRapidInputThenClearAndCategoryStayFresh",
+      "context_line": 403,
+      "end_line": 404,
+      "method_line": 405,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "48c7fc81f6bcb869b4d1bf2f04f07dfd9a0cdb87959be5749c1c3c8bd4a168c8"
+    },
+    {
+      "ordinal": 5,
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibrarySearchRepositoryTest#deletedOrStalePageAndTrashedCardCannotReviveSearchHits",
+      "context_line": 406,
+      "end_line": 407,
+      "method_line": 408,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "0ec982ade059e296e418359cb72fbb01b5ba3f22a31126eb900482537b109112"
+    },
+    {
+      "ordinal": 6,
+      "identity": "C1",
+      "selection": "org.inkweft.data.SearchIndexFreshnessTest#freshnessFollowsInkObjectLayerAndPageChanges",
+      "context_line": 409,
+      "end_line": 410,
+      "method_line": 411,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "73b91bc591517240870a0b4778fa0b5df3d7d6e52ec73057644e0c9d8753f483"
+    },
+    {
+      "ordinal": 7,
+      "identity": "C1",
+      "selection": "org.inkweft.data.SearchIndexFreshnessTest#checkingIndexNeverDecodesPayloadWhileFullObjectReadStillValidates",
+      "context_line": 412,
+      "end_line": 413,
+      "method_line": 414,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "adcdc28fe8e318c205c0d6d0a31b319d7c71aef2ecd490097b8d3261d06e43a6"
+    },
+    {
+      "ordinal": 8,
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#oneScanSurvivesRoomObserverRefreshAcrossSevenBatches",
+      "context_line": 415,
+      "end_line": 416,
+      "method_line": 417,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "9dae8cbcaccaa57cb75fbac22e14be467f0f427b913c3a0a25122467f518851a"
+    },
+    {
+      "ordinal": 9,
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "context_line": 418,
+      "end_line": 419,
+      "method_line": 420,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "f2dca138946da6ba0f4b6ff466cb5bc0a6a0692b3b1348b3f530f6a50458900c"
+    },
+    {
+      "ordinal": 10,
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomWriterAddingRootAfterFirstBatchDefersRemainingCandidates",
+      "context_line": 421,
+      "end_line": 422,
+      "method_line": 423,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "b10abfde81bf541f7b1754b5f02eba2b42283296c9dd03cc6268a33812430d3f"
+    },
+    {
+      "ordinal": 11,
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#sameRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "context_line": 424,
+      "end_line": 426,
+      "method_line": 427,
+      "record_count": 1,
+      "records_sha256": "6ff69ef24253f10e433af131e5bc133c458a4c8abb60ccf024f3cfd3f6213776",
+      "records_bytes": 313,
+      "payload_bytes": 256,
+      "raw_junit_log_sha256_claim": "76190f15312254f66bae8f0e3af0a6026f19a4ddaf81032c51b95e1767518339"
+    },
+    {
+      "ordinal": 12,
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#separateRoomAuthorQueuedBeforeDeleteCommitPreservesNewRoot",
+      "context_line": 428,
+      "end_line": 430,
+      "method_line": 431,
+      "record_count": 1,
+      "records_sha256": "c31916cd40218b3c153d40eccfb2c58f0be36bf721be5d4e2002755ffbd91fd3",
+      "records_bytes": 317,
+      "payload_bytes": 260,
+      "raw_junit_log_sha256_claim": "232239cc38b6476c277b136c4f4faa34c05d38ff1c6eb104f4171eb154ce592e"
+    },
+    {
+      "ordinal": 13,
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#overlappingRootSetsAcrossFullAndPartialBatchesRetainEveryVersion",
+      "context_line": 432,
+      "end_line": 433,
+      "method_line": 434,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "b49905b770c18191de784fcb85567f369be742d3c5d72bf8691417df90340d8d"
+    },
+    {
+      "ordinal": 14,
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#malformedTransformAfterAFullRootBatchAbortsBeforeAnyDeletion",
+      "context_line": 435,
+      "end_line": 436,
+      "method_line": 437,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "f11da1f7ec57fd33158426ef3250bf905b71ff6737e229ed6b7f3c83b2ab4edf"
+    },
+    {
+      "ordinal": 15,
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#interruptedBatchRollsBackAndReopenedCollectionResumes",
+      "context_line": 438,
+      "end_line": 439,
+      "method_line": 440,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "3be9ff7ad5cf2ee9d2cfb9499118e3193c363d6d9454467ed3cbd8014b09c2a9"
+    },
+    {
+      "ordinal": 16,
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryCollectionTest#missingRoomGuardLogAbortsWithoutDeletingCandidates",
+      "context_line": 441,
+      "end_line": 442,
+      "method_line": 443,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "92d4df4d54776a055c9524afbeb26ee4034bdecf6f26313b620c70e5340628a9"
+    },
+    {
+      "ordinal": 17,
+      "identity": "C1",
+      "selection": "org.inkweft.app.NotebookShelfUiTest#pageSourceEditResetsSecondShelfPageWithoutDirectoryChanges",
+      "context_line": 444,
+      "end_line": 445,
+      "method_line": 446,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "31a9fccf922652a33f1d5c2c4083321e315e473d014fe5def9fb99b215f011cf"
+    },
+    {
+      "ordinal": 18,
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibraryPagingTest#cancelledSourceReadSkipsDirectoryAssemblyAndNextReadKeepsClassification",
+      "context_line": 447,
+      "end_line": 448,
+      "method_line": 449,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "41ce865d3b0214f6aeb861230f4f8a15b84a8f4fd75e1cfcdd5fe9303a49e276"
+    },
+    {
+      "ordinal": 19,
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#separatedRegionsSkipEmptyMetadataBatchesAndDecodeCrossingStrokeOnce",
+      "context_line": 450,
+      "end_line": 451,
+      "method_line": 452,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "daa007aef138e36a10a1ff7ba9fcf08176eb359185332ebbeeb1c4e0d3dfa632"
+    },
+    {
+      "ordinal": 20,
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#payloadMaskAndRevisionChangesCannotReuseStaleDecodedGeometry",
+      "context_line": 453,
+      "end_line": 454,
+      "method_line": 455,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "1a4755dc6502b35485c809cc4e2b4fa7851d6ca24878203beefee654f3a6fa42"
+    },
+    {
+      "ordinal": 21,
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#explicitAppendReuseSkipsOldPayloadsAcrossRevisionJumpsAndDefaultsToInvalidation",
+      "context_line": 456,
+      "end_line": 457,
+      "method_line": 458,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "79bdcaa7b1359144d254066af75444bc0f151822beea757b9fce659d2f36ab7c"
+    },
+    {
+      "ordinal": 22,
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#appendPermissionStillRefreshesChangedPayloadVisibilityUndoAndMasks",
+      "context_line": 459,
+      "end_line": 460,
+      "method_line": 461,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "b5bda0a755a7532daa9900f5843cb445d7f8f09a14018dca2add1a56b5e8d1f3"
+    },
+    {
+      "ordinal": 23,
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#appendReuseRejectsHeadOrMaskChangesDuringCachedBatches",
+      "context_line": 462,
+      "end_line": 463,
+      "method_line": 464,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "4cb460f1fd0e772f1741c2d79b990e620cddba85fb150e75e12830fec69c77da"
+    },
+    {
+      "ordinal": 24,
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#decodedCacheRemainsBoundedForManyStrokesAndDenseMasks",
+      "context_line": 465,
+      "end_line": 466,
+      "method_line": 467,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "df9ffa0568126fb49034188e521721067bda6281aaf3c644d2ebf53374a1486c"
+    },
+    {
+      "ordinal": 25,
+      "identity": "C1",
+      "selection": "org.inkweft.data.RasterReadCacheTest#sameRevisionMaskChangeDuringCachedVisitRejectsTheWholeRead",
+      "context_line": 468,
+      "end_line": 469,
+      "method_line": 470,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "4a9ac5ca7b584d681ce6160c5800965e505e9bb9663c79b56572cb56582bc24f"
+    },
+    {
+      "ordinal": 26,
+      "identity": "C1",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#appendRetainsGeometryAcrossIdleLayerRevisionsAndDestructiveChangesMatchColdFrames",
+      "context_line": 471,
+      "end_line": 472,
+      "method_line": 473,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "46a03676688e10409976d3da0b460ba48845db386de76f0927cae0470c7636a8"
+    },
+    {
+      "ordinal": 27,
+      "identity": "C1",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#integralPanReusesInteriorTilesAndZoomPreviewNeverCompletesCapture",
+      "context_line": 474,
+      "end_line": 476,
+      "method_line": 477,
+      "record_count": 1,
+      "records_sha256": "cb4f9f47ed706ad9b742ba6a615e2884522d3c8e090fb5e99e2e4990d8cd7cdc",
+      "records_bytes": 139,
+      "payload_bytes": 98,
+      "raw_junit_log_sha256_claim": "92c3653ec0bf9919eb65558203b4ef45a5c91db69ad3fd6832080fa8e06050b1"
+    },
+    {
+      "ordinal": 28,
+      "identity": "C1",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources",
+      "context_line": 478,
+      "end_line": 480,
+      "method_line": 481,
+      "record_count": 1,
+      "records_sha256": "41fd8cc487e0135c3497300071f31cda1d4bd36e70e879bcf5754f02cc2f5b0d",
+      "records_bytes": 431,
+      "payload_bytes": 393,
+      "raw_junit_log_sha256_claim": "2565e1229d1fd599a66dfd4220764b358f5337eae9a7063db84c4e11943cc533"
+    },
+    {
+      "ordinal": 29,
+      "identity": "C1",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+      "context_line": 482,
+      "end_line": 483,
+      "method_line": 484,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "caa8dae9270e4eacb5a222523d90362a0946745183488b3c9da3196934b0cd19"
+    },
+    {
+      "ordinal": 30,
+      "identity": "C1",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+      "context_line": 485,
+      "end_line": 486,
+      "method_line": 487,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "8af1744187be493f370b0b40d2fb10700676182e975a70b40e09065cbf4a0cd4"
+    },
+    {
+      "ordinal": 31,
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibraryPagingTest#cancelledSetupStopsBeforeNextStageAndNextReadSeesCommittedAuthorState",
+      "context_line": 488,
+      "end_line": 489,
+      "method_line": 490,
+      "record_count": 0,
+      "records_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "records_bytes": 3,
+      "payload_bytes": 0,
+      "raw_junit_log_sha256_claim": "049c250bc9009de3cad142092d75d394b45578db321796fb63500c4bee547001"
+    },
+    {
+      "ordinal": 32,
+      "identity": "B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "context_line": 521,
+      "end_line": 531,
+      "method_line": 532,
+      "record_count": 9,
+      "records_sha256": "1eaf54e3fd885949e7db2b8fc8b9dab52464f6bb7f4e3ac1cdd727d614b20caa",
+      "records_bytes": 3132,
+      "payload_bytes": 2773,
+      "raw_junit_log_sha256_claim": "e28688efd3dceb84c19378185c988319106bbec3f1a7ff6ee300b97fb9103628"
+    },
+    {
+      "ordinal": 33,
+      "identity": "B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "context_line": 533,
+      "end_line": 546,
+      "method_line": 547,
+      "record_count": 12,
+      "records_sha256": "3251365dfa8d425adec7e25c4b46223d8bb58dac3b9ae3500cf6401ab9d48048",
+      "records_bytes": 33835,
+      "payload_bytes": 33320,
+      "raw_junit_log_sha256_claim": "ee7de2aa890418ca5784b00e88b31bc2f146ba960b734df63220e996d6027b6f"
+    },
+    {
+      "ordinal": 34,
+      "identity": "C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "context_line": 548,
+      "end_line": 558,
+      "method_line": 559,
+      "record_count": 9,
+      "records_sha256": "e75113bedf4b9d9e44e2b7dbe0ef800a9ef6d8fc8e1440d584a17e98564f6750",
+      "records_bytes": 3218,
+      "payload_bytes": 2859,
+      "raw_junit_log_sha256_claim": "eb571ead52cb2d2486c973389d48e787c108588c40a2d36d877719fbe1b89585"
+    },
+    {
+      "ordinal": 35,
+      "identity": "C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "context_line": 560,
+      "end_line": 573,
+      "method_line": 574,
+      "record_count": 12,
+      "records_sha256": "35fa1437c8dac3ade24f43274b297d5bfe2f597caa770bfe6836bfb109520f46",
+      "records_bytes": 33270,
+      "payload_bytes": 32755,
+      "raw_junit_log_sha256_claim": "068d4235823895014172862d29568b5f070de410d099bf4b24a544bc2541666a"
+    },
+    {
+      "ordinal": 36,
+      "identity": "C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "context_line": 575,
+      "end_line": 585,
+      "method_line": 586,
+      "record_count": 9,
+      "records_sha256": "a6839ec47877bbdcccdbc72f4b40094fb248068282d8b5ce60bfea01bd649eec",
+      "records_bytes": 3225,
+      "payload_bytes": 2866,
+      "raw_junit_log_sha256_claim": "065d01329a161a7e04282cb80fb36386d6653f3f1e471281e328f5cf407ca2d7"
+    },
+    {
+      "ordinal": 37,
+      "identity": "C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "context_line": 587,
+      "end_line": 600,
+      "method_line": 601,
+      "record_count": 12,
+      "records_sha256": "503ba43db34ba8871db640701ad716f77c64e1a20b7afe86df7411e571898048",
+      "records_bytes": 33273,
+      "payload_bytes": 32758,
+      "raw_junit_log_sha256_claim": "903b46e74b9894e363e67f8437d4ec986c8bc4e84731a6a91e8b5703e626b246"
+    },
+    {
+      "ordinal": 38,
+      "identity": "C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "context_line": 602,
+      "end_line": 612,
+      "method_line": 613,
+      "record_count": 9,
+      "records_sha256": "2478df2d17d8cb5b6a980463e73247064dad4228abaa6a5b811191f74cbb9fd8",
+      "records_bytes": 3204,
+      "payload_bytes": 2845,
+      "raw_junit_log_sha256_claim": "8fb397532745095733efc79fedc2e46c2a4970a663ee64a4cd3b46b240ea9baa"
+    },
+    {
+      "ordinal": 39,
+      "identity": "C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "context_line": 614,
+      "end_line": 627,
+      "method_line": 628,
+      "record_count": 12,
+      "records_sha256": "857047c3589e7f87d3844b127431b5550724ba690e04a5c337aca05fa71c4bab",
+      "records_bytes": 33349,
+      "payload_bytes": 32834,
+      "raw_junit_log_sha256_claim": "8fd855cc6f845ec815aaaed3659b40f46e0197ce46ac8300806911806174bdd3"
+    },
+    {
+      "ordinal": 40,
+      "identity": "B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "context_line": 629,
+      "end_line": 639,
+      "method_line": 640,
+      "record_count": 9,
+      "records_sha256": "55a00741efb1e177607ddf83b7503689696143a1c8b83ca504522d4d108e09dd",
+      "records_bytes": 3144,
+      "payload_bytes": 2785,
+      "raw_junit_log_sha256_claim": "a52a244cbeab9e56259d25baa304be75130d0c6efbb4ea2d35f97758137cd2b0"
+    },
+    {
+      "ordinal": 41,
+      "identity": "B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "context_line": 641,
+      "end_line": 654,
+      "method_line": 655,
+      "record_count": 12,
+      "records_sha256": "d767aa31c54c665315d7e67fb77345ad5a8cada9abc242fbb8a070598d25e875",
+      "records_bytes": 33858,
+      "payload_bytes": 33343,
+      "raw_junit_log_sha256_claim": "6ce998da69717791406b26b7f1c47a2cf4f03881538e34d33b327fa1b642a5da"
+    },
+    {
+      "ordinal": 42,
+      "identity": "C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "context_line": 656,
+      "end_line": 666,
+      "method_line": 667,
+      "record_count": 9,
+      "records_sha256": "6e90d10e4afcff29b4c71839be6ec79af1b7704cd46668a6c1212438a906802f",
+      "records_bytes": 3213,
+      "payload_bytes": 2854,
+      "raw_junit_log_sha256_claim": "b1b91827e726eee5a238d3d92cd29d6c3498ced63b879ed331cdc6f45a56a289"
+    },
+    {
+      "ordinal": 43,
+      "identity": "C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "context_line": 668,
+      "end_line": 681,
+      "method_line": 682,
+      "record_count": 12,
+      "records_sha256": "53937201c1cc1140d6633d0293bc42c9bfc00328c41679c2e7a9f424b7b05676",
+      "records_bytes": 33265,
+      "payload_bytes": 32750,
+      "raw_junit_log_sha256_claim": "8bf6b15c37b33f6ec16823380b859fa6c2bf3496f9bbf31cbdf3f9cfd9a8447b"
+    },
+    {
+      "ordinal": 44,
+      "identity": "C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "context_line": 683,
+      "end_line": 693,
+      "method_line": 694,
+      "record_count": 9,
+      "records_sha256": "9eb544ae19dc0d3cbe1cdb123772f19a638d7f32073128aa19ba8099d78b1ba6",
+      "records_bytes": 3204,
+      "payload_bytes": 2845,
+      "raw_junit_log_sha256_claim": "b1bc72580d2690ba8f80567cfe2101106a74465416e0b901300bb4976254461c"
+    },
+    {
+      "ordinal": 45,
+      "identity": "C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "context_line": 695,
+      "end_line": 708,
+      "method_line": 709,
+      "record_count": 12,
+      "records_sha256": "67bd500b07beae229e7cfec66143592e0415991b8c8f965d0290026d54f25fb3",
+      "records_bytes": 33276,
+      "payload_bytes": 32761,
+      "raw_junit_log_sha256_claim": "4b494781eb6b96a1268c6d89f35d7bda7b282b3f70a101f0a13ad31bb7e574c0"
+    },
+    {
+      "ordinal": 46,
+      "identity": "C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "context_line": 710,
+      "end_line": 720,
+      "method_line": 721,
+      "record_count": 9,
+      "records_sha256": "10de8abc94b02aaed3e01e283a22b0e18b6dc21eb30f81b8aabc9ee2ff69c841",
+      "records_bytes": 3204,
+      "payload_bytes": 2845,
+      "raw_junit_log_sha256_claim": "080e53816fe4124a2cea312ed93c803e6cebc998d0b2b20a53440b02c0fbe474"
+    },
+    {
+      "ordinal": 47,
+      "identity": "C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "context_line": 722,
+      "end_line": 735,
+      "method_line": 736,
+      "record_count": 12,
+      "records_sha256": "5a85cc702ac3108e0ed9463710ecca70b325ee117d2c73735ba9abecbfcd9359",
+      "records_bytes": 33308,
+      "payload_bytes": 32793,
+      "raw_junit_log_sha256_claim": "859659f79c88fc9be6198194c9056ed8edb8a7d23a92b3bbd9da1637d33075d5"
+    },
+    {
+      "ordinal": 48,
+      "identity": "B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "context_line": 737,
+      "end_line": 747,
+      "method_line": 748,
+      "record_count": 9,
+      "records_sha256": "2ad0c847f6dbf42917a36aec0ab1b91ac1b0b5de0503ba854da55261c1eeaf62",
+      "records_bytes": 3150,
+      "payload_bytes": 2791,
+      "raw_junit_log_sha256_claim": "bedef1fc8708824f720941ffcf7f83a495fb1343fde41a8b4f605035d93b4d0d"
+    },
+    {
+      "ordinal": 49,
+      "identity": "B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "context_line": 749,
+      "end_line": 762,
+      "method_line": 763,
+      "record_count": 12,
+      "records_sha256": "642e4e4bf6bb665ba02ad8995ce7321548f9798c67eecbcf28d9f0514a9a3b2c",
+      "records_bytes": 33846,
+      "payload_bytes": 33331,
+      "raw_junit_log_sha256_claim": "f0d43a60af00b1fbbe35621e670fa52bafc492c0079fb010b1c0eb365e2eb9c1"
+    },
+    {
+      "ordinal": 50,
+      "identity": "B",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "context_line": 764,
+      "end_line": 774,
+      "method_line": 775,
+      "record_count": 9,
+      "records_sha256": "a4f25232cb2a1dd4173d3eff72a0cf56c10b02d6958256321caf6a42f07e9f72",
+      "records_bytes": 3152,
+      "payload_bytes": 2793,
+      "raw_junit_log_sha256_claim": "d094fbeee9a06013de44d07b02447a2817952fd9ddef73543cd0b52cfa5f74e4"
+    },
+    {
+      "ordinal": 51,
+      "identity": "B",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "context_line": 776,
+      "end_line": 789,
+      "method_line": 790,
+      "record_count": 12,
+      "records_sha256": "78a723241dff3c3ff4f906980a6fd24067a39f4ef9273286dc393628df1cb5a6",
+      "records_bytes": 33837,
+      "payload_bytes": 33322,
+      "raw_junit_log_sha256_claim": "a20f6f6efa228e23dfe5cb3d168c44a5fc3474fce2393f249a24ad8ec9931c3a"
+    },
+    {
+      "ordinal": 52,
+      "identity": "C1",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "context_line": 791,
+      "end_line": 801,
+      "method_line": 802,
+      "record_count": 9,
+      "records_sha256": "61a6f15a95643861e15005b0239705a37507656b682a660690892caf2f8a46df",
+      "records_bytes": 3203,
+      "payload_bytes": 2844,
+      "raw_junit_log_sha256_claim": "a3905bdce9a995d5f109ff4c33cdb89de61f568e7f3d84094713703614fe1d6f"
+    },
+    {
+      "ordinal": 53,
+      "identity": "C1",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "context_line": 803,
+      "end_line": 816,
+      "method_line": 817,
+      "record_count": 12,
+      "records_sha256": "a5fdecde804ef3377360f1336c172b1cb7c4b3969e5e1aec1f821eeb48f73603",
+      "records_bytes": 33311,
+      "payload_bytes": 32796,
+      "raw_junit_log_sha256_claim": "3376b4a5f003094777f8c3af426d2fb2dbffbf6a94692c94ab738279a2c50a42"
+    },
+    {
+      "ordinal": 54,
+      "identity": "C0",
+      "selection": "org.inkweft.app.KvmLocalAppendPairProbe#oneFourEightLayerLocalAppendMatchesForcedFullFrameAndDecodesOnlyDirtyRegions",
+      "context_line": 818,
+      "end_line": 828,
+      "method_line": 829,
+      "record_count": 9,
+      "records_sha256": "a239e922753277aa958fb31dfdcfcc966a8a38bc2f663d7b75e2cd62e573019b",
+      "records_bytes": 3221,
+      "payload_bytes": 2862,
+      "raw_junit_log_sha256_claim": "658899343ed856b24a903aceaac27416dc09f5b5c9eb5a62e060991fc8f0121d"
+    },
+    {
+      "ordinal": 55,
+      "identity": "C0",
+      "selection": "org.inkweft.data.KvmLibraryPairProbe#coldSearchConcurrentSavesAndShelfReadScale",
+      "context_line": 830,
+      "end_line": 843,
+      "method_line": 844,
+      "record_count": 12,
+      "records_sha256": "4a976a9664ba0fc16cd35a8192ff3fe858e0ac965633c975a1ec1429e18c080a",
+      "records_bytes": 33308,
+      "payload_bytes": 32793,
+      "raw_junit_log_sha256_claim": "e36d8c5573f8ce62be91905495b6d6659872f472357f376c088b769bc85626b1"
+    },
+    {
+      "ordinal": 56,
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryDeletionExposureTest#sameRoomWriterNaturalDeletionExposure",
+      "context_line": 875,
+      "end_line": 907,
+      "method_line": 908,
+      "record_count": 31,
+      "records_sha256": "aefe54dcc3cdbac19d474b0cc4025e3b089eba800007549ff36db837c30f41ed",
+      "records_bytes": 38433,
+      "payload_bytes": 36786,
+      "raw_junit_log_sha256_claim": "332181cf9f1554a54482961f620447d6c180672b20e7b46588842d3850784ceb"
+    },
+    {
+      "ordinal": 57,
+      "identity": "C1",
+      "selection": "org.inkweft.data.HistoryDeletionExposureTest#separateRoomWriterNaturalDeletionExposure",
+      "context_line": 909,
+      "end_line": 941,
+      "method_line": 942,
+      "record_count": 31,
+      "records_sha256": "c898fbbea2f6229f31bf1aada97c76fcdcda4a9c6a42aea67a5b13ddc4855757",
+      "records_bytes": 39116,
+      "payload_bytes": 37469,
+      "raw_junit_log_sha256_claim": "a381027a03777ca9ae18af905fb3423417e58a8ba109c161d435ac91d3afc7ab"
+    },
+    {
+      "ordinal": 58,
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibraryReadPerformanceTest#coldSearchConcurrentSavesAndShelfReadScale",
+      "context_line": 943,
+      "end_line": 965,
+      "method_line": 966,
+      "record_count": 21,
+      "records_sha256": "a1f189ea81451332eeb353026b598b27332255a64828fdf4fa0ea61a54402016",
+      "records_bytes": 78070,
+      "payload_bytes": 77112,
+      "raw_junit_log_sha256_claim": "f9784f84d1cf5fef8f38b8e72b48735ff1e03655d2ee4e4f5ecf03c82f309716"
+    },
+    {
+      "ordinal": 59,
+      "identity": "C1",
+      "selection": "org.inkweft.data.LibrarySearchCausalTest#profiledContainsPreservesUnicodeAndSourceResults",
+      "context_line": 967,
+      "end_line": 969,
+      "method_line": 970,
+      "record_count": 1,
+      "records_sha256": "98349570bba15821033dcbf9bdb223584d90afe2141a6a38ac5aefd7ae483c82",
+      "records_bytes": 168,
+      "payload_bytes": 122,
+      "raw_junit_log_sha256_claim": "a12ffccdf3663b029bae1e094a3e93cc3073b16518d70075b425cda89a18c123"
+    },
+    {
+      "ordinal": 60,
+      "identity": "C1",
+      "selection": "org.inkweft.app.NativeStrokeTileReuseTest#oneNativeShapePerStrokeMatchesPerTileConstructionThroughTransformsAndClips",
+      "context_line": 971,
+      "end_line": 976,
+      "method_line": 977,
+      "record_count": 4,
+      "records_sha256": "cbbeee5d3543e9b3f66d707edc01daebcfab666408c6ac495318bfd18ba41212",
+      "records_bytes": 617,
+      "payload_bytes": 419,
+      "raw_junit_log_sha256_claim": "b6f4d171425c376ccb2c7421342600ff3a7db4e14b7cde6d565545a827dfef75"
+    },
+    {
+      "ordinal": 61,
+      "identity": "C1",
+      "selection": "org.inkweft.app.RasterPerformanceProbe#continuousTransformsAndSeparatedDirtyTiles",
+      "context_line": 978,
+      "end_line": 994,
+      "method_line": 995,
+      "record_count": 15,
+      "records_sha256": "f394110ea94c9979623bd1d8e048075b936b959cf338125d45e210d8523a88aa",
+      "records_bytes": 5530,
+      "payload_bytes": 4868,
+      "raw_junit_log_sha256_claim": "2c82e8f61b41b3cc482be809acf0a375ab3ba10fcf22dad80c5f0eac8bbe71f9"
+    },
+    {
+      "ordinal": 62,
+      "identity": "C1",
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "context_line": 996,
+      "end_line": 1003,
+      "method_line": 1004,
+      "record_count": 6,
+      "records_sha256": "6caecd0103a3cfe5e43af41bdc53c88882d24d8ccff7754154f3599e491973af",
+      "records_bytes": 1951,
+      "payload_bytes": 1697,
+      "raw_junit_log_sha256_claim": "5f65972ec2d30123236bc3c3f751efe631bf8296bd774cb727fac8b1e765dccd"
+    }
+  ],
+  "input_hashes": {
+    "job-decoded.log": "d1634bbeb118100737e2c9d6d6111fca972f2fb05999b5604ff34f0d0e7c9f62",
+    "run-terminal.json": "54058f0ec803579404bf51fe482c1dc7951a2b208e26b4c9e70dc18bfc9b5cc4",
+    "jobs-terminal.json": "781eb27f30fc750004fdbbec353aaadfe13f58809b9e70293b8eee7f6fd5cd91",
+    "binding.json": "a7c95e0912c880914a13c525baf628c6627389c1b9e9850543063152aa4960b8",
+    "official-acquisition.json": "b1ed4c6ac367dd5b0f108d69ddb51efaa7faf6b661fe4557cd0953eb94c62aca",
+    "extracted/analysis.json": "6c0f87b29a7a4611c20b413b16a5e7b3246e00c06ccd9f7af65aab6029abcbd5",
+    "extracted/statistics/analysis.json": "9c735a2031ba94f04ea7c185ba3c7fc820d69bd27bbffb63f080bf19d930e7bc"
+  },
+  "limitations": [
+    "62 JUnit/host PASS are compact controller receipts; original per-method raw instrumentation or XML were not separately obtained.",
+    "Selected/installed APK/native/dependency claims are hash-linked; no APK/ELF/dependency file was independently opened.",
+    "Dual cleanup receipts and equal ACL hashes are visible in official log; original ACL bytes were not obtained.",
+    "Packaging/manifest hashes are declarations from the controlled packager; no original ZIP or372payload files were independently obtained.",
+    "62calls include repeated common probe methods; do not call them62unique tests.",
+    "Full method execution/log integrity is not a claim that18numeric metrics pass or all product/performance gates close.",
+    "Single-run candidate diagnostics and fourseed comparison retain original independence/cold-warm limitations."
+  ]
+}

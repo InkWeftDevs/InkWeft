@@ -1,0 +1,15 @@
+{
+  "scope": "Official connector decoded job log and run/jobs GET; no artifact storage request",
+  "run_id": 38520196523,
+  "job_id": 115707901766,
+  "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+  "original_utf8_bytes": 1107962,
+  "original_sha256": "d1634bbeb118100737e2c9d6d6111fca972f2fb05999b5604ff34f0d0e7c9f62",
+  "saved_sha256": "d1634bbeb118100737e2c9d6d6111fca972f2fb05999b5604ff34f0d0e7c9f62",
+  "original_and_saved_independently_hashed_equal": true,
+  "bom_preserved": true,
+  "one_patch_added_newline_removed": true,
+  "artifact_download_attempted": false,
+  "job_started_at": "2026-10-14T06:05:35Z",
+  "job_completed_at": "2026-10-14T06:49:57Z"
+}

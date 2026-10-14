@@ -1,0 +1,131 @@
+[
+  {
+    "path": "control/ci/pr20-kvm-triple/authorization.json",
+    "bytes": 4248,
+    "sha256": "be5884313087a81f8f3c067f32605c6688c6cff01daa09cf8547aaa242d88739",
+    "source_commit": "115734b0ed9aab07a1100087ce76978c0d829e0f"
+  },
+  {
+    "path": "control/ci/pr20-kvm-triple/budget-revision.json",
+    "bytes": 9154,
+    "sha256": "be2006587f7e7feb9397310345ef3f8e73a5d35282d536916b5ac4c08db6d144",
+    "source_commit": "115734b0ed9aab07a1100087ce76978c0d829e0f"
+  },
+  {
+    "path": "control/ci/pr20-kvm-triple/clock-contract.json",
+    "bytes": 926,
+    "sha256": "b64b0ac49ae3f5de3784cf1fa4ab3151312d5faf59cc3f770d2514a705888314",
+    "source_commit": "115734b0ed9aab07a1100087ce76978c0d829e0f"
+  },
+  {
+    "path": "control/ci/pr20-kvm-triple/clock-server-receipt.json",
+    "bytes": 218,
+    "sha256": "44a85fb00efc441eba34d4849590b5f91b08eec8ab563cf3db319b9ebf13dcf4",
+    "source_commit": "115734b0ed9aab07a1100087ce76978c0d829e0f"
+  },
+  {
+    "path": "control/ci/pr20-kvm-triple/run.py",
+    "bytes": 47141,
+    "sha256": "4a3fc95304dfe0dfeeeecfda85a67f9f7ffc288fb904b9608262be5b04d97466",
+    "source_commit": "115734b0ed9aab07a1100087ce76978c0d829e0f"
+  },
+  {
+    "path": "control/ci/pr20-kvm-triple/markers.py",
+    "bytes": 10050,
+    "sha256": "7dfb88112bdf17b9cc8ff96b9cdf068a79394505cbb0103be4d93819533a2a80",
+    "source_commit": "115734b0ed9aab07a1100087ce76978c0d829e0f"
+  },
+  {
+    "path": "control/ci/pr20-kvm-triple/package.py",
+    "bytes": 8852,
+    "sha256": "e9b0fcfa55549dfc71e1737f07b7eaf7a598e09f961145be509d0c0945b6e24a",
+    "source_commit": "115734b0ed9aab07a1100087ce76978c0d829e0f"
+  },
+  {
+    "path": "control/ci/pr20-kvm-triple/cleanup.py",
+    "bytes": 4068,
+    "sha256": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "source_commit": "115734b0ed9aab07a1100087ce76978c0d829e0f"
+  },
+  {
+    "path": "control/ci/pr20-kvm-triple/workflow.proposed.yml",
+    "bytes": 10867,
+    "sha256": "807b8520913966fda9a204947d792025407a7e7abf7c6b3ead6363aa71a05891",
+    "source_commit": "115734b0ed9aab07a1100087ce76978c0d829e0f"
+  },
+  {
+    "path": "control/ci/pr20-kvm-triple/EXECUTION_SHA256SUMS",
+    "bytes": 1332,
+    "sha256": "7e9ddfba86a64d858eae6f475f9a96a2870f016f627190034362a3b0982dbcbd",
+    "source_commit": "115734b0ed9aab07a1100087ce76978c0d829e0f"
+  },
+  {
+    "path": "control/ci/pr20-kvm-triple/preflight.json",
+    "bytes": 2764,
+    "sha256": "a199bd8ce6905af02b31708e4538ef771e261f0feb964381fa8ef5daa6ad1076",
+    "source_commit": "115734b0ed9aab07a1100087ce76978c0d829e0f"
+  },
+  {
+    "path": "control/ci/pr20-kvm-triple/check_final_binding.py",
+    "bytes": 11500,
+    "sha256": "255974562c85466be0849e4305759dba348e54139566cfe4b83ae5f485c86a17",
+    "source_commit": "115734b0ed9aab07a1100087ce76978c0d829e0f"
+  },
+  {
+    "path": "control/ci/pr20-kvm-triple/binding-selftest.json",
+    "bytes": 2920,
+    "sha256": "bae817ca2220c5e473e6206b105d9c184b5c73b86b2dd1f2a978f4ef3bb03050",
+    "source_commit": "115734b0ed9aab07a1100087ce76978c0d829e0f"
+  },
+  {
+    "path": "control/.github/workflows/pr20-kvm-triple.yml",
+    "bytes": 10867,
+    "sha256": "807b8520913966fda9a204947d792025407a7e7abf7c6b3ead6363aa71a05891",
+    "source_commit": "115734b0ed9aab07a1100087ce76978c0d829e0f"
+  },
+  {
+    "path": "preparation/initial-runs.json",
+    "bytes": 14955,
+    "sha256": "8319d31383bdbf65dc7e6df8af566d665511fd95018926b4f65fb44b04a7591a"
+  },
+  {
+    "path": "preparation/initial-jobs.json",
+    "bytes": 5621,
+    "sha256": "b2ce23df906aa14a04a7353e68595e278d6ed0bea70e1aaf5ac2d459c5aa4cf9"
+  },
+  {
+    "path": "preparation/clock-server-receipt.json",
+    "bytes": 218,
+    "sha256": "44a85fb00efc441eba34d4849590b5f91b08eec8ab563cf3db319b9ebf13dcf4"
+  },
+  {
+    "path": "preparation/real-binding-zero.json",
+    "bytes": 2764,
+    "sha256": "a199bd8ce6905af02b31708e4538ef771e261f0feb964381fa8ef5daa6ad1076"
+  },
+  {
+    "path": "preparation/real-binding-active.json",
+    "bytes": 3144,
+    "sha256": "10e72af3d47f1a48e85a61f2c6bc9cf801976f702ed1e93026cd1e3853bbb62f"
+  },
+  {
+    "path": "preparation/finalize-clock-review.md",
+    "bytes": 2820,
+    "sha256": "6baf1b3b5f8f9a137ef0fa0340b59ff5430d0e2adfb128525aeafb36721bae6c"
+  },
+  {
+    "path": "preparation/binding.template.json",
+    "bytes": 3052,
+    "sha256": "89a5a419948389b38c48d519d3046fa01a9d30bd797b219e69237bc0fa29f37a"
+  },
+  {
+    "path": "preparation/external-binding-review.md",
+    "bytes": 2725,
+    "sha256": "010aa57dddb5afc344331be8164ae5a266b3a1c0b4a01286f2acb87228b77e4c"
+  },
+  {
+    "path": "preparation/external-binding-review.json",
+    "bytes": 2672,
+    "sha256": "071030c906a2929da0fabce30c7ef54913d1ac7c6f6334ee1a233a6cecba7fa7"
+  }
+]

@@ -1,0 +1,50 @@
+{
+  "status": "STATIC_BINDING_TEMPLATE_READY_TERMINAL_PENDING",
+  "scope": "READ_ONLY_LOCAL_ACTIVATION_AND_INITIAL_METADATA_NOT_NATIVE_RESULT",
+  "expected": {
+    "run_id": "38520196523",
+    "job_id": "115707901766",
+    "workflow_sha": "115734b0ed9aab07a1100087ce76978c0d829e0f",
+    "source_commit": "cb7e14218ac83aa8cf6b9d7906051a10da1a6547",
+    "readiness_git": "d70fcb23afecb6f80e8fc716a5145ecf851dd68e"
+  },
+  "prep": "b35d448862fe5963cdb57e0bc67042e87d22b1f6",
+  "single_parent": true,
+  "clean": true,
+  "changed_files": [
+    ".github/workflows/pr20-kvm-triple.yml",
+    "ci/pr20-kvm-triple/EXECUTION_SHA256SUMS",
+    "ci/pr20-kvm-triple/workflow.proposed.yml"
+  ],
+  "workflow_change": "Only zero before->exact prep; active workflow bytes equal proposed",
+  "execution_checksum_count": 13,
+  "control_receipt_all_hashes_match": true,
+  "android_tree_unchanged_since_readiness": true,
+  "frozen_inputs_validation": "PASS using existing frozen extractor, no log analyzed",
+  "clock_anchor": 1791957846,
+  "clock_anchor_utc": "2026-10-14T06:04:06Z",
+  "initial_official_job_started_at": "2026-10-14T06:05:35Z",
+  "anchor_precedes_job_seconds": 89,
+  "deadline_utc": {
+    "setup": "2026-10-14T06:42:06Z",
+    "correctness": "2026-10-14T06:45:06Z",
+    "common": "2026-10-14T06:57:06Z",
+    "diagnostics": "2026-10-14T06:59:06Z"
+  },
+  "actual_job_hard_60min_at": "2026-10-14T07:05:35Z",
+  "terminal_statuses": "PENDING; must copy actual official terminal statuses, never desired success",
+  "input_files": {
+    "/workspace/scratch/pr20-match-execution-20261014/initial-jobs.json": "b2ce23df906aa14a04a7353e68595e278d6ed0bea70e1aaf5ac2d459c5aa4cf9",
+    "/workspace/scratch/pr20-match-execution-20261014/real-binding-active.json": "10e72af3d47f1a48e85a61f2c6bc9cf801976f702ed1e93026cd1e3853bbb62f",
+    "/workspace/InkWeft-native-match/ci/pr20-kvm-triple/clock-contract.json": "b64b0ac49ae3f5de3784cf1fa4ab3151312d5faf59cc3f770d2514a705888314",
+    "/workspace/InkWeft-native-match/ci/pr20-kvm-triple/clock-server-receipt.json": "44a85fb00efc441eba34d4849590b5f91b08eec8ab563cf3db319b9ebf13dcf4"
+  },
+  "template_sha256": "89a5a419948389b38c48d519d3046fa01a9d30bd797b219e69237bc0fa29f37a",
+  "statistics_sha256": "fdbf7b76ebbf587bccaede00910209ba2586c0982bbd0da80cb26cb94ce07740",
+  "extractor_sha256": "bafc7ca19ad2fb0523dd5d859ef0b521c78d8715d888c30dee274fdf97eae800",
+  "limitations": [
+    "Initial metadata is not terminal or test success.",
+    "No incomplete log analysis, native run, network, push or input modification occurred.",
+    "Server PR head607c and source/readiness Git identities serve different purposes; they are not expected equal."
+  ]
+}
