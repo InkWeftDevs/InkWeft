@@ -1,0 +1,170 @@
+diff --git a/android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt b/android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt
+index 6592737..2fec5d0 100644
+--- a/android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt
++++ b/android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt
+@@ -21,7 +21,8 @@ class NativeStrokeTileReuseTest {
+         val context=ApplicationProvider.getApplicationContext<Context>();val name="native-tile-${UUID.randomUUID()}.db";val db=NoteDatabase.open(context,name)
+         val target=Bitmap.createBitmap(1600,1800,Bitmap.Config.ARGB_8888);val reference=Bitmap.createBitmap(1600,1800,Bitmap.Config.ARGB_8888)
+         val crop=Rect(100,90,1500,1710);val events=Channel<Unit>(Channel.CONFLATED);var failed=false
+-        val raster=StreamedInkRaster({events.trySend(Unit)},{failed=true;events.trySend(Unit)});val baselineJobs=RenderResources.inFlightJobs.get()
++        val raster=StreamedInkRaster({events.trySend(Unit)},{failed=true;events.trySend(Unit)});val jobs=OwnedRasterJobs()
++        var primaryFailure:Throwable?=null
+         try{
+             val page=WorkspaceRepository(db).create("跨瓦片不可变笔迹",false,PaperStyle.BLANK).id;val repo=InkRepository(db)
+             val cut=InkCut(UUID(0,100).toString(),1f,listOf(EraserPoint(450f,640f),EraserPoint(550f,774f)),InkCutShape.RECTANGLE)
+@@ -37,7 +38,9 @@ class NativeStrokeTileReuseTest {
+             val source=InkRenderSource(repo,page,1,values.map{it.id}.toSet())
+             var viewport=CanvasViewport(500.0,707.0,1.0);var omitted=emptySet<String>();var allowed:Set<String>?=null
+             suspend fun draw()=withContext(Dispatchers.Main){
+-                target.eraseColor(Color.WHITE);raster.draw(Canvas(target),1600,1800,viewport,1.0,false,false,source,allowed,omitted,pixelBounds=crop);raster.frameReady
++                target.eraseColor(Color.WHITE);jobs.remember(raster)
++                try{raster.draw(Canvas(target),1600,1800,viewport,1.0,false,false,source,allowed,omitted,pixelBounds=crop);raster.frameReady}
++                finally{jobs.remember(raster)}
+             }
+             // Differential oracle: the previous scale-1 raster path constructed native
+             // Stroke separately inside each tile. Keep that behavior only in this test.
+@@ -86,9 +89,11 @@ class NativeStrokeTileReuseTest {
+                     .put("phase",phase).put("nativeStrokeBuilds",stats.nativeStrokeBuilds).put("perTileReferenceBuilds",legacyBuilds)
+                     .put("tiles",stats.tiles).put("rebuilt",stats.rebuilt).put("pixelsEqual",true)}\n")})
+             }
+-        }finally{
+-            withContext(Dispatchers.Main){raster.clear()};withTimeoutOrNull(5000){while(RenderResources.inFlightJobs.get()>baselineJobs)delay(20)}
+-            events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)
++        }catch(error:Throwable){primaryFailure=error;throw error}
++        finally{
++            try{jobs.clearAndJoin(listOf(raster))}
++            catch(cleanup:Throwable){if(primaryFailure!=null)primaryFailure.addSuppressed(cleanup)else throw cleanup}
++            finally{if(jobs.joined){events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)}}
+         }
+     }
+ }
+diff --git a/android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt b/android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt
+index 8de3a42..f75036e 100644
+--- a/android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt
++++ b/android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt
+@@ -24,7 +24,7 @@ class RasterPerformanceProbe {
+         val context=ApplicationProvider.getApplicationContext<Context>();val name="raster-probe-${UUID.randomUUID()}.db"
+         val db=NoteDatabase.open(context,name);val repo=InkRepository(db)
+         val target=Bitmap.createBitmap(2400,1800,Bitmap.Config.ARGB_8888);val reference=Bitmap.createBitmap(2400,1800,Bitmap.Config.ARGB_8888)
+-        val events=Channel<Unit>(Channel.CONFLATED);var failed=false;val initialJobs=RenderResources.inFlightJobs.get()
++        val events=Channel<Unit>(Channel.CONFLATED);var failed=false;val jobs=OwnedRasterJobs();var primaryFailure:Throwable?=null
+         val active=StreamedInkRaster({events.trySend(Unit)},{failed=true;events.trySend(Unit)})
+         val cold=StreamedInkRaster({events.trySend(Unit)},{failed=true;events.trySend(Unit)})
+         try{
+@@ -44,7 +44,9 @@ class RasterPerformanceProbe {
+             val payloadRows=AtomicInteger()
+             repo.readObserver={payloadRows.addAndGet(it.entries)}
+             suspend fun draw(raster:StreamedInkRaster,bitmap:Bitmap)=withContext(Dispatchers.Main){
+-                bitmap.eraseColor(Color.WHITE);raster.draw(Canvas(bitmap),2400,1800,viewport,1.0,true,false,source,null,emptySet());raster.frameReady
++                bitmap.eraseColor(Color.WHITE);jobs.remember(raster)
++                try{raster.draw(Canvas(bitmap),2400,1800,viewport,1.0,true,false,source,null,emptySet());raster.frameReady}
++                finally{jobs.remember(raster)}
+             }
+             suspend fun ready(raster:StreamedInkRaster,bitmap:Bitmap,expectPending:Boolean=false):Double {
+                 val start=System.nanoTime()
+@@ -98,10 +100,11 @@ class RasterPerformanceProbe {
+                 settings
+             }
+             InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","RASTER_SQLITE_EVIDENCE ${JSONObject().put("writerSqlite",writerSqlite)}\n")})
+-        }finally{
+-            withContext(Dispatchers.Main){active.clear();cold.clear()}
+-            withTimeoutOrNull(5000){while(RenderResources.inFlightJobs.get()>initialJobs)delay(20)}
+-            events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)
++        }catch(error:Throwable){primaryFailure=error;throw error}
++        finally{
++            try{jobs.clearAndJoin(listOf(active,cold))}
++            catch(cleanup:Throwable){if(primaryFailure!=null)primaryFailure.addSuppressed(cleanup)else throw cleanup}
++            finally{if(jobs.joined){repo.readObserver=null;events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)}}
+         }
+     }
+ }
+diff --git a/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt b/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt
+index 974ca3f..bfd84b7 100644
+--- a/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt
++++ b/android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt
+@@ -94,8 +94,7 @@ class StreamedInkRasterTest {
+         val context=ApplicationProvider.getApplicationContext<Context>();val name="stream-frame-${id()}.db";val db=NoteDatabase.open(context,name)
+         var raster:StreamedInkRaster?=null;val events=Channel<Unit>(Channel.CONFLATED)
+         val bitmap=Bitmap.createBitmap(400,500,Bitmap.Config.ARGB_8888);bitmap.eraseColor(Color.WHITE)
+-        val baseline=RenderResources.inFlightJobs.get()
+-        val baselineGeometry=RenderResources.snapshot()["category.ink-geometry-reservation"]?:0L
++        val jobs=OwnedRasterJobs();var primaryFailure:Throwable?=null
+         try{
+             val page=WorkspaceRepository(db).create("完整帧分批验证",false,PaperStyle.BLANK).id
+             evidence("fixture-start")
+@@ -122,12 +121,17 @@ class StreamedInkRasterTest {
+             val source=InkRenderSource(repo,page,2,window.strokes.map{it.stroke.id}.toSet())
+             val viewport=CanvasViewport(500.0,707.0,.25)
+             var ready=false
++            fun draw(){
++                val current=checkNotNull(raster);jobs.remember(current)
++                try{current.draw(Canvas(bitmap),400,500,viewport,1.0,false,false,source,null,emptySet());ready=current.frameReady}
++                finally{jobs.remember(current)}
++            }
+             evidence("frame-start")
+-            main{raster=StreamedInkRaster({callbacks.incrementAndGet();events.trySend(Unit)},{failed=true;events.trySend(Unit)});raster!!.draw(Canvas(bitmap),400,500,viewport,1.0,false,false,source,null,emptySet())}
++            main{raster=StreamedInkRaster({callbacks.incrementAndGet();events.trySend(Unit)},{failed=true;events.trySend(Unit)});draw()}
+             try{
+                 // Preserve the original 30 s frame gate; fixture creation and editor reads
+                 // remain outside it. Collect batch timings without logging on the worker.
+-                withTimeout(30_000){while(!ready){events.receive();main{raster!!.draw(Canvas(bitmap),400,500,viewport,1.0,false,false,source,null,emptySet());ready=raster!!.frameReady};check(!failed)}}
++                withTimeout(30_000){while(!ready){events.receive();main{draw()};check(!failed)}}
+             }catch(timeout:TimeoutCancellationException){
+                 val threads=JSONArray()
+                 Thread.getAllStackTraces().filter{(thread,_)->thread.name=="InkWeft-streamed-raster"||thread.name=="main"}.forEach{(thread,stack)->
+@@ -147,10 +151,16 @@ class StreamedInkRasterTest {
+             val color=bitmap.getPixel(pixel.x.toInt(),pixel.y.toInt());assertTrue("Last batch must appear in the complete frame",Color.red(color)>180&&Color.blue(color)<100)
+             assertTrue(decoded.get() in 1..256)
+             assertEquals(strokeCount+1,rows.get());assertTrue("Complete geometry crosses database batches",reads.size>1)
+-            main{raster!!.clear()};withTimeout(5000){while(RenderResources.inFlightJobs.get()>baseline)delay(20)}
++            val releaseStarted=System.nanoTime()
++            jobs.clearAndJoin(listOf(checkNotNull(raster)))
++            assertTrue("Original 5 s worker release gate",System.nanoTime()-releaseStarted<=5_000_000_000L)
+             assertFalse(raster!!.pending)
+-            assertEquals(baselineGeometry,RenderResources.snapshot()["category.ink-geometry-reservation"]?:0L)
+             evidence("verified-and-released")
+-        }finally{main{raster?.clear()};withTimeoutOrNull(5000){while(RenderResources.inFlightJobs.get()>baseline)delay(20)};events.close();bitmap.recycle();db.close();context.deleteDatabase(name)}
++        }catch(error:Throwable){primaryFailure=error;throw error}
++        finally{
++            try{jobs.clearAndJoin(listOfNotNull(raster))}
++            catch(cleanup:Throwable){if(primaryFailure!=null)primaryFailure.addSuppressed(cleanup)else throw cleanup}
++            finally{if(jobs.joined){events.close();bitmap.recycle();db.close();context.deleteDatabase(name)}}
++        }
+     }
+ }
+diff --git a/android/app/src/androidTest/java/org/inkweft/app/OwnedRasterJobs.kt b/android/app/src/androidTest/java/org/inkweft/app/OwnedRasterJobs.kt
+new file mode 100644
+index 0000000..6548944
+--- /dev/null
++++ b/android/app/src/androidTest/java/org/inkweft/app/OwnedRasterJobs.kt
+@@ -0,0 +1,30 @@
++// SPDX-License-Identifier: AGPL-3.0-or-later
++package org.inkweft.app
++
++import kotlinx.coroutines.*
++import org.junit.Assert.*
++
++/** Test ownership only: retain replaced Jobs until their worker finally has run. */
++internal class OwnedRasterJobs {
++    private val field=StreamedInkRaster::class.java.getDeclaredField("job").apply{isAccessible=true}
++    private val jobs=linkedSetOf<Job>()
++    private val baselineJobs=RenderResources.inFlightJobs.get()
++    private val baselineGeometry=RenderResources.snapshot()["category.ink-geometry-reservation"]?:0L
++    var joined=false;private set
++
++    // Call on Main before and in finally after draw, including draws that supersede a Job.
++    fun remember(raster:StreamedInkRaster){(field.get(raster) as Job?)?.let{jobs.add(it);joined=false}}
++
++    suspend fun clearAndJoin(rasters:List<StreamedInkRaster>)=withContext(NonCancellable){
++        joined=false
++        withContext(Dispatchers.Main){rasters.forEach{remember(it);it.clear()};jobs.forEach{it.cancel()}}
++        // A hung worker must fail the enclosing test/process deadline; it must not
++        // permit database close or a later test to run against unfinished work.
++        jobs.joinAll()
++        joined=true
++        assertTrue("All owned raster jobs must complete",jobs.all{it.isCompleted})
++        assertEquals("Raster worker count after join",baselineJobs,RenderResources.inFlightJobs.get())
++        assertEquals("Geometry ownership after join",baselineGeometry,RenderResources.snapshot()["category.ink-geometry-reservation"]?:0L)
++        jobs.clear()
++    }
++}

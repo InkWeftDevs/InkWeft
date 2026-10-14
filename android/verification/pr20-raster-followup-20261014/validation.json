@@ -1,0 +1,29 @@
+{
+  "scope": "HOST_COMPILE_AND_SOURCE_REVIEW_ONLY_NOT_NATIVE",
+  "verified_at": "2026-10-14T09:17:54.233637+00:00",
+  "compile_exit_code": 0,
+  "compiled_task": ":app:compileDebugAndroidTestKotlin",
+  "actionable_tasks": {
+    "executed": 13,
+    "from_cache": 31
+  },
+  "source_hashes_unchanged_in_root_and_isolated_worktree": true,
+  "source_files": {
+    "android/app/src/androidTest/java/org/inkweft/app/OwnedRasterJobs.kt": "00c38f1f951ad4572e23fb3e7d9a412bd723275d52c68298d4723134e5d51d18",
+    "android/app/src/androidTest/java/org/inkweft/app/NativeStrokeTileReuseTest.kt": "ea3f320d3189e053a1e316dc399eece4afb4792ace36cf0b16087330027beb98",
+    "android/app/src/androidTest/java/org/inkweft/app/RasterPerformanceProbe.kt": "38fd3638d88ed3b21b23442a3759c61a0a3733af7c1619dbbf0bafaac419aa5f",
+    "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt": "6b61b7bbe518729ffc65195f72bfb4a4fe7e84139fbf896e5b687fbe29f756e5"
+  },
+  "git_diff_check_exit_code": 0,
+  "native_tests_executed": 0,
+  "jvm_tests_executed": 0,
+  "apk_built": false,
+  "production_changed": false,
+  "eight_layer_forced_full_status": "REGRESSION_SIGNAL_REMAINS_OPEN",
+  "native_validation_pending": [
+    "NativeStrokeTileReuseTest#oneNativeShapePerStrokeMatchesPerTileConstructionThroughTransformsAndClips",
+    "RasterPerformanceProbe#continuousTransformsAndSeparatedDirtyTiles",
+    "StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+    "StreamedInkRasterTest#completeFrameCrossesBothTheEditorPointWindowAndDatabaseBatchBoundary"
+  ]
+}

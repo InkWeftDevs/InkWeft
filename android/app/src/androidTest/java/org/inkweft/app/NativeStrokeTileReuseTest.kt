@@ -21,7 +21,8 @@ class NativeStrokeTileReuseTest {
         val context=ApplicationProvider.getApplicationContext<Context>();val name="native-tile-${UUID.randomUUID()}.db";val db=NoteDatabase.open(context,name)
         val target=Bitmap.createBitmap(1600,1800,Bitmap.Config.ARGB_8888);val reference=Bitmap.createBitmap(1600,1800,Bitmap.Config.ARGB_8888)
         val crop=Rect(100,90,1500,1710);val events=Channel<Unit>(Channel.CONFLATED);var failed=false
-        val raster=StreamedInkRaster({events.trySend(Unit)},{failed=true;events.trySend(Unit)});val baselineJobs=RenderResources.inFlightJobs.get()
+        val raster=StreamedInkRaster({events.trySend(Unit)},{failed=true;events.trySend(Unit)});val jobs=OwnedRasterJobs()
+        var primaryFailure:Throwable?=null
         try{
             val page=WorkspaceRepository(db).create("跨瓦片不可变笔迹",false,PaperStyle.BLANK).id;val repo=InkRepository(db)
             val cut=InkCut(UUID(0,100).toString(),1f,listOf(EraserPoint(450f,640f),EraserPoint(550f,774f)),InkCutShape.RECTANGLE)
@@ -37,7 +38,9 @@ class NativeStrokeTileReuseTest {
             val source=InkRenderSource(repo,page,1,values.map{it.id}.toSet())
             var viewport=CanvasViewport(500.0,707.0,1.0);var omitted=emptySet<String>();var allowed:Set<String>?=null
             suspend fun draw()=withContext(Dispatchers.Main){
-                target.eraseColor(Color.WHITE);raster.draw(Canvas(target),1600,1800,viewport,1.0,false,false,source,allowed,omitted,pixelBounds=crop);raster.frameReady
+                target.eraseColor(Color.WHITE);jobs.remember(raster)
+                try{raster.draw(Canvas(target),1600,1800,viewport,1.0,false,false,source,allowed,omitted,pixelBounds=crop);raster.frameReady}
+                finally{jobs.remember(raster)}
             }
             // Differential oracle: the previous scale-1 raster path constructed native
             // Stroke separately inside each tile. Keep that behavior only in this test.
@@ -86,9 +89,11 @@ class NativeStrokeTileReuseTest {
                     .put("phase",phase).put("nativeStrokeBuilds",stats.nativeStrokeBuilds).put("perTileReferenceBuilds",legacyBuilds)
                     .put("tiles",stats.tiles).put("rebuilt",stats.rebuilt).put("pixelsEqual",true)}\n")})
             }
-        }finally{
-            withContext(Dispatchers.Main){raster.clear()};withTimeoutOrNull(5000){while(RenderResources.inFlightJobs.get()>baselineJobs)delay(20)}
-            events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)
+        }catch(error:Throwable){primaryFailure=error;throw error}
+        finally{
+            try{jobs.clearAndJoin(listOf(raster))}
+            catch(cleanup:Throwable){if(primaryFailure!=null)primaryFailure.addSuppressed(cleanup)else throw cleanup}
+            finally{if(jobs.joined){events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)}}
         }
     }
 }

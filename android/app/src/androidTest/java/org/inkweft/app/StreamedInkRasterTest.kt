@@ -94,8 +94,7 @@ class StreamedInkRasterTest {
         val context=ApplicationProvider.getApplicationContext<Context>();val name="stream-frame-${id()}.db";val db=NoteDatabase.open(context,name)
         var raster:StreamedInkRaster?=null;val events=Channel<Unit>(Channel.CONFLATED)
         val bitmap=Bitmap.createBitmap(400,500,Bitmap.Config.ARGB_8888);bitmap.eraseColor(Color.WHITE)
-        val baseline=RenderResources.inFlightJobs.get()
-        val baselineGeometry=RenderResources.snapshot()["category.ink-geometry-reservation"]?:0L
+        val jobs=OwnedRasterJobs();var primaryFailure:Throwable?=null
         try{
             val page=WorkspaceRepository(db).create("完整帧分批验证",false,PaperStyle.BLANK).id
             evidence("fixture-start")
@@ -122,12 +121,17 @@ class StreamedInkRasterTest {
             val source=InkRenderSource(repo,page,2,window.strokes.map{it.stroke.id}.toSet())
             val viewport=CanvasViewport(500.0,707.0,.25)
             var ready=false
+            fun draw(){
+                val current=checkNotNull(raster);jobs.remember(current)
+                try{current.draw(Canvas(bitmap),400,500,viewport,1.0,false,false,source,null,emptySet());ready=current.frameReady}
+                finally{jobs.remember(current)}
+            }
             evidence("frame-start")
-            main{raster=StreamedInkRaster({callbacks.incrementAndGet();events.trySend(Unit)},{failed=true;events.trySend(Unit)});raster!!.draw(Canvas(bitmap),400,500,viewport,1.0,false,false,source,null,emptySet())}
+            main{raster=StreamedInkRaster({callbacks.incrementAndGet();events.trySend(Unit)},{failed=true;events.trySend(Unit)});draw()}
             try{
                 // Preserve the original 30 s frame gate; fixture creation and editor reads
                 // remain outside it. Collect batch timings without logging on the worker.
-                withTimeout(30_000){while(!ready){events.receive();main{raster!!.draw(Canvas(bitmap),400,500,viewport,1.0,false,false,source,null,emptySet());ready=raster!!.frameReady};check(!failed)}}
+                withTimeout(30_000){while(!ready){events.receive();main{draw()};check(!failed)}}
             }catch(timeout:TimeoutCancellationException){
                 val threads=JSONArray()
                 Thread.getAllStackTraces().filter{(thread,_)->thread.name=="InkWeft-streamed-raster"||thread.name=="main"}.forEach{(thread,stack)->
@@ -147,10 +151,16 @@ class StreamedInkRasterTest {
             val color=bitmap.getPixel(pixel.x.toInt(),pixel.y.toInt());assertTrue("Last batch must appear in the complete frame",Color.red(color)>180&&Color.blue(color)<100)
             assertTrue(decoded.get() in 1..256)
             assertEquals(strokeCount+1,rows.get());assertTrue("Complete geometry crosses database batches",reads.size>1)
-            main{raster!!.clear()};withTimeout(5000){while(RenderResources.inFlightJobs.get()>baseline)delay(20)}
+            val releaseStarted=System.nanoTime()
+            jobs.clearAndJoin(listOf(checkNotNull(raster)))
+            assertTrue("Original 5 s worker release gate",System.nanoTime()-releaseStarted<=5_000_000_000L)
             assertFalse(raster!!.pending)
-            assertEquals(baselineGeometry,RenderResources.snapshot()["category.ink-geometry-reservation"]?:0L)
             evidence("verified-and-released")
-        }finally{main{raster?.clear()};withTimeoutOrNull(5000){while(RenderResources.inFlightJobs.get()>baseline)delay(20)};events.close();bitmap.recycle();db.close();context.deleteDatabase(name)}
+        }catch(error:Throwable){primaryFailure=error;throw error}
+        finally{
+            try{jobs.clearAndJoin(listOfNotNull(raster))}
+            catch(cleanup:Throwable){if(primaryFailure!=null)primaryFailure.addSuppressed(cleanup)else throw cleanup}
+            finally{if(jobs.joined){events.close();bitmap.recycle();db.close();context.deleteDatabase(name)}}
+        }
     }
 }

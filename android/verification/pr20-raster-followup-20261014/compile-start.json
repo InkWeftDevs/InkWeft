@@ -1,0 +1,14 @@
+{
+  "scope": "HOST_COMPILE_ONLY_NOT_NATIVE",
+  "started_at": "2026-10-14T09:11:25.341921+00:00",
+  "command": [
+    "/workspace/.setup/tools/gradle-9.4.1/bin/gradle",
+    "--offline",
+    "--max-workers=1",
+    "--daemon",
+    "-Dorg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    ":app:compileDebugAndroidTestKotlin"
+  ],
+  "cwd": "/workspace/InkWeft-raster-followup-host-20261014/android"
+}

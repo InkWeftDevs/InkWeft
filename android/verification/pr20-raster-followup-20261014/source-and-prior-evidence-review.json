@@ -1,0 +1,108 @@
+{
+  "scope": "READ_ONLY_SOURCE_AND_PRIOR_NATIVE_EVIDENCE_NOT_A_NEW_NATIVE_RUN",
+  "inputs": {
+    "android/verification/pr20-causal-results-20261014/raster-analysis/analysis.json": "387719c6ae3b1d98719b2be12013f708a8a4516c9db5f81416215560f664866a"
+  },
+  "c0_c1_identical_files": {
+    "android/app/src/main/java/org/inkweft/app/InkBrushes.kt": {
+      "d66b60d6cf9587f646acb76dd8a00910b73a6d70": "69abf19a294b657dee9a65f7b1a2be2ec04559148096565b81019ebb057f4c17",
+      "cb7e14218ac83aa8cf6b9d7906051a10da1a6547": "69abf19a294b657dee9a65f7b1a2be2ec04559148096565b81019ebb057f4c17"
+    },
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt": {
+      "d66b60d6cf9587f646acb76dd8a00910b73a6d70": "e7241f4329ece5148f8d1e6f740e102f8326bd4ef0db7f0a6f0a2871e12c9950",
+      "cb7e14218ac83aa8cf6b9d7906051a10da1a6547": "e7241f4329ece5148f8d1e6f740e102f8326bd4ef0db7f0a6f0a2871e12c9950"
+    },
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRasterCache.kt": {
+      "d66b60d6cf9587f646acb76dd8a00910b73a6d70": "064890abd3249d88db94aeaeebd9c07fe3c359e9568a9e74b001509ff8aa77e4",
+      "cb7e14218ac83aa8cf6b9d7906051a10da1a6547": "064890abd3249d88db94aeaeebd9c07fe3c359e9568a9e74b001509ff8aa77e4"
+    }
+  },
+  "unchanged_current_files": {
+    "android/app/src/androidTest/java/org/inkweft/app/TileLocalRedrawTest.kt": "385e5618cdb95d91084054da9724f012b57f63e4e77a33d97bf1588681ba792a",
+    "android/app/src/androidTest/java/org/inkweft/app/RasterCausalDiagnosticsTest.kt": "f7a1424cfec939344584c86a1c11005d9f5d70447d31651bc9764907938cccc1",
+    "android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt": "c27b9f9d3326a625a9063b8fa8a446cc68296406b527a8254d8993dd41f44731",
+    "StreamedInkRasterTest.kt unchanged first two methods prefix": "cbef3031e592fe9679877617b162a8a97fe2c0040792cf34424dacd5cdddf6db"
+  },
+  "historical_full_only": {
+    "run_id": 38514139119,
+    "source_commit": "78a5babeaeb92292026423222d5e08635989198b",
+    "seed": 4101,
+    "layers": 8,
+    "result": {
+      "layers": 8,
+      "initialStrokes": 320,
+      "finalStrokes": 321,
+      "firstCompleteMs": 275.522921,
+      "appendCompleteMs": 142.719236,
+      "forcedFullCompleteMs": 337.269194,
+      "localDecoded": 1,
+      "fullDecoded": 321,
+      "localRebuiltTiles": 1,
+      "fullRebuiltTiles": 48,
+      "metadataMs": 54.748578,
+      "rasterMs": 56.068385,
+      "publicationMs": 217.65960900000002,
+      "pixelsEqual": true,
+      "bitmapBytes": 24294816,
+      "nativeStrokeBuilds": 11
+    },
+    "full_phase": {
+      "role": "full",
+      "phase": "full",
+      "layers": 8,
+      "phaseFrameSpanMs": 334.770225,
+      "accumulatedLayerWallMs": {
+        "requestToWorkerMs": 13.798972000000001,
+        "workerToMetadataMs": 0.383809,
+        "metadataMs": 153.798063,
+        "rasterMs": 1630.813458,
+        "prepareMs": 0.140761,
+        "prepareEndToMainEntryMs": 146.810147,
+        "mainPublicationMs": 2.121344,
+        "publishedToReadyDrawMs": 272.881426,
+        "readyDrawMs": 70.913028,
+        "requestToReadyEndMs": 2291.661008,
+        "requestToWorkerFinallyMs": 2269.7741889999998,
+        "publishedToFirstEnqueueMs": 0.037269,
+        "enqueueToCallbackMs": 55.333844,
+        "callbackToReadyDrawSignedMs": 217.510313
+      },
+      "nativeAttempts": 321,
+      "nativeCompleted": 321,
+      "nativePreparationAndBuildWallMs": 56.771468,
+      "nativePreparationAndBuildThreadCpuMs": 45.506184,
+      "nativeCpuUnavailableFrames": 0,
+      "metadata": {
+        "regions": 48,
+        "preparationBatches": 0,
+        "preparationRows": 0,
+        "queryBatches": 16,
+        "metadataRows": 321,
+        "admissionAndPreparationNanos": 123489336,
+        "queryAndDigestNanos": 24998833,
+        "queryAndDigestThreadCpuNanos": 23171111,
+        "hexAndResultNanos": 713723,
+        "hexAndResultThreadCpuNanos": 703692
+      },
+      "readBatches": 8,
+      "reads": {
+        "freezeNanos": 570109517,
+        "decodeNanos": 13978404,
+        "entries": 321,
+        "payloadBytes": 44940,
+        "decodedPoints": 642,
+        "candidateRows": 321
+      },
+      "notifications": {
+        "notificationRequests": 16,
+        "notificationCallbacks": 12,
+        "notificationsSuperseded": 0
+      },
+      "missingCallbackFrames": 0,
+      "callbackAfterReadyFrames": 1
+    }
+  },
+  "performance_status": "8_LAYER_FORCED_FULL_REGRESSION_SIGNAL_REMAINS_OPEN",
+  "production_changes_this_followup": 0,
+  "native_executions_this_followup": 0
+}

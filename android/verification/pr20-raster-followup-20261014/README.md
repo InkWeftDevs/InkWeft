@@ -1,0 +1,27 @@
+# Raster follow-up: strict worker ownership, full rebuild gate still open
+
+This follow-up changes Android test cleanup only. It does not change production rendering, introduce a new cache, change a performance band, run Android, or rerun completed run38520196523. Offline :app:compileDebugAndroidTestKotlin passed in 322.761 seconds (13 tasks executed, 31 from cache) in an isolated worktree; zero native/JVM tests and no APK build were performed. The four source hashes remained unchanged in both the root and isolated worktree. See compile-result.json, source-manifest.json and validation.json.
+
+## What existing evidence supports
+
+The frozen four-seed rule remains at least three positive paired deltas plus paired median relative and absolute deltas over the original bands. B→C1 eight-layer forced full is therefore still a REGRESSION_SIGNAL: paired median +39.038078 ms / +12.219478%; individual deltas −21.328534, +61.678235, +16.397921, +65.572811 ms. C0→C1 full is INCONCLUSIVE, with all four deltas positive. No sample is removed and the alternative three-individually-over-band rule is not substituted.
+
+Each independent full raster starts without a previous frame, so it allocates its own bounded geometry cache and reads/decodes all 321 strokes. Append retains compatible geometry and only decodes the new payload. The actual full path still builds 48 tiles for eight layers; neither those counts nor append-only BuildStats identify the extra full latency. Fractional pans and zooms retain decoded geometry but rebuild pixels under the exact new matrix. Integer-sample translations alone can reuse complete bitmaps. The sparse-region filter selects payloads before decoding while retaining one paint-order cursor.
+
+Between exact C0 d66b60d and C1 cb7e142, InkRepository.kt, InkRasterCache.kt and InkBrushes.kt are byte-identical. StreamedInkRaster.kt adds default-off diagnostic observations and lazy Pencil creation. The pen-only full fixture has no identified additional native stroke or payload work. This does not prove the latency is noise or caused by diagnostics, and does not justify removing cache population or invalidation/visibility guards.
+
+The already completed, single-source causal run38514139119 (source78a5babe, seed4101) has eight-layer full=337.269194 ms, 321 native attempts/completions and 321 read entries. Its native preparation/construction wall/CPU sums are 56.771468/45.506184 ms; query/digest CPU is 23.171111 ms. It has no same-run paired C0 or B observation. Per-layer metadata/raster/publication wall intervals overlap across suspensions and cannot be added into an exclusive latency breakdown. These historical diagnostic numbers cannot explain the later four-seed comparison or close its gate. Source hashes and the selected original full-phase record are in source-and-prior-evidence-review.json.
+
+## Changes and limits
+
+New test-only OwnedRasterJobs captures the actual private Job on Main before and in finally after each draw, retains superseded Jobs, cancels and joins every captured Job in NonCancellable cleanup, then checks completion plus original worker/geometry baselines. Databases and bitmaps are released only after the owned Jobs have finished. Cleanup assertion failures are suppressed onto an existing test failure. A stuck worker cannot time out silently and permit a later method to use its resources; the enclosing process deadline must fail that run.
+
+NativeStrokeTileReuseTest retains all four mixed-brush/transform/clip oracle phases. RasterPerformanceProbe retains all 14 cases, frame timeouts, read/decode counters, pixel comparisons and result fields. StreamedInkRasterTest changes only its shared dense/two-batch helper; its first two tests remain byte-identical. The original 30-second frame gate stays unchanged. Dense cleanup retains a five-second release assertion measured after strict join; it now includes clear and join, so it is stricter than the former counter-poll timer, not byte-identical timing. Capturing Jobs adds test-only work inside draw timing. Any future timing comparison must apply these exact test/helper bytes to both sources and must not pool with archived old-probe timings.
+
+The frozen TileLocalRedrawTest and RasterCausalDiagnosticsTest, all production source, all thresholds, all archived evidence and all CI controllers are unchanged. The changed cleanup assertions are not yet natively executed. Compilation does not establish pixel correctness, native lifetime safety or performance.
+
+## Minimum next native evidence, if selected by the integration owner
+
+Use the existing default-off RasterCausalDiagnosticsTest full phase with identical observer support on both selected sources, bound to exact source/APK/fixture/environment hashes and unchanged public performance probes. Select full-role/eight-layer frame records only during analysis; do not simply skip the one/four-layer fixture setup because that changes the seeded identifier stream and fixture hash. Preserve every seed, phase, cancellation/failure and raw marker. Compare metadata preparation/query CPU, native synchronous wall/same-thread CPU, read counts/decode wall, request/worker/publication and notification/ready endpoints. Cross-thread gaps are scheduling-inclusive intervals, not CPU or lock wait. Keep strict captured-Job cleanup.
+
+This is a diagnostic proposal, not a new workflow or an executed test. A comparable work increase or repeatable identified redundant operation is needed before another production change. Eight-layer forced-full acceptance remains open.

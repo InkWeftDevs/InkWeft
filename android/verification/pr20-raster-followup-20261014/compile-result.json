@@ -1,0 +1,8 @@
+{
+  "scope": "HOST_COMPILE_ONLY_NOT_NATIVE",
+  "started_at": "2026-10-14T09:11:25.341921+00:00",
+  "finished_at": "2026-10-14T09:16:48.102911+00:00",
+  "elapsed_seconds": 322.76121980899916,
+  "exit_code": 0,
+  "native_tests_run": 0
+}

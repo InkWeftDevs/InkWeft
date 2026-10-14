@@ -24,7 +24,7 @@ class RasterPerformanceProbe {
         val context=ApplicationProvider.getApplicationContext<Context>();val name="raster-probe-${UUID.randomUUID()}.db"
         val db=NoteDatabase.open(context,name);val repo=InkRepository(db)
         val target=Bitmap.createBitmap(2400,1800,Bitmap.Config.ARGB_8888);val reference=Bitmap.createBitmap(2400,1800,Bitmap.Config.ARGB_8888)
-        val events=Channel<Unit>(Channel.CONFLATED);var failed=false;val initialJobs=RenderResources.inFlightJobs.get()
+        val events=Channel<Unit>(Channel.CONFLATED);var failed=false;val jobs=OwnedRasterJobs();var primaryFailure:Throwable?=null
         val active=StreamedInkRaster({events.trySend(Unit)},{failed=true;events.trySend(Unit)})
         val cold=StreamedInkRaster({events.trySend(Unit)},{failed=true;events.trySend(Unit)})
         try{
@@ -44,7 +44,9 @@ class RasterPerformanceProbe {
             val payloadRows=AtomicInteger()
             repo.readObserver={payloadRows.addAndGet(it.entries)}
             suspend fun draw(raster:StreamedInkRaster,bitmap:Bitmap)=withContext(Dispatchers.Main){
-                bitmap.eraseColor(Color.WHITE);raster.draw(Canvas(bitmap),2400,1800,viewport,1.0,true,false,source,null,emptySet());raster.frameReady
+                bitmap.eraseColor(Color.WHITE);jobs.remember(raster)
+                try{raster.draw(Canvas(bitmap),2400,1800,viewport,1.0,true,false,source,null,emptySet());raster.frameReady}
+                finally{jobs.remember(raster)}
             }
             suspend fun ready(raster:StreamedInkRaster,bitmap:Bitmap,expectPending:Boolean=false):Double {
                 val start=System.nanoTime()
@@ -98,10 +100,11 @@ class RasterPerformanceProbe {
                 settings
             }
             InstrumentationRegistry.getInstrumentation().sendStatus(0,android.os.Bundle().apply{putString("stream","RASTER_SQLITE_EVIDENCE ${JSONObject().put("writerSqlite",writerSqlite)}\n")})
-        }finally{
-            withContext(Dispatchers.Main){active.clear();cold.clear()}
-            withTimeoutOrNull(5000){while(RenderResources.inFlightJobs.get()>initialJobs)delay(20)}
-            events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)
+        }catch(error:Throwable){primaryFailure=error;throw error}
+        finally{
+            try{jobs.clearAndJoin(listOf(active,cold))}
+            catch(cleanup:Throwable){if(primaryFailure!=null)primaryFailure.addSuppressed(cleanup)else throw cleanup}
+            finally{if(jobs.joined){repo.readObserver=null;events.close();target.recycle();reference.recycle();db.close();context.deleteDatabase(name)}}
         }
     }
 }
