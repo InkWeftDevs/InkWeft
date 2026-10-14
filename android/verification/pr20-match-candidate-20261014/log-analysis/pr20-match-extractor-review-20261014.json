@@ -1,0 +1,79 @@
+{
+  "scope": "INDEPENDENT_OFFLINE_SYNTHETIC_REVIEW_NOT_NATIVE",
+  "reviewed_files": {
+    "analyze_logs.py": {
+      "sha256": "bafc7ca19ad2fb0523dd5d859ef0b521c78d8715d888c30dee274fdf97eae800",
+      "bytes": 33703
+    },
+    "test_analyzer.py": {
+      "sha256": "9536712d7117c7ab5d763dad8b531f2cb0e7beeb2ffeb220ce4e3fdf3dc220d7",
+      "bytes": 22637
+    },
+    "test_process_receipts.py": {
+      "sha256": "ed9368f59ce921533cf0560b876b7eb8e979be687c7bb70616b575064fcc0056",
+      "bytes": 3218
+    },
+    "check-final-reviewed-metadata/selftest-results.json": {
+      "sha256": "68e83ee9bfbedbbe311bc95945d22c5a9e53314769939976df7fcaa465891673",
+      "bytes": 24280
+    },
+    "process-check-final-reviewed/results.json": {
+      "sha256": "13ee3ec781e017d675249b02d9a11e7a8a6b025ac28fd34a10222fec0dcafdc7",
+      "bytes": 2554
+    }
+  },
+  "independent_cases": [
+    {
+      "name": "complete62",
+      "status": "PASS",
+      "parser_status": "COMPLETE_SCOPED_MATCH_LOG_EVIDENCE",
+      "issues": []
+    },
+    {
+      "name": "END ordinal bool",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: END count differs"
+      ]
+    },
+    {
+      "name": "END footer sequence bool with recomputed SHA",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Footer integer type differs"
+      ]
+    },
+    {
+      "name": "negative process observation",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Process chronology differs"
+      ]
+    },
+    {
+      "name": "official setup before actual job",
+      "status": "PASS",
+      "parser_status": "INCOMPLETE",
+      "issues": [
+        "ValueError: Official phase exceeds budget/sequence"
+      ]
+    }
+  ],
+  "input_directory_unchanged": true,
+  "input_entries": 31,
+  "python_dont_write_bytecode": false,
+  "new_pycache_directories": 0,
+  "complete_statistics_status": "COMPLETE_SCREENING_NOT_FINAL_ACCEPTANCE",
+  "raw_saves": 720,
+  "comparison_rows": 54,
+  "author_reported_cases": {
+    "log": 69,
+    "process": 20
+  },
+  "author_suites_independently_rerun": false,
+  "frozen_statistics_sha256": "fdbf7b76ebbf587bccaede00910209ba2586c0982bbd0da80cb26cb94ce07740",
+  "no_build_native_network": true
+}
