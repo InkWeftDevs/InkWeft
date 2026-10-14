@@ -1,0 +1,12 @@
+be5884313087a81f8f3c067f32605c6688c6cff01daa09cf8547aaa242d88739  ci/pr20-kvm-triple/authorization.json
+bae817ca2220c5e473e6206b105d9c184b5c73b86b2dd1f2a978f4ef3bb03050  ci/pr20-kvm-triple/binding-selftest.json
+be2006587f7e7feb9397310345ef3f8e73a5d35282d536916b5ac4c08db6d144  ci/pr20-kvm-triple/budget-revision.json
+255974562c85466be0849e4305759dba348e54139566cfe4b83ae5f485c86a17  ci/pr20-kvm-triple/check_final_binding.py
+49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576  ci/pr20-kvm-triple/cleanup.py
+b64b0ac49ae3f5de3784cf1fa4ab3151312d5faf59cc3f770d2514a705888314  ci/pr20-kvm-triple/clock-contract.json
+44a85fb00efc441eba34d4849590b5f91b08eec8ab563cf3db319b9ebf13dcf4  ci/pr20-kvm-triple/clock-server-receipt.json
+7dfb88112bdf17b9cc8ff96b9cdf068a79394505cbb0103be4d93819533a2a80  ci/pr20-kvm-triple/markers.py
+e9b0fcfa55549dfc71e1737f07b7eaf7a598e09f961145be509d0c0945b6e24a  ci/pr20-kvm-triple/package.py
+a199bd8ce6905af02b31708e4538ef771e261f0feb964381fa8ef5daa6ad1076  ci/pr20-kvm-triple/preflight.json
+4a3fc95304dfe0dfeeeecfda85a67f9f7ffc288fb904b9608262be5b04d97466  ci/pr20-kvm-triple/run.py
+add3e107c74ae3c28907847d8296d2420281e3d19d7e04fd408424c7c511345d  ci/pr20-kvm-triple/workflow.proposed.yml

@@ -1,0 +1,113 @@
+{
+  "status": "PASS",
+  "scope": "OFFLINE_SYNTHETIC_BINDINGS_NOT_PR_OR_NATIVE",
+  "cases": [
+    {
+      "name": "valid-distinct-PR-head-and-readiness-zero-guard",
+      "status": "PASS",
+      "expected": "ACCEPT"
+    },
+    {
+      "name": "approval-false",
+      "status": "PASS",
+      "expected": "REJECT",
+      "error": ""
+    },
+    {
+      "name": "wrong-top-plan",
+      "status": "PASS",
+      "expected": "REJECT",
+      "error": ""
+    },
+    {
+      "name": "wrong-readiness-commit",
+      "status": "PASS",
+      "expected": "REJECT",
+      "error": ""
+    },
+    {
+      "name": "stale-scope",
+      "status": "PASS",
+      "expected": "REJECT",
+      "error": "Unexpected current or historical authorization change"
+    },
+    {
+      "name": "wrong-live-phase-plan",
+      "status": "PASS",
+      "expected": "REJECT",
+      "error": ""
+    },
+    {
+      "name": "stale-authorization-source",
+      "status": "PASS",
+      "expected": "REJECT",
+      "error": ""
+    },
+    {
+      "name": "history-mutated",
+      "status": "PASS",
+      "expected": "REJECT",
+      "error": ""
+    },
+    {
+      "name": "wrong-receipt-head",
+      "status": "PASS",
+      "expected": "REJECT",
+      "error": ""
+    },
+    {
+      "name": "wrong-clock-contract",
+      "status": "PASS",
+      "expected": "REJECT",
+      "error": ""
+    },
+    {
+      "name": "future-anchor",
+      "status": "PASS",
+      "expected": "REJECT",
+      "error": "Future or expired anchor; never replace or rebase it"
+    },
+    {
+      "name": "expired-setup",
+      "status": "PASS",
+      "expected": "REJECT",
+      "error": "Future or expired anchor; never replace or rebase it"
+    },
+    {
+      "name": "literal-mismatch",
+      "status": "PASS",
+      "expected": "REJECT",
+      "error": "Workflow changed beyond frozen clock literals/prep guard"
+    },
+    {
+      "name": "source-readiness-changed",
+      "status": "PASS",
+      "expected": "REJECT",
+      "error": "Committed readiness differs: android/verification/pr20-match-candidate-20261014/PLAN.md"
+    },
+    {
+      "name": "executable-changed",
+      "status": "PASS",
+      "expected": "REJECT",
+      "error": "Executable changed after review: run.py"
+    },
+    {
+      "name": "valid-exact-prep-active-copy",
+      "status": "PASS",
+      "expected": "ACCEPT"
+    },
+    {
+      "name": "active-proposed-mismatch",
+      "status": "PASS",
+      "expected": "REJECT",
+      "error": "Active/proposed mismatch"
+    }
+  ],
+  "case_count": 17,
+  "checker_sha256": "255974562c85466be0849e4305759dba348e54139566cfe4b83ae5f485c86a17",
+  "test_sha256": "8fa58ae30470040a1970b9264a2c3d28c6706c1c794b4c72449af1a476812dbc",
+  "finalizer_sha256": "54b870ab4953995c0dde99e1139574eb4efda3a61b89c77fa78545c2a55e3a82",
+  "reviewed_handoff_sha256": "47e89c61525dad3eb42b1e2977a2e065d7dd5afa6ae76fe6408656255cf97181",
+  "actual_runner_invocations": 0,
+  "network_calls": 0
+}

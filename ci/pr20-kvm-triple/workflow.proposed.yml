@@ -35,10 +35,10 @@ jobs:
         mkdir -p "$KVM_ONCE/evidence"
         python3 - <<'PYCODE'
         import datetime,json,os,pathlib,re,time
-        anchor_literal='__CLOCK_ANCHOR_EPOCH__'
-        updated_at='__CLOCK_UPDATED_AT__'
-        contract_sha='__CLOCK_CONTRACT_SHA256__'
-        receipt_sha='__CLOCK_RECEIPT_SHA256__'
+        anchor_literal='1791957846'
+        updated_at='2026-10-14T06:04:06Z'
+        contract_sha='b64b0ac49ae3f5de3784cf1fa4ab3151312d5faf59cc3f770d2514a705888314'
+        receipt_sha='44a85fb00efc441eba34d4849590b5f91b08eec8ab563cf3db319b9ebf13dcf4'
         observed=time.time()
         clock={'status':'FAIL','anchor_kind':'github_pull_request_updated_at',
                'updated_at':updated_at,'clock_contract_sha256':contract_sha,'server_receipt_sha256':receipt_sha,
