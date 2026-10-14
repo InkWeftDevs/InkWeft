@@ -1,0 +1,120 @@
+{
+  "status": "NO_REMAINING_STATIC_REVIEW_BLOCKER_IN_INACTIVE_TEMPLATE",
+  "scope": "READ_ONLY_AND_PURE_SYNTHETIC_NO_NATIVE",
+  "controller_manifest": {
+    "path": "/workspace/scratch/pr20-save-boundary-ci-20261014/CONTROLLER_SHA256SUMS",
+    "sha256": "ee2a145cf9f744e6ad18b6bcfcd1e899a580b946f9c164cacca9463f1dbc1a3d",
+    "file_count": 16
+  },
+  "controller_files": {
+    "PLAN.template.md": "6572c9e87a4767586875154f78f70eb4660d76c3577a01cb1da0155d3350a1c9",
+    "README.md": "b733984e628ef98bd673fa657d7b9fa672d4d52853742eaf2978a2e8f75c40c2",
+    "authorization.json": "addd994a3d4790359f80303368dfd5d385499c5d55be8cf0ea1e48a98eb3d577",
+    "bind_control.py": "924576dfae10bb73ad39f702fceb94d6b46fff22bdf887260052b7fe22cfc800",
+    "check_offline.py": "0456bc5ccd5896d89c385a33e7fa7f1a9442f73e8c99921aaffb8d5ba358172c",
+    "cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "freeze_readiness.py": "a04055c0eb5c4a6ae2b01d3a9459d1f905f28a6293b859cec6d6b4afcad1f2e5",
+    "marker-contract.template.json": "a596c9cd02d27fde1b5b9103eb231cf0320f5330ffd6838324f39e04e9a82bec",
+    "markers.py": "d27e19a7ae5b090436b8e70d5a2d914119e343eeb40e01352359d27f30215857",
+    "method-plan.template.json": "df8b176df3fcae60fae4d0ec8fb0a106eb04413d061cd98804a85338e9a7993d",
+    "original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "package.py": "635da20910a0fc65cbfe5113f4147ca1333be01cfe851ee8b8608f30ac4c6a2a",
+    "prepare_sources.py": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516",
+    "run.py": "48be5c66c150884138bb78ea8959b4b1578c3d325fbdd139405904134a34571a",
+    "size_bounds.py": "3eca77783dcbffb707f69e2e5e41600d286157c7db57cba882a773fe0282e10a",
+    "workflow.proposed.yml": "785c1b6adac26b99c87a38d547e34b619afe23e543da221e7112143d19e33bfe"
+  },
+  "root_inactive_copy_matches_all_16_files": true,
+  "offline_preflight": {
+    "path": "/workspace/scratch/pr20-save-boundary-ci-20261014/offline-check-10/preflight.json",
+    "sha256": "e85f3cc28e3a9a57b90fad74c166118e5dbbbfcbc3c112c7b79b4df02f61db30",
+    "status": "PASS",
+    "scope": "OFFLINE_ONLY_NO_NEW_NATIVE_NO_NETWORK_NO_BUILD",
+    "group_count": 13
+  },
+  "cross_validation": {
+    "path": "/workspace/scratch/pr20-save-boundary-ci-20261014/independent-review/cross-validation.json",
+    "sha256": "2095f543b3babdda717a198344b0889dc1ec8ef0a15abb13c3893ac07bd80ff1",
+    "script_sha256": "b466cccb19b91ee5fddbb1ddbe80228c72926c17c98c92dfb65880ddfa617142",
+    "status": "PASS",
+    "case_count": 42,
+    "positive_cases": 5,
+    "negative_cases": 37
+  },
+  "analysis_files_sha256": {
+    "/workspace/scratch/pr20-save-boundary-analysis-20261014/analyze.py": "fd1c22004bb91e7e6673a6ac59eb0f2c2413c9f8ef454a00b2950c0581bbd1b7",
+    "/workspace/scratch/pr20-save-boundary-analysis-20261014/test_analyze.py": "87278e9fa7565f0817b59ffb589c83207671ec71b6334fbd5210a0e0608c8e68",
+    "/workspace/scratch/pr20-save-boundary-analysis-20261014/README.md": "6651b3c711fe5317df2cfa760e825b4658ac3ad4b03b7b21c8a9ffb78cd32730",
+    "/workspace/scratch/pr20-save-boundary-analysis-20261014/selftest.log": "c758b615fc387a684429798b6c62d68a7a033335526f7630ad3adfa5e36f90fe"
+  },
+  "reviewed_source_commit": "4f41a501127dbed6dbef3519f93233a105b5d618",
+  "reviewed_source_sha256": {
+    "android/data-local/src/main/kotlin/org/inkweft/data/NoteDatabase.kt": "c904a8ebc9b2aed64266a82d24b8f1395621314a9087fd6f0de6298b8865fb47",
+    "android/data-local/src/main/kotlin/org/inkweft/data/NoteRepository.kt": "a9351355ca45af5f6f5db34109fa68d6bf10505d3117ed60a7c68cc000b05e89",
+    "android/data-local/src/main/kotlin/org/inkweft/data/PreservingOpenHelperFactory.kt": "052467625c685a79f72337379b2d4e70718440c6717e91c6d18677c9c1982581",
+    "android/data-local/src/main/kotlin/org/inkweft/data/SaveBoundaryDiagnostics.kt": "392bf0e25e6f62d77f915eec628eac16f3f374e0de5287fb02435d29c0cecab9",
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/LibrarySaveBoundaryDiagnosticsTest.kt": "03ef99d05bc814fa19d755b0d3fb534f84da6f04e1af024dc0433c8f367a276a",
+    "android/data-local/src/test/kotlin/org/inkweft/data/SaveBoundaryDiagnosticsTest.kt": "d1bd148f6f787bf636d005d5f0932b4e4e02c65c0953ece313eb0e7bbd789dc6"
+  },
+  "causal_template_comparison": {
+    "unchanged_ast_count": 23,
+    "unchanged_ast_names": [
+      "BudgetAbort",
+      "EvidenceIncomplete",
+      "write_json",
+      "save",
+      "seconds",
+      "digest",
+      "owned",
+      "run",
+      "capture",
+      "shell",
+      "phase",
+      "host",
+      "environment",
+      "source_manifest",
+      "validate_instrumentation_manifest",
+      "raw_result",
+      "processes_after",
+      "common_fixtures",
+      "junit",
+      "validate_shape",
+      "safe_marker_payloads",
+      "forward_causal_records",
+      "method"
+    ],
+    "changed_ast_names": [
+      "validate_clock",
+      "setup",
+      "build",
+      "start_emulator",
+      "install",
+      "methods",
+      "main"
+    ],
+    "removed_ast_names": [
+      "official_dependency_check"
+    ],
+    "byte_identical_files_sha256": {
+      "cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+      "original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+    }
+  },
+  "review_report_sha256": "5aff1146590f0e6690e48bddda362325d1701d441db0000112bf8df049adce3d",
+  "remaining_review_findings": [],
+  "not_performed_by_reviewer": [
+    "readiness freeze",
+    "binding or activation",
+    "push",
+    "native execution",
+    "build",
+    "network or device operation",
+    "KVM or ACL mutation",
+    "formal performance acceptance"
+  ],
+  "remaining_tasks": [
+    "root exact source/readiness/prep/active binding and final review",
+    "separately authorized native diagnostic execution if pursued",
+    "independent official terminal evidence audit; no performance gate closed"
+  ]
+}

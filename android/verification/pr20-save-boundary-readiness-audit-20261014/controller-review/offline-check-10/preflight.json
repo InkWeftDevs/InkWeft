@@ -1,0 +1,249 @@
+{
+  "status": "PASS",
+  "scope": "OFFLINE_ONLY_NO_NEW_NATIVE_NO_NETWORK_NO_BUILD",
+  "groups": [
+    {
+      "name": "unbound isolation and exact scope",
+      "status": "PASS",
+      "details": {
+        "methods": 10,
+        "groups": 1,
+        "source_identities": 1,
+        "apk_count": 1,
+        "execution_binding": "UNBOUND_REFUSED",
+        "copied_functions": [
+          "write_json",
+          "save",
+          "seconds",
+          "digest",
+          "owned",
+          "run",
+          "capture",
+          "shell",
+          "phase",
+          "host",
+          "environment",
+          "source_manifest",
+          "junit"
+        ],
+        "cleanup_byte_identical": true
+      }
+    },
+    {
+      "name": "workflow syntax and isolated real first-step clock",
+      "status": "PASS",
+      "details": {
+        "actionlint": 0,
+        "phase_wrappers": 4,
+        "actual_clock_lines": 8,
+        "second_clock_rejected": true
+      }
+    },
+    {
+      "name": "phase/work absolute deadline boundaries",
+      "status": "PASS",
+      "details": {
+        "phase_boundaries": 9
+      }
+    },
+    {
+      "name": "strict original JUnit parser and skipped/fault cases",
+      "status": "PASS",
+      "details": {
+        "prior_raw_junit": 58,
+        "failure_or_skipped_variants": 10,
+        "new_native": 0
+      }
+    },
+    {
+      "name": "closed boundary schemas and whole-method loss/order/count fault refusal",
+      "status": "PASS",
+      "details": {
+        "synthetic_complete_methods": 10,
+        "whole_method_fault_cases": 24,
+        "author_endpoint_deleted_and_recounted": 22,
+        "author_endpoint_duplicated_and_recounted": 22,
+        "thread_task_txn_depth_cpu_order_faults": 8,
+        "background_fragment_positive": 1,
+        "run_exit_after_return_positive": 1,
+        "closed_object_schemas": 4,
+        "native_results": 0
+      }
+    },
+    {
+      "name": "actual fixture, source hashes, capacities and stage allowlist",
+      "status": "PASS",
+      "details": {
+        "source_hashes_match": true,
+        "fixture_pages": 20001,
+        "actual_stage_literals": 50,
+        "boundary_capacity_per_arm": 4096,
+        "read_capacity_per_arm": 2048
+      }
+    },
+    {
+      "name": "all-three package natural isolation and no cleanup fallback",
+      "status": "PASS",
+      "details": [
+        "gone",
+        "app_alive",
+        "test_alive",
+        "data_alive",
+        "transport"
+      ]
+    },
+    {
+      "name": "instrumentation manifest uses xmltree and exact target package",
+      "status": "PASS",
+      "details": {
+        "prior_actual_data_manifest": 1,
+        "synthetic_app_target": 1,
+        "mismatches": 4
+      }
+    },
+    {
+      "name": "data-only build receipt: four ABI APK/AAR match and negative source cases",
+      "status": "PASS",
+      "details": [
+        {
+          "case": "match",
+          "native_executions": 0,
+          "gradle_executions": 0
+        },
+        {
+          "case": "missing_apk_abi",
+          "native_executions": 0,
+          "gradle_executions": 0
+        },
+        {
+          "case": "different_aar_native",
+          "native_executions": 0,
+          "gradle_executions": 0
+        },
+        {
+          "case": "wrong_aar_version",
+          "native_executions": 0,
+          "gradle_executions": 0
+        }
+      ]
+    },
+    {
+      "name": "data install group binds exact installed APK bytes; wrong path/hash stop",
+      "status": "PASS",
+      "details": [
+        {
+          "group": "C1-data-diagnostics",
+          "case": "match",
+          "commands": 3
+        },
+        {
+          "group": "C1-data-diagnostics",
+          "case": "wrong_hash",
+          "commands": 3
+        },
+        {
+          "group": "C1-data-diagnostics",
+          "case": "wrong_path",
+          "commands": 2
+        }
+      ]
+    },
+    {
+      "name": "malformed extra marker preserves raw JUnit PASS but host INCOMPLETE",
+      "status": "PASS",
+      "details": {
+        "junit": "PASS",
+        "host": "INCOMPLETE",
+        "unvalidated_payload_forwarded": false,
+        "raw_preserved": true
+      }
+    },
+    {
+      "name": "actual new packager: partial, missing raw, failure, limits and privacy",
+      "status": "PASS",
+      "details": [
+        {
+          "case": "running",
+          "exit": 0
+        },
+        {
+          "case": "installed",
+          "exit": 0
+        },
+        {
+          "case": "between_steps",
+          "exit": 0
+        },
+        {
+          "case": "pass_preserved",
+          "exit": 0
+        },
+        {
+          "case": "fail_preserved",
+          "exit": 0
+        },
+        {
+          "case": "notrun_preserved",
+          "exit": 0
+        },
+        {
+          "case": "cleanup_failure",
+          "exit": 0
+        },
+        {
+          "case": "all10_complete",
+          "exit": 0
+        },
+        {
+          "case": "all10_missing_raw",
+          "exit": 0
+        },
+        {
+          "case": "oversize",
+          "exit": 1
+        },
+        {
+          "case": "secret",
+          "exit": 1
+        },
+        {
+          "case": "excluded_binary",
+          "exit": 0
+        },
+        {
+          "case": "no_summary",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "name": "bounded maximum shapes plus three MiB other text reserve",
+      "status": "PASS",
+      "details": {
+        "raw_plus_records_upper_bytes": 9115485,
+        "official_record_envelopes_upper_bytes": 4931709,
+        "other_text_reserved_bytes": 3145728,
+        "final_real_total_checked_by_packager": true
+      }
+    }
+  ],
+  "inputs": {
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/PLAN.template.md": "6572c9e87a4767586875154f78f70eb4660d76c3577a01cb1da0155d3350a1c9",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/README.md": "b733984e628ef98bd673fa657d7b9fa672d4d52853742eaf2978a2e8f75c40c2",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/authorization.json": "addd994a3d4790359f80303368dfd5d385499c5d55be8cf0ea1e48a98eb3d577",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/bind_control.py": "924576dfae10bb73ad39f702fceb94d6b46fff22bdf887260052b7fe22cfc800",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/check_offline.py": "0456bc5ccd5896d89c385a33e7fa7f1a9442f73e8c99921aaffb8d5ba358172c",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/freeze_readiness.py": "a04055c0eb5c4a6ae2b01d3a9459d1f905f28a6293b859cec6d6b4afcad1f2e5",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/marker-contract.template.json": "a596c9cd02d27fde1b5b9103eb231cf0320f5330ffd6838324f39e04e9a82bec",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/markers.py": "d27e19a7ae5b090436b8e70d5a2d914119e343eeb40e01352359d27f30215857",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/method-plan.template.json": "df8b176df3fcae60fae4d0ec8fb0a106eb04413d061cd98804a85338e9a7993d",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/package.py": "635da20910a0fc65cbfe5113f4147ca1333be01cfe851ee8b8608f30ac4c6a2a",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/prepare_sources.py": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/run.py": "48be5c66c150884138bb78ea8959b4b1578c3d325fbdd139405904134a34571a",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/size_bounds.py": "3eca77783dcbffb707f69e2e5e41600d286157c7db57cba882a773fe0282e10a",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/workflow.proposed.yml": "785c1b6adac26b99c87a38d547e34b619afe23e543da221e7112143d19e33bfe"
+  },
+  "checker_sha256": "0456bc5ccd5896d89c385a33e7fa7f1a9442f73e8c99921aaffb8d5ba358172c"
+}

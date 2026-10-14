@@ -1,0 +1,682 @@
+{
+  "scope": "PURE_SYNTHETIC_CONTRACT_REVIEW_NOT_NATIVE",
+  "native_executions": 0,
+  "network_calls": 0,
+  "builds": 0,
+  "status": "PASS",
+  "case_count": 42,
+  "positive_cases": 5,
+  "negative_cases": 37,
+  "source_sha256": {
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/markers.py": "d27e19a7ae5b090436b8e70d5a2d914119e343eeb40e01352359d27f30215857",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/check_offline.py": "0456bc5ccd5896d89c385a33e7fa7f1a9442f73e8c99921aaffb8d5ba358172c",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/marker-contract.template.json": "a596c9cd02d27fde1b5b9103eb231cf0320f5330ffd6838324f39e04e9a82bec",
+    "/workspace/scratch/pr20-save-boundary-ci-20261014/controller/method-plan.template.json": "df8b176df3fcae60fae4d0ec8fb0a106eb04413d061cd98804a85338e9a7993d",
+    "/workspace/scratch/pr20-save-boundary-analysis-20261014/analyze.py": "fd1c22004bb91e7e6673a6ac59eb0f2c2413c9f8ef454a00b2950c0581bbd1b7",
+    "/workspace/scratch/pr20-save-boundary-analysis-20261014/test_analyze.py": "87278e9fa7565f0817b59ffb589c83207671ec71b6334fbd5210a0e0608c8e68"
+  },
+  "cases": [
+    {
+      "name": "controller complete synthetic fixture accepted by both",
+      "expected_acceptance": true,
+      "outcomes": {
+        "controller": {
+          "accepted": true
+        },
+        "analysis": {
+          "accepted": true,
+          "save_count": 90,
+          "segments_per_sample": 12
+        }
+      }
+    },
+    {
+      "name": "analysis trigger-sync and nested synthetic fixture accepted by both",
+      "expected_acceptance": true,
+      "outcomes": {
+        "controller": {
+          "accepted": true
+        },
+        "analysis": {
+          "accepted": true,
+          "save_count": 90,
+          "segments_per_sample": 12
+        }
+      }
+    },
+    {
+      "name": "delete save-request and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one save-request"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/save-request/{}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete writer-submit and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one writer-submit"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/writer-submit/{}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete writer-run-enter and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one writer-run-enter"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/writer-run-enter/{}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete room-begin-enter and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one room-begin-enter"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/room-begin-enter/{'depth': 1}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete sqlite-begin-enter and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one sqlite-begin-enter"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/sqlite-begin-enter/{'depth': 1, 'transaction': 2000}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete sqlite-begin-exit and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Author boundaries out of order"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0: SQLite outer transaction spanning author body: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete room-begin-exit and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one room-begin-exit"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/room-begin-exit/{'depth': 1}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete save-writer-acquired and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one save-writer-acquired"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/save-writer-acquired/{}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete save-head-read and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one save-head-read"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/save-head-read/{}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete save-head-written and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one save-head-written"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/save-head-written/{}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete save-revision-written and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one save-revision-written"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/save-revision-written/{}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete save-receipt-written and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one save-receipt-written"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/save-receipt-written/{}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete room-success-enter and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one room-success-enter"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/room-success-enter/{'depth': 1}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete sqlite-success-enter and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one sqlite-success-enter"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/sqlite-success-enter/{'depth': 1, 'transaction': 2000}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete sqlite-success-exit and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one sqlite-success-exit"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/sqlite-success-exit/{'depth': 1, 'transaction': 2000}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete room-success-exit and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one room-success-exit"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/room-success-exit/{'depth': 1}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete room-end-enter and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one room-end-enter"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/room-end-enter/{'depth': 1}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete sqlite-end-enter and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one sqlite-end-enter"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/sqlite-end-enter/{'depth': 1, 'transaction': 2000}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete sqlite-end-exit and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one sqlite-end-exit"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0: SQLite outer transaction spanning author body: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete room-end-exit and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one room-end-exit"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/room-end-exit/{'depth': 1}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete save-returned and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Expected one save-returned"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0/save-returned/{}: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "delete writer-run-exit and repair counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Recorded writer submit missing terminal"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE: submitted task lacks unique exit"
+        }
+      }
+    },
+    {
+      "name": "author body corrupted threadId",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": ""
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0: transaction worker thread changed"
+        }
+      }
+    },
+    {
+      "name": "author body corrupted task",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": ""
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0: writer task token mismatch"
+        }
+      }
+    },
+    {
+      "name": "author body corrupted threadCpuNs",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Per-thread counters decreased"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE: boundary events: same-thread wall/CPU decreased"
+        }
+      }
+    },
+    {
+      "name": "author body corrupted wallNs",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Per-thread counters decreased"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE: boundary events: same-thread wall/CPU decreased"
+        }
+      }
+    },
+    {
+      "name": "author body corrupted depth",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": ""
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0: non-transaction point carries transaction state"
+        }
+      }
+    },
+    {
+      "name": "author body corrupted transaction",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": ""
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0: non-transaction point carries transaction state"
+        }
+      }
+    },
+    {
+      "name": "author body corrupted outcome",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Successful author sample contains failure evidence"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0: unsuccessful boundary"
+        }
+      }
+    },
+    {
+      "name": "extra save-failed with repaired counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Successful author sample contains failure evidence"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE/0: failed save task"
+        }
+      }
+    },
+    {
+      "name": "DIRECT end removed with repaired counts",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "DIRECT requires original start and awaited end"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "DIRECT: control end: expected exactly one, found 0"
+        }
+      }
+    },
+    {
+      "name": "OBSERVE nonpositive commit witness -1",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "OBSERVE starts after an original index commit"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "OBSERVE: missing committed-index readiness witness"
+        }
+      }
+    },
+    {
+      "name": "OBSERVE nonpositive commit witness 0",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "OBSERVE starts after an original index commit"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "OBSERVE: missing committed-index readiness witness"
+        }
+      }
+    },
+    {
+      "name": "END moved after other arms",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": ""
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "interleaved or reordered window/marker sequence"
+        }
+      }
+    },
+    {
+      "name": "unknown result field",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Unknown/missing object key"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "RESULT: closed field shape"
+        }
+      }
+    },
+    {
+      "name": "unmeasured table count wrong",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Field fixture: Field rowCounts: Field note_revisions: Constant mismatch"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE: fixture rows"
+        }
+      }
+    },
+    {
+      "name": "background terminal fragment without recorded submit allowed",
+      "expected_acceptance": true,
+      "outcomes": {
+        "controller": {
+          "accepted": true
+        },
+        "analysis": {
+          "accepted": true,
+          "save_count": 90,
+          "segments_per_sample": 12
+        }
+      }
+    },
+    {
+      "name": "recorded background submit without terminal rejected",
+      "expected_acceptance": false,
+      "outcomes": {
+        "controller": {
+          "accepted": false,
+          "error_type": "AssertionError",
+          "error": "Recorded writer submit missing terminal"
+        },
+        "analysis": {
+          "accepted": false,
+          "error_type": "ValueError",
+          "error": "IDLE: submitted task lacks unique exit"
+        }
+      }
+    },
+    {
+      "name": "different-thread enqueue interleave accepted",
+      "expected_acceptance": true,
+      "outcomes": {
+        "controller": {
+          "accepted": true
+        },
+        "analysis": {
+          "accepted": true,
+          "save_count": 90,
+          "segments_per_sample": 12
+        }
+      }
+    },
+    {
+      "name": "cancelled background read fragment kept without invented page completion",
+      "expected_acceptance": true,
+      "outcomes": {
+        "controller": {
+          "accepted": true
+        },
+        "analysis": {
+          "accepted": true,
+          "save_count": 90,
+          "segments_per_sample": 12
+        }
+      }
+    }
+  ]
+}

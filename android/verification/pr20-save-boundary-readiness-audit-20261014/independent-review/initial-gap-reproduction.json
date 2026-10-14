@@ -1,0 +1,38 @@
+{
+  "scope": "SYNTHETIC_REJECTION_AUDIT_NOT_NATIVE",
+  "controller_files": {
+    "markers.py": "ba30f5c40fe393141fb1505239b60963b5d97ae2b4ede811b85f73224187d842",
+    "check_offline.py": "934eb25067ce94bc4118e2397de67a3304c69b15eab3d99c0e70a98553be96e8",
+    "marker-contract.template.json": "9b31ab109dd43482cbc24a4ba769d569563e1aadd0a66eb5983888f8e8a1b023"
+  },
+  "synthetic_fixture_accepted": true,
+  "synthetic_author_stages": [
+    "save-request",
+    "writer-submit",
+    "writer-run-enter",
+    "room-begin-enter",
+    "sqlite-begin-enter",
+    "sqlite-begin-exit",
+    "room-begin-exit",
+    "save-writer-acquired",
+    "save-head-read",
+    "save-head-written",
+    "save-revision-written",
+    "save-receipt-written",
+    "room-success-enter",
+    "sqlite-success-enter",
+    "sqlite-success-exit",
+    "room-success-exit",
+    "room-end-enter",
+    "sqlite-end-enter",
+    "sqlite-end-exit",
+    "room-end-exit",
+    "save-returned",
+    "writer-run-exit"
+  ],
+  "synthetic_missing_real_author_stages": [],
+  "synthetic_direct_control_stages": [
+    "direct-start"
+  ],
+  "native_executions": 0
+}

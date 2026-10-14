@@ -1,0 +1,87 @@
+{
+  "status": "UNBOUND_INDEPENDENT_REVIEW_CANDIDATE",
+  "source_git": "4f41a501127dbed6dbef3519f93233a105b5d618",
+  "offline_checks": "offline-check-10/preflight.json",
+  "files": [
+    {
+      "file": "PLAN.template.md",
+      "bytes": 5493,
+      "sha256": "6572c9e87a4767586875154f78f70eb4660d76c3577a01cb1da0155d3350a1c9"
+    },
+    {
+      "file": "README.md",
+      "bytes": 1763,
+      "sha256": "b733984e628ef98bd673fa657d7b9fa672d4d52853742eaf2978a2e8f75c40c2"
+    },
+    {
+      "file": "authorization.json",
+      "bytes": 741,
+      "sha256": "addd994a3d4790359f80303368dfd5d385499c5d55be8cf0ea1e48a98eb3d577"
+    },
+    {
+      "file": "bind_control.py",
+      "bytes": 2084,
+      "sha256": "924576dfae10bb73ad39f702fceb94d6b46fff22bdf887260052b7fe22cfc800"
+    },
+    {
+      "file": "check_offline.py",
+      "bytes": 37152,
+      "sha256": "0456bc5ccd5896d89c385a33e7fa7f1a9442f73e8c99921aaffb8d5ba358172c"
+    },
+    {
+      "file": "cleanup.py",
+      "bytes": 4068,
+      "sha256": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576"
+    },
+    {
+      "file": "freeze_readiness.py",
+      "bytes": 2961,
+      "sha256": "a04055c0eb5c4a6ae2b01d3a9459d1f905f28a6293b859cec6d6b4afcad1f2e5"
+    },
+    {
+      "file": "marker-contract.template.json",
+      "bytes": 21256,
+      "sha256": "a596c9cd02d27fde1b5b9103eb231cf0320f5330ffd6838324f39e04e9a82bec"
+    },
+    {
+      "file": "markers.py",
+      "bytes": 11577,
+      "sha256": "d27e19a7ae5b090436b8e70d5a2d914119e343eeb40e01352359d27f30215857"
+    },
+    {
+      "file": "method-plan.template.json",
+      "bytes": 8624,
+      "sha256": "df8b176df3fcae60fae4d0ec8fb0a106eb04413d061cd98804a85338e9a7993d"
+    },
+    {
+      "file": "original-protocol.json",
+      "bytes": 1942,
+      "sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+    },
+    {
+      "file": "package.py",
+      "bytes": 8380,
+      "sha256": "635da20910a0fc65cbfe5113f4147ca1333be01cfe851ee8b8608f30ac4c6a2a"
+    },
+    {
+      "file": "prepare_sources.py",
+      "bytes": 1980,
+      "sha256": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516"
+    },
+    {
+      "file": "run.py",
+      "bytes": 39057,
+      "sha256": "48be5c66c150884138bb78ea8959b4b1578c3d325fbdd139405904134a34571a"
+    },
+    {
+      "file": "size_bounds.py",
+      "bytes": 2809,
+      "sha256": "3eca77783dcbffb707f69e2e5e41600d286157c7db57cba882a773fe0282e10a"
+    },
+    {
+      "file": "workflow.proposed.yml",
+      "bytes": 7217,
+      "sha256": "785c1b6adac26b99c87a38d547e34b619afe23e543da221e7112143d19e33bfe"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "kind": "STATIC_SCHEMA_WORST_SHAPE_NOT_NATIVE",
+  "methods": [
+    {
+      "ordinal": 1,
+      "per_marker_upper_bytes": {},
+      "raw_framed_upper_bytes": 16384,
+      "compact_records_upper_bytes": 3,
+      "forwarded_official_log_upper_bytes": 0
+    },
+    {
+      "ordinal": 2,
+      "per_marker_upper_bytes": {},
+      "raw_framed_upper_bytes": 16384,
+      "compact_records_upper_bytes": 3,
+      "forwarded_official_log_upper_bytes": 0
+    },
+    {
+      "ordinal": 3,
+      "per_marker_upper_bytes": {},
+      "raw_framed_upper_bytes": 16384,
+      "compact_records_upper_bytes": 3,
+      "forwarded_official_log_upper_bytes": 0
+    },
+    {
+      "ordinal": 4,
+      "per_marker_upper_bytes": {},
+      "raw_framed_upper_bytes": 16384,
+      "compact_records_upper_bytes": 3,
+      "forwarded_official_log_upper_bytes": 0
+    },
+    {
+      "ordinal": 5,
+      "per_marker_upper_bytes": {},
+      "raw_framed_upper_bytes": 16384,
+      "compact_records_upper_bytes": 3,
+      "forwarded_official_log_upper_bytes": 0
+    },
+    {
+      "ordinal": 6,
+      "per_marker_upper_bytes": {},
+      "raw_framed_upper_bytes": 16384,
+      "compact_records_upper_bytes": 3,
+      "forwarded_official_log_upper_bytes": 0
+    },
+    {
+      "ordinal": 7,
+      "per_marker_upper_bytes": {},
+      "raw_framed_upper_bytes": 16384,
+      "compact_records_upper_bytes": 3,
+      "forwarded_official_log_upper_bytes": 0
+    },
+    {
+      "ordinal": 8,
+      "per_marker_upper_bytes": {},
+      "raw_framed_upper_bytes": 16384,
+      "compact_records_upper_bytes": 3,
+      "forwarded_official_log_upper_bytes": 0
+    },
+    {
+      "ordinal": 9,
+      "per_marker_upper_bytes": {},
+      "raw_framed_upper_bytes": 16384,
+      "compact_records_upper_bytes": 3,
+      "forwarded_official_log_upper_bytes": 0
+    },
+    {
+      "ordinal": 10,
+      "per_marker_upper_bytes": {
+        "LIBRARY_SAVE_BOUNDARY_RESULT": 7928,
+        "LIBRARY_SAVE_BOUNDARY_EVENTS": 24818,
+        "LIBRARY_SAVE_BOUNDARY_READS": 18578,
+        "LIBRARY_SAVE_BOUNDARY_END": 170
+      },
+      "raw_framed_upper_bytes": 4506061,
+      "compact_records_upper_bytes": 4461941,
+      "forwarded_official_log_upper_bytes": 4931709
+    }
+  ],
+  "raw_plus_records_bytes": 9115485,
+  "official_record_stream_bytes": 4931709,
+  "total_artifact_limit_bytes": 20971520,
+  "note": "Only bounded diagnostic payloads are estimated. Build/dependency/source/host/cleanup text needs separate reserve; packager always checks real total and never truncates."
+}
