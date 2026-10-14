@@ -1,13 +1,13 @@
 {
-  "approved": false,
+  "approved": true,
   "scope": "DIAGNOSTIC_ONLY",
-  "plan_git": "UNBOUND",
-  "approved_plan_sha256": "UNBOUND",
-  "source_spec_sha256": "UNBOUND",
-  "method_plan_sha256": "UNBOUND",
-  "original_protocol_sha256": "UNBOUND",
-  "marker_contract_sha256": "UNBOUND",
-  "prepare_sources_sha256": "UNBOUND",
+  "plan_git": "a69c173c16bd8a434cc1eab9ef8ff2ad56070c19",
+  "approved_plan_sha256": "bd4da8e0d92fd1c90a524c2a7234ea416a0cbebe5b4f27867264dffa47a5d44c",
+  "source_spec_sha256": "d09bcba6e4d726cb233170213177f39d6e2bf49f94f40284283c7da32cdfe2c6",
+  "method_plan_sha256": "cf5800f39b55524ccded154d72ab94421323b34861b8dea3d03e454c3d07117a",
+  "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+  "marker_contract_sha256": "a5b97b1f50633b88275aeeaad3cde686cda8022d385953a3e2020a471abcf0e9",
+  "prepare_sources_sha256": "12b357208be7e3405af34d1e615a94f59b522cada43a15e5060b7ec58669f516",
   "phase_cutoff_minutes": {
     "setup": 30,
     "data": 45,
@@ -18,5 +18,5 @@
   "new_permissions": false,
   "automatic_retry": false,
   "authorization_scope": "Root-authorized bounded one-source save-boundary diagnostic; not formal acceptance. Inactive template; root must bind source/readiness/authorization and one prep-parent attempt1 activation.",
-  "status": "UNBOUND"
+  "status": "FROZEN"
 }

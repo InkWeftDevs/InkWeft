@@ -20,7 +20,7 @@ from collections import Counter
 HERE = Path(__file__).resolve().parent
 CONTROL = HERE.parents[1]
 FROZEN_RELATIVE = 'android/verification/pr20-save-boundary-uuid-20261014'
-FROZEN_SOURCE_SPEC_SHA256 = 'UNBOUND'
+FROZEN_SOURCE_SPEC_SHA256 = 'd09bcba6e4d726cb233170213177f39d6e2bf49f94f40284283c7da32cdfe2c6'
 assert re.fullmatch(r'[0-9a-f]{64}', FROZEN_SOURCE_SPEC_SHA256), 'Finalize source identity before execution'
 FROZEN = CONTROL / FROZEN_RELATIVE
 ROOT = Path(os.environ['KVM_ONCE'])
