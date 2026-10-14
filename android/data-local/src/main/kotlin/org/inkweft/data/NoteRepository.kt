@@ -20,13 +20,21 @@ class NoteRepository(private val db:NoteDatabase,private val fault:(NoteFaultPoi
 
     suspend fun save(command:SaveNote):SaveResult {
         val stage=saveStageObserver
-        return if(stage==null)saveTransaction(command,null)else tracedSave(command,stage)
+        val boundary=db.saveBoundaryDiagnostics
+        return if(stage==null&&boundary==null)saveTransaction(command,null)else tracedSave(command,stage,boundary)
     }
-    private suspend fun tracedSave(command:SaveNote,stage:(String)->Unit):SaveResult {
-        stage("waiting-writer")
-        val result=saveTransaction(command,stage)
-        stage("transaction-returned")
-        return result
+    private suspend fun tracedSave(command:SaveNote,stage:((String)->Unit)?,boundary:SaveBoundaryDiagnostics?):SaveResult {
+        boundary?.point("save-request")
+        stage?.invoke("waiting-writer")
+        try {
+            val result=saveTransaction(command){event->stage?.invoke(event);boundary?.point("save-$event")}
+            boundary?.point("save-returned")
+            stage?.invoke("transaction-returned")
+            return result
+        } catch(failure:Throwable) {
+            boundary?.point("save-failed")
+            throw failure
+        }
     }
     private suspend fun saveTransaction(command:SaveNote,stage:((String)->Unit)?):SaveResult=db.withTransaction {
         stage?.invoke("writer-acquired")

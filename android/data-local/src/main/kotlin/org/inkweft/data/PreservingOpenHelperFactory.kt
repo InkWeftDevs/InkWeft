@@ -9,7 +9,7 @@ import java.io.File
 import java.io.RandomAccessFile
 
 /** Never let the framework's default corruption handler delete an author DB. */
-internal class PreservingOpenHelperFactory : SupportSQLiteOpenHelper.Factory {
+internal class PreservingOpenHelperFactory(private val diagnostics: SaveBoundaryDiagnostics? = null) : SupportSQLiteOpenHelper.Factory {
     override fun create(configuration: SupportSQLiteOpenHelper.Configuration): SupportSQLiteOpenHelper {
         val original = configuration.callback
         val callback = object : SupportSQLiteOpenHelper.Callback(original.version) {
@@ -36,11 +36,23 @@ internal class PreservingOpenHelperFactory : SupportSQLiteOpenHelper.Factory {
         val helper = RequerySQLiteOpenHelperFactory().create(config)
         return object : SupportSQLiteOpenHelper by helper {
             @Volatile private var opened = false
+            private var tracedDelegate: SupportSQLiteDatabase? = null
+            private var tracedDatabase: SupportSQLiteDatabase? = null
             override val databaseName: String? get() = configuration.name
             override val writableDatabase: SupportSQLiteDatabase get() = open(true)
             override val readableDatabase: SupportSQLiteDatabase get() = open(false)
             private fun open(writable: Boolean): SupportSQLiteDatabase {
-                fun read() = if (writable) helper.writableDatabase else helper.readableDatabase
+                fun read(): SupportSQLiteDatabase {
+                    val database = if (writable) helper.writableDatabase else helper.readableDatabase
+                    val trace = diagnostics ?: return database
+                    return synchronized(this) {
+                        if (tracedDelegate !== database) {
+                            tracedDelegate = database
+                            tracedDatabase = trace.database(database)
+                        }
+                        checkNotNull(tracedDatabase)
+                    }
+                }
                 if (opened) return read()
                 return synchronized(openLock) {
                     if (opened || name == null) read().also { opened = true }
@@ -59,7 +71,10 @@ internal class PreservingOpenHelperFactory : SupportSQLiteOpenHelper.Factory {
                     }
                 }
             }
-            override fun close() = synchronized(openLock) { helper.close(); opened = false }
+            override fun close() = synchronized(openLock) {
+                helper.close(); opened = false
+                synchronized(this) { tracedDelegate = null; tracedDatabase = null }
+            }
         }
     }
 
