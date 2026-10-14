@@ -14,7 +14,7 @@ jobs:
   causal:
     name: DIAGNOSTIC_ONLY one source / one data APK / eight proposed methods
     if: github.event_name == 'push' && github.ref == 'refs/heads/codex/kvm-pr20-gc-save-20261014' && github.event.created ==
-      false && github.event.before == '0000000000000000000000000000000000000000' && github.run_attempt == 1
+      false && github.event.before == '083a892133d818cf364865d3ee3edc1fdb6413c0' && github.run_attempt == 1
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
