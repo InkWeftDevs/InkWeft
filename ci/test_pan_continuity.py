@@ -1,13 +1,15 @@
 """Offline inventory, unchanged-runner selection and strict control-result guards."""
 import copy
+import hashlib
 import json
 from pathlib import Path
+import subprocess
 import tempfile
 import unittest
 from unittest.mock import patch
 
 import pan_continuity
-from pan_continuity import PLAN, ROOT, classify, resolve_fixed_commit, selections, validate_manifest, validate_plan
+from pan_continuity import PLAN, ROOT, classify, classify_formatted_positive, observe_fixed, resolve_fixed_commit, selections, valid_runner_summary, validate_manifest, validate_plan
 from test_six_batch_workflow import run_regression
 
 
@@ -33,14 +35,18 @@ class PanContinuityTest(unittest.TestCase):
                 validate_plan(plan)
 
     def test_api_created_commit_requires_exact_tree_baseline_and_three_files(self):
-        fixed = "a" * 40  # Different metadata/SHA from the local informational commit.
+        fixed = PLAN["published_fixed_commit"]
+        self.assertNotEqual(fixed, PLAN["local_fixed_commit"])
         responses = {
-            ("rev-parse", "HEAD^"): fixed,
+            ("rev-parse", fixed + "^{commit}"): fixed,
+            ("merge-base", "--is-ancestor", fixed, "HEAD"): "",
             ("rev-parse", fixed + "^{tree}"): PLAN["fixed_tree"],
             ("rev-parse", fixed + "^"): PLAN["baseline_commit"],
             ("diff", "--name-only", PLAN["baseline_commit"], fixed): "\n".join(PLAN["production_files"] + ["android/app/src/androidTest/java/org/inkweft/app/StreamedPanContinuityTest.kt"]),
         }
         def git(*args):
+            if isinstance(responses[args], Exception):
+                raise responses[args]
             return (responses[args] + "\n").encode()
         with patch("pan_continuity.git", side_effect=git):
             self.assertEqual(fixed, resolve_fixed_commit())
@@ -52,6 +58,9 @@ class PanContinuityTest(unittest.TestCase):
                 with self.assertRaises(AssertionError):
                     resolve_fixed_commit()
                 responses[key] = original
+            responses[("merge-base", "--is-ancestor", fixed, "HEAD")] = subprocess.CalledProcessError(1, "git merge-base")
+            with self.assertRaises(subprocess.CalledProcessError):
+                resolve_fixed_commit()
 
     def test_unchanged_runner_executes_only_the_eleven_methods_once(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -104,6 +113,55 @@ class PanContinuityTest(unittest.TestCase):
             self.assertNotIn(text, pan)
         self.assertEqual(1, pan.count("uses: actions/upload-artifact@"))
         self.assertIn("path: ${{ runner.temp }}/inkweft-pan/upload/", pan)
+        self.assertIn("fetch-depth: 4", pan)
+        self.assertIn('["shell", "am", "instrument", "-w", "-r", "-e", "class", PLAN["negative_control"]', (ROOT / "ci/pan_continuity.py").read_text())
+
+    def test_actual_run_38887941132_formatted_logs_all_pass(self):
+        fixture = json.loads((ROOT / "ci/fixtures/pan_continuity_run1.json").read_text())
+        self.assertEqual("5faeb6e0150e2e8130c7025986bba4fde025f080e016cd96f9ed7188e0d3892d", fixture["artifact_sha256"])
+        self.assertEqual(selections(), [case["selection"] for case in fixture["cases"]])
+        self.assertTrue(valid_runner_summary(fixture["runner_summary"]))
+        for case in fixture["cases"]:
+            self.assertEqual(case["raw_sha256"], hashlib.sha256(case["raw"].encode()).hexdigest())
+            self.assertEqual("PASS", classify_formatted_positive(case["raw"], case["selection"], 0))
+            # These historical -w logs never contained raw -r protocol fields.
+            self.assertEqual("INFRASTRUCTURE_OR_INCOMPLETE", classify(case["raw"], case["selection"], 0))
+
+    def test_formatted_positive_rejects_missing_duplicate_wrong_or_failed_results(self):
+        fixture = json.loads((ROOT / "ci/fixtures/pan_continuity_run1.json").read_text())
+        case = fixture["cases"][0]
+        raw, selection = case["raw"], case["selection"]
+        for bad in ["", raw.replace("OK (1 test)", "OK (0 tests)"), raw.replace("OK (1 test)", "OK (2 tests)"),
+                    raw + "OK (1 test)\n", raw.replace("StreamedPanContinuityTest:", "WrongTest:"),
+                    raw.replace("Time:", "Incomplete:"), raw.replace(":.", ":.."), raw + "RUNNER_TIMEOUT",
+                    raw.replace("OK (1 test)", "FAILURES!!!\nTests run: 1, Failures: 1")]:
+            self.assertNotEqual("PASS", classify_formatted_positive(bad, selection, 0))
+        self.assertNotEqual("PASS", classify_formatted_positive(raw, selection, 1))
+        diagnostic = fixture["cases"][8]
+        self.assertNotEqual("PASS", classify_formatted_positive(diagnostic["raw"].replace("STREAMED_FRAME_STAGE {", "STREAMED_FRAME_STAGE INVALID{"), diagnostic["selection"], 0))
+        for key, value in [("passed", 10), ("executed", 10), ("diagnostic_rounds", 3), ("failures", [selection]), ("infrastructure", ["adb failure"])]:
+            changed = dict(fixture["runner_summary"], **{key: value})
+            self.assertFalse(valid_runner_summary(changed))
+
+    def test_formatted_positive_requires_exact_round_selection_and_source_binding(self):
+        fixture = json.loads((ROOT / "ci/fixtures/pan_continuity_run1.json").read_text())
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            control = root / "control"
+            control.mkdir()
+            (control / "source.json").write_text(json.dumps({"fixed_commit": fixture["fixed_commit"]}))
+            for index, case in enumerate(fixture["cases"]):
+                out = root / "android/build/evidence" / f"app-{index:03d}"
+                out.mkdir(parents=True)
+                (out / "selection.txt").write_text(case["selection"])
+                (out / "instrumentation.txt").write_text(case["raw"])
+                (out / "round.json").write_text(json.dumps(case["round"]))
+            with patch.multiple(pan_continuity, ROOT=root, OUT=control, create=True):
+                self.assertTrue(all(case["status"] == "PASS" for case in observe_fixed()))
+                path = root / "android/build/evidence/app-000/round.json"
+                for key, value in [("round", 2), ("source", "wrong"), ("selection", selections()[1])]:
+                    path.write_text(json.dumps(dict(fixture["cases"][0]["round"], **{key: value})))
+                    self.assertNotEqual("PASS", observe_fixed()[0]["status"])
 
     def test_instrumentation_manifest_requires_one_exact_runner_and_target(self):
         xml = ('    E: instrumentation (line=1)\n'

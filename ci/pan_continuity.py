@@ -78,6 +78,41 @@ def classify(raw, selection, returncode, negative=False):
     return "EXPECTED_ASSERTION_FAILURE" if negative and expected else "FAIL"
 
 
+def classify_formatted_positive(raw, selection, returncode):
+    """The unchanged runner uses am instrument -w, whose default output is JUnit text.
+
+    Method identity is independently bound by selection.txt and round.json in observe_fixed.
+    Only the exact class, one completed test and its known JSON diagnostic streams are accepted.
+    """
+    cls, _ = selection.split("#")
+    if returncode != 0 or any(token in raw for token in ["RUNNER_TIMEOUT", "INSTRUMENTATION_FAILED", "FAILURES!!!"]):
+        return "INFRASTRUCTURE_OR_INCOMPLETE"
+    match = re.fullmatch(r"\s*" + re.escape(cls) + r":(.*?)\n\s*Time: [0-9]+(?:\.[0-9]+)?\s*\n\s*OK \(1 tests?\)\s*", raw, re.S)
+    if not match:
+        return "INFRASTRUCTURE_OR_INCOMPLETE"
+    lines = match[1].strip().splitlines()
+    if not lines or lines[-1] != ".":
+        return "INFRASTRUCTURE_OR_INCOMPLETE"
+    marker = {"org.inkweft.app.StreamedInkRasterTest": "STREAMED_FRAME_STAGE ",
+              "org.inkweft.app.LayerRasterBudgetTest": "LAYER_RASTER_EVIDENCE "}.get(cls)
+    for line in lines[:-1]:
+        if marker is None or not line.startswith(marker):
+            return "INFRASTRUCTURE_OR_INCOMPLETE"
+        try:
+            if not isinstance(json.loads(line[len(marker):]), dict):
+                return "INFRASTRUCTURE_OR_INCOMPLETE"
+        except ValueError:
+            return "INFRASTRUCTURE_OR_INCOMPLETE"
+    return "PASS"
+
+
+def valid_runner_summary(summary):
+    expected = {"expected": 11, "planned_total": 11, "distinct_methods": 11, "diagnostic_rounds": 1,
+                "executed": 11, "stopped_after_first_failure": False, "shard_index": 0, "shard_count": 1,
+                "passed": 11, "failures": [], "infrastructure": []}
+    return all(summary.get(key) == value for key, value in expected.items())
+
+
 def validate_manifest(xmltree):
     blocks = re.findall(r'^    E: instrumentation[^\n]*\n((?:      [^\n]*\n)*)', xmltree + '\n', re.M)
     assert len(blocks) == 1, "Expected one instrumentation element"
@@ -129,9 +164,11 @@ def git(*args):
 
 
 def resolve_fixed_commit():
-    # API publication may change commit author/timestamps, but never the reviewed tree or parent.
-    fixed = git("rev-parse", "HEAD^").decode().strip()
+    # Bind the already-published fix explicitly, so a later CI-only repair can be its descendant.
+    fixed = PLAN["published_fixed_commit"]
     assert re.fullmatch(r"[0-9a-f]{40}", fixed)
+    assert git("rev-parse", fixed + "^{commit}").decode().strip() == fixed
+    git("merge-base", "--is-ancestor", fixed, "HEAD")
     assert git("rev-parse", fixed + "^{tree}").decode().strip() == PLAN["fixed_tree"], "Wrong fixed tree"
     assert git("rev-parse", fixed + "^").decode().strip() == PLAN["baseline_commit"], "Wrong original baseline parent"
     changed = git("diff", "--name-only", PLAN["baseline_commit"], fixed).decode().splitlines()
@@ -252,12 +289,19 @@ def installed(name):
 
 def observe_fixed():
     cases = ROOT / "android/build/evidence"
+    fixed = json.loads((OUT / "source.json").read_text())["fixed_commit"]
     observed = []
     for index, selection in enumerate(selections()):
         case = cases / f"app-{index:03d}"
         actual = (case / "selection.txt").read_text() if (case / "selection.txt").exists() else None
         raw = (case / "instrumentation.txt").read_text() if (case / "instrumentation.txt").exists() else ""
-        observed.append({"selection": selection, "status": classify(raw, selection, 0) if actual == selection else "NOT_RUN"})
+        try:
+            round_info = json.loads((case / "round.json").read_text())
+        except (FileNotFoundError, ValueError):
+            round_info = {}
+        bound = actual == selection and round_info == {"round": 1, "selection": selection, "source": fixed, "timeout_seconds": 180}
+        status = classify_formatted_positive(raw, selection, 0) if bound else ("NOT_RUN" if not raw else "INFRASTRUCTURE_OR_INCOMPLETE")
+        observed.append({"selection": selection, "status": status})
     return observed
 
 
@@ -281,7 +325,11 @@ def methods():
         result, _ = command([sys.executable, "ci/run_android_tests.py", "--shard-index", "0", "--shard-count", "1"], "fixed-runner.log", 1800, check=False, cwd=ROOT, env=env)
     finally:
         observed = observe_fixed()
-        summary = {"fixed": "PASS" if result == 0 and all(item["status"] == "PASS" for item in observed) else "FAIL_OR_INCOMPLETE",
+        try:
+            runner_summary = json.loads((cases / "app-summary.json").read_text())
+        except (FileNotFoundError, ValueError):
+            runner_summary = {}
+        summary = {"fixed": "PASS" if result == 0 and valid_runner_summary(runner_summary) and all(item["status"] == "PASS" for item in observed) else "FAIL_OR_INCOMPLETE",
                    "fixed_methods": observed, "negative_control": "NOT_RUN"}
         write(OUT / "summary.json", summary)
     if any(item["status"] in ["NOT_RUN", "INFRASTRUCTURE_OR_INCOMPLETE"] for item in observed):
@@ -295,7 +343,7 @@ def methods():
         (OUT / "negative-setup.txt").write_text("\n".join(setup))
     code = None
     try:
-        code, _ = command(ADB + ["shell", "am", "instrument", "-w", "-e", "class", PLAN["negative_control"], RUNNER], "negative-instrumentation.txt", 180, check=False)
+        code, _ = command(ADB + ["shell", "am", "instrument", "-w", "-r", "-e", "class", PLAN["negative_control"], RUNNER], "negative-instrumentation.txt", 180, check=False)
     finally:
         path = OUT / "negative-instrumentation.txt"
         raw = path.read_text(errors="replace") if path.exists() else ""

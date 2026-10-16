@@ -1,0 +1,141 @@
+{
+  "run_id": "38887941132",
+  "artifact_sha256": "5faeb6e0150e2e8130c7025986bba4fde025f080e016cd96f9ed7188e0d3892d",
+  "fixed_commit": "defb97eb9954d756afb983b79ab56574a14f8dd3",
+  "runner_summary": {
+    "expected": 11,
+    "planned_total": 11,
+    "distinct_methods": 11,
+    "diagnostic_rounds": 1,
+    "executed": 11,
+    "stopped_after_first_failure": false,
+    "shard_index": 0,
+    "shard_count": 1,
+    "passed": 11,
+    "failures": [],
+    "infrastructure": []
+  },
+  "cases": [
+    {
+      "selection": "org.inkweft.app.StreamedPanContinuityTest#attachedLayeredInkStaysVisibleDuringMoveBeforeReleaseAndWindowRefresh",
+      "round": {
+        "round": 1,
+        "selection": "org.inkweft.app.StreamedPanContinuityTest#attachedLayeredInkStaysVisibleDuringMoveBeforeReleaseAndWindowRefresh",
+        "source": "defb97eb9954d756afb983b79ab56574a14f8dd3",
+        "timeout_seconds": 180
+      },
+      "raw_sha256": "71a07fbcd1cf5e557d2261bb6bc82f7cba1fcb8802dcaea85636865f23a20690",
+      "raw": "\norg.inkweft.app.StreamedPanContinuityTest:.\n\nTime: 2.464\n\nOK (1 test)\n\n\n"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedPanContinuityTest#pendingPanZoomAndCroppedResizeProjectFromTheLastCompletedDimensions",
+      "round": {
+        "round": 1,
+        "selection": "org.inkweft.app.StreamedPanContinuityTest#pendingPanZoomAndCroppedResizeProjectFromTheLastCompletedDimensions",
+        "source": "defb97eb9954d756afb983b79ab56574a14f8dd3",
+        "timeout_seconds": 180
+      },
+      "raw_sha256": "81f1925ee4898a29bf329488f5d52440a0d90a2efaaf607b617ccd29be839892",
+      "raw": "\norg.inkweft.app.StreamedPanContinuityTest:.\n\nTime: 2.156\n\nOK (1 test)\n\n\n"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedPanContinuityTest#changedRenderIdentityNeverReplaysOldInkWhileReplacementIsHeld",
+      "round": {
+        "round": 1,
+        "selection": "org.inkweft.app.StreamedPanContinuityTest#changedRenderIdentityNeverReplaysOldInkWhileReplacementIsHeld",
+        "source": "defb97eb9954d756afb983b79ab56574a14f8dd3",
+        "timeout_seconds": 180
+      },
+      "raw_sha256": "1d8ac3ff1cbc90d529f24d113345a8d9b2310cb01f55b64a58c1cd94015748de",
+      "raw": "\norg.inkweft.app.StreamedPanContinuityTest:.\n\nTime: 2.314\n\nOK (1 test)\n\n\n"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedPanContinuityTest#editingWindowOnlyChangeDrawsAnAppendPreviewExactlyOnce",
+      "round": {
+        "round": 1,
+        "selection": "org.inkweft.app.StreamedPanContinuityTest#editingWindowOnlyChangeDrawsAnAppendPreviewExactlyOnce",
+        "source": "defb97eb9954d756afb983b79ab56574a14f8dd3",
+        "timeout_seconds": 180
+      },
+      "raw_sha256": "5ec4d51b668bfbb35baae13a06553c81c4d34e08c1b198c0ccda3a0b394d980d",
+      "raw": "\norg.inkweft.app.StreamedPanContinuityTest:.\n\nTime: 2.104\n\nOK (1 test)\n\n\n"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedPanContinuityTest#failedBoundsRefreshKeepsPreviewIncomplete",
+      "round": {
+        "round": 1,
+        "selection": "org.inkweft.app.StreamedPanContinuityTest#failedBoundsRefreshKeepsPreviewIncomplete",
+        "source": "defb97eb9954d756afb983b79ab56574a14f8dd3",
+        "timeout_seconds": 180
+      },
+      "raw_sha256": "402d5659f254526461a4be34082a8f5c81b48742d5c03d4ca248f29a5d82d0b0",
+      "raw": "\norg.inkweft.app.StreamedPanContinuityTest:.\n\nTime: 2.011\n\nOK (1 test)\n\n\n"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedPanContinuityTest#clearDuringSupersededPanReleasesWorkersAndCannotPublishStaleLayout",
+      "round": {
+        "round": 1,
+        "selection": "org.inkweft.app.StreamedPanContinuityTest#clearDuringSupersededPanReleasesWorkersAndCannotPublishStaleLayout",
+        "source": "defb97eb9954d756afb983b79ab56574a14f8dd3",
+        "timeout_seconds": 180
+      },
+      "raw_sha256": "aa1fdbb2d51001dcdb04c595e5bd6b03487451b8963ca292aba62d13a4744217",
+      "raw": "\norg.inkweft.app.StreamedPanContinuityTest:.\n\nTime: 2.123\n\nOK (1 test)\n\n\n"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedInkRasterTest#clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+      "round": {
+        "round": 1,
+        "selection": "org.inkweft.app.StreamedInkRasterTest#clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+        "source": "defb97eb9954d756afb983b79ab56574a14f8dd3",
+        "timeout_seconds": 180
+      },
+      "raw_sha256": "bf4d59e54e02cf65262b99c3df700df87e3158d13ded4a9401608536a52684f4",
+      "raw": "\norg.inkweft.app.StreamedInkRasterTest:.\n\nTime: 0.233\n\nOK (1 test)\n\n\n"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+      "round": {
+        "round": 1,
+        "selection": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+        "source": "defb97eb9954d756afb983b79ab56574a14f8dd3",
+        "timeout_seconds": 180
+      },
+      "raw_sha256": "a4b809880573e57bbd62c8d55884a73c52f1107f91a3e17f1f028f31b8fd293e",
+      "raw": "\norg.inkweft.app.StreamedInkRasterTest:.\n\nTime: 0.77\n\nOK (1 test)\n\n\n"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "round": {
+        "round": 1,
+        "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+        "source": "defb97eb9954d756afb983b79ab56574a14f8dd3",
+        "timeout_seconds": 180
+      },
+      "raw_sha256": "1d518829f7085818519455cfb5679d10559e7adcc18512bb39f435775284840f",
+      "raw": "\norg.inkweft.app.StreamedInkRasterTest:STREAMED_FRAME_STAGE {\"case\":\"original-dense\",\"stage\":\"fixture-start\",\"elapsedMs\":109.168332,\"fixtureStrokes\":1201,\"fixturePoints\":76802,\"frameDeadlineMs\":30000}\nSTREAMED_FRAME_STAGE {\"case\":\"original-dense\",\"stage\":\"fixture-complete\",\"elapsedMs\":714.750993,\"fixtureStrokes\":1201,\"fixturePoints\":76802,\"frameDeadlineMs\":30000}\nSTREAMED_FRAME_STAGE {\"windowStrokes\":128,\"windowPoints\":8192,\"case\":\"original-dense\",\"stage\":\"editor-window-complete\",\"elapsedMs\":1411.206154,\"fixtureStrokes\":1201,\"fixturePoints\":76802,\"frameDeadlineMs\":30000}\nSTREAMED_FRAME_STAGE {\"case\":\"original-dense\",\"stage\":\"frame-start\",\"elapsedMs\":1412.502291,\"fixtureStrokes\":1201,\"fixturePoints\":76802,\"frameDeadlineMs\":30000}\nSTREAMED_FRAME_STAGE {\"frameElapsedMs\":1306.806906,\"snapshotReads\":[{\"frameElapsedMs\":125.247415,\"rows\":256,\"points\":16384,\"freezeMs\":11.565443,\"decodeMs\":16.613109},{\"frameElapsedMs\":452.77756,\"rows\":256,\"points\":16384,\"freezeMs\":10.465861,\"decodeMs\":14.330271},{\"frameElapsedMs\":709.081755,\"rows\":256,\"points\":16384,\"freezeMs\":9.973043,\"decodeMs\":13.865714},{\"frameElapsedMs\":938.273368,\"rows\":256,\"points\":16384,\"freezeMs\":10.2439,\"decodeMs\":14.352463},{\"frameElapsedMs\":1160.934857,\"rows\":177,\"points\":11266,\"freezeMs\":8.626223,\"decodeMs\":17.586982}],\"snapshotRows\":1201,\"changeCallbacks\":1,\"publishedStats\":\"BuildStats(tiles=4, rebuilt=4, decoded=1201, bitmapBytes=800000, metadataMs=63.447621, rasterMs=1222.749209, publicationMs=0.651458, reusedStrokes=0, geometryBytes=1046656, nativeStrokeBuilds=1201)\",\"case\":\"original-dense\",\"stage\":\"frame-complete\",\"elapsedMs\":2718.882912,\"fixtureStrokes\":1201,\"fixturePoints\":76802,\"frameDeadlineMs\":30000}\nSTREAMED_FRAME_STAGE {\"case\":\"original-dense\",\"stage\":\"verified-and-released\",\"elapsedMs\":2720.932484,\"fixtureStrokes\":1201,\"fixturePoints\":76802,\"frameDeadlineMs\":30000}\n.\n\nTime: 2.737\n\nOK (1 test)\n\n\n"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameCrossesBothTheEditorPointWindowAndDatabaseBatchBoundary",
+      "round": {
+        "round": 1,
+        "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameCrossesBothTheEditorPointWindowAndDatabaseBatchBoundary",
+        "source": "defb97eb9954d756afb983b79ab56574a14f8dd3",
+        "timeout_seconds": 180
+      },
+      "raw_sha256": "dba091405220fa4f88f5a685d97812133ab0c7bbf9a058c04a1254c445c9feb3",
+      "raw": "\norg.inkweft.app.StreamedInkRasterTest:STREAMED_FRAME_STAGE {\"case\":\"bounded-two-batch\",\"stage\":\"fixture-start\",\"elapsedMs\":108.039275,\"fixtureStrokes\":258,\"fixturePoints\":8226,\"frameDeadlineMs\":30000}\nSTREAMED_FRAME_STAGE {\"case\":\"bounded-two-batch\",\"stage\":\"fixture-complete\",\"elapsedMs\":282.84909,\"fixtureStrokes\":258,\"fixturePoints\":8226,\"frameDeadlineMs\":30000}\nSTREAMED_FRAME_STAGE {\"windowStrokes\":256,\"windowPoints\":8192,\"case\":\"bounded-two-batch\",\"stage\":\"editor-window-complete\",\"elapsedMs\":523.457961,\"fixtureStrokes\":258,\"fixturePoints\":8226,\"frameDeadlineMs\":30000}\nSTREAMED_FRAME_STAGE {\"case\":\"bounded-two-batch\",\"stage\":\"frame-start\",\"elapsedMs\":524.714705,\"fixtureStrokes\":258,\"fixturePoints\":8226,\"frameDeadlineMs\":30000}\nSTREAMED_FRAME_STAGE {\"frameElapsedMs\":294.87567,\"snapshotReads\":[{\"frameElapsedMs\":66.471026,\"rows\":256,\"points\":8192,\"freezeMs\":11.487986,\"decodeMs\":14.889313},{\"frameElapsedMs\":285.383397,\"rows\":2,\"points\":34,\"freezeMs\":2.727087,\"decodeMs\":0.185506}],\"snapshotRows\":258,\"changeCallbacks\":1,\"publishedStats\":\"BuildStats(tiles=4, rebuilt=4, decoded=258, bitmapBytes=800000, metadataMs=11.997998, rasterMs=273.295369, publicationMs=0.633282, reusedStrokes=0, geometryBytes=658560, nativeStrokeBuilds=258)\",\"case\":\"bounded-two-batch\",\"stage\":\"frame-complete\",\"elapsedMs\":818.985317,\"fixtureStrokes\":258,\"fixturePoints\":8226,\"frameDeadlineMs\":30000}\nSTREAMED_FRAME_STAGE {\"case\":\"bounded-two-batch\",\"stage\":\"verified-and-released\",\"elapsedMs\":820.687202,\"fixtureStrokes\":258,\"fixturePoints\":8226,\"frameDeadlineMs\":30000}\n.\n\nTime: 0.832\n\nOK (1 test)\n\n\n"
+    },
+    {
+      "selection": "org.inkweft.app.LayerRasterBudgetTest#oneFourAndEightLayersDecodeEachVisibleStrokeOnceWithinOnePixelBudget",
+      "round": {
+        "round": 1,
+        "selection": "org.inkweft.app.LayerRasterBudgetTest#oneFourAndEightLayersDecodeEachVisibleStrokeOnceWithinOnePixelBudget",
+        "source": "defb97eb9954d756afb983b79ab56574a14f8dd3",
+        "timeout_seconds": 180
+      },
+      "raw_sha256": "cf519a1be59cca0ee03e11d68730b1840b88ce2bb08f2bb7ce57c193017ff462",
+      "raw": "\norg.inkweft.app.LayerRasterBudgetTest:LAYER_RASTER_EVIDENCE {\"visibleLayers\":1,\"visibleStrokes\":320,\"decodedRows\":320,\"decodedPoints\":640,\"payloadBytes\":44800,\"geometryReads\":2,\"nativeExtentPixels\":3117845,\"inkBitmapBytes\":12471380,\"readyMs\":392.154588,\"softwareDrawP95Ms\":3.261293,\"javaUsedBytes\":27739072,\"processPssKiB\":147039}\nLAYER_RASTER_EVIDENCE {\"visibleLayers\":4,\"visibleStrokes\":320,\"decodedRows\":320,\"decodedPoints\":640,\"payloadBytes\":44800,\"geometryReads\":4,\"nativeExtentPixels\":10530530,\"inkBitmapBytes\":10544352,\"readyMs\":1132.78978,\"softwareDrawP95Ms\":30.037238,\"javaUsedBytes\":31933472,\"processPssKiB\":154887}\nLAYER_RASTER_EVIDENCE {\"visibleLayers\":8,\"visibleStrokes\":320,\"decodedRows\":320,\"decodedPoints\":640,\"payloadBytes\":44800,\"geometryReads\":8,\"nativeExtentPixels\":21061060,\"inkBitmapBytes\":21088704,\"readyMs\":2039.738617,\"softwareDrawP95Ms\":59.558746,\"javaUsedBytes\":21707664,\"processPssKiB\":137075}\n.\n\nTime: 4.132\n\nOK (1 test)\n\n\n"
+    }
+  ]
+}
