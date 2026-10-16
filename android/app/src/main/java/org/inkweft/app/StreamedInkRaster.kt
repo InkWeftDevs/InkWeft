@@ -19,7 +19,12 @@ import kotlin.math.ceil
 import kotlin.math.round
 
 internal data class InkRenderSource(val repository:InkRepository,val page:String,val revision:Long,
-    val committedIds:Set<String>,val authoringRevision:Long?=null,val layerCounts:Map<String,Long>?=null,val appendGeneration:Any?=null)
+    val committedIds:Set<String>,val authoringRevision:Long?=null,val layerCounts:Map<String,Long>?=null,val appendGeneration:Any?=null){
+    // Editing-window IDs are capture acknowledgements, not persisted render content.
+    // Moving the window must not invalidate an otherwise identical visual preview.
+    fun sameContent(other:InkRenderSource)=repository===other.repository&&page==other.page&&revision==other.revision&&
+        authoringRevision==other.authoringRevision&&layerCounts==other.layerCounts&&appendGeneration===other.appendGeneration
+}
 
 /** Immutable tiles are shared between complete frames. A partial replacement never publishes. */
 internal class StreamedInkRaster(private val changed:()->Unit,private val failed:()->Unit){
@@ -52,7 +57,7 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
     private fun compatible(old:Key,next:Key):Boolean = old==next||
         (projection(old,next)&&old.viewport==next.viewport&&next.source.appendGeneration!=null&&old.source.appendGeneration===next.source.appendGeneration&&
         old.source.revision<=next.source.revision&&old.allowed==next.allowed&&old.omitted==next.omitted)
-    private fun previewCompatible(old:Key,next:Key)=old.source==next.source&&old.width==next.width&&old.height==next.height&&old.density==next.density&&
+    private fun previewCompatible(old:Key,next:Key)=old.source.sameContent(next.source)&&old.density==next.density&&
         old.world==next.world&&old.embedded==next.embedded&&old.layer==next.layer&&old.allowed==next.allowed&&old.omitted==next.omitted
     private fun notifyChanged(diagnostic:RasterFrameDiagnostics.Frame?=null)=InkFrameInvalidations.enqueue(changed,diagnostic)
     var frameReady=false;private set
@@ -213,10 +218,10 @@ internal class StreamedInkRaster(private val changed:()->Unit,private val failed
             f.tiles.forEach{canvas.drawBitmap(it.bitmap,null,it.pixels,paint)};frameReady=f.key==key
         }
         if(frameReady){diagnosticFrame?.ready(diagnosticDrawStart);diagnosticFrame=null}
-        if(!frameReady)frame?.takeIf{it.key!=key&&previewCompatible(it.key,key)}?.let{f->
+        if(!frameReady)frame?.takeIf{!compatible(it.key,key)&&previewCompatible(it.key,key)}?.let{f->
             val ratio=(viewport.zoom/f.key.viewport.zoom).toFloat();val dx=((f.key.viewport.centerX-viewport.centerX)*viewport.zoom*density).toFloat();val dy=((f.key.viewport.centerY-viewport.centerY)*viewport.zoom*density).toFloat()
-            f.tiles.forEach{t->canvas.drawBitmap(t.bitmap,null,RectF((t.pixels.left-width/2)*ratio+width/2+dx,(t.pixels.top-height/2)*ratio+height/2+dy,
-                (t.pixels.right-width/2)*ratio+width/2+dx,(t.pixels.bottom-height/2)*ratio+height/2+dy),paint)}
+            f.tiles.forEach{t->canvas.drawBitmap(t.bitmap,null,RectF((t.pixels.left-f.key.width/2)*ratio+width/2+dx,(t.pixels.top-f.key.height/2)*ratio+height/2+dy,
+                (t.pixels.right-f.key.width/2)*ratio+width/2+dx,(t.pixels.bottom-f.key.height/2)*ratio+height/2+dy),paint)}
             // This same-source preview is never a completed frame or a capture acknowledgement.
         }
     }
