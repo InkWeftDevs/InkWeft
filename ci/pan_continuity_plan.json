@@ -1,0 +1,44 @@
+{
+  "mode": "pan",
+  "local_fixed_commit": "d3edb986bf2f965c25160f69701edaf22cfbc3ad",
+  "fixed_tree": "2febc36a2efbec23340ccded797b222d7d7d6eae",
+  "baseline_commit": "3852d6e5153d1ab4962d1c13234747417b1d3d39",
+  "production_files": [
+    "android/app/src/main/java/org/inkweft/app/StreamedInkRaster.kt",
+    "android/app/src/main/java/org/inkweft/app/StreamedLayerLayout.kt"
+  ],
+  "app": [
+    "org.inkweft.app.StreamedPanContinuityTest",
+    "org.inkweft.app.StreamedInkRasterTest",
+    "org.inkweft.app.LayerRasterBudgetTest"
+  ],
+  "app_methods": {
+    "org.inkweft.app.StreamedPanContinuityTest": [
+      "attachedLayeredInkStaysVisibleDuringMoveBeforeReleaseAndWindowRefresh",
+      "pendingPanZoomAndCroppedResizeProjectFromTheLastCompletedDimensions",
+      "changedRenderIdentityNeverReplaysOldInkWhileReplacementIsHeld",
+      "editingWindowOnlyChangeDrawsAnAppendPreviewExactlyOnce",
+      "failedBoundsRefreshKeepsPreviewIncomplete",
+      "clearDuringSupersededPanReleasesWorkersAndCannotPublishStaleLayout"
+    ],
+    "org.inkweft.app.StreamedInkRasterTest": [
+      "clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+      "omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+      "completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "completeFrameCrossesBothTheEditorPointWindowAndDatabaseBatchBoundary"
+    ],
+    "org.inkweft.app.LayerRasterBudgetTest": [
+      "oneFourAndEightLayersDecodeEachVisibleStrokeOnceWithinOnePixelBudget"
+    ]
+  },
+  "expected_app": 11,
+  "room": [],
+  "expected_room": 0,
+  "diagnostic_rounds": 1,
+  "core": false,
+  "lint": false,
+  "tls": false,
+  "backup": false,
+  "experiments": false,
+  "negative_control": "org.inkweft.app.StreamedPanContinuityTest#attachedLayeredInkStaysVisibleDuringMoveBeforeReleaseAndWindowRefresh"
+}

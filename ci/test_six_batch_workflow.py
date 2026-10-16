@@ -20,7 +20,8 @@ from six_batch_scope import build_plan, lint_requirement
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = (ROOT / ".github/workflows/android-six-batches.yml").read_text()
-STEPS = re.split(r"^      - ", WORKFLOW, flags=re.M)[1:]
+# These assertions cover the existing verify job; the independent pan job has its own tests.
+STEPS = re.split(r"^      - ", WORKFLOW.split("\n  pan:\n", 1)[0], flags=re.M)[1:]
 
 
 def step_containing(text):
