@@ -1,0 +1,602 @@
+{
+  "run_id": "39053188644",
+  "run_attempt": "1",
+  "workflow_sha": "357d1432117d2eb548ff6099db10286a0b310614",
+  "source_spec": {
+    "status": "FROZEN",
+    "scope": "DIAGNOSTIC_ONLY",
+    "identities": {
+      "C1": {
+        "alias": "all_miss_control",
+        "git": "33e8e60f35f3c60339d2595928857006b77af082",
+        "tree": "7973e8ad56eadee47e5b73f8c341ab6c95b4ffe8",
+        "canonical_manifest_sha256": "d443503de1890ea731120da864e2c1f05d6da1591425e0bbfeece6e098034ec0",
+        "production_overrides": []
+      },
+      "C2": {
+        "alias": "all_miss_candidate",
+        "git": "01011eacec7d0d6411703631f49fb64f2f9e7aab",
+        "tree": "ab7f2565176cf67d6c2c7538a17d8f38d9750c6a",
+        "canonical_manifest_sha256": "aa13030a418e4df4fea9e8cbc43c86195fdf211a94a3826f617fc519ef0623e5",
+        "production_overrides": []
+      }
+    },
+    "common_probes": [],
+    "only_production_delta": "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt",
+    "prior_correctness_reuse_sha256": "44146fbb903ac5a8f34b096850070d6793af3e9a8c8d1579c1c34fec3603e334"
+  },
+  "input_hashes": {
+    "approved_plan_sha256": "e569834968f54b278e32f9b98f838d49f7da1fbc97762ad2b65b7f26f81f1f81",
+    "source_spec_sha256": "36a8d13ab8a62bf4dd9141a279bbf2f0c45db64d99bcfb93c3941da932b675d9",
+    "method_plan_sha256": "fb6afedd01bc77027a3d82a5b33ce84d396de7ec4e75c45356e715bcec18ffbe",
+    "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "marker_contract_sha256": "41c047cfaa9e6cb057a01807624811c5e19e6c3837c40b7a4bb68392988a3736",
+    "prepare_sources_sha256": "0911bab24186c0c34b2734544c02eb3ac53c2b464fe04dbb0a99fd8274dd00fa",
+    "prior_correctness_reuse_sha256": "44146fbb903ac5a8f34b096850070d6793af3e9a8c8d1579c1c34fec3603e334"
+  },
+  "version_aliases": {
+    "C1": {
+      "alias": "all_miss_control",
+      "source_commit": "33e8e60f35f3c60339d2595928857006b77af082"
+    },
+    "C2": {
+      "alias": "all_miss_candidate",
+      "source_commit": "01011eacec7d0d6411703631f49fb64f2f9e7aab"
+    }
+  },
+  "budget_anchor_epoch": 1792257526,
+  "anchor_kind": "runner_first_step",
+  "actual_job_started_epoch": null,
+  "phase_cutoff_epochs": {
+    "setup": 1792259326,
+    "data": 1792260226,
+    "raster": 1792260526,
+    "work": 1792260826
+  },
+  "work_deadline_epoch": 1792260826,
+  "status": "BLOCKED_OR_FAILED",
+  "actions": {
+    "setup": {
+      "status": "PASS",
+      "budget_phase": "setup",
+      "started_epoch": 1792257535.0066595,
+      "seconds": 43.77936673164368
+    },
+    "build-C1": {
+      "status": "PASS",
+      "budget_phase": "setup",
+      "started_epoch": 1792257578.8541656,
+      "seconds": 537.7050988674164
+    },
+    "build-C2": {
+      "status": "PASS",
+      "budget_phase": "setup",
+      "started_epoch": 1792258116.6297643,
+      "seconds": 455.51559042930603
+    },
+    "emulator": {
+      "status": "PASS",
+      "budget_phase": "setup",
+      "started_epoch": 1792258572.2157443,
+      "seconds": 30.39508843421936
+    },
+    "methods-data": {
+      "status": "FAIL",
+      "budget_phase": "data",
+      "started_epoch": 1792258602.7102404,
+      "seconds": 2.2394649982452393
+    }
+  },
+  "phases": [
+    {
+      "name": "source-fetch",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1792257535.9120917,
+      "exit_code": 0,
+      "seconds": 0.4182093143463135
+    },
+    {
+      "name": "source-reconstruction",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1792257536.3311348,
+      "exit_code": 0,
+      "seconds": 3.5223629474639893
+    },
+    {
+      "name": "sdk",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1792257541.8268182,
+      "exit_code": 0,
+      "seconds": 36.95825743675232
+    },
+    {
+      "name": "build-C1",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1792257578.9742756,
+      "exit_code": 0,
+      "seconds": 535.2533073425293
+    },
+    {
+      "name": "build-C2",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1792258116.7506547,
+      "exit_code": 0,
+      "seconds": 453.1332199573517
+    },
+    {
+      "name": "acceleration",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1792258572.2708566,
+      "exit_code": 0,
+      "seconds": 0.033046722412109375
+    },
+    {
+      "name": "avd",
+      "budget_phase": "setup",
+      "status": "PASS",
+      "started_epoch": 1792258572.3050027,
+      "exit_code": 0,
+      "seconds": 1.4771490097045898
+    }
+  ],
+  "install_groups": {
+    "C2-data-guards": {
+      "identity": "C2",
+      "status": "INCOMPLETE",
+      "started_epoch": 1792258602.7115872,
+      "installed_apks": [
+        {
+          "package": "org.inkweft.data.test",
+          "path": "/data/app/~~k10bXSwFu1YxljPj1jW6sQ==/org.inkweft.data.test-_KTMw31h3AWec2s19MgYYw==/base.apk",
+          "sha256": "ccd2d33a8ea2a0a42e4584da8985e39aa142b7906fa6c3f3cd8e7c2a198e0a9f",
+          "source_apk_sha256": "ccd2d33a8ea2a0a42e4584da8985e39aa142b7906fa6c3f3cd8e7c2a198e0a9f",
+          "source_manifest_sha256": "aa13030a418e4df4fea9e8cbc43c86195fdf211a94a3826f617fc519ef0623e5"
+        }
+      ],
+      "seconds": 2.2391514778137207
+    }
+  },
+  "methods": [
+    {
+      "ordinal": 1,
+      "phase": "data-diagnostics",
+      "identity": "C2",
+      "install_group": "C2-data-guards",
+      "selection": "org.inkweft.data.RasterReadCacheTest#coldBatchesPreservePaintOrderAndPopulateEveryCachedIdentity",
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.RasterReadCacheTest#coldBatchesPreservePaintOrderAndPopulateEveryCachedIdentity",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "seed": null,
+      "expected_junit_tests": 1,
+      "diagnostic_only": true,
+      "outer_cap_seconds": 3600,
+      "marker_policy": "none",
+      "status": "FAIL",
+      "started_epoch": 1792258603.5051198,
+      "log_sha256": "a968c56502887e8d840bf85d36a859602025a70dca35835281dbf60797122626",
+      "junit_status": "FAIL",
+      "adb_exit": 0,
+      "junit_ok_counts": [],
+      "status_codes": [
+        1,
+        -2
+      ],
+      "reported_classes": [
+        "org.inkweft.data.RasterReadCacheTest",
+        "org.inkweft.data.RasterReadCacheTest"
+      ],
+      "reported_methods": [
+        "coldBatchesPreservePaintOrderAndPopulateEveryCachedIdentity",
+        "coldBatchesPreservePaintOrderAndPopulateEveryCachedIdentity"
+      ],
+      "reported_test_counts": [
+        "1",
+        "1"
+      ],
+      "process_exit_observations": [
+        {
+          "stage": "natural-exit",
+          "elapsed_seconds": 5.694000037692604e-06,
+          "packages": {
+            "org.inkweft.app.a0": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.app.a0.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            },
+            "org.inkweft.data.test": {
+              "exit": 1,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        }
+      ],
+      "process_exit_outcome": "NATURAL_EXIT",
+      "processes_after": {
+        "org.inkweft.app.a0": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.app.a0.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        },
+        "org.inkweft.data.test": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "process_exit_seconds": 0.059259143000190306,
+      "error_type": "AssertionError",
+      "error": "Original method/JUnit failed; stop without retry",
+      "seconds": 1.4351201057434082,
+      "failure_log_forwarding": {
+        "status": "BEGIN",
+        "raw_bytes": 69337,
+        "raw_sha256": "a968c56502887e8d840bf85d36a859602025a70dca35835281dbf60797122626"
+      }
+    },
+    {
+      "ordinal": 2,
+      "phase": "data-diagnostics",
+      "identity": "C2",
+      "install_group": "C2-data-guards",
+      "selection": "org.inkweft.data.RasterReadCacheTest#sameRevisionMaskChangeDuringCachedVisitRejectsTheWholeRead",
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.data.RasterReadCacheTest#sameRevisionMaskChangeDuringCachedVisitRejectsTheWholeRead",
+        "org.inkweft.data.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "seed": null,
+      "expected_junit_tests": 1,
+      "diagnostic_only": true,
+      "outer_cap_seconds": 3600,
+      "marker_policy": "none",
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 3,
+      "phase": "raster-diagnostics",
+      "identity": "C2",
+      "install_group": "C2-app-guards",
+      "selection": "org.inkweft.app.NativeStrokeTileReuseTest#oneNativeShapePerStrokeMatchesPerTileConstructionThroughTransformsAndClips",
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.app.NativeStrokeTileReuseTest#oneNativeShapePerStrokeMatchesPerTileConstructionThroughTransformsAndClips",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "seed": null,
+      "expected_junit_tests": 1,
+      "diagnostic_only": true,
+      "outer_cap_seconds": 3600,
+      "marker_policy": "required",
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 4,
+      "phase": "raster-diagnostics",
+      "identity": "C2",
+      "install_group": "C2-app-guards",
+      "selection": "org.inkweft.app.RasterPerformanceProbe#continuousTransformsAndSeparatedDirtyTiles",
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.app.RasterPerformanceProbe#continuousTransformsAndSeparatedDirtyTiles",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "seed": null,
+      "expected_junit_tests": 1,
+      "diagnostic_only": true,
+      "outer_cap_seconds": 3600,
+      "marker_policy": "required",
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 5,
+      "phase": "raster-diagnostics",
+      "identity": "C2",
+      "install_group": "C2-app-guards",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#appendRetainsGeometryAcrossIdleLayerRevisionsAndDestructiveChangesMatchColdFrames",
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.app.TileLocalRedrawTest#appendRetainsGeometryAcrossIdleLayerRevisionsAndDestructiveChangesMatchColdFrames",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "seed": null,
+      "expected_junit_tests": 1,
+      "diagnostic_only": true,
+      "outer_cap_seconds": 3600,
+      "marker_policy": "none",
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 6,
+      "phase": "raster-diagnostics",
+      "identity": "C2",
+      "install_group": "C2-app-guards",
+      "selection": "org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources",
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "class",
+        "org.inkweft.app.TileLocalRedrawTest#interruptedPanWaitJoinsItsWorkerBeforeClosingResources",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "seed": null,
+      "expected_junit_tests": 1,
+      "diagnostic_only": true,
+      "outer_cap_seconds": 3600,
+      "marker_policy": "required",
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 7,
+      "phase": "raster-diagnostics",
+      "identity": "C1",
+      "install_group": "C1-pair-4101",
+      "selection": "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "rasterCausalDiagnostics",
+        "true",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "seed": 4101,
+      "expected_junit_tests": 1,
+      "diagnostic_only": true,
+      "outer_cap_seconds": 3600,
+      "marker_policy": "required",
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 8,
+      "phase": "raster-diagnostics",
+      "identity": "C2",
+      "install_group": "C2-pairs",
+      "selection": "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "rasterCausalDiagnostics",
+        "true",
+        "-e",
+        "pairSeed",
+        "4101",
+        "-e",
+        "class",
+        "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "seed": 4101,
+      "expected_junit_tests": 1,
+      "diagnostic_only": true,
+      "outer_cap_seconds": 3600,
+      "marker_policy": "required",
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 9,
+      "phase": "raster-diagnostics",
+      "identity": "C2",
+      "install_group": "C2-pairs",
+      "selection": "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "rasterCausalDiagnostics",
+        "true",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "seed": 4102,
+      "expected_junit_tests": 1,
+      "diagnostic_only": true,
+      "outer_cap_seconds": 3600,
+      "marker_policy": "required",
+      "status": "NOT_RUN"
+    },
+    {
+      "ordinal": 10,
+      "phase": "raster-diagnostics",
+      "identity": "C1",
+      "install_group": "C1-pair-4102",
+      "selection": "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+      "args": [
+        "adb",
+        "-s",
+        "emulator-5554",
+        "shell",
+        "am",
+        "instrument",
+        "-w",
+        "-r",
+        "-e",
+        "rasterCausalDiagnostics",
+        "true",
+        "-e",
+        "pairSeed",
+        "4102",
+        "-e",
+        "class",
+        "org.inkweft.app.RasterCausalDiagnosticsTest#oneFourEightLayerAppendReportsFrameStagesAndMatchesColdFrames",
+        "org.inkweft.app.a0.test/androidx.test.runner.AndroidJUnitRunner"
+      ],
+      "seed": 4102,
+      "expected_junit_tests": 1,
+      "diagnostic_only": true,
+      "outer_cap_seconds": 3600,
+      "marker_policy": "required",
+      "status": "NOT_RUN"
+    }
+  ],
+  "scope": "DIAGNOSTIC_ONLY",
+  "fetched_fixed_refs": [
+    "33e8e60f35f3c60339d2595928857006b77af082",
+    "01011eacec7d0d6411703631f49fb64f2f9e7aab"
+  ],
+  "setup_elapsed_from_anchor_seconds": 1076.610801935196,
+  "error": "AssertionError: Original method/JUnit failed; stop without retry",
+  "cleanup_verified": true,
+  "missing_files": [
+    "device-after.json",
+    "install-C2-data-guards-environment-after.json",
+    "install-C2-data-guards-host-after.json",
+    "install-C2-app-guards.log",
+    "install-C2-app-guards-environment-before.json",
+    "install-C2-app-guards-host-before.json",
+    "install-C2-app-guards-environment-after.json",
+    "install-C2-app-guards-host-after.json",
+    "install-C1-pair-4101.log",
+    "install-C1-pair-4101-environment-before.json",
+    "install-C1-pair-4101-host-before.json",
+    "install-C1-pair-4101-environment-after.json",
+    "install-C1-pair-4101-host-after.json",
+    "install-C2-pairs.log",
+    "install-C2-pairs-environment-before.json",
+    "install-C2-pairs-host-before.json",
+    "install-C2-pairs-environment-after.json",
+    "install-C2-pairs-host-after.json",
+    "install-C1-pair-4102.log",
+    "install-C1-pair-4102-environment-before.json",
+    "install-C1-pair-4102-host-before.json",
+    "install-C1-pair-4102-environment-after.json",
+    "install-C1-pair-4102-host-after.json",
+    "method-01-C2-log-forwarding.json",
+    "method-02-C2-instrumentation.log",
+    "method-02-C2-junit.xml",
+    "method-02-C2-records.json",
+    "method-02-C2-log-forwarding.json",
+    "method-03-C2-instrumentation.log",
+    "method-03-C2-junit.xml",
+    "method-03-C2-records.json",
+    "method-03-C2-log-forwarding.json",
+    "method-04-C2-instrumentation.log",
+    "method-04-C2-junit.xml",
+    "method-04-C2-records.json",
+    "method-04-C2-log-forwarding.json",
+    "method-05-C2-instrumentation.log",
+    "method-05-C2-junit.xml",
+    "method-05-C2-records.json",
+    "method-05-C2-log-forwarding.json",
+    "method-06-C2-instrumentation.log",
+    "method-06-C2-junit.xml",
+    "method-06-C2-records.json",
+    "method-06-C2-log-forwarding.json",
+    "method-07-C1-instrumentation.log",
+    "method-07-C1-junit.xml",
+    "method-07-C1-records.json",
+    "method-07-C1-log-forwarding.json",
+    "method-08-C2-instrumentation.log",
+    "method-08-C2-junit.xml",
+    "method-08-C2-records.json",
+    "method-08-C2-log-forwarding.json",
+    "method-09-C2-instrumentation.log",
+    "method-09-C2-junit.xml",
+    "method-09-C2-records.json",
+    "method-09-C2-log-forwarding.json",
+    "method-10-C1-instrumentation.log",
+    "method-10-C1-junit.xml",
+    "method-10-C1-records.json",
+    "method-10-C1-log-forwarding.json"
+  ]
+}

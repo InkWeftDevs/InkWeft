@@ -1,0 +1,15 @@
+test_cancellation_after_identity_write_remains_owned_for_cleanup (test_adb_ownership.AdbOwnershipTest.test_cancellation_after_identity_write_remains_owned_for_cleanup) ... ok
+test_changed_identity_refuses_cleanup_signal (test_adb_ownership.AdbOwnershipTest.test_changed_identity_refuses_cleanup_signal) ... ok
+test_client_with_changed_identity_cannot_spawn (test_adb_ownership.AdbOwnershipTest.test_client_with_changed_identity_cannot_spawn) ... ok
+test_client_without_owned_server_cannot_spawn (test_adb_ownership.AdbOwnershipTest.test_client_without_owned_server_cannot_spawn) ... ok
+test_early_server_exit_is_not_ready (test_adb_ownership.AdbOwnershipTest.test_early_server_exit_is_not_ready) ... ok
+test_foreground_owner_stops_and_repeated_always_cleanup_is_safe (test_adb_ownership.AdbOwnershipTest.test_foreground_owner_stops_and_repeated_always_cleanup_is_safe) ... ok
+test_foreign_config_directory_is_refused_before_start (test_adb_ownership.AdbOwnershipTest.test_foreign_config_directory_is_refused_before_start) ... ok
+test_foreign_default_listener_is_refused_without_start_or_signal (test_adb_ownership.AdbOwnershipTest.test_foreign_default_listener_is_refused_without_start_or_signal) ... ok
+test_slow_trickle_after_late_retry_cannot_extend_startup_cap (test_adb_ownership.AdbOwnershipTest.test_slow_trickle_after_late_retry_cannot_extend_startup_cap) ... ok
+test_startup_phase_timeout_remains_owned_for_cleanup (test_adb_ownership.AdbOwnershipTest.test_startup_phase_timeout_remains_owned_for_cleanup) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 3.090s
+
+OK

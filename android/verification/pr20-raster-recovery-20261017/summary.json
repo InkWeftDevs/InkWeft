@@ -1,0 +1,50 @@
+{
+  "fixed": "PASS",
+  "fixed_methods": [
+    {
+      "selection": "org.inkweft.app.StreamedPanContinuityTest#attachedLayeredInkStaysVisibleDuringMoveBeforeReleaseAndWindowRefresh",
+      "status": "PASS"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedPanContinuityTest#pendingPanZoomAndCroppedResizeProjectFromTheLastCompletedDimensions",
+      "status": "PASS"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedPanContinuityTest#changedRenderIdentityNeverReplaysOldInkWhileReplacementIsHeld",
+      "status": "PASS"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedPanContinuityTest#editingWindowOnlyChangeDrawsAnAppendPreviewExactlyOnce",
+      "status": "PASS"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedPanContinuityTest#failedBoundsRefreshKeepsPreviewIncomplete",
+      "status": "PASS"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedPanContinuityTest#clearDuringSupersededPanReleasesWorkersAndCannotPublishStaleLayout",
+      "status": "PASS"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedInkRasterTest#clearingPendingTransformReleasesPinnedGeometryWithoutPublishing",
+      "status": "PASS"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedInkRasterTest#omittedStrokeCannotReappearWhileItsReplacementFrameIsDelayed",
+      "status": "PASS"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "status": "PASS"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameCrossesBothTheEditorPointWindowAndDatabaseBatchBoundary",
+      "status": "PASS"
+    },
+    {
+      "selection": "org.inkweft.app.LayerRasterBudgetTest#oneFourAndEightLayersDecodeEachVisibleStrokeOnceWithinOnePixelBudget",
+      "status": "PASS"
+    }
+  ],
+  "negative_control": "EXPECTED_ASSERTION_FAILURE"
+}

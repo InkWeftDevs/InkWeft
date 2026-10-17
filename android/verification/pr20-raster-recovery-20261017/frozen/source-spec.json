@@ -1,0 +1,23 @@
+{
+  "status": "FROZEN",
+  "scope": "DIAGNOSTIC_ONLY",
+  "identities": {
+    "C1": {
+      "alias": "all_miss_control",
+      "git": "a9a335a535de05398c066ae6f68028efa17977be",
+      "tree": "9f2521554e13045ef5cbc953e81b22608ad1bb15",
+      "canonical_manifest_sha256": "bf6577e95b7f3931e9b99ed27cec085a13a7a720494ce16f1cf9cf80708af95c",
+      "production_overrides": []
+    },
+    "C2": {
+      "alias": "all_miss_candidate",
+      "git": "1c542a708c709715e11eedbd8398d5434ec9f061",
+      "tree": "205b1338f1d3ed047aa7b2640908700ae9760db9",
+      "canonical_manifest_sha256": "a6714a250980139d908beb6e637c417f608a4cd775f3f0825448831d4448f239",
+      "production_overrides": []
+    }
+  },
+  "common_probes": [],
+  "only_production_delta": "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt",
+  "prior_correctness_reuse_sha256": "7dcd34256d8ba554bc365efcf31a9788ca8c1a843ee78f93ece9b5339f896515"
+}

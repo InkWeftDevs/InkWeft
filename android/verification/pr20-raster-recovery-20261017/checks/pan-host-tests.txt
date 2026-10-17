@@ -1,0 +1,16 @@
+test_actual_run_38887941132_formatted_logs_all_pass (test_pan_continuity.PanContinuityTest.test_actual_run_38887941132_formatted_logs_all_pass) ... ok
+test_api_created_commit_requires_exact_tree_baseline_and_three_files (test_pan_continuity.PanContinuityTest.test_api_created_commit_requires_exact_tree_baseline_and_three_files) ... ok
+test_exact_inventory_and_original_parent (test_pan_continuity.PanContinuityTest.test_exact_inventory_and_original_parent) ... ok
+test_formatted_positive_rejects_missing_duplicate_wrong_or_failed_results (test_pan_continuity.PanContinuityTest.test_formatted_positive_rejects_missing_duplicate_wrong_or_failed_results) ... ok
+test_formatted_positive_requires_exact_round_selection_and_source_binding (test_pan_continuity.PanContinuityTest.test_formatted_positive_requires_exact_round_selection_and_source_binding) ... ok
+test_instrumentation_manifest_requires_one_exact_runner_and_target (test_pan_continuity.PanContinuityTest.test_instrumentation_manifest_requires_one_exact_runner_and_target) ... ok
+test_negative_accepts_only_the_original_pixel_assertion (test_pan_continuity.PanContinuityTest.test_negative_accepts_only_the_original_pixel_assertion) ... ok
+test_packaging_excludes_apks_and_counts_metadata_in_twenty_mib_cap (test_pan_continuity.PanContinuityTest.test_packaging_excludes_apks_and_counts_metadata_in_twenty_mib_cap) ... ok
+test_positive_requires_exact_identity_count_and_completed_junit (test_pan_continuity.PanContinuityTest.test_positive_requires_exact_identity_count_and_completed_junit) ... ok
+test_unchanged_runner_executes_only_the_eleven_methods_once (test_pan_continuity.PanContinuityTest.test_unchanged_runner_executes_only_the_eleven_methods_once) ... ok
+test_workflow_is_isolated_push_only_and_has_no_matrix_or_apk_upload (test_pan_continuity.PanContinuityTest.test_workflow_is_isolated_push_only_and_has_no_matrix_or_apk_upload) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.048s
+
+OK

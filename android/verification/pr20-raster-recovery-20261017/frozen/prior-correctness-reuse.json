@@ -1,0 +1,57 @@
+{
+  "status": "PRIOR_CORRECTNESS_ONLY_NOT_NEW_NATIVE",
+  "archive": {
+    "filename": "pan-run2-evidence.zip",
+    "bytes": 65183,
+    "sha256": "5a13c82e46041f675826a97f99106bf6b36a011017be5da60eb95a4291380c01"
+  },
+  "evidence_files": {
+    "control/source.json": {
+      "bytes": 31390,
+      "sha256": "9381bec14b2497497193bec68d0c4e828b800e54e4014d5f2fc7ac1838cd8b77"
+    },
+    "control/summary.json": {
+      "bytes": 1877,
+      "sha256": "ce76300e294207559463bfd2f2c03cec1981f587336f34067b1bf812370a86f6"
+    },
+    "control/apks.json": {
+      "bytes": 766,
+      "sha256": "3d1859b21d0097ccf36c1d5029f02848d3b133ca8348ef3a27a4f88961592b41"
+    }
+  },
+  "prior_workflow_commit": "01011eacec7d0d6411703631f49fb64f2f9e7aab",
+  "prior_fixed_commit": "defb97eb9954d756afb983b79ab56574a14f8dd3",
+  "prior_fixed_tree": "2febc36a2efbec23340ccded797b222d7d7d6eae",
+  "candidate_commit": "1c542a708c709715e11eedbd8398d5434ec9f061",
+  "candidate_tree": "205b1338f1d3ed047aa7b2640908700ae9760db9",
+  "android_diff_to_prior_fixed_source": [
+    "android/data-local/src/androidTest/kotlin/org/inkweft/data/RasterReadCacheTest.kt"
+  ],
+  "source_files": {
+    "android/app/src/androidTest/java/org/inkweft/app/StreamedInkRasterTest.kt": "6b61b7bbe518729ffc65195f72bfb4a4fe7e84139fbf896e5b687fbe29f756e5",
+    "android/app/src/androidTest/java/org/inkweft/app/OwnedRasterJobs.kt": "00c38f1f951ad4572e23fb3e7d9a412bd723275d52c68298d4723134e5d51d18"
+  },
+  "omitted_methods": [
+    {
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameIncludesGeometryBeyondTheEditorWindowAndReleasesItsWorker",
+      "status": "PASS"
+    },
+    {
+      "selection": "org.inkweft.app.StreamedInkRasterTest#completeFrameCrossesBothTheEditorPointWindowAndDatabaseBatchBoundary",
+      "status": "PASS"
+    }
+  ],
+  "prior_application_id": "org.inkweft.app.a0.insertion",
+  "new_application_id": "org.inkweft.app.a0",
+  "limits": [
+    "Reuse is exact-source prior correctness only; package/build configuration differs.",
+    "No reused timing, APK, percentile, or new-run PASS is claimed.",
+    "Only the reviewed RasterReadCacheTest assertion repair differs under android. Omitted dense tests, all production, app tests and build inputs remain byte-identical; any other difference invalidates reuse."
+  ],
+  "allowed_test_only_repair": {
+    "path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/RasterReadCacheTest.kt",
+    "prior_sha256": "2467d9dffb61e6d987654ad37d83d4dfc74d3ee0c3d3cad92d8feacdae7ea1dd",
+    "candidate_sha256": "1776b54cd89f9130509c563764ec7ed39b0f63ab67fb5e51e85e757530c7c43c",
+    "reason": "Replace invalid reference equality between independently decoded InkStroke objects with ordered canonical persisted-value equality. Warm identity and all epoch/pixel guards unchanged."
+  }
+}

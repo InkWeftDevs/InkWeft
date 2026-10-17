@@ -1,0 +1,14 @@
+{
+  "C1": {
+    "git": "a9a335a535de05398c066ae6f68028efa17977be",
+    "tree": "9f2521554e13045ef5cbc953e81b22608ad1bb15"
+  },
+  "C2": {
+    "git": "1c542a708c709715e11eedbd8398d5434ec9f061",
+    "tree": "205b1338f1d3ed047aa7b2640908700ae9760db9"
+  },
+  "candidate_parent": "01011eacec7d0d6411703631f49fb64f2f9e7aab",
+  "test_path": "android/data-local/src/androidTest/kotlin/org/inkweft/data/RasterReadCacheTest.kt",
+  "test_sha256": "1776b54cd89f9130509c563764ec7ed39b0f63ab67fb5e51e85e757530c7c43c",
+  "only_pair_delta": "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+}

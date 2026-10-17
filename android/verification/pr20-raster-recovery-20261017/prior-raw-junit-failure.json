@@ -1,0 +1,8 @@
+{
+  "source": "pan-run2-evidence.zip/control/negative-instrumentation.txt",
+  "bytes": 5892,
+  "sha256": "dbb4320483a3ce0e3b89b3297b2ac38509e0090da0aa1c0b11cd64b8119ab4a8",
+  "selection": "org.inkweft.app.StreamedPanContinuityTest#attachedLayeredInkStaysVisibleDuringMoveBeforeReleaseAndWindowRefresh",
+  "expected": "FAIL",
+  "purpose": "Real raw (-r) completed JUnit assertion output; parser fixture only, never a new native result."
+}

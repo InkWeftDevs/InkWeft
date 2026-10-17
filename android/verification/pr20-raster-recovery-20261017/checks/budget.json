@@ -1,0 +1,238 @@
+{
+  "scope": "STATIC_BOUND_NOT_NATIVE",
+  "methods": [
+    {
+      "ordinal": 1,
+      "payload": 0,
+      "records": 0,
+      "raw_upper": 16384,
+      "parsed_upper": 16384,
+      "wire_upper": 16384
+    },
+    {
+      "ordinal": 2,
+      "payload": 0,
+      "records": 0,
+      "raw_upper": 16384,
+      "parsed_upper": 16384,
+      "wire_upper": 16384
+    },
+    {
+      "ordinal": 3,
+      "payload": 16384,
+      "records": 4,
+      "raw_upper": 34816,
+      "parsed_upper": 32768,
+      "wire_upper": 53248
+    },
+    {
+      "ordinal": 4,
+      "payload": 65536,
+      "records": 15,
+      "raw_upper": 89600,
+      "parsed_upper": 81920,
+      "wire_upper": 162816
+    },
+    {
+      "ordinal": 5,
+      "payload": 0,
+      "records": 0,
+      "raw_upper": 16384,
+      "parsed_upper": 16384,
+      "wire_upper": 16384
+    },
+    {
+      "ordinal": 6,
+      "payload": 8192,
+      "records": 1,
+      "raw_upper": 25088,
+      "parsed_upper": 24576,
+      "wire_upper": 33792
+    },
+    {
+      "ordinal": 7,
+      "payload": 786432,
+      "records": 3,
+      "raw_upper": 804352,
+      "parsed_upper": 802816,
+      "wire_upper": 1592320
+    },
+    {
+      "ordinal": 8,
+      "payload": 786432,
+      "records": 3,
+      "raw_upper": 804352,
+      "parsed_upper": 802816,
+      "wire_upper": 1592320
+    },
+    {
+      "ordinal": 9,
+      "payload": 786432,
+      "records": 3,
+      "raw_upper": 804352,
+      "parsed_upper": 802816,
+      "wire_upper": 1592320
+    },
+    {
+      "ordinal": 10,
+      "payload": 786432,
+      "records": 3,
+      "raw_upper": 804352,
+      "parsed_upper": 802816,
+      "wire_upper": 1592320
+    }
+  ],
+  "success_with_shared_reserve": 16629760,
+  "failure_paths": [
+    {
+      "ordinal": 1,
+      "prior_complete_methods_bytes": 0,
+      "failure_raw_bytes": 1048576,
+      "failure_parsed_upper": 2162688,
+      "failure_wire_upper": 1439104,
+      "shared_once": 3145728,
+      "bytes": 7796096
+    },
+    {
+      "ordinal": 2,
+      "prior_complete_methods_bytes": 49152,
+      "failure_raw_bytes": 1048576,
+      "failure_parsed_upper": 2162688,
+      "failure_wire_upper": 1439104,
+      "shared_once": 3145728,
+      "bytes": 7845248
+    },
+    {
+      "ordinal": 3,
+      "prior_complete_methods_bytes": 98304,
+      "failure_raw_bytes": 1048576,
+      "failure_parsed_upper": 2162688,
+      "failure_wire_upper": 1439104,
+      "shared_once": 3145728,
+      "bytes": 7894400
+    },
+    {
+      "ordinal": 4,
+      "prior_complete_methods_bytes": 219136,
+      "failure_raw_bytes": 1048576,
+      "failure_parsed_upper": 2162688,
+      "failure_wire_upper": 1439104,
+      "shared_once": 3145728,
+      "bytes": 8015232
+    },
+    {
+      "ordinal": 5,
+      "prior_complete_methods_bytes": 553472,
+      "failure_raw_bytes": 1048576,
+      "failure_parsed_upper": 2162688,
+      "failure_wire_upper": 1439104,
+      "shared_once": 3145728,
+      "bytes": 8349568
+    },
+    {
+      "ordinal": 6,
+      "prior_complete_methods_bytes": 602624,
+      "failure_raw_bytes": 1048576,
+      "failure_parsed_upper": 2162688,
+      "failure_wire_upper": 1439104,
+      "shared_once": 3145728,
+      "bytes": 8398720
+    },
+    {
+      "ordinal": 7,
+      "prior_complete_methods_bytes": 686080,
+      "failure_raw_bytes": 1048576,
+      "failure_parsed_upper": 2162688,
+      "failure_wire_upper": 1439104,
+      "shared_once": 3145728,
+      "bytes": 8482176
+    },
+    {
+      "ordinal": 8,
+      "prior_complete_methods_bytes": 3885568,
+      "failure_raw_bytes": 1048576,
+      "failure_parsed_upper": 2162688,
+      "failure_wire_upper": 1439104,
+      "shared_once": 3145728,
+      "bytes": 11681664
+    },
+    {
+      "ordinal": 9,
+      "prior_complete_methods_bytes": 7085056,
+      "failure_raw_bytes": 1048576,
+      "failure_parsed_upper": 2162688,
+      "failure_wire_upper": 1439104,
+      "shared_once": 3145728,
+      "bytes": 14881152
+    },
+    {
+      "ordinal": 10,
+      "prior_complete_methods_bytes": 10284544,
+      "failure_raw_bytes": 1048576,
+      "failure_parsed_upper": 2162688,
+      "failure_wire_upper": 1439104,
+      "shared_once": 3145728,
+      "bytes": 18080640
+    }
+  ],
+  "interrupted_normal_paths": [
+    {
+      "ordinal": 1,
+      "bytes": 3203072
+    },
+    {
+      "ordinal": 2,
+      "bytes": 3252224
+    },
+    {
+      "ordinal": 3,
+      "bytes": 3373056
+    },
+    {
+      "ordinal": 4,
+      "bytes": 3707392
+    },
+    {
+      "ordinal": 5,
+      "bytes": 3756544
+    },
+    {
+      "ordinal": 6,
+      "bytes": 3840000
+    },
+    {
+      "ordinal": 7,
+      "bytes": 7039488
+    },
+    {
+      "ordinal": 8,
+      "bytes": 10238976
+    },
+    {
+      "ordinal": 9,
+      "bytes": 13438464
+    },
+    {
+      "ordinal": 10,
+      "bytes": 16637952
+    }
+  ],
+  "shared_buckets": {
+    "frozen_control": 786432,
+    "build_dependency": 1048576,
+    "source_install_environment": 262144,
+    "summary": 524288,
+    "cleanup_emulator": 131072,
+    "method_receipts": 163840,
+    "packaging": 98304,
+    "official_fixed": 131072
+  },
+  "failure_raw_limit": 1048576,
+  "failure_wire_limit": 1439104,
+  "shared_reserve": 3145728,
+  "maximum_bytes": 18080640,
+  "limit_bytes": 20971520,
+  "headroom_bytes": 2890880,
+  "within_limit": true,
+  "note": "Includes raw + parsed + official stream together. Shared 3MiB is one reserve for all source/control/build/dependency/context/cleanup and packaging text. Runtime packager checks actual total, rejects oversize/missing/secret data without truncation. Arbitrary malformed producer output beyond the closed contract is not promised complete publication."
+}
