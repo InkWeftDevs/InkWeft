@@ -53,7 +53,12 @@ class RasterReadCacheTest {
         assertEquals(List(300){id(it+1)},reference.map{it.id})
         var decoded=0;repo.readObserver={decoded+=it.entries}
         val cold=read(cache)
-        assertEquals(listOf(256,44),cold.map{it.size});assertEquals(reference,cold.flatten())
+        assertEquals(listOf(256,44),cold.map{it.size})
+        val coldStrokes=cold.flatten();assertEquals(reference.size,coldStrokes.size)
+        // Independent reads decode distinct objects; compare complete values in paint order.
+        reference.forEachIndexed{index,expected->
+            assertArrayEquals("Cold stroke at paint index $index",InkStrokeCodec.encode(expected),InkStrokeCodec.encode(coldStrokes[index]))
+        }
         assertEquals(300,decoded);assertEquals(0,cache.hits)
         decoded=0;val warm=read(cache).flatten()
         assertEquals(0,decoded);assertEquals(300,cache.hits)
