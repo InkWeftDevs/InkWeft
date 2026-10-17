@@ -1,0 +1,77 @@
+{
+  "status": "PREPARED_NOT_ACTIVATED",
+  "files": {
+    "ci/pr20-raster-screen/PLAN.template.md": {
+      "bytes": 6192,
+      "sha256": "48074867d58df7b5168a17cb6627ade37d7b1c9b92af3de51ac6c28afbf80f7e"
+    },
+    "ci/pr20-raster-screen/authorization.json": {
+      "bytes": 811,
+      "sha256": "09753ff5dfe776f5a7cbb118cb002c21f2ea601f5381c49fda02c8be44127b31"
+    },
+    "ci/pr20-raster-screen/bind_control.py": {
+      "bytes": 2222,
+      "sha256": "cb6b83287118a6726c4e15c1084125015933cd2d53e883901e48051ab7f9882d"
+    },
+    "ci/pr20-raster-screen/check_offline.py": {
+      "bytes": 17963,
+      "sha256": "8092ab51f91646d3113f629e45829a1e66f93d9415cc28e2794a15ba001088d9"
+    },
+    "ci/pr20-raster-screen/cleanup.py": {
+      "bytes": 4068,
+      "sha256": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576"
+    },
+    "ci/pr20-raster-screen/failure_text.py": {
+      "bytes": 6309,
+      "sha256": "7a096a8c730c9a9a8efaf24f7c6363948a686df0ba001d50d13a297b849036e6"
+    },
+    "ci/pr20-raster-screen/freeze_readiness.py": {
+      "bytes": 4254,
+      "sha256": "83da574591cda78a98670c1d7d307a7ad0f7e8124ef833e45947bf8ae8e52355"
+    },
+    "ci/pr20-raster-screen/marker-contract.template.json": {
+      "bytes": 50134,
+      "sha256": "9c4d4e4674259da57dd1c767905c1b1f61b3ec6290428ce79150f9d730738273"
+    },
+    "ci/pr20-raster-screen/markers.py": {
+      "bytes": 11431,
+      "sha256": "b6cddc15b85d9b58fb687a054e383bfb847766ca76b044e58c45244a127196dd"
+    },
+    "ci/pr20-raster-screen/method-plan.template.json": {
+      "bytes": 8658,
+      "sha256": "b9d2efb1b8977b9e92f11d25461b37485dc695df94a951f468859cec59d2aedc"
+    },
+    "ci/pr20-raster-screen/original-protocol.json": {
+      "bytes": 1942,
+      "sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba"
+    },
+    "ci/pr20-raster-screen/package.py": {
+      "bytes": 11553,
+      "sha256": "0f87b1618e1c60f3c5a7725cec54e4267e7f523ed016dc2b2d698aa98e737bfb"
+    },
+    "ci/pr20-raster-screen/prepare_sources.py": {
+      "bytes": 2390,
+      "sha256": "0911bab24186c0c34b2734544c02eb3ac53c2b464fe04dbb0a99fd8274dd00fa"
+    },
+    "ci/pr20-raster-screen/prior-correctness-reuse.json": {
+      "bytes": 2180,
+      "sha256": "44146fbb903ac5a8f34b096850070d6793af3e9a8c8d1579c1c34fec3603e334"
+    },
+    "ci/pr20-raster-screen/run.py": {
+      "bytes": 47856,
+      "sha256": "52fc6b53e8233c3dcc5a716972abbd7bb81ebc95f796bdc37fc7d5155eb25e0b"
+    },
+    "ci/pr20-raster-screen/size_bounds.py": {
+      "bytes": 5437,
+      "sha256": "82e1d347d341242d7054a090c6b0b4e2364a9ae69854e41e816e16e3e908e1a5"
+    },
+    "ci/pr20-raster-screen/source-scope.template.json": {
+      "bytes": 2230,
+      "sha256": "febc5de2f21e31de22e995cfc57d6133275001548c93e68b11f607a1126baab6"
+    },
+    "ci/pr20-raster-screen/workflow.proposed.yml": {
+      "bytes": 8452,
+      "sha256": "1872901f7fec11f552d21207a6584004883a405eed57a79724bfa4d8de163a75"
+    }
+  }
+}

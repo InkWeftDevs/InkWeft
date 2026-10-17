@@ -1,0 +1,20 @@
+{
+  "fixed": {
+    "sha256": "ee161e3cb132c6583ec98f28b3a57707f8c81b5b71404e49289d98f982de9e1f",
+    "bytes": 229811747,
+    "signer": "6a0a747a14825cb76540d1bf56976a396422ea285f20352ba8e93878e707e15f",
+    "package": "org.inkweft.app.a0.insertion"
+  },
+  "tests": {
+    "sha256": "2d3dfc8cd530181590ad6f5673f86ce26910158a2d80ee18ab505811386b79dd",
+    "bytes": 10754743,
+    "signer": "6a0a747a14825cb76540d1bf56976a396422ea285f20352ba8e93878e707e15f",
+    "package": "org.inkweft.app.a0.insertion.test"
+  },
+  "original": {
+    "sha256": "b15d2f5d63b2f7400818d1ff22100c061a416b37687d510814edcc435f45b8f5",
+    "bytes": 229811747,
+    "signer": "6a0a747a14825cb76540d1bf56976a396422ea285f20352ba8e93878e707e15f",
+    "package": "org.inkweft.app.a0.insertion"
+  }
+}

@@ -1,0 +1,373 @@
+{
+  "status": "HOST_STATIC_SYNTHETIC_PASS_NOT_NATIVE",
+  "checks": [
+    {
+      "name": "unbound refusal and exact source/method scope",
+      "status": "PASS",
+      "details": {
+        "methods": 10,
+        "groups": 5,
+        "apks": 5,
+        "cleanup_and_original_protocol_unchanged": true
+      }
+    },
+    {
+      "name": "reviewed core functions preserved",
+      "status": "PASS",
+      "details": [
+        "write_json",
+        "save",
+        "seconds",
+        "digest",
+        "owned",
+        "run",
+        "capture",
+        "shell",
+        "phase",
+        "host",
+        "environment",
+        "source_manifest",
+        "official_dependency_check",
+        "validate_instrumentation_manifest",
+        "processes_after",
+        "junit"
+      ]
+    },
+    {
+      "name": "hard stop extends unchanged clock validation",
+      "status": "PASS",
+      "details": {
+        "user_hard_stop_epoch": 1792281600,
+        "requires_full_hour_before_start": true
+      }
+    },
+    {
+      "name": "actual historical marker fixtures and negative cases",
+      "status": "PASS",
+      "details": {
+        "accepted": 10,
+        "negatives": 53,
+        "new_native": 0,
+        "unknown_history_marker_rejected_for_all_methods": true
+      }
+    },
+    {
+      "name": "strict JUnit state parser",
+      "status": "PASS",
+      "details": {
+        "valid": 10,
+        "incomplete": 40
+      }
+    },
+    {
+      "name": "real raw failure and emitted status-stream fixtures",
+      "status": "PASS",
+      "details": {
+        "real_failure": 1,
+        "incomplete": 17,
+        "status_stream": 1,
+        "native_executions": 0
+      }
+    },
+    {
+      "name": "inactive workflow syntax and one-use local clock",
+      "status": "PASS",
+      "details": {
+        "actionlint": "NOT_RUN_TOOL_UNAVAILABLE",
+        "wrappers": 6,
+        "clock_reuse_refused": true
+      }
+    },
+    {
+      "name": "actual method failure integration",
+      "status": "PASS",
+      "details": {
+        "full_raw_roundtrip": true,
+        "normal_started_duplicate_refused": true,
+        "original_error_preserved": true
+      }
+    },
+    {
+      "name": "actual normal forwarding boundary faults",
+      "status": "PASS",
+      "details": {
+        "cases": 4,
+        "latch_saved_before_first_print": true,
+        "duplicate_original_streams": 0
+      }
+    },
+    {
+      "name": "joint success/failure text cap",
+      "status": "PASS",
+      "details": {
+        "scope": "STATIC_BOUND_NOT_NATIVE",
+        "methods": [
+          {
+            "ordinal": 1,
+            "payload": 0,
+            "records": 0,
+            "raw_upper": 16384,
+            "parsed_upper": 16384,
+            "wire_upper": 16384
+          },
+          {
+            "ordinal": 2,
+            "payload": 0,
+            "records": 0,
+            "raw_upper": 16384,
+            "parsed_upper": 16384,
+            "wire_upper": 16384
+          },
+          {
+            "ordinal": 3,
+            "payload": 16384,
+            "records": 4,
+            "raw_upper": 34816,
+            "parsed_upper": 32768,
+            "wire_upper": 53248
+          },
+          {
+            "ordinal": 4,
+            "payload": 65536,
+            "records": 15,
+            "raw_upper": 89600,
+            "parsed_upper": 81920,
+            "wire_upper": 162816
+          },
+          {
+            "ordinal": 5,
+            "payload": 0,
+            "records": 0,
+            "raw_upper": 16384,
+            "parsed_upper": 16384,
+            "wire_upper": 16384
+          },
+          {
+            "ordinal": 6,
+            "payload": 8192,
+            "records": 1,
+            "raw_upper": 25088,
+            "parsed_upper": 24576,
+            "wire_upper": 33792
+          },
+          {
+            "ordinal": 7,
+            "payload": 786432,
+            "records": 3,
+            "raw_upper": 804352,
+            "parsed_upper": 802816,
+            "wire_upper": 1592320
+          },
+          {
+            "ordinal": 8,
+            "payload": 786432,
+            "records": 3,
+            "raw_upper": 804352,
+            "parsed_upper": 802816,
+            "wire_upper": 1592320
+          },
+          {
+            "ordinal": 9,
+            "payload": 786432,
+            "records": 3,
+            "raw_upper": 804352,
+            "parsed_upper": 802816,
+            "wire_upper": 1592320
+          },
+          {
+            "ordinal": 10,
+            "payload": 786432,
+            "records": 3,
+            "raw_upper": 804352,
+            "parsed_upper": 802816,
+            "wire_upper": 1592320
+          }
+        ],
+        "success_with_shared_reserve": 16629760,
+        "failure_paths": [
+          {
+            "ordinal": 1,
+            "prior_complete_methods_bytes": 0,
+            "failure_raw_bytes": 1048576,
+            "failure_parsed_upper": 2162688,
+            "failure_wire_upper": 1439104,
+            "shared_once": 3145728,
+            "bytes": 7796096
+          },
+          {
+            "ordinal": 2,
+            "prior_complete_methods_bytes": 49152,
+            "failure_raw_bytes": 1048576,
+            "failure_parsed_upper": 2162688,
+            "failure_wire_upper": 1439104,
+            "shared_once": 3145728,
+            "bytes": 7845248
+          },
+          {
+            "ordinal": 3,
+            "prior_complete_methods_bytes": 98304,
+            "failure_raw_bytes": 1048576,
+            "failure_parsed_upper": 2162688,
+            "failure_wire_upper": 1439104,
+            "shared_once": 3145728,
+            "bytes": 7894400
+          },
+          {
+            "ordinal": 4,
+            "prior_complete_methods_bytes": 219136,
+            "failure_raw_bytes": 1048576,
+            "failure_parsed_upper": 2162688,
+            "failure_wire_upper": 1439104,
+            "shared_once": 3145728,
+            "bytes": 8015232
+          },
+          {
+            "ordinal": 5,
+            "prior_complete_methods_bytes": 553472,
+            "failure_raw_bytes": 1048576,
+            "failure_parsed_upper": 2162688,
+            "failure_wire_upper": 1439104,
+            "shared_once": 3145728,
+            "bytes": 8349568
+          },
+          {
+            "ordinal": 6,
+            "prior_complete_methods_bytes": 602624,
+            "failure_raw_bytes": 1048576,
+            "failure_parsed_upper": 2162688,
+            "failure_wire_upper": 1439104,
+            "shared_once": 3145728,
+            "bytes": 8398720
+          },
+          {
+            "ordinal": 7,
+            "prior_complete_methods_bytes": 686080,
+            "failure_raw_bytes": 1048576,
+            "failure_parsed_upper": 2162688,
+            "failure_wire_upper": 1439104,
+            "shared_once": 3145728,
+            "bytes": 8482176
+          },
+          {
+            "ordinal": 8,
+            "prior_complete_methods_bytes": 3885568,
+            "failure_raw_bytes": 1048576,
+            "failure_parsed_upper": 2162688,
+            "failure_wire_upper": 1439104,
+            "shared_once": 3145728,
+            "bytes": 11681664
+          },
+          {
+            "ordinal": 9,
+            "prior_complete_methods_bytes": 7085056,
+            "failure_raw_bytes": 1048576,
+            "failure_parsed_upper": 2162688,
+            "failure_wire_upper": 1439104,
+            "shared_once": 3145728,
+            "bytes": 14881152
+          },
+          {
+            "ordinal": 10,
+            "prior_complete_methods_bytes": 10284544,
+            "failure_raw_bytes": 1048576,
+            "failure_parsed_upper": 2162688,
+            "failure_wire_upper": 1439104,
+            "shared_once": 3145728,
+            "bytes": 18080640
+          }
+        ],
+        "interrupted_normal_paths": [
+          {
+            "ordinal": 1,
+            "bytes": 3203072
+          },
+          {
+            "ordinal": 2,
+            "bytes": 3252224
+          },
+          {
+            "ordinal": 3,
+            "bytes": 3373056
+          },
+          {
+            "ordinal": 4,
+            "bytes": 3707392
+          },
+          {
+            "ordinal": 5,
+            "bytes": 3756544
+          },
+          {
+            "ordinal": 6,
+            "bytes": 3840000
+          },
+          {
+            "ordinal": 7,
+            "bytes": 7039488
+          },
+          {
+            "ordinal": 8,
+            "bytes": 10238976
+          },
+          {
+            "ordinal": 9,
+            "bytes": 13438464
+          },
+          {
+            "ordinal": 10,
+            "bytes": 16637952
+          }
+        ],
+        "shared_buckets": {
+          "frozen_control": 786432,
+          "build_dependency": 1048576,
+          "source_install_environment": 262144,
+          "summary": 524288,
+          "cleanup_emulator": 131072,
+          "method_receipts": 163840,
+          "packaging": 98304,
+          "official_fixed": 131072
+        },
+        "failure_raw_limit": 1048576,
+        "failure_wire_limit": 1439104,
+        "shared_reserve": 3145728,
+        "maximum_bytes": 18080640,
+        "limit_bytes": 20971520,
+        "headroom_bytes": 2890880,
+        "within_limit": true,
+        "note": "Includes raw + parsed + official stream together. Shared 3MiB is one reserve for all source/control/build/dependency/context/cleanup and packaging text. Runtime packager checks actual total, rejects oversize/missing/secret data without truncation. Arbitrary malformed producer output beyond the closed contract is not promised complete publication."
+      }
+    },
+    {
+      "name": "exact-source prior reuse and unbound native refusal",
+      "status": "PASS",
+      "details": {
+        "omitted_prior_passes": 2,
+        "new_native": 0,
+        "control": "33e8e60f35f3c60339d2595928857006b77af082",
+        "source_pair_reconstructed": true,
+        "candidate_tree": "ab7f2565176cf67d6c2c7538a17d8f38d9750c6a"
+      }
+    }
+  ],
+  "controller_sha256": {
+    "prepare_sources.py": "0911bab24186c0c34b2734544c02eb3ac53c2b464fe04dbb0a99fd8274dd00fa",
+    "markers.py": "b6cddc15b85d9b58fb687a054e383bfb847766ca76b044e58c45244a127196dd",
+    "cleanup.py": "49e4337f483de46179466ae1c0fcf9ef18772e6a9388cce5cb6826a60d634576",
+    "prior-correctness-reuse.json": "44146fbb903ac5a8f34b096850070d6793af3e9a8c8d1579c1c34fec3603e334",
+    "source-scope.template.json": "febc5de2f21e31de22e995cfc57d6133275001548c93e68b11f607a1126baab6",
+    "size_bounds.py": "82e1d347d341242d7054a090c6b0b4e2364a9ae69854e41e816e16e3e908e1a5",
+    "method-plan.template.json": "b9d2efb1b8977b9e92f11d25461b37485dc695df94a951f468859cec59d2aedc",
+    "run.py": "52fc6b53e8233c3dcc5a716972abbd7bb81ebc95f796bdc37fc7d5155eb25e0b",
+    "freeze_readiness.py": "83da574591cda78a98670c1d7d307a7ad0f7e8124ef833e45947bf8ae8e52355",
+    "PLAN.template.md": "48074867d58df7b5168a17cb6627ade37d7b1c9b92af3de51ac6c28afbf80f7e",
+    "package.py": "0f87b1618e1c60f3c5a7725cec54e4267e7f523ed016dc2b2d698aa98e737bfb",
+    "original-protocol.json": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+    "failure_text.py": "7a096a8c730c9a9a8efaf24f7c6363948a686df0ba001d50d13a297b849036e6",
+    "authorization.json": "09753ff5dfe776f5a7cbb118cb002c21f2ea601f5381c49fda02c8be44127b31",
+    "bind_control.py": "cb6b83287118a6726c4e15c1084125015933cd2d53e883901e48051ab7f9882d",
+    "workflow.proposed.yml": "1872901f7fec11f552d21207a6584004883a405eed57a79724bfa4d8de163a75",
+    "check_offline.py": "8092ab51f91646d3113f629e45829a1e66f93d9415cc28e2794a15ba001088d9",
+    "marker-contract.template.json": "9c4d4e4674259da57dd1c767905c1b1f61b3ec6290428ce79150f9d730738273"
+  }
+}

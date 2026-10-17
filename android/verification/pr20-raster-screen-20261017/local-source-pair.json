@@ -1,0 +1,13 @@
+{
+  "status": "LOCAL_SOURCE_PAIR_ONLY_NOT_PUBLISHED_OR_RUN",
+  "candidate_commit": "01011eacec7d0d6411703631f49fb64f2f9e7aab",
+  "candidate_tree": "ab7f2565176cf67d6c2c7538a17d8f38d9750c6a",
+  "control_commit": "33e8e60f35f3c60339d2595928857006b77af082",
+  "control_tree": "7973e8ad56eadee47e5b73f8c341ab6c95b4ffe8",
+  "control_parent": "01011eacec7d0d6411703631f49fb64f2f9e7aab",
+  "delta_files": [
+    "android/data-local/src/main/kotlin/org/inkweft/data/InkRepository.kt"
+  ],
+  "control_sha256": "e7241f4329ece5148f8d1e6f740e102f8326bd4ef0db7f0a6f0a2871e12c9950",
+  "candidate_worktree_unchanged": true
+}

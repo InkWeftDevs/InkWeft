@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "command": "python3 -B -m unittest discover -s ci -p test_pan_continuity.py -v",
+  "tests": 11,
+  "failures": 0,
+  "errors": 0,
+  "seconds": 0.055,
+  "earlier_invocation": {
+    "command": "python3 -B -m unittest ci.test_pan_continuity -v",
+    "status": "IMPORT_ERROR_BEFORE_TESTS",
+    "reason": "pan_continuity module is resolved from ci; corrected unittest discovery uses that source directory."
+  },
+  "native_executions": 0
+}
