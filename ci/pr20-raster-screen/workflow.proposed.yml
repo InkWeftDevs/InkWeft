@@ -14,7 +14,7 @@ jobs:
   causal:
     name: DIAGNOSTIC_ONLY two sources / five APKs / ten methods
     if: github.event_name == 'push' && github.ref == 'refs/heads/codex/kvm-pr20-raster-screen-20261017'
-      && github.event.created == false && github.event.before == '0000000000000000000000000000000000000000'
+      && github.event.created == false && github.event.before == '6675a1c1e5822e137faa103054a59f8496dedfff'
       && github.run_attempt == 1
     runs-on: ubuntu-24.04
     timeout-minutes: 60
