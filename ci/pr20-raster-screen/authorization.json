@@ -1,13 +1,13 @@
 {
-  "approved": false,
+  "approved": true,
   "scope": "DIAGNOSTIC_ONLY",
-  "plan_git": "UNBOUND",
-  "approved_plan_sha256": "UNBOUND",
-  "source_spec_sha256": "UNBOUND",
-  "method_plan_sha256": "UNBOUND",
-  "original_protocol_sha256": "UNBOUND",
-  "marker_contract_sha256": "UNBOUND",
-  "prepare_sources_sha256": "UNBOUND",
+  "plan_git": "9af8c9937cdc6fbabd881f62a90596d92deb8bae",
+  "approved_plan_sha256": "e569834968f54b278e32f9b98f838d49f7da1fbc97762ad2b65b7f26f81f1f81",
+  "source_spec_sha256": "36a8d13ab8a62bf4dd9141a279bbf2f0c45db64d99bcfb93c3941da932b675d9",
+  "method_plan_sha256": "fb6afedd01bc77027a3d82a5b33ce84d396de7ec4e75c45356e715bcec18ffbe",
+  "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+  "marker_contract_sha256": "41c047cfaa9e6cb057a01807624811c5e19e6c3837c40b7a4bb68392988a3736",
+  "prepare_sources_sha256": "0911bab24186c0c34b2734544c02eb3ac53c2b464fe04dbb0a99fd8274dd00fa",
   "phase_cutoff_minutes": {
     "setup": 30,
     "data": 45,
@@ -18,8 +18,8 @@
   "task_build_cache": false,
   "new_permissions": false,
   "automatic_retry": false,
-  "authorization_scope": "Preparation only: ten calls, five APKs, diagnostic screen. Source control and readiness remain unbound; no native execution, push, or activation authorized.",
-  "status": "UNBOUND",
-  "prior_correctness_reuse_sha256": "UNBOUND",
+  "authorization_scope": "One independently reviewed 10-call KVM diagnostic round on the exact frozen C1/C2 sources, five APKs, no matrix or retry. Authorized isolated control/readiness/prep publication and activation after final bound review; no PR, main, release, or additional round. Setup/data/raster/work/job limits remain 30/45/50/55/60 minutes. Latest start 2026-10-17 23:00:00 UTC; complete cleanup before 2026-10-18 00:00:00 UTC. If quota resets earlier, finish the active round then pause.",
+  "status": "FROZEN",
+  "prior_correctness_reuse_sha256": "44146fbb903ac5a8f34b096850070d6793af3e9a8c8d1579c1c34fec3603e334",
   "user_hard_stop_epoch": 1792281600
 }
