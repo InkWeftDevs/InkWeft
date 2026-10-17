@@ -21,7 +21,7 @@ from collections import Counter
 HERE = Path(__file__).resolve().parent
 CONTROL = HERE.parents[1]
 FROZEN_RELATIVE = 'android/verification/pr20-raster-recovery-20261017/frozen'
-FROZEN_SOURCE_SPEC_SHA256 = 'UNBOUND'
+FROZEN_SOURCE_SPEC_SHA256 = 'e83af6bd7ab19c2251fd4a81c853b37de7a2071f75651bf3aca1391b7cb5f0f5'
 assert re.fullmatch(r'[0-9a-f]{64}', FROZEN_SOURCE_SPEC_SHA256), 'Finalize source identity before execution'
 FROZEN = CONTROL / FROZEN_RELATIVE
 ROOT = Path(os.environ['KVM_ONCE'])

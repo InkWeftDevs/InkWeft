@@ -4,7 +4,7 @@ from pathlib import Path
 from size_bounds import SHARED_BUCKETS,BUDGET_RECEIPT_ALLOWANCE,fixed_bucket,method_wire_bound
 here=Path(__file__).resolve().parent
 FROZEN_RELATIVE='android/verification/pr20-raster-recovery-20261017/frozen'
-FROZEN_SOURCE_SPEC_SHA256='UNBOUND'
+FROZEN_SOURCE_SPEC_SHA256='e83af6bd7ab19c2251fd4a81c853b37de7a2071f75651bf3aca1391b7cb5f0f5'
 assert re.fullmatch(r'[0-9a-f]{64}', FROZEN_SOURCE_SPEC_SHA256), 'Finalize source-spec hash before execution'
 frozen=here.parents[1]/FROZEN_RELATIVE
 root=Path(os.environ['KVM_ONCE']);source=root/'evidence';out=root/'upload';out.mkdir(exist_ok=False)  # Never upload unaccounted stale output.

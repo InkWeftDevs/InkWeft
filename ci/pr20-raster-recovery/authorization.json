@@ -1,13 +1,13 @@
 {
-  "approved": false,
+  "approved": true,
   "scope": "DIAGNOSTIC_ONLY",
-  "plan_git": "UNBOUND",
-  "approved_plan_sha256": "UNBOUND",
-  "source_spec_sha256": "UNBOUND",
-  "method_plan_sha256": "UNBOUND",
-  "original_protocol_sha256": "UNBOUND",
-  "marker_contract_sha256": "UNBOUND",
-  "prepare_sources_sha256": "UNBOUND",
+  "plan_git": "656748110d3c50996d1ab2a8c4e0f125e77c9e53",
+  "approved_plan_sha256": "084a297f60c2b61be7131636aa2f94214f8ef36de9bf53d1e0b9039677df3f5c",
+  "source_spec_sha256": "e83af6bd7ab19c2251fd4a81c853b37de7a2071f75651bf3aca1391b7cb5f0f5",
+  "method_plan_sha256": "6c5569766a3647c3ac4785afc4bdf7ce335404fb6743323692d65dc84e8dd11b",
+  "original_protocol_sha256": "1065177d7809426d949c4b4b67bd639a47c3fc1943f706a77c2dfabb985e9aba",
+  "marker_contract_sha256": "170460994c88371229e495d322f0364b2f10f36f3d4dbc0ee354de289fec11bc",
+  "prepare_sources_sha256": "0911bab24186c0c34b2734544c02eb3ac53c2b464fe04dbb0a99fd8274dd00fa",
   "phase_cutoff_minutes": {
     "setup": 30,
     "data": 45,
@@ -18,8 +18,8 @@
   "task_build_cache": false,
   "new_permissions": false,
   "automatic_retry": false,
-  "authorization_scope": "Recovery preparation only. Bind the exact reviewed source pair/readiness and obtain final activation review before the one authorized 10-call recovery round. No production changes, extra samples, matrix, automatic retries, PR, main or release.",
-  "status": "UNBOUND",
-  "prior_correctness_reuse_sha256": "UNBOUND",
+  "authorization_scope": "One reviewed 10-call KVM recovery round after the concrete cold-cache assertion and adb ownership defects in run 39053188644. This is not a performance resample. Use only the frozen source pair, selectors and two seeds; no extra calls, samples, seeds, matrix or automatic retries. Rebuild all five APKs. Preserve the original performance gates, phase cutoffs and 2026-10-18 00:00 UTC hard stop. No PR, main or release. Activation requires exact remote source/prep verification and independent review.",
+  "status": "FROZEN",
+  "prior_correctness_reuse_sha256": "7dcd34256d8ba554bc365efcf31a9788ca8c1a843ee78f93ece9b5339f896515",
   "user_hard_stop_epoch": 1792281600
 }
